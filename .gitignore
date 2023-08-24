@@ -1,0 +1,24 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.idea/
+Tablet notes.txt
+app/
+build.gradle
+gradle.properties
+gradle/
+gradlew
+gradlew.bat
+keystore.jks
+keystorenew.jks
+settings.gradle
