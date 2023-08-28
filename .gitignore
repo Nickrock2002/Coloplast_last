@@ -13,11 +13,8 @@
 .externalNativeBuild
 .idea/
 Tablet notes.txt
-build.gradle
-gradle.properties
 gradle/
 gradlew
 gradlew.bat
 keystore.jks
 keystorenew.jks
-settings.gradle

@@ -9,12 +9,11 @@
     tools:context=".MainActivity">
 
     <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat"
+        android:id="@+id/llHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,33 +23,62 @@
             android:layout_height="100dp"
             android:src="@mipmap/ic_launcher" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="400dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/bt_rounded_corners"
-            android:text="@string/surgery"
-            android:textAllCaps="false"
-            android:textColor="@color/colorWhite"
-            android:textSize="24sp" />
+    </android.support.v7.widget.LinearLayoutCompat>
 
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="400dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/bt_rounded_corners"
-            android:text="@string/clinic_visit"
-            android:textAllCaps="false"
-            android:textColor="@color/colorWhite"
-            android:textSize="24sp" />
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/llBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llHeader">
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:text="Want is not communicating with device" />
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/llButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llHeader">
+
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bt_rounded_corners"
+                android:text="@string/surgery"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bt_rounded_corners"
+                android:text="@string/clinic_visit"
+                android:layout_marginLeft="250dp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp" />
+
+        </android.support.v7.widget.LinearLayoutCompat>
     </android.support.v7.widget.LinearLayoutCompat>
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="300dp"
         android:layout_height="100dp"
-        android:src="@drawable/temp"
         android:layout_marginBottom="32dp"
+        android:src="@drawable/temp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
