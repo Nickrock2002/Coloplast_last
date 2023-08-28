@@ -38,7 +38,7 @@
         <TextView
             android:layout_width="300dp"
             android:layout_height="100dp"
-            android:text="Want is not communicating with device" />
+            android:text="@string/wand_not_comm" />
 
         <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/llButtons"
@@ -54,17 +54,17 @@
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:background="@drawable/bt_rounded_corners"
-                android:text="@string/surgery"
+                android:text="@string/cancel"
                 android:textAllCaps="false"
+                android:background="@drawable/bt_dialogue_wand_comm_ghosted"
                 android:textColor="@color/colorWhite"
                 android:textSize="24sp" />
 
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="200dp"
                 android:layout_height="50dp"
-                android:background="@drawable/bt_rounded_corners"
-                android:text="@string/clinic_visit"
+                android:background="@drawable/bt_dialogue_wand_comm_ghosted"
+                android:text="@string/confirm"
                 android:layout_marginLeft="250dp"
                 android:textAllCaps="false"
                 android:textColor="@color/colorWhite"

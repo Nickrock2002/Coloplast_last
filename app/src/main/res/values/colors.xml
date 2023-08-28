@@ -6,6 +6,14 @@
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorControlNoChange">#EEF0FA</color>
     <color name="colorControlChange">#faeeee</color>
+
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorTeal">#008080</color>
+    <color name="colorPrimaryTurquoise">#00a2ba</color>
+    <color name="colorBaseDeepBlue">#213D46</color>
+    <color name="colorBaseGrayFifty">#f4f5f5</color>
+    <color name="colorGrayHundred">#ebeeef</color>
+    <color name="colorGreyThreeHundred">#cad0d3</color>
+    <color name="colorBaseGreyFourHundred">#b4bdc0</color>
+    <color name="colorGreySixHundred">#4d646b</color>
+    <color name="colorOrange">#d05d29</color>
 </resources>
