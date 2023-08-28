@@ -68,7 +68,7 @@ public class ItnsFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeInterrogateButton(View view) {
         Button interrogate = view.findViewById(R.id.btItnsInterrogate);
-        interrogate.setEnabled(false);
+        /*interrogate.setEnabled(false);
         interrogate.setAlpha(0.5f);
         interrogate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -87,6 +87,14 @@ public class ItnsFragment extends Fragment {
                     StartProgressBar();
                 }
                 return true;
+            }
+        });
+*/
+        //following for testing
+        interrogate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).showResetCounterDialog();
             }
         });
     }
