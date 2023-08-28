@@ -1,5 +1,7 @@
 package com.ninecmed.tablet;
 
+import static com.ninecmed.tablet.R.string.all_ok;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -8,17 +10,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +21,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -34,8 +39,6 @@ import java.util.Objects;
 
 import me.aflak.bluetooth.Bluetooth;
 import me.aflak.bluetooth.interfaces.DeviceCallback;
-
-import static com.ninecmed.tablet.R.string.all_ok;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
