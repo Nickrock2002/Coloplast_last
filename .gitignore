@@ -13,7 +13,6 @@
 .externalNativeBuild
 .idea/
 Tablet notes.txt
-app/
 build.gradle
 gradle.properties
 gradle/
