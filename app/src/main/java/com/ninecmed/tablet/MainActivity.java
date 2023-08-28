@@ -21,7 +21,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -463,5 +465,26 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < tabStrip.getChildCount(); i++) {
             tabStrip.getChildAt(i).setClickable(enable);
         }
+    }
+
+    public void showResetCounterDialog(){
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_reset_counter);
+
+        TextView text = (TextView) dialog.findViewById(R.id.tv_reset_counter);
+        //text.setText("msg");
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.btn_reset_counter);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
     }
 }
