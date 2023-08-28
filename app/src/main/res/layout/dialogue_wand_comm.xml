@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/llHeader"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBaseGrayFifty"
         android:gravity="center"
         android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintBottom_toTopOf="@id/llBody"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="300dp"
-            android:layout_height="100dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
             android:src="@mipmap/ic_launcher" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -28,24 +29,34 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/llBody"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llHeader">
 
         <TextView
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:text="@string/wand_not_comm" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/wand_not_comm"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:padding="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,33 +65,23 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="200dp"
                 android:layout_height="50dp"
+                android:background="@drawable/bt_dialogue_wand_comm_active"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
-                android:background="@drawable/bt_dialogue_wand_comm_ghosted"
-                android:textColor="@color/colorWhite"
+                android:textColor="@drawable/txt_dialogue_wand_comm_active"
                 android:textSize="24sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="200dp"
                 android:layout_height="50dp"
+                android:layout_marginLeft="250dp"
                 android:background="@drawable/bt_dialogue_wand_comm_ghosted"
                 android:text="@string/confirm"
-                android:layout_marginLeft="250dp"
                 android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
+                android:textColor="@drawable/txt_dialogue_wand_comm_ghosted"
                 android:textSize="24sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/temp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
