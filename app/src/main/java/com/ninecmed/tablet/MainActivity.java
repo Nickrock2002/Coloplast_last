@@ -1,13 +1,19 @@
 package com.ninecmed.tablet;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private boolean mRunBT = false;
 
+    private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
+
     public interface tabs {
             int EXT = 1;
             int ITNS = 0;           // Tab 0 must also be the default fragment
@@ -54,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_old);
 
         // This hides the status bar at the top
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -77,161 +85,209 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: Starting.");
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        toolbar.setNavigationIcon(R.drawable.ic_icon_app);
-//        setSupportActionBar(toolbar);
-//        mHandler.postDelayed(MinuteTimer, 60000);
-//
-//        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-//
-//        // Setup ViewPager with the sections adapter
-//        CustomViewPager mViewPager = findViewById(R.id.container);
-//        SetupViewPager(mViewPager);
-//
-//        mTabLayout = findViewById(R.id.tabs);
-//        mTabLayout.setupWithViewPager(mViewPager);
-//
-//        mBluetooth = new Bluetooth(this);
-//        mBluetooth.setReader(ByteReader.class);
-//        mBluetooth.setDeviceCallback(deviceCallback);
-//
-//        wandComm = new WandComm(mBluetooth, this);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_icon_app);
+        setSupportActionBar(toolbar);
+        mHandler.postDelayed(MinuteTimer, 60000);
+
+        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
+
+        // Setup ViewPager with the sections adapter
+        CustomViewPager mViewPager = findViewById(R.id.container);
+        SetupViewPager(mViewPager);
+
+        mTabLayout = findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+                    != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+                            != PackageManager.PERMISSION_GRANTED) {
+                // Request both permissions
+                ActivityCompat.requestPermissions(this,
+                        new String[]{
+                                Manifest.permission.BLUETOOTH_CONNECT,
+                                Manifest.permission.BLUETOOTH_SCAN
+                        },
+                        REQUEST_BLUETOOTH_PERMISSION);
+            } else {
+                // Both permissions are granted, proceed with Bluetooth functionality
+                initBluetooth();
+            }
+        } else {
+            // For devices below Android 12, the permission is granted at install time
+            // You can proceed with your Bluetooth functionality
+            initBluetooth();
+        }
     }
 
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        UpdateTitle();
-//        UpdateSubTitle();
-//
-//        return super.onPrepareOptionsMenu(menu);
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-//        final View decorView = getWindow().getDecorView();
-//        decorView.setSystemUiVisibility(uiOptions);
-//    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.main_menu, menu);
-//
-//        return true;
-//    }
-//
-//    @SuppressLint("NonConstantResourceId")
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch(item.getItemId()) {
-//            case R.id.menu_bat:
-//                return true;
-//
-//            case R.id.menu_date_and_time:
-//                startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
-//                return true;
-//
-//            case R.id.menu_about:
-//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-//
-//                alertDialog.setTitle(getString(R.string.about_title));
-//                alertDialog.setMessage(getString(R.string.about_version));
-//
-//                alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        dialogInterface.dismiss();
-//                    }
-//                });
-//                alertDialog.show();
-//                return true;
-//
-//            case R.id.menu_close:
-//                this.finishAffinity();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mBluetooth.onStart();
-//
-//        List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
-//        for(BluetoothDevice bt : btDevices) {
-//            mBTDevice = bt;
-//        }
-//
-////        mBluetooth.connectToDevice(mBTDevice);
-//
-//        if(mBluetooth.isEnabled()) {
-//            Log.d(TAG, "BT was enabled");
-//        }
-//        else {
-//            mBluetooth.enable();
-//        }
-//
-//        mRunBT = true;
-//
-//        // Update subtitle - required after returning from activity to set date and time
-//        UpdateSubTitle();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if(mBluetooth.isConnected()) {
-//            mHandler.removeCallbacks(MinuteTimer);
-//            mHandler.removeCallbacks(Reconnect);
-//            mBluetooth.disconnect();
-//        }
-//        mBluetooth.onStop();
-//        mRunBT = false;
-//    }
-//
-//    private final DeviceCallback deviceCallback = new DeviceCallback() {
-//        @Override
-//        public void onDeviceConnected(BluetoothDevice device) {
-//            wandComm.InitWand();
-//        }
-//
-//        @Override
-//        public void onDeviceDisconnected(BluetoothDevice device, String message) {
-//            wandComm.ResetWandComm();
-//            MainActivity.this.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(tabs.EXT);
-//                    external.OnDisconnected();
-//
-//                    ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);
-//                    itns.OnDisconnected();
-//                }
-//            });
-//
-//            // Reconnect
-//            mBluetooth.connectToDevice(mBTDevice);
-//        }
-//
-//        @Override
-//        public void onMessage(byte[] message) {
-//            wandComm.ReturnMessage(message);
-//        }
-//
-//        @Override
-//        public void onError(int errorCode) {
-//        }
-//
-//        @Override
-//        public void onConnectError(final BluetoothDevice device, String message) {
-//           if(mRunBT)
-//                mHandler.postDelayed(Reconnect, 1000);                                    // And if fail, try every second
-//        }
-//    };
-//
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_BLUETOOTH_PERMISSION) {
+            // Check if all permissions are granted
+            boolean allPermissionsGranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
+                }
+            }
+
+            if (allPermissionsGranted) {
+                // Both permissions are granted, proceed with Bluetooth functionality
+                initBluetooth();
+            } else {
+                // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
+            }
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        UpdateTitle();
+        UpdateSubTitle();
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        final View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_bat:
+                return true;
+
+            case R.id.menu_date_and_time:
+                startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                return true;
+
+            case R.id.menu_about:
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+                alertDialog.setTitle(getString(R.string.about_title));
+                alertDialog.setMessage(getString(R.string.about_version));
+
+                alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                alertDialog.show();
+                return true;
+
+            case R.id.menu_close:
+                this.finishAffinity();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void initBluetooth() {
+        // Permission has been granted, you can proceed with your Bluetooth functionality
+        mBluetooth = new Bluetooth(this);
+        mBluetooth.setReader(ByteReader.class);
+        mBluetooth.setDeviceCallback(deviceCallback);
+
+        wandComm = new WandComm(mBluetooth, this);
+
+        mBluetooth.onStart();
+
+        List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
+        for(BluetoothDevice bt : btDevices) {
+            mBTDevice = bt;
+        }
+
+        //mBluetooth.connectToDevice(mBTDevice);
+
+        if(mBluetooth.isEnabled()) {
+            Log.d(TAG, "BT was enabled");
+        }
+        else {
+            mBluetooth.enable();
+        }
+
+        mRunBT = true;
+
+        // Update subtitle - required after returning from activity to set date and time
+        UpdateSubTitle();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mBluetooth.isConnected()) {
+            mHandler.removeCallbacks(MinuteTimer);
+            mHandler.removeCallbacks(Reconnect);
+            mBluetooth.disconnect();
+        }
+        mBluetooth.onStop();
+        mRunBT = false;
+    }
+
+    private final DeviceCallback deviceCallback = new DeviceCallback() {
+        @Override
+        public void onDeviceConnected(BluetoothDevice device) {
+            wandComm.InitWand();
+        }
+
+        @Override
+        public void onDeviceDisconnected(BluetoothDevice device, String message) {
+            wandComm.ResetWandComm();
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(tabs.EXT);
+                    external.OnDisconnected();
+
+                    ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);
+                    itns.OnDisconnected();
+                }
+            });
+
+            // Reconnect
+            mBluetooth.connectToDevice(mBTDevice);
+        }
+
+        @Override
+        public void onMessage(byte[] message) {
+            wandComm.ReturnMessage(message);
+        }
+
+        @Override
+        public void onError(int errorCode) {
+        }
+
+        @Override
+        public void onConnectError(final BluetoothDevice device, String message) {
+           if(mRunBT)
+                mHandler.postDelayed(Reconnect, 1000);                                    // And if fail, try every second
+        }
+    };
+
     private void SetupViewPager(ViewPager viewPager) {
         // The first fragment added is the default fragment that appears
         mSectionsPageAdapter.AddFragment(new ItnsFragment(), getResources().getString(R.string.itns_title));
