@@ -70,67 +70,67 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_old);
+        setContentView(R.layout.activity_main);
 
-        showMyDialogue();
-
-        // This hides the status bar at the top
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // And this hides the navigation bar at the bottom - along with the code in onResume()
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener (new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-                }
-            }
-        });
-
-        Log.d(TAG, "onCreate: Starting.");
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_icon_app);
-        setSupportActionBar(toolbar);
-        mHandler.postDelayed(MinuteTimer, 60000);
-
-        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-
-        // Setup ViewPager with the sections adapter
-        CustomViewPager mViewPager = findViewById(R.id.container);
-        SetupViewPager(mViewPager);
-
-        mTabLayout = findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(mViewPager);
-
-        // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
-                    != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
-                            != PackageManager.PERMISSION_GRANTED) {
-                // Request both permissions
-                ActivityCompat.requestPermissions(this,
-                        new String[]{
-                                Manifest.permission.BLUETOOTH_CONNECT,
-                                Manifest.permission.BLUETOOTH_SCAN
-                        },
-                        REQUEST_BLUETOOTH_PERMISSION);
-            } else {
-                // Both permissions are granted, proceed with Bluetooth functionality
-                initBluetooth();
-            }
-        } else {
-            // For devices below Android 12, the permission is granted at install time
-            // You can proceed with your Bluetooth functionality
-            initBluetooth();
-        }
+//        showMyDialogue();
+//
+//        // This hides the status bar at the top
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//
+//        // And this hides the navigation bar at the bottom - along with the code in onResume()
+//        final View decorView = getWindow().getDecorView();
+//        decorView.setOnSystemUiVisibilityChangeListener (new View.OnSystemUiVisibilityChangeListener() {
+//            @Override
+//            public void onSystemUiVisibilityChange(int visibility) {
+//                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+//                    decorView.setSystemUiVisibility(
+//                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//                }
+//            }
+//        });
+//
+//        Log.d(TAG, "onCreate: Starting.");
+//
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        toolbar.setNavigationIcon(R.drawable.ic_icon_app);
+//        setSupportActionBar(toolbar);
+//        mHandler.postDelayed(MinuteTimer, 60000);
+//
+//        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
+//
+//        // Setup ViewPager with the sections adapter
+//        CustomViewPager mViewPager = findViewById(R.id.container);
+//        SetupViewPager(mViewPager);
+//
+//        mTabLayout = findViewById(R.id.tabs);
+//        mTabLayout.setupWithViewPager(mViewPager);
+//
+//        // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+//                    != PackageManager.PERMISSION_GRANTED ||
+//                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+//                            != PackageManager.PERMISSION_GRANTED) {
+//                // Request both permissions
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{
+//                                Manifest.permission.BLUETOOTH_CONNECT,
+//                                Manifest.permission.BLUETOOTH_SCAN
+//                        },
+//                        REQUEST_BLUETOOTH_PERMISSION);
+//            } else {
+//                // Both permissions are granted, proceed with Bluetooth functionality
+//                initBluetooth();
+//            }
+//        } else {
+//            // For devices below Android 12, the permission is granted at install time
+//            // You can proceed with your Bluetooth functionality
+//            initBluetooth();
+//        }
     }
 
     private void showMyDialogue() {
