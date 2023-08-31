@@ -24,6 +24,7 @@
             android:src="@drawable/cp_intibia_startpage_logo" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_surgery"
             android:layout_width="400dp"
             android:layout_height="80dp"
             android:layout_marginTop="40dp"
