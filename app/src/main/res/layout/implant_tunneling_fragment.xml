@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_bottom_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBaseGrayFifty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btn_hold_neuro_stim"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="110dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/rounded_corners_button"
+            android:text="Hold to deliver neurostimulation"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:text="Amplitude:"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintStart_toStartOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintTop_toTopOf="@+id/img_btn_minus" />
+
+        <ImageButton
+            android:id="@+id/img_btn_minus"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="110dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/button_circular"
+            android:contentDescription="ic_plus"
+            android:gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ic_minus_white"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3.50V"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img_btn_minus"
+            app:layout_constraintEnd_toStartOf="@+id/img_btn_plus"
+            app:layout_constraintStart_toEndOf="@+id/img_btn_minus"
+            app:layout_constraintTop_toTopOf="@+id/img_btn_plus" />
+
+        <ImageButton
+            android:id="@+id/img_btn_plus"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="110dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/button_circular"
+            android:contentDescription="ic_plus"
+            android:gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ic_plus_white"
+            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_implant_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="When Implant Tool Tunnelling is complete,\n go to the ITNS Interrogation Tab"
+        android:textSize="34sp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
