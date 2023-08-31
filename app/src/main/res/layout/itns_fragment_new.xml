@@ -7,7 +7,7 @@
     android:background="@color/colorBaseGrayFifty">
 
     <Button
-        android:id="@+id/tv_confirm_reset_date"
+        android:id="@+id/btn_confirm_date"
         android:layout_width="260dp"
         android:layout_height="80dp"
         android:layout_marginTop="72dp"
@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_confirm_reset_date"
+        app:layout_constraintTop_toBottomOf="@+id/btn_confirm_date"
         app:layout_constraintVertical_bias="0.0">
 
 
