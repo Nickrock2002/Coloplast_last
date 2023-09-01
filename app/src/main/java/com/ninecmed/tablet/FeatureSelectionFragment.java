@@ -21,24 +21,6 @@ public class FeatureSelectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_feature_selection, container, false);
-
-        AppCompatButton buttonSurgery = view.findViewById(R.id.bt_surgery);
-        AppCompatButton buttonClinicVisit = view.findViewById(R.id.bt_clinic_visit);
-
-        buttonSurgery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.showBluetoothConnectionDialogue();
-            }
-        });
-
-        buttonClinicVisit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.showBluetoothConnectionDialogue();
-            }
-        });
-
         return view;
     }
 
@@ -52,11 +34,20 @@ public class FeatureSelectionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AppCompatButton btn = view.findViewById(R.id.bt_surgery);
-        btn.setOnClickListener(new View.OnClickListener() {
+        AppCompatButton buttonSurgery = view.findViewById(R.id.bt_surgery);
+        AppCompatButton buttonClinicVisit = view.findViewById(R.id.bt_clinic_visit);
+
+        buttonClinicVisit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //showSetDateTimeDialog();
+            public void onClick(View view) {
+                mainActivity.showWandConnectionDialogue();
+            }
+        });
+
+        buttonSurgery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainActivity.showWandConnectionDialogue();
             }
         });
     }
