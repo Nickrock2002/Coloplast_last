@@ -14,10 +14,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +33,7 @@ import androidx.fragment.app.FragmentTransaction;
 import java.util.List;
 
 import me.aflak.bluetooth.Bluetooth;
+import me.aflak.bluetooth.interfaces.DeviceCallback;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected Bluetooth mBluetooth = null;
     protected final Handler mHandler = new Handler();
     protected boolean mRunBT = false;
-
+    public WandComm wandComm = null;
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -114,7 +117,9 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        dialog.getWindow().setLayout((int) (width * 0.7), (int) (height * 0.5));
+//        dialog.getWindow().setLayout((int) (width * 0.7), (int) (height * 0.5));
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
@@ -152,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
         // Permission has been granted, you can proceed with your Bluetooth functionality
         mBluetooth = new Bluetooth(this);
         mBluetooth.setReader(ByteReader.class);
-//        mBluetooth.setDeviceCallback(deviceCallback);
+        mBluetooth.setDeviceCallback(deviceCallback);
+        wandComm = new WandComm(mBluetooth, this);
 
         mBluetooth.onStart();
 
@@ -161,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
             mBTDevice = bt;
         }
 
+        //TODO remove this when publishing
         //mBluetooth.connectToDevice(mBTDevice);
 
         if (mBluetooth.isEnabled()) {
@@ -244,6 +251,104 @@ public class MainActivity extends AppCompatActivity {
         mLowBatDialog.show();
     }
 
+    public void UpdateUIFragments(final int frag, final boolean success) {
+        //TODO add event to dashboard fragment
+//        MainActivity.this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (frag == WandComm.frags.EXTERNAL) {
+//                    ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
+//                    external.UIUpdate(success);
+//                }
+//
+//                if (frag == WandComm.frags.ITNS) {
+//                    ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
+//                    itns.UIUpdate(success);
+//                }
+//            }
+//        });
+    }
+
+    public void UpdateUI(final boolean success) {
+        //TODO add event to dashboard fragment
+//        if (success) {
+//            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
+//                ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
+//                external.OnConnected();
+//
+//                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
+//                itns.OnConnected();
+//            }
+//        } else {
+//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+//
+//            alertDialog.setTitle(R.string.main_wand_error_title);
+//            alertDialog.setMessage(R.string.main_wand_error_msg);
+//
+//            alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            alertDialog.show();
+//
+//            ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
+//            external.OnDisconnected();
+//
+//            ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
+//            itns.OnDisconnected();
+//        }
+    }
+
+    public void UpdateItnsAmplitude() {
+        //TODO add event to dashboard fragment
+//        MainActivity.this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
+//                itns.UpdateAmplitude();
+//            }
+//        });
+    }
+
+    public void EnableTabs(boolean enable) {
+//        LinearLayout tabStrip = ((LinearLayout) mTabLayout.getChildAt(0));
+//        tabStrip.setEnabled(false);
+//        for (int i = 0; i < tabStrip.getChildCount(); i++) {
+//            tabStrip.getChildAt(i).setClickable(enable);
+//        }
+    }
+
+    private final DeviceCallback deviceCallback = new DeviceCallback() {
+        @Override
+        public void onDeviceConnected(BluetoothDevice device) {
+            wandComm.InitWand();
+        }
+
+        @Override
+        public void onDeviceDisconnected(BluetoothDevice device, String message) {
+            wandComm.ResetWandComm();
+            // Reconnect
+            mBluetooth.connectToDevice(MainActivity.this.mBTDevice);
+        }
+
+        @Override
+        public void onMessage(byte[] message) {
+            wandComm.ReturnMessage(message);
+        }
+
+        @Override
+        public void onError(int errorCode) {
+        }
+
+        @Override
+        public void onConnectError(final BluetoothDevice device, String message) {
+            if (mRunBT)
+                mHandler.postDelayed(Reconnect, 1000);                                    // And if fail, try every second
+        }
+    };
+
     public void showResetCounterDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -262,6 +367,5 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
         dialog.show();
-
     }
 }

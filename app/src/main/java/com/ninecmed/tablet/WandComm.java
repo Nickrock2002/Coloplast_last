@@ -65,14 +65,14 @@ class WandComm {
     private boolean mContinue = false;
     private final Handler mHandler = new Handler();
 
-    private final DashboardFragment dashboardFragment;
+    private final MainActivity mainActivity;
     private int mRetries;
     private boolean mEnableStim = false;
     private boolean mJobCancelled = false;
 
-    WandComm(Bluetooth bt, DashboardFragment dashboardFragment) {
+    WandComm(Bluetooth bt, MainActivity mainActivity) {
         mBluetooth = bt;
-        this.dashboardFragment = dashboardFragment;
+        this.mainActivity = mainActivity;
     }
 
     int GetCurrentJob() {
@@ -918,7 +918,7 @@ class WandComm {
                     // and if the "program" command succeeds, the TEMPORARY value will copies to
                     // the CURRENT value.
                     WandData.amplitude[WandData.TEMPORARY] = WandData.amplitude[WandData.CURRENT] = WandData.amplitude[WandData.FUTURE];
-                    dashboardFragment.UpdateItnsAmplitude();
+                    mainActivity.UpdateItnsAmplitude();
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;
@@ -1029,13 +1029,13 @@ class WandComm {
                 || jobs.PROGRAM == mCurrentJob
                 || jobs.SETRESETCOUNTER == mCurrentJob
                 || jobs.SETSTIM == mCurrentJob) {
-            dashboardFragment.UpdateUIFragments(frags.ITNS, success);
+            mainActivity.UpdateUIFragments(frags.ITNS, success);
         }
         else if(jobs.SETSTIMEXT == mCurrentJob) {
-            dashboardFragment.UpdateUIFragments(frags.EXTERNAL, success);
+            mainActivity.UpdateUIFragments(frags.EXTERNAL, success);
         }
         else if(jobs.INITWAND == mCurrentJob) {
-            dashboardFragment.UpdateUI(success);
+            mainActivity.UpdateUI(success);
         }
 
        if(success) {

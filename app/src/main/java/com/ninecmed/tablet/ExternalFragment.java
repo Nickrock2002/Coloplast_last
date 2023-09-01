@@ -23,8 +23,8 @@ import java.util.Objects;
 
 public class ExternalFragment extends Fragment {
     private static final String TAG = "ExternalFragment";
-//    private MainActivity mDashboardFragment = null;
-    private DashboardFragment mDashboardFragment = null;
+//    private MainActivity mMainActivity = null;
+    private MainActivity mMainActivity = null;
     private int mAmplitudePos = 8;                                                                   // Set default position ot 1.5V
     private long mNow;
     private final Handler mHandler = new Handler();
@@ -44,7 +44,7 @@ public class ExternalFragment extends Fragment {
         ImageView iv = view.findViewById(R.id.ivExternalLink);
         iv.setImageResource(R.drawable.ic_link_off);
 
-        mDashboardFragment = (DashboardFragment) getParentFragment();
+        mMainActivity = (MainActivity) getActivity();
         return view;
     }
 
@@ -60,12 +60,12 @@ public class ExternalFragment extends Fragment {
                  switch (motionEvent.getActionMasked()) {
                      case MotionEvent.ACTION_DOWN:
                          if(mNow + 500 < System.currentTimeMillis()) {
-                             mDashboardFragment.wandComm.SetStimulationExt(true);
+                             mMainActivity.wandComm.SetStimulationExt(true);
                              WandData.InvalidateStimExtLeadI();
                              UIUpdate(true);
                              MakeTone(ToneGenerator.TONE_PROP_BEEP);
                              SetAmplitudeParameterEnabled(false, false);
-                             mDashboardFragment.EnableTabs(false);
+                             mMainActivity.EnableTabs(false);
                              StartProgressBar();
                              mNow = System.currentTimeMillis();
                              mStimEnabled = true;
@@ -85,7 +85,7 @@ public class ExternalFragment extends Fragment {
                              // to cancel the machine. If this is done too quickly, the stimulation
                              // stop command is ignored.
                              if (mNow + 1500 < System.currentTimeMillis()) {
-                                 mDashboardFragment.wandComm.SetStimulationExt(false);
+                                 mMainActivity.wandComm.SetStimulationExt(false);
                                  MakeTone(ToneGenerator.TONE_PROP_NACK);
                                  StopProgressBar();
                                  mStimEnabled = false;
@@ -103,7 +103,7 @@ public class ExternalFragment extends Fragment {
     private final Runnable HoldStimulation = new Runnable() {
         @Override
         public void run() {
-            mDashboardFragment.wandComm.SetStimulationExt(false);
+            mMainActivity.wandComm.SetStimulationExt(false);
             MakeTone(ToneGenerator.TONE_PROP_NACK);
             StopProgressBar();
             mStimEnabled = false;
@@ -184,14 +184,14 @@ public class ExternalFragment extends Fragment {
 
         SetAmplitudeParameterEnabled(false, true);
         StopProgressBar();
-        mDashboardFragment.EnableTabs(true);
+        mMainActivity.EnableTabs(true);
     }
 
     @SuppressLint("DefaultLocale")
     public void UIUpdate(boolean success) {
-        mDashboardFragment.EnableTabs(true);
+        mMainActivity.EnableTabs(true);
 
-        if(mDashboardFragment.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
+        if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             // Re-enable the test stim button) only when UIUpdate is called -
             // meaning that the state machine has finished its tasks
             SetAmplitudeParameterEnabled(true, false);
