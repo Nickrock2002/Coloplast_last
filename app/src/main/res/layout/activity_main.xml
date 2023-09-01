@@ -24,8 +24,8 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="44dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
                 android:src="@drawable/cp_menu" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -40,14 +40,14 @@
                 <ImageView
                     android:id="@+id/intibia_logo"
                     android:layout_width="wrap_content"
-                    android:layout_height="44dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/cp_intibia_topbar_logo" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <ImageView
                 android:id="@+id/ivBatteryPer"
-                android:layout_width="40dp"
-                android:layout_height="44dp" />
+                android:layout_width="35dp"
+                android:layout_height="40dp" />
 
             <TextView
                 android:id="@+id/tvBatteryPer"

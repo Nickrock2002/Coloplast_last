@@ -12,7 +12,6 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     protected boolean mRunBT = false;
     public WandComm wandComm = null;
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
+
+    Dialog wandConnDialog;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -104,34 +106,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void showBluetoothConnectionDialogue(final boolean isClinicVisit) {
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
+    protected void showWandConnectionDialogue(final boolean isClinicVisit) {
+        wandConnDialog = new Dialog(this);
+        wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
 
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialogue_wand_comm);
-        dialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.findViewById(R.id.bt_confirm).setOnClickListener(new View.OnClickListener() {
+        AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
+        btConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isClinicVisit) {
                     showSetDateTimeDialog();
                 }
-                dialog.dismiss();
+                wandConnDialog.dismiss();
             }
         });
-//        dialog.getWindow().setLayout((int) (width * 0.7), (int) (height * 0.5));
+        wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wandConnDialog.dismiss();
+            }
+        });
+
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
+        wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        wandConnDialog.show();
+    }
+
+    /**
+     * This function is written for showing updates in wand connection dialogue when wand is connected
+     */
+    void showWandConnectionInActiveMode() {
+        if (wandConnDialog != null) {
+            wandConnDialog.findViewById(R.id.ll_header).setBackgroundColor(
+                    ActivityCompat.getColor(this, R.color.colorBaseDeepBlue));
+            wandConnDialog.findViewById(R.id.iv_header_image).setBackgroundResource(R.drawable.connection_full_element_white);
+            ((TextView) wandConnDialog.findViewById(R.id.tv_connection_status)).setText(R.string.wand_is_comm);
+            AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
+            btConfirm.setEnabled(true);
+            btConfirm.setAlpha(1);
+            btConfirm.setBackgroundResource(R.drawable.bt_dialogue_wand_comm_active);
+            btConfirm.setTextColor(ActivityCompat.getColor(this, R.color.txt_dialogue_wand_comm_active));
+        }
     }
 
     @Override

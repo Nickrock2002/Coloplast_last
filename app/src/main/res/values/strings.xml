@@ -51,6 +51,7 @@
     <string name="surgery">Surgery</string>
     <string name="clinic_visit">Clinic Visit</string>
     <string name="wand_not_comm">Tablet is not communicating with Wand.\nIs wand on?</string>
+    <string name="wand_is_comm">Tablet communicating with Wand.</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string-array name="itns_therapy_schedule_array_model_one">
