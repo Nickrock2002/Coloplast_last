@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 initBluetooth();
             } else {
                 // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
+                showBluetoothPermissionRequiredDialog();
             }
         }
     }
@@ -466,6 +467,25 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 showSetDateTimeDialog();
                 dialog.dismiss();
+            }
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showBluetoothPermissionRequiredDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_bluetooth_permission_required);
+
+        Button btnOkCloseApp = (Button) dialog.findViewById(R.id.btn_ok_close_app);
+        btnOkCloseApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
