@@ -17,6 +17,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void showWandConnectionDialogue() {
+    protected void showWandConnectionDialogue(final boolean isClinicVisit) {
         wandConnDialog = new Dialog(this);
         wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
@@ -113,7 +114,10 @@ public class MainActivity extends AppCompatActivity {
         btConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (isClinicVisit) {
+                    showSetDateTimeDialog();
+                }
+                wandConnDialog.dismiss();
             }
         });
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
@@ -162,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 initBluetooth();
             } else {
                 // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
+                showBluetoothPermissionRequiredDialog();
             }
         }
     }
@@ -173,6 +178,14 @@ public class MainActivity extends AppCompatActivity {
         final View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(uiOptions);
         updateBatteryStatus();
+
+        /*ImageView intibiaLogo = findViewById(R.id.ivBatteryPer);
+        intibiaLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new MessageEvent());
+            }
+        });*/
     }
 
     private void initBluetooth() {
@@ -388,6 +401,112 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        dialog.show();
+    }
+
+    //TODO- call this method once the bluetooth dialog setup flow is done
+    public void showSetDateTimeDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_set_date_time);
+
+        Button btnDate = (Button) dialog.findViewById(R.id.btn_date);
+        Button btnTime = (Button) dialog.findViewById(R.id.btn_time);
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+                dialog.dismiss();
+            }
+        });
+
+        btnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: save delta time
+                dialog.dismiss();
+            }
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showTimePickerDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_time_picker);
+
+        Button btnConfirmTime = (Button) dialog.findViewById(R.id.btn_confirm_time);
+        btnConfirmTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSetDateTimeDialog();
+                dialog.dismiss();
+            }
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showDatePickerDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_date_picker);
+
+        Button btnConfirmDate = (Button) dialog.findViewById(R.id.btn_confirm_date);
+        btnConfirmDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSetDateTimeDialog();
+                dialog.dismiss();
+            }
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showBluetoothPermissionRequiredDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_bluetooth_permission_required);
+
+        Button btnOkCloseApp = (Button) dialog.findViewById(R.id.btn_ok_close_app);
+        btnOkCloseApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 }

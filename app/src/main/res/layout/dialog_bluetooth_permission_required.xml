@@ -8,7 +8,7 @@
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBaseGrayFifty"
+        android:background="@color/colorOrange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -17,9 +17,10 @@
             android:id="@+id/tv_warn_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_error"
             android:drawablePadding="10dp"
             android:padding="32dp"
-            android:text="Set Date"
+            android:text="Bluetooth Permission required"
             android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -28,31 +29,33 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <DatePicker
-        android:id="@+id/dp_datepicker"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tv_reset_counter"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-
-        app:layout_constraintBottom_toTopOf="@+id/btn_confirm_date"
+        android:layout_marginHorizontal="64dp"
+        android:layout_marginTop="32dp"
+        android:text="Unfortunately, the app cannot work without granting Bluetooth permission."
+        android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btn_ok_close_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
-
     <Button
-        android:id="@+id/btn_confirm_date"
+        android:id="@+id/btn_ok_close_app"
         android:layout_width="120dp"
         android:layout_height="30dp"
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corners_button"
-        android:text="Confirm"
+        android:text="OK"
         android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
