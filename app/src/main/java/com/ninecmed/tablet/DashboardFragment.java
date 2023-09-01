@@ -23,7 +23,6 @@ import java.util.Objects;
 import me.aflak.bluetooth.interfaces.DeviceCallback;
 
 public class DashboardFragment extends Fragment {
-
     private SectionsPageAdapter mSectionsPageAdapter;
     private TabLayout mTabLayout;
     public WandComm wandComm = null;
@@ -123,7 +122,7 @@ public class DashboardFragment extends Fragment {
     }
 
     public void UpdateItnsAmplitude() {
-        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+        requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);

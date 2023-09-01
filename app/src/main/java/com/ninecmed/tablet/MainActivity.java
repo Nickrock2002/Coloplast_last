@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected Bluetooth mBluetooth = null;
     protected final Handler mHandler = new Handler();
     protected boolean mRunBT = false;
+
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void showBluetoothConnectionDialogue() {
-
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
@@ -109,9 +108,14 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialogue_wand_comm);
-
-        dialog.show();
+        dialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         dialog.getWindow().setLayout((int) (width * 0.7), (int) (height * 0.5));
+        dialog.show();
     }
 
     @Override

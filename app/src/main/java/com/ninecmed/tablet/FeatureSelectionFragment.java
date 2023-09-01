@@ -15,7 +15,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 public class FeatureSelectionFragment extends Fragment {
-
     MainActivity mainActivity;
 
     @Override
