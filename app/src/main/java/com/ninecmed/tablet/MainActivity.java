@@ -14,15 +14,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -31,41 +28,25 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 
 import java.util.List;
 
 import me.aflak.bluetooth.Bluetooth;
-import me.aflak.bluetooth.interfaces.DeviceCallback;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private AlertDialog mLowBatDialog = null;
-
-    private BluetoothDevice mBTDevice = null;
-    private Bluetooth mBluetooth = null;
-
-    private SectionsPageAdapter mSectionsPageAdapter;
-    private final Handler mHandler = new Handler();
-
-    public WandComm wandComm = null;
-    //    private TabLayout mTabLayout;
-    private boolean mRunBT = false;
-
+    protected BluetoothDevice mBTDevice = null;
+    protected Bluetooth mBluetooth = null;
+    protected final Handler mHandler = new Handler();
+    protected boolean mRunBT = false;
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
-
-    public interface tabs {
-        int EXT = 1;
-        int ITNS = 0;           // Tab 0 must also be the default fragment
-    }
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //showMyDialogue();
 
         // This hides the status bar at the top
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -89,26 +70,12 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-
         FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
         fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
 
         fragmentTransaction.commit();
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        toolbar.setNavigationIcon(R.drawable.cp_menu);
-//        setSupportActionBar(toolbar);
-//        mHandler.postDelayed(MinuteTimer, 60000);
-//
-//        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-
-        // Setup ViewPager with the sections adapter
-//        CustomViewPager mViewPager = findViewById(R.id.container);
-//        SetupViewPager(mViewPager);
-
-//        mTabLayout = findViewById(R.id.tabs);
-//        mTabLayout.setupWithViewPager(mViewPager);
-
+        mHandler.postDelayed(MinuteTimer, 60000);
         // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
@@ -133,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showMyDialogue() {
+    protected void showBluetoothConnectionDialogue() {
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
@@ -142,8 +109,9 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialogue_wand_comm);
+
         dialog.show();
-        dialog.getWindow().setLayout((6 * width) / 7, (4 * height) / 5);
+        dialog.getWindow().setLayout((int) (width * 0.7), (int) (height * 0.5));
     }
 
     @Override
@@ -168,14 +136,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-//        UpdateTitle();
-//        UpdateSubTitle();
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
@@ -183,13 +143,12 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
         updateBatteryStatus();
     }
+
     private void initBluetooth() {
         // Permission has been granted, you can proceed with your Bluetooth functionality
         mBluetooth = new Bluetooth(this);
         mBluetooth.setReader(ByteReader.class);
-        mBluetooth.setDeviceCallback(deviceCallback);
-
-        wandComm = new WandComm(mBluetooth, this);
+//        mBluetooth.setDeviceCallback(deviceCallback);
 
         mBluetooth.onStart();
 
@@ -207,9 +166,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mRunBT = true;
-
-        // Update subtitle - required after returning from activity to set date and time
-//        UpdateSubTitle();
     }
 
     @Override
@@ -224,60 +180,7 @@ public class MainActivity extends AppCompatActivity {
         mRunBT = false;
     }
 
-    private final DeviceCallback deviceCallback = new DeviceCallback() {
-        @Override
-        public void onDeviceConnected(BluetoothDevice device) {
-            wandComm.InitWand();
-        }
-
-        @Override
-        public void onDeviceDisconnected(BluetoothDevice device, String message) {
-            wandComm.ResetWandComm();
-//            MainActivity.this.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(tabs.EXT);
-//                    external.OnDisconnected();
-//
-//                    ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);
-//                    itns.OnDisconnected();
-//                }
-//            });
-
-            // Reconnect
-            mBluetooth.connectToDevice(mBTDevice);
-        }
-
-        @Override
-        public void onMessage(byte[] message) {
-            wandComm.ReturnMessage(message);
-        }
-
-        @Override
-        public void onError(int errorCode) {
-        }
-
-        @Override
-        public void onConnectError(final BluetoothDevice device, String message) {
-            if (mRunBT)
-                mHandler.postDelayed(Reconnect, 1000);                                    // And if fail, try every second
-        }
-    };
-
-    private void SetupViewPager(ViewPager viewPager) {
-        // The first fragment added is the default fragment that appears
-        mSectionsPageAdapter.AddFragment(new ItnsFragment(), getResources().getString(R.string.itns_title));
-        mSectionsPageAdapter.AddFragment(new ExternalFragment(), getResources().getString(R.string.external_title));
-
-        viewPager.setAdapter(mSectionsPageAdapter);
-        viewPager.setOffscreenPageLimit(2);                                                         // Set page limit to 2 when using two fragments
-    }
-
-    private void msg(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-    }
-
-    private final Runnable Reconnect = new Runnable() {
+    protected final Runnable Reconnect = new Runnable() {
         @Override
         public void run() {
             mBluetooth.connectToDevice(mBTDevice);
@@ -335,72 +238,6 @@ public class MainActivity extends AppCompatActivity {
         mLowBatDialog = alertDialog.create();
         mLowBatDialog.setCancelable(false);
         mLowBatDialog.show();
-    }
-
-    public void UpdateUIFragments(final int frag, final boolean success) {
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (frag == WandComm.frags.EXTERNAL) {
-                    ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(tabs.EXT);
-                    external.UIUpdate(success);
-                }
-
-                if (frag == WandComm.frags.ITNS) {
-                    ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);
-                    itns.UIUpdate(success);
-                }
-            }
-        });
-    }
-
-    public void UpdateUI(final boolean success) {
-        if (success) {
-            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
-                ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(tabs.EXT);
-                external.OnConnected();
-
-                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);
-                itns.OnConnected();
-            }
-        } else {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-            alertDialog.setTitle(R.string.main_wand_error_title);
-            alertDialog.setMessage(R.string.main_wand_error_msg);
-
-            alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            alertDialog.show();
-
-            ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(tabs.EXT);
-            external.OnDisconnected();
-
-            ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);
-            itns.OnDisconnected();
-        }
-    }
-
-    public void UpdateItnsAmplitude() {
-//        MainActivity.this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(tabs.ITNS);
-//                itns.UpdateAmplitude();
-//            }
-//        });
-    }
-
-    public void EnableTabs(boolean enable) {
-//        LinearLayout tabStrip = ((LinearLayout)mTabLayout.getChildAt(0));
-//        tabStrip.setEnabled(false);
-//        for(int i = 0; i < tabStrip.getChildCount(); i++) {
-//            tabStrip.getChildAt(i).setClickable(enable);
-//        }
     }
 
     public void showResetCounterDialog() {

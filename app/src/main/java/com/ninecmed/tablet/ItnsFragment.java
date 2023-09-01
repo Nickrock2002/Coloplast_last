@@ -34,7 +34,7 @@ import java.util.Objects;
 
 public class ItnsFragment extends Fragment {
     private static final String TAG = "ItnsFragment";
-    private MainActivity mMainActivity = null;
+    private DashboardFragment mDashboardFragment = null;
     private int mAmplitudePos = 0;
     private long mNow;
     private final Handler mHandler = new Handler();
@@ -61,7 +61,7 @@ public class ItnsFragment extends Fragment {
         ProgressBar pb1 = view.findViewById(R.id.pbItnsStim);
         pb1.setVisibility(View.INVISIBLE);
 
-        mMainActivity = (MainActivity) getActivity();
+        mDashboardFragment = (DashboardFragment) getParentFragment();
         return view;
     }
 
@@ -82,7 +82,7 @@ public class ItnsFragment extends Fragment {
                 // The same steps are required for the Program button.
                 if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
                     bTouch = true;
-                    mMainActivity.wandComm.Interrogate();
+                    mDashboardFragment.wandComm.Interrogate();
                     MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     StartProgressBar();
                 }
@@ -139,11 +139,11 @@ public class ItnsFragment extends Fragment {
                         }
                     }
 
-                    if (mMainActivity.wandComm.AnyAmplitudeChanges()) {
+                    if (mDashboardFragment.wandComm.AnyAmplitudeChanges()) {
                         WandData.InvalidateStimLeadI();
                     }
 
-                    mMainActivity.wandComm.Program();
+                    mDashboardFragment.wandComm.Program();
                     MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     StartProgressBar();
                 }
@@ -182,7 +182,7 @@ public class ItnsFragment extends Fragment {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         if(mNow + 500 < System.currentTimeMillis()) {
-                            mMainActivity.wandComm.SetStimulation(true);
+                            mDashboardFragment.wandComm.SetStimulation(true);
                             MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             WandData.InvalidateStimLeadI();
 
@@ -206,7 +206,7 @@ public class ItnsFragment extends Fragment {
                             EnableInterrogateButton(false, false);
                             EnableProgramButton(false, false);
                             StartStimProgressBar();
-                            mMainActivity.EnableTabs(false);
+                            mDashboardFragment.EnableTabs(false);
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
                         }
@@ -223,7 +223,7 @@ public class ItnsFragment extends Fragment {
                             stimulate.setEnabled(false);
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.SetStimulation(false);
+                                mDashboardFragment.wandComm.SetStimulation(false);
                                 MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 StopStimProgressBar();
                                 mStimEnabled = false;
@@ -241,7 +241,7 @@ public class ItnsFragment extends Fragment {
     private final Runnable HoldStimulation = new Runnable() {
         @Override
         public void run() {
-            mMainActivity.wandComm.SetStimulation(false);
+            mDashboardFragment.wandComm.SetStimulation(false);
             MakeTone(ToneGenerator.TONE_PROP_NACK);
             StopStimProgressBar();
             mStimEnabled = false;
@@ -266,7 +266,7 @@ public class ItnsFragment extends Fragment {
                  WandData.therapy[WandData.FUTURE] = (byte) position;
 
                 if(WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
-                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.THERAPY);
+                    mDashboardFragment.wandComm.RemoveProgramChanges(WandComm.changes.THERAPY);
                     ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
                     parent.getChildAt(0).setBackgroundResource(R.color.colorControlNoChange);
 
@@ -297,7 +297,7 @@ public class ItnsFragment extends Fragment {
                     time.setEnabled(WandData.therapy[WandData.CURRENT] != 0);
                 }
                 else {
-                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.THERAPY);
+                    mDashboardFragment.wandComm.AddProgramChanges(WandComm.changes.THERAPY);
                     ((TextView) parent.getChildAt(0)).setTextColor(Color.RED);
                     parent.getChildAt(0).setBackgroundResource(R.color.colorControlChange);
 
@@ -424,12 +424,12 @@ public class ItnsFragment extends Fragment {
                         WandData.dateandtime[WandData.FUTURE] = selected_date.getTimeInMillis();
 
                         if(WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                            mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.DATE);
+                            mDashboardFragment.wandComm.RemoveProgramChanges(WandComm.changes.DATE);
                             date.setTextColor(Color.BLACK);
                             date.setBackgroundResource(R.color.colorControlNoChange);
                         }
                         else {
-                            mMainActivity.wandComm.AddProgramChanges(WandComm.changes.DATE);
+                            mDashboardFragment.wandComm.AddProgramChanges(WandComm.changes.DATE);
                             date.setTextColor(Color.RED);
                             date.setBackgroundResource(R.color.colorControlChange);
                         }
@@ -479,12 +479,12 @@ public class ItnsFragment extends Fragment {
                     WandData.dateandtime[WandData.FUTURE] = futuretime.getTimeInMillis();
 
                     if(WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
+                        mDashboardFragment.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
                         time.setTextColor(Color.BLACK);
                         time.setBackgroundResource(R.color.colorControlNoChange);
                     }
                     else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
+                        mDashboardFragment.wandComm.AddProgramChanges(WandComm.changes.TIME);
                         time.setTextColor(Color.RED);
                         time.setBackgroundResource(R.color.colorControlChange);
                     }
@@ -518,13 +518,13 @@ public class ItnsFragment extends Fragment {
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
                     if(WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                        mDashboardFragment.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.BLACK);
                         plus.setBackgroundResource(R.color.colorControlNoChange);
                         minus.setBackgroundResource(R.color.colorControlNoChange);
                     }
                     else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                        mDashboardFragment.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.RED);
                         plus.setBackgroundResource(R.color.colorControlChange);
                         minus.setBackgroundResource(R.color.colorControlChange);
@@ -551,13 +551,13 @@ public class ItnsFragment extends Fragment {
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
                     if(WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                        mDashboardFragment.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.BLACK);
                         minus.setBackgroundResource(R.color.colorControlNoChange);
                         plus.setBackgroundResource(R.color.colorControlNoChange);
                     }
                     else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                        mDashboardFragment.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.RED);
                         minus.setBackgroundResource(R.color.colorControlChange);
                         plus.setBackgroundResource(R.color.colorControlChange);
@@ -642,14 +642,14 @@ public class ItnsFragment extends Fragment {
     public void UIUpdate(boolean success) {
         View view = getView();
         StopProgressBar();
-        mMainActivity.EnableTabs(true);
+        mDashboardFragment.EnableTabs(true);
 
         if(success) {
-            if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+            if(mDashboardFragment.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
                 // Re-enable changed parameters (and the test stim button) only when
                 // UIUpdate is called - meaning that the state machine has finished its tasks
                 SetChangedParametersEnable(true, true);
-                mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                mDashboardFragment.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                 EnableInterrogateButton(true, true);
                 EnableProgramButton(true, true);
                 EnableStimTestButton(true);
@@ -663,12 +663,12 @@ public class ItnsFragment extends Fragment {
             else {
                 MakeTone(ToneGenerator.TONE_CDMA_PIP);
 
-                if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE) {
+                if (mDashboardFragment.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE) {
                     Group gp = Objects.requireNonNull(view).findViewById(R.id.ghITNS);
                     gp.setVisibility(View.VISIBLE);
                 }
 
-                if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
+                if (mDashboardFragment.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
                     EnableProgramButton(false, true);
                 }
 
@@ -724,7 +724,7 @@ public class ItnsFragment extends Fragment {
         }
         // Here's what happens on fail
         else {
-            if(WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if(WandData.IsITNSNew() && mDashboardFragment.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_newitns_title_msg));
@@ -747,7 +747,7 @@ public class ItnsFragment extends Fragment {
                 mAlertDialog.show();
                 return;
             }
-            if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+            if(mDashboardFragment.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
                 StopStimProgressBar();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
@@ -774,10 +774,10 @@ public class ItnsFragment extends Fragment {
                 alertDialog.setPositiveButton(getString(R.string.all_retry), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE)
-                            mMainActivity.wandComm.Interrogate();
-                        else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
-                            mMainActivity.wandComm.Program();
+                        if (mDashboardFragment.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE)
+                            mDashboardFragment.wandComm.Interrogate();
+                        else if (mDashboardFragment.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
+                            mDashboardFragment.wandComm.Program();
                         StartProgressBar();
                     }
                 });
@@ -810,7 +810,7 @@ public class ItnsFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     StartProgressBar();
-                    mMainActivity.wandComm.ClearResetCounter();
+                    mDashboardFragment.wandComm.ClearResetCounter();
                 }
             });
             alertDialog.setNegativeButton(getString(R.string.all_cancel), new DialogInterface.OnClickListener() {
@@ -892,7 +892,7 @@ public class ItnsFragment extends Fragment {
         ImageButton minus = view.findViewById(R.id.ibItnsMinus);
         minus.setBackgroundResource(R.color.colorControlNoChange);
 
-        mMainActivity.wandComm.RemoveAllProgramChanges();
+        mDashboardFragment.wandComm.RemoveAllProgramChanges();
     }
 
     private void StartProgressBar() {
@@ -936,7 +936,7 @@ public class ItnsFragment extends Fragment {
     public void UpdateAmplitude() {
         View view = getView();
 
-        if(!mMainActivity.wandComm.AnyProgramChangesOtherThanAmplitude()) {
+        if(!mDashboardFragment.wandComm.AnyProgramChangesOtherThanAmplitude()) {
             EnableProgramButton(false, true);
         }
 
@@ -964,7 +964,7 @@ public class ItnsFragment extends Fragment {
     private void EnableProgramButton(boolean enable, boolean change_alpha) {
         Button program = Objects.requireNonNull(getView()).findViewById(R.id.btItnsProgram);
 
-        if(enable && mMainActivity.wandComm.AnyProgramChanges()) {
+        if(enable && mDashboardFragment.wandComm.AnyProgramChanges()) {
             program.setEnabled(true);
             if(change_alpha) program.setAlpha(1f);
         }
