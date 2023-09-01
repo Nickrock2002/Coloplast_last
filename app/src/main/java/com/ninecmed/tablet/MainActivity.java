@@ -18,8 +18,8 @@ import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void showBluetoothConnectionDialogue() {
+    protected void showBluetoothConnectionDialogue(final boolean isClinicVisit) {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
@@ -114,6 +114,16 @@ public class MainActivity extends AppCompatActivity {
         dialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.bt_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isClinicVisit) {
+                    showSetDateTimeDialog();
+                }
                 dialog.dismiss();
             }
         });
@@ -151,6 +161,14 @@ public class MainActivity extends AppCompatActivity {
         final View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(uiOptions);
         updateBatteryStatus();
+
+        /*ImageView intibiaLogo = findViewById(R.id.ivBatteryPer);
+        intibiaLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new MessageEvent());
+            }
+        });*/
     }
 
     private void initBluetooth() {
@@ -366,6 +384,84 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        dialog.show();
+    }
+
+    //TODO- call this method once the bluetooth dialog setup flow is done
+    public void showSetDateTimeDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_set_date_time);
+
+        Button btnDate = (Button) dialog.findViewById(R.id.btn_date);
+        Button btnTime = (Button) dialog.findViewById(R.id.btn_time);
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+                dialog.dismiss();
+            }
+        });
+
+        btnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: save delta time
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    public void showTimePickerDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_time_picker);
+
+        Button btnConfirmTime = (Button) dialog.findViewById(R.id.btn_confirm_time);
+        btnConfirmTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSetDateTimeDialog();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    public void showDatePickerDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_date_picker);
+
+        Button btnConfirmDate = (Button) dialog.findViewById(R.id.btn_confirm_date);
+        btnConfirmDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSetDateTimeDialog();
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 }
