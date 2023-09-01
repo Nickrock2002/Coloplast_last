@@ -29,12 +29,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <DatePicker
-        android:id="@+id/dp_datepicker"
+        android:id="@+id/datePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
-
         app:layout_constraintBottom_toTopOf="@+id/btn_confirm_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
