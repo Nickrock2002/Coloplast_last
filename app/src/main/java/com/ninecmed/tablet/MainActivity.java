@@ -244,9 +244,9 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_reset_counter);
+        dialog.setContentView(R.layout.dialog_time_picker);
 
-        TextView text = (TextView) dialog.findViewById(R.id.tv_reset_counter);
+        /*TextView text = (TextView) dialog.findViewById(R.id.tv_reset_counter);
         //text.setText("msg");
 
         Button dialogButton = (Button) dialog.findViewById(R.id.btn_reset_counter);
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
             }
-        });
+        });*/
 
         dialog.show();
 
