@@ -34,15 +34,15 @@ public class ExternalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
-        View view = inflater.inflate(R.layout.external_fragment, container, false);
+        View view = inflater.inflate(R.layout.implant_tunneling_fragment, container, false);
 
-        InitializeStimulationButton(view);
+        /*InitializeStimulationButton(view);
         InitializeAmplitudeButton(view);
 
         // Must redraw the icon for this fragment and not for the itns fragment.
         // Not sure why since both imageviews are visible.
         ImageView iv = view.findViewById(R.id.ivExternalLink);
-        iv.setImageResource(R.drawable.ic_link_off);
+        iv.setImageResource(R.drawable.ic_link_off);*/
 
         mMainActivity = (MainActivity) getActivity();
         return view;

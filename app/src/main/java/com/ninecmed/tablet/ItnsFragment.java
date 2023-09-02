@@ -45,21 +45,21 @@ public class ItnsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
-        View view = inflater.inflate(R.layout.itns_fragment, container, false);
+        View view = inflater.inflate(R.layout.itns_fragment_new, container, false);
 
-        InitializeInterrogateButton(view);
+        /*InitializeInterrogateButton(view);
         InitializeProgramButton(view);
         InitializeStimulationButton(view);
         InitializeTherapySpinner(view);
         InitializeDate(view);
         InitializeTime(view);
-        InitializeAmpControls(view);
+        InitializeAmpControls(view);*/
 
-        ProgressBar pb = view.findViewById(R.id.pbItns);
+        /*ProgressBar pb = view.findViewById(R.id.pbItns);
         pb.setVisibility(View.INVISIBLE);
 
         ProgressBar pb1 = view.findViewById(R.id.pbItnsStim);
-        pb1.setVisibility(View.INVISIBLE);
+        pb1.setVisibility(View.INVISIBLE);*/
 
         mMainActivity = (MainActivity) getActivity();
         return view;
@@ -615,8 +615,8 @@ public class ItnsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-        gp.setVisibility(View.GONE);
+       /* Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
+        gp.setVisibility(View.GONE);*/
     }
 
     @Override

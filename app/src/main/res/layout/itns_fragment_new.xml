@@ -15,7 +15,7 @@
         android:text="Interrogate"
         android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
-        android:textSize="36sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,14 +38,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="790dp" />
+            app:layout_constraintGuide_percent="0.1" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="790dp" />
+            app:layout_constraintGuide_percent="0.95" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_mid"
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Implant Model"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textColor="@color/colorGreySixHundred"
             android:layout_marginTop="32dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Implant Serial #"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textColor="@color/colorGreySixHundred"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="9C-680E"
             android:layout_marginTop="32dp"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/cardview_dark_background"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:text="07039"
             android:layout_marginTop="32dp"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/cardview_dark_background"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -120,14 +120,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="790dp" />
+            app:layout_constraintGuide_percent="0.1" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_end_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="790dp" />
+            app:layout_constraintGuide_percent="0.95" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_mid_1"
@@ -141,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Lead R"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textColor="@color/colorGreySixHundred"
             android:layout_marginVertical="64dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:text="OK"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
@@ -196,69 +196,81 @@
         app:layout_constraintVertical_bias="0.0">
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/btn_hold_neuro_stim"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginHorizontal="110dp"
-        android:background="@drawable/rounded_corners_button"
-        android:text="Hold to deliver neurostimulation"
-        android:textAllCaps="false"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_bottom_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:text="Amplitude:"
-        android:textColor="@color/colorGreySixHundred"
-        android:textSize="28sp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
-        app:layout_constraintStart_toStartOf="@+id/btn_hold_neuro_stim"
-        app:layout_constraintTop_toTopOf="@+id/img_btn_minus" />
-
-    <ImageButton
-        android:id="@+id/img_btn_minus"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginEnd="110dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/button_circular"
-        android:contentDescription="ic_plus"
-        android:gravity="center_vertical|center_horizontal"
-        android:src="@drawable/ic_minus_white"
-        app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+        android:background="@color/colorBaseGrayFifty"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView6" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3.50V"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/img_btn_minus"
-        app:layout_constraintEnd_toStartOf="@+id/img_btn_plus"
-        app:layout_constraintStart_toEndOf="@+id/img_btn_minus"
-        app:layout_constraintTop_toTopOf="@+id/img_btn_plus" />
+        <Button
+            android:id="@+id/btn_hold_neuro_stim"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/rounded_corners_button"
+            android:text="Hold to deliver neurostimulation"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-        android:id="@+id/img_btn_plus"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:background="@drawable/button_circular"
-        android:gravity="center_vertical|center_horizontal"
-        android:src="@drawable/ic_plus_white"
-        android:layout_marginEnd="110dp"
-        android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="ic_plus" />
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:text="Amplitude:"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintStart_toStartOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintTop_toTopOf="@+id/img_btn_minus" />
+
+        <ImageButton
+            android:id="@+id/img_btn_minus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/button_circular"
+            android:contentDescription="ic_plus"
+            android:gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ic_minus_white"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3.50V"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img_btn_minus"
+            app:layout_constraintEnd_toStartOf="@+id/img_btn_plus"
+            app:layout_constraintStart_toEndOf="@+id/img_btn_minus"
+            app:layout_constraintTop_toTopOf="@+id/img_btn_plus" />
+
+        <ImageButton
+            android:id="@+id/img_btn_plus"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/button_circular"
+            android:contentDescription="ic_plus"
+            android:gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ic_plus_white"
+            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

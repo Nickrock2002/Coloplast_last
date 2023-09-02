@@ -71,8 +71,8 @@ public class DashboardFragment extends Fragment {
 
     private void SetupViewPager(ViewPager viewPager) {
         // The first fragment added is the default fragment that appears
-        mSectionsPageAdapter.AddFragment(new ItnsFragment(), getResources().getString(R.string.itns_title));
         mSectionsPageAdapter.AddFragment(new ExternalFragment(), getResources().getString(R.string.external_title));
+        mSectionsPageAdapter.AddFragment(new ItnsFragment(), getResources().getString(R.string.itns_title));
 
         viewPager.setAdapter(mSectionsPageAdapter);
         viewPager.setOffscreenPageLimit(2);                                                         // Set page limit to 2 when using two fragments
