@@ -47,9 +47,10 @@ public class ItnsFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.itns_fragment_new, container, false);
 
+        InitializeStimulationButton(view);
         /*InitializeInterrogateButton(view);
         InitializeProgramButton(view);
-        InitializeStimulationButton(view);
+
         InitializeTherapySpinner(view);
         InitializeDate(view);
         InitializeTime(view);
@@ -173,29 +174,32 @@ public class ItnsFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
-        final Button stimulate = view.findViewById(R.id.btItnsStartStim);
-        stimulate.setEnabled(false);
-        stimulate.setAlpha(0.5f);
+        final Button stimulate = view.findViewById(R.id.btn_hold_neuro_stim);
+        //stimulate.setEnabled(false);
+        //stimulate.setAlpha(0.5f);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         if(mNow + 500 < System.currentTimeMillis()) {
-                            mMainActivity.wandComm.SetStimulation(true);
+                            stimulate.setPressed(true);
+                            //TODO:IMP remove comment after BT
+                            //mMainActivity.wandComm.SetStimulation(true);
                             MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                            stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
 
-                            TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
+                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
                             leadi.setText(WandData.GetLeadI());
 
                             TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());
+                            leadr.setText(WandData.GetLeadR());*/
                             // Disable changed parameters during test stim. Only re-enable once
                             // job is completed. Even though controls are disabled, don't change
                             // alpha, meaning don't gray out the controls, otherwise it appears
                             // strange.
-                            SetChangedParametersEnable(false, false);
+                            //SetChangedParametersEnable(false, false);
                             // Also, don't update alpha for the program and interrogate
                             // buttons either, otherwise pressing the test stim button
                             // would cause the program and interrogate button to go grey. Since
@@ -203,9 +207,9 @@ public class ItnsFragment extends Fragment {
                             // program button is pressed - we decided to disable other telemetry
                             // controls when a telemetry command is in progress, but without changing
                             // the appearance.
-                            EnableInterrogateButton(false, false);
-                            EnableProgramButton(false, false);
-                            StartStimProgressBar();
+                            //EnableInterrogateButton(false, false);
+                            //EnableProgramButton(false, false);
+                            //StartStimProgressBar();
                             mMainActivity.EnableTabs(false);
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
@@ -220,15 +224,21 @@ public class ItnsFragment extends Fragment {
                         // to be executed again even though it wasn't started. This causes an
                         // unnecessary beep as well.
                         if(mStimEnabled) {
-                            stimulate.setEnabled(false);
+                            stimulate.setPressed(false);
+                            stimulate.setText("Hold to deliver neurostimulation");
+                            //stimulate.setEnabled(false);
+                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.SetStimulation(false);
+                                //TODO:IMP remove comment after BT
+                                //mMainActivity.wandComm.SetStimulation(false);
+
+                                //StopStimProgressBar();
                                 MakeTone(ToneGenerator.TONE_PROP_NACK);
-                                StopStimProgressBar();
                                 mStimEnabled = false;
                             } else {
-                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                                //TODO:IMP remove comment after BT
+                                //mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
                         }
                         break;
@@ -243,7 +253,7 @@ public class ItnsFragment extends Fragment {
         public void run() {
             mMainActivity.wandComm.SetStimulation(false);
             MakeTone(ToneGenerator.TONE_PROP_NACK);
-            StopStimProgressBar();
+            //StopStimProgressBar();
             mStimEnabled = false;
         }
     };
@@ -748,7 +758,7 @@ public class ItnsFragment extends Fragment {
                 return;
             }
             if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
-                StopStimProgressBar();
+                //StopStimProgressBar();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));

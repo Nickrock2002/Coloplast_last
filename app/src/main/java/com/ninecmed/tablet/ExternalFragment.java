@@ -36,8 +36,8 @@ public class ExternalFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.implant_tunneling_fragment, container, false);
 
-        /*InitializeStimulationButton(view);
-        InitializeAmplitudeButton(view);
+        InitializeStimulationButton(view);
+        /*InitializeAmplitudeButton(view);
 
         // Must redraw the icon for this fragment and not for the itns fragment.
         // Not sure why since both imageviews are visible.
@@ -50,62 +50,86 @@ public class ExternalFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
-        final Button stimulate = view.findViewById(R.id.btExternalStartStim);
-        stimulate.setEnabled(false);
-        stimulate.setAlpha(0.5f);
+        final Button stimulate = view.findViewById(R.id.btn_hold_neuro_stim);
+        //stimulate.setEnabled(false);
+        //stimulate.setAlpha(0.5f);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
             @Override
-             public boolean onTouch(View view, MotionEvent motionEvent) {
-                 switch (motionEvent.getActionMasked()) {
-                     case MotionEvent.ACTION_DOWN:
-                         if(mNow + 500 < System.currentTimeMillis()) {
-                             mMainActivity.wandComm.SetStimulationExt(true);
-                             WandData.InvalidateStimExtLeadI();
-                             UIUpdate(true);
-                             MakeTone(ToneGenerator.TONE_PROP_BEEP);
-                             SetAmplitudeParameterEnabled(false, false);
-                             mMainActivity.EnableTabs(false);
-                             StartProgressBar();
-                             mNow = System.currentTimeMillis();
-                             mStimEnabled = true;
-                         }
-                         break;
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if(mNow + 500 < System.currentTimeMillis()) {
+                            stimulate.setPressed(true);
+                            //TODO:IMP remove comment after BT
+                            //mMainActivity.wandComm.SetStimulation(true);
+                            MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                            stimulate.setText("Stimulation Active");
+                            WandData.InvalidateStimLeadI();
 
-                     case MotionEvent.ACTION_UP:
-                     case MotionEvent.ACTION_CANCEL:
-                         // Only execute code on up/cancel when mStimEnabled is true,
-                         // otherwise this means that the user pressed the down key too
-                         // quickly and when he let's go, the motion event causes SetTestStimulation
-                         // to be executed again even though it wasn't started. This causes an
-                         // unnecessary beep as well.
-                         if(mStimEnabled) {
-                             stimulate.setEnabled(false);
-                             // Set delay to 1500 to ensure state machine completes before trying
-                             // to cancel the machine. If this is done too quickly, the stimulation
-                             // stop command is ignored.
-                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                 mMainActivity.wandComm.SetStimulationExt(false);
-                                 MakeTone(ToneGenerator.TONE_PROP_NACK);
-                                 StopProgressBar();
-                                 mStimEnabled = false;
-                             } else {
-                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
-                             }
-                         }
-                         break;
-                 }
-                 return true;
-             }
+                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
+                            leadi.setText(WandData.GetLeadI());
+
+                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
+                            leadr.setText(WandData.GetLeadR());*/
+                            // Disable changed parameters during test stim. Only re-enable once
+                            // job is completed. Even though controls are disabled, don't change
+                            // alpha, meaning don't gray out the controls, otherwise it appears
+                            // strange.
+                            //SetChangedParametersEnable(false, false);
+                            // Also, don't update alpha for the program and interrogate
+                            // buttons either, otherwise pressing the test stim button
+                            // would cause the program and interrogate button to go grey. Since
+                            // this isn't consistent with what we do when the interrogate or
+                            // program button is pressed - we decided to disable other telemetry
+                            // controls when a telemetry command is in progress, but without changing
+                            // the appearance.
+                            //EnableInterrogateButton(false, false);
+                            //EnableProgramButton(false, false);
+                            //StartStimProgressBar();
+                            mMainActivity.EnableTabs(false);
+                            mNow = System.currentTimeMillis();
+                            mStimEnabled = true;
+                        }
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // Only execute code on up/cancel when mStimEnabled is true,
+                        // otherwise this means that the user pressed the down key too
+                        // quickly and when he let's go, the motion event causes SetTestStimulation
+                        // to be executed again even though it wasn't started. This causes an
+                        // unnecessary beep as well.
+                        if(mStimEnabled) {
+                            stimulate.setPressed(false);
+                            stimulate.setText("Hold to deliver neurostimulation");
+                            //stimulate.setEnabled(false);
+                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            // Set delay to 1500 to be the same delay as ExternalFragment
+                            if (mNow + 1500 < System.currentTimeMillis()) {
+                                //TODO:IMP remove comment after BT
+                                //mMainActivity.wandComm.SetStimulation(false);
+
+                                //StopStimProgressBar();
+                                MakeTone(ToneGenerator.TONE_PROP_NACK);
+                                mStimEnabled = false;
+                            } else {
+                                //TODO:IMP remove comment after BT
+                                //mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                            }
+                        }
+                        break;
+                }
+                return true;
+            }
         });
     }
 
     private final Runnable HoldStimulation = new Runnable() {
         @Override
         public void run() {
-            mMainActivity.wandComm.SetStimulationExt(false);
+            mMainActivity.wandComm.SetStimulation(false);
             MakeTone(ToneGenerator.TONE_PROP_NACK);
-            StopProgressBar();
+            //StopStimProgressBar();
             mStimEnabled = false;
         }
     };
