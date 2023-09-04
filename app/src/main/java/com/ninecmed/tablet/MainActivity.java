@@ -528,6 +528,7 @@ public class MainActivity extends AppCompatActivity {
         btnOkCloseApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 finish();
             }
         });
