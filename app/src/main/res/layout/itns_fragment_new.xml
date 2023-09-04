@@ -7,7 +7,7 @@
     android:background="@color/colorBaseGrayFifty">
 
     <Button
-        android:id="@+id/btn_confirm_date"
+        android:id="@+id/btn_interrogate"
         android:layout_width="260dp"
         android:layout_height="80dp"
         android:layout_marginTop="72dp"
@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_confirm_date"
+        app:layout_constraintTop_toBottomOf="@+id/btn_interrogate"
         app:layout_constraintVertical_bias="0.0">
 
 
@@ -79,10 +79,10 @@
             app:layout_constraintStart_toEndOf="@+id/guideline_start"/>
 
         <TextView
-            android:id="@+id/tv_implant_model_val"
+            android:id="@+id/tvItnsModelNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="9C-680E"
+            android:text="_"
             android:layout_marginTop="32dp"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -92,16 +92,17 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tvItnsSN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="07039"
+            android:text="_"
             android:layout_marginTop="32dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/cardview_dark_background"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid"
-            app:layout_constraintTop_toBottomOf="@+id/tv_implant_model_val" />
+            app:layout_constraintTop_toBottomOf="@+id/tvItnsModelNumber" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -152,7 +153,7 @@
             android:id="@+id/tv_lead_r_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
+            android:text="_"
             android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -206,7 +207,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btn_hold_neuro_stim"
+            android:id="@+id/btItnsStartStim"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginHorizontal="40dp"
@@ -228,12 +229,12 @@
             android:text="Amplitude:"
             android:textColor="@color/colorGreySixHundred"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
-            app:layout_constraintStart_toStartOf="@+id/btn_hold_neuro_stim"
-            app:layout_constraintTop_toTopOf="@+id/img_btn_minus" />
+            app:layout_constraintBottom_toTopOf="@+id/btItnsStartStim"
+            app:layout_constraintStart_toStartOf="@+id/btItnsStartStim"
+            app:layout_constraintTop_toTopOf="@+id/ibItnsMinus" />
 
         <ImageButton
-            android:id="@+id/img_btn_minus"
+            android:id="@+id/ibItnsMinus"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginBottom="40dp"
@@ -242,26 +243,26 @@
             android:gravity="center_vertical|center_horizontal"
             android:src="@drawable/ic_minus_white"
             android:layout_marginTop="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintBottom_toTopOf="@+id/btItnsStartStim"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView6"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvItnsAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3.50V"
+            android:text="0.0V"
             android:textColor="@color/cardview_dark_background"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/img_btn_minus"
-            app:layout_constraintEnd_toStartOf="@+id/img_btn_plus"
-            app:layout_constraintStart_toEndOf="@+id/img_btn_minus"
-            app:layout_constraintTop_toTopOf="@+id/img_btn_plus" />
+            app:layout_constraintBottom_toBottomOf="@+id/ibItnsMinus"
+            app:layout_constraintEnd_toStartOf="@+id/ibItnsPlus"
+            app:layout_constraintStart_toEndOf="@+id/ibItnsMinus"
+            app:layout_constraintTop_toTopOf="@+id/ibItnsPlus" />
 
         <ImageButton
-            android:id="@+id/img_btn_plus"
+            android:id="@+id/ibItnsPlus"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="80dp"
@@ -270,7 +271,7 @@
             android:contentDescription="ic_plus"
             android:gravity="center_vertical|center_horizontal"
             android:src="@drawable/ic_plus_white"
-            app:layout_constraintBottom_toTopOf="@+id/btn_hold_neuro_stim"
+            app:layout_constraintBottom_toTopOf="@+id/btItnsStartStim"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,8 +6,6 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +16,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import java.util.Objects;
 
@@ -37,11 +38,11 @@ public class ExternalFragment extends Fragment {
         View view = inflater.inflate(R.layout.implant_tunneling_fragment, container, false);
 
         InitializeStimulationButton(view);
-        /*InitializeAmplitudeButton(view);
+        InitializeAmplitudeButton(view);
 
         // Must redraw the icon for this fragment and not for the itns fragment.
         // Not sure why since both imageviews are visible.
-        ImageView iv = view.findViewById(R.id.ivExternalLink);
+        /*ImageView iv = view.findViewById(R.id.ivExternalLink);
         iv.setImageResource(R.drawable.ic_link_off);*/
 
         mMainActivity = (MainActivity) getActivity();
@@ -50,7 +51,7 @@ public class ExternalFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
-        final Button stimulate = view.findViewById(R.id.btn_hold_neuro_stim);
+        final Button stimulate = view.findViewById(R.id.btExternalStartStim);
         //stimulate.setEnabled(false);
         //stimulate.setAlpha(0.5f);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
@@ -61,7 +62,7 @@ public class ExternalFragment extends Fragment {
                         if(mNow + 500 < System.currentTimeMillis()) {
                             stimulate.setPressed(true);
                             //TODO:IMP remove comment after BT
-                            //mMainActivity.wandComm.SetStimulation(true);
+                            //mMainActivity.wandComm.SetStimulationExt(true);
                             MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
@@ -107,7 +108,7 @@ public class ExternalFragment extends Fragment {
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
                                 //TODO:IMP remove comment after BT
-                                //mMainActivity.wandComm.SetStimulation(false);
+                                //mMainActivity.wandComm.SetStimulationExt(false);
 
                                 //StopStimProgressBar();
                                 MakeTone(ToneGenerator.TONE_PROP_NACK);
@@ -127,7 +128,7 @@ public class ExternalFragment extends Fragment {
     private final Runnable HoldStimulation = new Runnable() {
         @Override
         public void run() {
-            mMainActivity.wandComm.SetStimulation(false);
+            mMainActivity.wandComm.SetStimulationExt(false);
             MakeTone(ToneGenerator.TONE_PROP_NACK);
             //StopStimProgressBar();
             mStimEnabled = false;
@@ -137,24 +138,33 @@ public class ExternalFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeAmplitudeButton(View view) {
         final ImageButton plus = view.findViewById(R.id.ibExternalPlus);
-        plus.setEnabled(false);
-        plus.setAlpha(0.5f);
+
+        //TODO:Imp remove comment after BT
+        /*plus.setEnabled(false);
+        plus.setAlpha(0.5f);*/
 
         final ImageButton minus = view.findViewById(R.id.ibExternalMinus);
-        minus.setEnabled(false);
-        minus.setAlpha(0.5f);
+
+        //TODO:Imp remove comment after BT
+        /*minus.setEnabled(false);
+        minus.setAlpha(0.5f);*/
 
         plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    if(mAmplitudePos < 42) {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    plus.setPressed(true);
+                    if (mAmplitudePos < 42) {
                         mAmplitudePos += 1;
                         MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
-                    UIUpdate(true);
+
+                    //TODO:Imp remove comment after BT
+                    //UIUpdate(true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    plus.setPressed(false);
                 }
                 return true;
             }
@@ -163,15 +173,21 @@ public class ExternalFragment extends Fragment {
         minus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN ) {
-                    if(mAmplitudePos > 0) {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    minus.setPressed(true);
+                    if (mAmplitudePos > 0) {
                         mAmplitudePos -= 1;
                         MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
-                    UIUpdate(true);
+
+                    //TODO:Imp remove comment after BT
+                    //UIUpdate(true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    minus.setPressed(false);
                 }
+
                 return true;
             }
         });
