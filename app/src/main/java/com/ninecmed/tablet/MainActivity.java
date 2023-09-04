@@ -73,13 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
-        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
-
-        fragmentTransaction.commit();
+        launchFeatureSelectionFragment();
 
         mHandler.postDelayed(MinuteTimer, 60000);
         // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
@@ -117,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isClinicVisit) {
                     showSetDateTimeDialog();
+                } else {
+                    launchSurgeryFragment();
                 }
                 wandConnDialog.dismiss();
             }
@@ -131,6 +127,26 @@ public class MainActivity extends AppCompatActivity {
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
         wandConnDialog.show();
+    }
+
+    private void launchFeatureSelectionFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
+        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
+
+        fragmentTransaction.commit();
+    }
+
+    private void launchSurgeryFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        DashboardFragment dashboardFragment = new DashboardFragment();
+        fragmentTransaction.replace(R.id.fl_fragment, dashboardFragment);
+
+        fragmentTransaction.commit();
     }
 
     /**
