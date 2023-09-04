@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -97,6 +98,16 @@ public class MainActivity extends AppCompatActivity {
             // For devices below Android 12, the permission is granted at install time
             // You can proceed with your Bluetooth functionality
             initBluetooth();
+        }
+    }
+
+    public void updateToolbarColor(boolean isInside){
+        if (isInside) {
+            LinearLayoutCompat toolbar = findViewById(R.id.ll_toolbar);
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorGreyThreeHundred));
+
+            ImageView intibiaIv = findViewById(R.id.intibia_logo);
+            intibiaIv.setVisibility(View.VISIBLE);
         }
     }
 
