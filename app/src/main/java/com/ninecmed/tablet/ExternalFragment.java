@@ -156,7 +156,7 @@ public class ExternalFragment extends Fragment {
                     plus.setPressed(true);
                     if (mAmplitudePos < 42) {
                         mAmplitudePos += 1;
-                        MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
@@ -177,7 +177,7 @@ public class ExternalFragment extends Fragment {
                     minus.setPressed(true);
                     if (mAmplitudePos > 0) {
                         mAmplitudePos -= 1;
-                        MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
