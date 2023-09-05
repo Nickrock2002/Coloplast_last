@@ -6,8 +6,6 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +16,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import java.util.Objects;
 
@@ -34,15 +35,15 @@ public class ExternalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
-        View view = inflater.inflate(R.layout.external_fragment, container, false);
+        View view = inflater.inflate(R.layout.implant_tunneling_fragment, container, false);
 
         InitializeStimulationButton(view);
         InitializeAmplitudeButton(view);
 
         // Must redraw the icon for this fragment and not for the itns fragment.
         // Not sure why since both imageviews are visible.
-        ImageView iv = view.findViewById(R.id.ivExternalLink);
-        iv.setImageResource(R.drawable.ic_link_off);
+        /*ImageView iv = view.findViewById(R.id.ivExternalLink);
+        iv.setImageResource(R.drawable.ic_link_off);*/
 
         mMainActivity = (MainActivity) getActivity();
         return view;
@@ -51,52 +52,76 @@ public class ExternalFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btExternalStartStim);
-        stimulate.setEnabled(false);
-        stimulate.setAlpha(0.5f);
+        //stimulate.setEnabled(false);
+        //stimulate.setAlpha(0.5f);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
             @Override
-             public boolean onTouch(View view, MotionEvent motionEvent) {
-                 switch (motionEvent.getActionMasked()) {
-                     case MotionEvent.ACTION_DOWN:
-                         if(mNow + 500 < System.currentTimeMillis()) {
-                             mMainActivity.wandComm.SetStimulationExt(true);
-                             WandData.InvalidateStimExtLeadI();
-                             UIUpdate(true);
-                             MakeTone(ToneGenerator.TONE_PROP_BEEP);
-                             SetAmplitudeParameterEnabled(false, false);
-                             mMainActivity.EnableTabs(false);
-                             StartProgressBar();
-                             mNow = System.currentTimeMillis();
-                             mStimEnabled = true;
-                         }
-                         break;
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if(mNow + 500 < System.currentTimeMillis()) {
+                            stimulate.setPressed(true);
+                            //TODO:IMP remove comment after BT
+                            //mMainActivity.wandComm.SetStimulationExt(true);
+                            MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                            stimulate.setText("Stimulation Active");
+                            WandData.InvalidateStimLeadI();
 
-                     case MotionEvent.ACTION_UP:
-                     case MotionEvent.ACTION_CANCEL:
-                         // Only execute code on up/cancel when mStimEnabled is true,
-                         // otherwise this means that the user pressed the down key too
-                         // quickly and when he let's go, the motion event causes SetTestStimulation
-                         // to be executed again even though it wasn't started. This causes an
-                         // unnecessary beep as well.
-                         if(mStimEnabled) {
-                             stimulate.setEnabled(false);
-                             // Set delay to 1500 to ensure state machine completes before trying
-                             // to cancel the machine. If this is done too quickly, the stimulation
-                             // stop command is ignored.
-                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                 mMainActivity.wandComm.SetStimulationExt(false);
-                                 MakeTone(ToneGenerator.TONE_PROP_NACK);
-                                 StopProgressBar();
-                                 mStimEnabled = false;
-                             } else {
-                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
-                             }
-                         }
-                         break;
-                 }
-                 return true;
-             }
+                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
+                            leadi.setText(WandData.GetLeadI());
+
+                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
+                            leadr.setText(WandData.GetLeadR());*/
+                            // Disable changed parameters during test stim. Only re-enable once
+                            // job is completed. Even though controls are disabled, don't change
+                            // alpha, meaning don't gray out the controls, otherwise it appears
+                            // strange.
+                            //SetChangedParametersEnable(false, false);
+                            // Also, don't update alpha for the program and interrogate
+                            // buttons either, otherwise pressing the test stim button
+                            // would cause the program and interrogate button to go grey. Since
+                            // this isn't consistent with what we do when the interrogate or
+                            // program button is pressed - we decided to disable other telemetry
+                            // controls when a telemetry command is in progress, but without changing
+                            // the appearance.
+                            //EnableInterrogateButton(false, false);
+                            //EnableProgramButton(false, false);
+                            //StartStimProgressBar();
+                            mMainActivity.EnableTabs(false);
+                            mNow = System.currentTimeMillis();
+                            mStimEnabled = true;
+                        }
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // Only execute code on up/cancel when mStimEnabled is true,
+                        // otherwise this means that the user pressed the down key too
+                        // quickly and when he let's go, the motion event causes SetTestStimulation
+                        // to be executed again even though it wasn't started. This causes an
+                        // unnecessary beep as well.
+                        if(mStimEnabled) {
+                            stimulate.setPressed(false);
+                            stimulate.setText("Hold to deliver neurostimulation");
+                            //stimulate.setEnabled(false);
+                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            // Set delay to 1500 to be the same delay as ExternalFragment
+                            if (mNow + 1500 < System.currentTimeMillis()) {
+                                //TODO:IMP remove comment after BT
+                                //mMainActivity.wandComm.SetStimulationExt(false);
+
+                                //StopStimProgressBar();
+                                MakeTone(ToneGenerator.TONE_PROP_NACK);
+                                mStimEnabled = false;
+                            } else {
+                                //TODO:IMP remove comment after BT
+                                //mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                            }
+                        }
+                        break;
+                }
+                return true;
+            }
         });
     }
 
@@ -105,7 +130,7 @@ public class ExternalFragment extends Fragment {
         public void run() {
             mMainActivity.wandComm.SetStimulationExt(false);
             MakeTone(ToneGenerator.TONE_PROP_NACK);
-            StopProgressBar();
+            //StopStimProgressBar();
             mStimEnabled = false;
         }
     };
@@ -113,24 +138,33 @@ public class ExternalFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeAmplitudeButton(View view) {
         final ImageButton plus = view.findViewById(R.id.ibExternalPlus);
-        plus.setEnabled(false);
-        plus.setAlpha(0.5f);
+
+        //TODO:Imp remove comment after BT
+        /*plus.setEnabled(false);
+        plus.setAlpha(0.5f);*/
 
         final ImageButton minus = view.findViewById(R.id.ibExternalMinus);
-        minus.setEnabled(false);
-        minus.setAlpha(0.5f);
+
+        //TODO:Imp remove comment after BT
+        /*minus.setEnabled(false);
+        minus.setAlpha(0.5f);*/
 
         plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    if(mAmplitudePos < 42) {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    plus.setPressed(true);
+                    if (mAmplitudePos < 42) {
                         mAmplitudePos += 1;
-                        MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
-                    UIUpdate(true);
+
+                    //TODO:Imp remove comment after BT
+                    //UIUpdate(true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    plus.setPressed(false);
                 }
                 return true;
             }
@@ -139,15 +173,21 @@ public class ExternalFragment extends Fragment {
         minus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN ) {
-                    if(mAmplitudePos > 0) {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    minus.setPressed(true);
+                    if (mAmplitudePos > 0) {
                         mAmplitudePos -= 1;
-                        MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
-                    UIUpdate(true);
+
+                    //TODO:Imp remove comment after BT
+                    //UIUpdate(true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    minus.setPressed(false);
                 }
+
                 return true;
             }
         });

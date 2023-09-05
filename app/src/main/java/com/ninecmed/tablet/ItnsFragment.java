@@ -9,9 +9,6 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.constraintlayout.widget.Group;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +26,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -45,21 +46,24 @@ public class ItnsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
-        View view = inflater.inflate(R.layout.itns_fragment, container, false);
+        View view = inflater.inflate(R.layout.itns_fragment_new, container, false);
 
-        InitializeInterrogateButton(view);
-        InitializeProgramButton(view);
         InitializeStimulationButton(view);
+        InitializeInterrogateButton(view);
+        InitializeAmpControls(view);
+
+        /*InitializeProgramButton(view);
+
         InitializeTherapySpinner(view);
         InitializeDate(view);
         InitializeTime(view);
-        InitializeAmpControls(view);
+        InitializeAmpControls(view);*/
 
-        ProgressBar pb = view.findViewById(R.id.pbItns);
+        /*ProgressBar pb = view.findViewById(R.id.pbItns);
         pb.setVisibility(View.INVISIBLE);
 
         ProgressBar pb1 = view.findViewById(R.id.pbItnsStim);
-        pb1.setVisibility(View.INVISIBLE);
+        pb1.setVisibility(View.INVISIBLE);*/
 
         mMainActivity = (MainActivity) getActivity();
         return view;
@@ -67,9 +71,11 @@ public class ItnsFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeInterrogateButton(View view) {
-        Button interrogate = view.findViewById(R.id.btItnsInterrogate);
+        final Button interrogate = view.findViewById(R.id.btn_interrogate);
+
+        //TODO: remove comment after BT
         /*interrogate.setEnabled(false);
-        interrogate.setAlpha(0.5f);
+        interrogate.setAlpha(0.5f);*/
         interrogate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -80,23 +86,21 @@ public class ItnsFragment extends Fragment {
                 // In order to prevent this, we'll add a flag, bTouch, that's set
                 // on the first touch and only cleared in the EndProgressBar method.
                 // The same steps are required for the Program button.
-                if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
-                    bTouch = true;
-                    mMainActivity.wandComm.Interrogate();
-                    MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    StartProgressBar();
+                if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN /*&& !bTouch*/) {
+                    interrogate.setPressed(true);
+                    //bTouch = true;
+
+                    //TODO: remove comment after BT
+                    //mMainActivity.wandComm.Interrogate();
+                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                    //StartProgressBar();
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+                    interrogate.setPressed(false);
                 }
                 return true;
             }
         });
-*/
-        //following for testing
-        interrogate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).showResetCounterDialog();
-            }
-        });
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -174,28 +178,32 @@ public class ItnsFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btItnsStartStim);
-        stimulate.setEnabled(false);
-        stimulate.setAlpha(0.5f);
+        //TODO:IMP remove comment after BT
+        //stimulate.setEnabled(false);
+        //stimulate.setAlpha(0.5f);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         if(mNow + 500 < System.currentTimeMillis()) {
-                            mMainActivity.wandComm.SetStimulation(true);
+                            stimulate.setPressed(true);
+                            //TODO: IMP remove comment after BT
+                            //mMainActivity.wandComm.SetStimulation(true);
                             MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                            stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
 
-                            TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
+                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
                             leadi.setText(WandData.GetLeadI());
 
                             TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());
+                            leadr.setText(WandData.GetLeadR());*/
                             // Disable changed parameters during test stim. Only re-enable once
                             // job is completed. Even though controls are disabled, don't change
                             // alpha, meaning don't gray out the controls, otherwise it appears
                             // strange.
-                            SetChangedParametersEnable(false, false);
+                            //SetChangedParametersEnable(false, false);
                             // Also, don't update alpha for the program and interrogate
                             // buttons either, otherwise pressing the test stim button
                             // would cause the program and interrogate button to go grey. Since
@@ -203,9 +211,9 @@ public class ItnsFragment extends Fragment {
                             // program button is pressed - we decided to disable other telemetry
                             // controls when a telemetry command is in progress, but without changing
                             // the appearance.
-                            EnableInterrogateButton(false, false);
-                            EnableProgramButton(false, false);
-                            StartStimProgressBar();
+                            //EnableInterrogateButton(false, false);
+                            //EnableProgramButton(false, false);
+                            //StartStimProgressBar();
                             mMainActivity.EnableTabs(false);
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
@@ -220,15 +228,21 @@ public class ItnsFragment extends Fragment {
                         // to be executed again even though it wasn't started. This causes an
                         // unnecessary beep as well.
                         if(mStimEnabled) {
-                            stimulate.setEnabled(false);
+                            stimulate.setPressed(false);
+                            stimulate.setText("Hold to deliver neurostimulation");
+                            //stimulate.setEnabled(false);
+                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.SetStimulation(false);
+                                //TODO:IMP remove comment after BT
+                                //mMainActivity.wandComm.SetStimulation(false);
+
+                                //StopStimProgressBar();
                                 MakeTone(ToneGenerator.TONE_PROP_NACK);
-                                StopStimProgressBar();
                                 mStimEnabled = false;
                             } else {
-                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                                //TODO:IMP remove comment after BT
+                                //mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
                         }
                         break;
@@ -243,7 +257,7 @@ public class ItnsFragment extends Fragment {
         public void run() {
             mMainActivity.wandComm.SetStimulation(false);
             MakeTone(ToneGenerator.TONE_PROP_NACK);
-            StopStimProgressBar();
+            //StopStimProgressBar();
             mStimEnabled = false;
         }
     };
@@ -507,30 +521,38 @@ public class ItnsFragment extends Fragment {
             @SuppressLint("DefaultLocale")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    if(mAmplitudePos < 42) {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    plus.setPressed(true);
+                    if (mAmplitudePos < 42) {
                         mAmplitudePos += 1;
-                        MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
 
                     WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                     TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
-                    if(WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.BLACK);
-                        plus.setBackgroundResource(R.color.colorControlNoChange);
-                        minus.setBackgroundResource(R.color.colorControlNoChange);
-                    }
-                    else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.RED);
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+
+                        //TODO: Imp remove following line after BT
+                        //mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+
+
+                        /*amp.setTextColor(Color.BLACK);
+                        plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
+                        minus.setBackgroundResource(R.color.colorControlNoChange);*/
+                    } else {
+                        //TODO: Imp remove following line after BT
+                        //mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+
+                        /*amp.setTextColor(Color.RED);
                         plus.setBackgroundResource(R.color.colorControlChange);
-                        minus.setBackgroundResource(R.color.colorControlChange);
+                        minus.setBackgroundResource(R.color.colorControlChange);*/
                     }
 
-                    EnableProgramButton(true, true);
+                    //EnableProgramButton(true, true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    plus.setPressed(false);
                 }
                 return true;
             }
@@ -541,9 +563,10 @@ public class ItnsFragment extends Fragment {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    minus.setPressed(true);
                     if(mAmplitudePos > 0) {
                         mAmplitudePos -= 1;
-                        MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
 
                     WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
@@ -552,18 +575,20 @@ public class ItnsFragment extends Fragment {
 
                     if(WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.BLACK);
+                       /* amp.setTextColor(Color.BLACK);
                         minus.setBackgroundResource(R.color.colorControlNoChange);
-                        plus.setBackgroundResource(R.color.colorControlNoChange);
+                        plus.setBackgroundResource(R.color.colorControlNoChange);*/
                     }
                     else {
                         mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.RED);
+                       /* amp.setTextColor(Color.RED);
                         minus.setBackgroundResource(R.color.colorControlChange);
-                        plus.setBackgroundResource(R.color.colorControlChange);
+                        plus.setBackgroundResource(R.color.colorControlChange);*/
                     }
 
-                    EnableProgramButton(true, true);
+                    //EnableProgramButton(true, true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    minus.setPressed(false);
                 }
                 return true;
             }
@@ -607,16 +632,16 @@ public class ItnsFragment extends Fragment {
         EnableStimTestButton(false);
 
         // Hide controls
-        Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-        gp.setVisibility(View.GONE);
+        /*Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
+        gp.setVisibility(View.GONE);*/
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-        gp.setVisibility(View.GONE);
+       /* Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
+        gp.setVisibility(View.GONE);*/
     }
 
     @Override
@@ -651,26 +676,27 @@ public class ItnsFragment extends Fragment {
                 SetChangedParametersEnable(true, true);
                 mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                 EnableInterrogateButton(true, true);
-                EnableProgramButton(true, true);
-                EnableStimTestButton(true);
 
-                TextView leadi = Objects.requireNonNull(view).findViewById(R.id.tvItnsLeadI);
+                /*EnableProgramButton(true, true);
+                EnableStimTestButton(true);*/
+
+                /*TextView leadi = Objects.requireNonNull(view).findViewById(R.id.tvItnsLeadI);
                 leadi.setText(WandData.GetLeadI());
 
                 TextView leadr = view.findViewById(R.id.tvItnsLeadR);
-                leadr.setText(WandData.GetLeadR());
+                leadr.setText(WandData.GetLeadR());*/
             }
             else {
                 MakeTone(ToneGenerator.TONE_CDMA_PIP);
 
-                if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE) {
+                /*if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE) {
                     Group gp = Objects.requireNonNull(view).findViewById(R.id.ghITNS);
                     gp.setVisibility(View.VISIBLE);
                 }
 
                 if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
                     EnableProgramButton(false, true);
-                }
+                }*/
 
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
                 mn.setText((WandData.GetModelNumber(view.getContext())));
@@ -678,7 +704,7 @@ public class ItnsFragment extends Fragment {
                 TextView sn = view.findViewById(R.id.tvItnsSN);
                 sn.setText(WandData.GetSerialNumber());
 
-                TextView cellv = view.findViewById(R.id.tvItnsCellV);
+                /*TextView cellv = view.findViewById(R.id.tvItnsCellV);
                 cellv.setText(WandData.GetCellV());
 
                 TextView rrt = view.findViewById(R.id.tvItnsRRT);
@@ -690,12 +716,15 @@ public class ItnsFragment extends Fragment {
                     rrt.setTextColor(Color.BLACK);
 
                 TextView leadi = view.findViewById(R.id.tvItnsLeadI);
-                leadi.setText(WandData.GetLeadI());
+                leadi.setText(WandData.GetLeadI());*/
 
-                TextView leadr = view.findViewById(R.id.tvItnsLeadR);
-                leadr.setText(WandData.GetLeadR());
+                //TODO:IMP use below for Lead R warnings and OK
+                //TextView leadr = view.findViewById(R.id.tvItnsLeadR);
+                //leadr.setText(WandData.GetLeadR());
 
-                Spinner therapySpinner = view.findViewById(R.id.ddItnsTherapy);
+
+                //TODO IMP: Shift below logic to Program Therapy
+                /*Spinner therapySpinner = view.findViewById(R.id.ddItnsTherapy);
                 ArrayAdapter<CharSequence> adapter;
                 if(WandData.GetModelNumber() == 2)
                      adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getActivity()).getBaseContext(),
@@ -719,7 +748,7 @@ public class ItnsFragment extends Fragment {
                 ampRO.setText(WandData.GetAmplitude());
 
                 ResetChangedParameters();
-                CheckForReset();
+                CheckForReset();*/
             }
         }
         // Here's what happens on fail
@@ -738,8 +767,8 @@ public class ItnsFragment extends Fragment {
                         EnableInterrogateButton(true, true);
                         EnableProgramButton(false, true);
                         EnableStimTestButton(true);
-                        Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-                        gp.setVisibility(View.GONE);
+                        /*Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
+                        gp.setVisibility(View.GONE);*/
                     }
                 });
                 mAlertDialog = alertDialog.create();
@@ -748,7 +777,7 @@ public class ItnsFragment extends Fragment {
                 return;
             }
             if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
-                StopStimProgressBar();
+                //StopStimProgressBar();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
@@ -903,11 +932,11 @@ public class ItnsFragment extends Fragment {
     }
 
     private void StopProgressBar() {
-        bTouch = false;
+        /*bTouch = false;
         ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItns);
         progressBar.setVisibility(View.INVISIBLE);
         Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
+*/    }
 
     private void StartStimProgressBar() {
         ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItnsStim);

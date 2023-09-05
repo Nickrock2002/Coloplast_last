@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -72,13 +74,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
-        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
-
-        fragmentTransaction.commit();
+        launchFeatureSelectionFragment();
 
         mHandler.postDelayed(MinuteTimer, 60000);
         // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
@@ -105,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void updateToolbarColor(boolean isInside){
+        if (isInside) {
+            LinearLayoutCompat toolbar = findViewById(R.id.ll_toolbar);
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorGreyThreeHundred));
+
+            ImageView intibiaIv = findViewById(R.id.intibia_logo);
+            intibiaIv.setVisibility(View.VISIBLE);
+        }
+    }
+
     protected void showWandConnectionDialogue(final boolean isClinicVisit) {
         wandConnDialog = new Dialog(this);
         wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -116,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isClinicVisit) {
                     showSetDateTimeDialog();
+                } else {
+                    launchSurgeryFragment();
                 }
                 wandConnDialog.dismiss();
             }
@@ -130,6 +138,26 @@ public class MainActivity extends AppCompatActivity {
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
         wandConnDialog.show();
+    }
+
+    private void launchFeatureSelectionFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
+        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
+
+        fragmentTransaction.commit();
+    }
+
+    private void launchSurgeryFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        DashboardFragment dashboardFragment = new DashboardFragment();
+        fragmentTransaction.replace(R.id.fl_fragment, dashboardFragment);
+
+        fragmentTransaction.commit();
     }
 
     /**
@@ -486,6 +514,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        DatePicker datePicker = dialog.findViewById(R.id.datePicker);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+                @Override
+                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                }
+            });
+        }
+
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -501,6 +539,7 @@ public class MainActivity extends AppCompatActivity {
         btnOkCloseApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 finish();
             }
         });

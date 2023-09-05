@@ -1,10 +1,6 @@
 package com.ninecmed.tablet;
 
-import static com.ninecmed.tablet.R.string.all_ok;
-
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +8,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.Objects;
-
-import me.aflak.bluetooth.interfaces.DeviceCallback;
 
 public class DashboardFragment extends Fragment {
     private SectionsPageAdapter mSectionsPageAdapter;
@@ -45,6 +36,8 @@ public class DashboardFragment extends Fragment {
 
         mTabLayout = view.findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        ((MainActivity) getActivity()).updateToolbarColor(true);
 
         return view;
     }
@@ -71,8 +64,8 @@ public class DashboardFragment extends Fragment {
 
     private void SetupViewPager(ViewPager viewPager) {
         // The first fragment added is the default fragment that appears
-        mSectionsPageAdapter.AddFragment(new ItnsFragment(), getResources().getString(R.string.itns_title));
         mSectionsPageAdapter.AddFragment(new ExternalFragment(), getResources().getString(R.string.external_title));
+        mSectionsPageAdapter.AddFragment(new ItnsFragment(), getResources().getString(R.string.itns_title));
 
         viewPager.setAdapter(mSectionsPageAdapter);
         viewPager.setOffscreenPageLimit(2);                                                         // Set page limit to 2 when using two fragments
