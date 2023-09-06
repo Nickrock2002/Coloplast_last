@@ -537,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_set_frequency);
+        dialog.setContentView(R.layout.dialog_bluetooth_permission_required);
 
         Button btnOkCloseApp = (Button) dialog.findViewById(R.id.btn_ok_close_app);
         btnOkCloseApp.setOnClickListener(new View.OnClickListener() {
@@ -547,15 +547,30 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
     }
 
 
-    //TODO: Imp call this when we want to set frequency from Program therapy.
-    public void showSetFrequencydDialog() {
+    //TODO: Imp call this when we want to set Day/Date from Program therapy.
+    public void showSetDayDateDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_bluetooth_permission_required);
+        dialog.setContentView(R.layout.dialog_start_day_date);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to set frequency from Program therapy.
+    public void showSetFrequencyDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_set_frequency);
 
         RadioButton radioButton1 = (RadioButton) dialog.findViewById(R.id.radio1);
