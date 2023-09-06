@@ -8,6 +8,8 @@ import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +22,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -533,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_bluetooth_permission_required);
+        dialog.setContentView(R.layout.dialog_set_frequency);
 
         Button btnOkCloseApp = (Button) dialog.findViewById(R.id.btn_ok_close_app);
         btnOkCloseApp.setOnClickListener(new View.OnClickListener() {
@@ -542,6 +546,47 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
                 finish();
             }
+        });
+    }
+
+
+    //TODO: Imp call this when we want to set frequency from Program therapy.
+    public void showSetFrequencydDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_bluetooth_permission_required);
+        dialog.setContentView(R.layout.dialog_set_frequency);
+
+        RadioButton radioButton1 = (RadioButton) dialog.findViewById(R.id.radio1);
+        RadioButton radioButton2 = (RadioButton) dialog.findViewById(R.id.radio2);
+        RadioButton radioButton3 = (RadioButton) dialog.findViewById(R.id.radio3);
+        RadioButton radioButton4 = (RadioButton) dialog.findViewById(R.id.radio4);
+        RadioButton radioButton5 = (RadioButton) dialog.findViewById(R.id.radio5);
+        RadioButton radioButton6 = (RadioButton) dialog.findViewById(R.id.radio6);
+
+        RadioGroupPlus radioGroupPlus = (RadioGroupPlus) dialog.findViewById(R.id.frequencyRadioGroup);
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, //disabled
+                        new int[]{android.R.attr.state_checked} //enabled
+                },
+                new int[] {
+                        Color.BLACK, //disabled
+                        getResources().getColor(R.color.colorPrimary) //enabled
+                }
+        );
+
+        radioButton1.setButtonTintList(colorStateList);
+        radioButton2.setButtonTintList(colorStateList);
+        radioButton3.setButtonTintList(colorStateList);
+        radioButton4.setButtonTintList(colorStateList);
+        radioButton5.setButtonTintList(colorStateList);
+        radioButton6.setButtonTintList(colorStateList);
+
+        radioGroupPlus.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton rb = (RadioButton) dialog.findViewById(checkedId);
+            Toast.makeText(getApplicationContext(), rb.getText(), Toast.LENGTH_SHORT).show();
         });
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
