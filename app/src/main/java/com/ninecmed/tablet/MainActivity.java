@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 initBluetooth();
             } else {
                 // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
-                showBluetoothPermissionRequiredDialog();
+                showSetTimeForTherapyDialog();
             }
         }
     }
@@ -555,11 +555,35 @@ public class MainActivity extends AppCompatActivity {
 
 
     //TODO: Imp call this when we want to set Day/Date from Program therapy.
-    public void showSetDayDateDialog() {
+    public void showSetDayForTherapyDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_start_day_date);
+        dialog.setContentView(R.layout.dialog_set_start_day_therapy);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(v -> {});
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to set Day/Date from Program therapy.
+    public void showSetTimeForTherapyDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_set_time_therapy);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(v -> {});
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
