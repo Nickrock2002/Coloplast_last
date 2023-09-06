@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBaseGrayFifty">
+
+    <Button
+        android:id="@+id/btn_interrogate"
+        android:layout_width="260dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/rounded_corners_button"
+        android:text="@string/interrogate"
+        android:textAllCaps="false"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/cl_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="38dp"
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@id/cl_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_interrogate"
+        app:layout_constraintVertical_weight="1">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_mid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/tv_implant_model"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/implant_model"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_implant_sr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:text="@string/implant_serial"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/tv_implant_model" />
+
+        <TextView
+            android:id="@+id/tvItnsModelNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="_"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvItnsSN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="_"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid"
+            app:layout_constraintTop_toBottomOf="@+id/tvItnsModelNumber" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/cl_3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_1"
+        app:layout_constraintVertical_weight="1">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_mid_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/tv_implant_battery_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/implant_battery"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_lead_r_title"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_lead_r_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="32dp"
+            android:text="@string/lead_r"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_implant_battery_title" />
+
+        <TextView
+            android:id="@+id/tv_implant_battery_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="_"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/btn_lead_r_warn"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_lead_r_warn"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:background="@drawable/rounded_corners_btn_error"
+            android:drawableStart="@drawable/ic_error"
+            android:drawablePadding="5dp"
+            android:paddingStart="60dp"
+            android:text="@string/warning"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="24sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_implant_battery_val" />
+
+        <TextView
+            android:id="@+id/tv_lead_r_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="_"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
+            app:layout_constraintTop_toBottomOf="@id/tv_implant_battery_val" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@+id/cv_bottom_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_2"
+        app:layout_constraintVertical_weight="2">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_mid_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/tv_amplitude_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amplitude"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_frequency_title"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_frequency_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/frequency"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_start_day_date_title"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
+            app:layout_constraintTop_toBottomOf="@id/tv_amplitude_title" />
+
+        <TextView
+            android:id="@+id/tv_start_day_date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_day_date"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_time_of_day_title"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
+            app:layout_constraintTop_toBottomOf="@id/tv_frequency_title" />
+
+        <TextView
+            android:id="@+id/tv_time_of_day_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/time_of_day"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
+            app:layout_constraintTop_toBottomOf="@id/tv_start_day_date_title" />
+
+        <Button
+            android:id="@+id/btn_amplitude_val"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:background="@drawable/rounded_corner_white_button"
+            android:clickable="false"
+            android:drawablePadding="5dp"
+            android:text="@string/_1_5v"
+            android:textAllCaps="false"
+            android:textColor="@color/colorGreyThreeHundred"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_frequency_val"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_frequency_val"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:background="@drawable/rounded_corner_white_button"
+            android:clickable="false"
+            android:text="@string/off"
+            android:textAllCaps="false"
+            android:textColor="@color/colorGreyThreeHundred"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_start_day"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
+            app:layout_constraintTop_toBottomOf="@id/btn_amplitude_val" />
+
+        <Button
+            android:id="@+id/btn_start_day"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:background="@drawable/rounded_corner_white_button"
+            android:clickable="false"
+            android:text="_ _ _"
+            android:textAllCaps="false"
+            android:textColor="@color/colorGreyThreeHundred"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_time_of_day"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
+            app:layout_constraintTop_toBottomOf="@id/btn_frequency_val" />
+
+        <Button
+            android:id="@+id/btn_time_of_day"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:background="@drawable/rounded_corner_white_button"
+            android:clickable="false"
+            android:text="_ _ _"
+            android:textAllCaps="false"
+            android:textColor="@color/colorGreyThreeHundred"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
+            app:layout_constraintTop_toBottomOf="@id/btn_start_day" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_bottom_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBaseGrayFifty"
+        android:padding="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_3"
+        app:layout_constraintVertical_weight="0.5">
+
+        <Button
+            android:id="@+id/btItnsStartStim"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/rounded_corners_button"
+            android:text="@string/hold_to_deliver_neurostimulation"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

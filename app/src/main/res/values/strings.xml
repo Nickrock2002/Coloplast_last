@@ -54,6 +54,19 @@
     <string name="wand_is_comm">Tablet communicating with Wand.</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="amplitude">Amplitude</string>
+    <string name="start_day_date">Start day/date</string>
+    <string name="frequency">Frequency</string>
+    <string name="time_of_day">Time of day</string>
+    <string name="warning">Warning</string>
+    <string name="lead_r">Lead R</string>
+    <string name="implant_serial">Implant Serial #</string>
+    <string name="implant_model">Implant Model</string>
+    <string name="interrogate">Interrogate</string>
+    <string name="hold_to_deliver_neurostimulation">Hold to deliver neurostimulation</string>
+    <string name="_1_5v">1.50 V</string>
+    <string name="off">Off</string>
+    <string name="implant_battery">Implant Battery</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>
