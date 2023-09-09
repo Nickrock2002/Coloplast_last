@@ -160,6 +160,26 @@
             app:layout_constraintStart_toEndOf="@+id/guideline_start_1"
             app:layout_constraintTop_toBottomOf="@id/tv_implant_battery_title" />
 
+        <Button
+            android:id="@+id/tv_lead_r_status"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:background="@drawable/rounded_corners_btn_error"
+            android:drawableStart="@drawable/ic_error"
+            android:drawablePadding="5dp"
+            android:paddingStart="60dp"
+            android:text="@string/warning"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="24sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/btn_lead_r_warn"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tv_implant_battery_val"
             android:layout_width="wrap_content"

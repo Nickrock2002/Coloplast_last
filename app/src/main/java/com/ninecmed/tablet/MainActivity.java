@@ -105,10 +105,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void updateToolbarColor(boolean isInside){
+    public void updateToolbarColor(boolean isInside) {
         if (isInside) {
             LinearLayoutCompat toolbar = findViewById(R.id.ll_toolbar);
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorGreyThreeHundred));
+            toolbar.setBackgroundColor(ActivityCompat.getColor(this,
+                    R.color.colorGreyThreeHundred));
 
             ImageView intibiaIv = findViewById(R.id.intibia_logo);
             intibiaIv.setVisibility(View.VISIBLE);
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         wandConnDialog.show();
     }
 
-    private void launchFeatureSelectionFragment(){
+    private void launchFeatureSelectionFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void launchSurgeryFragment(){
+    private void launchSurgeryFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -565,7 +566,8 @@ public class MainActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
-        btnConfirm.setOnClickListener(v -> {});
+        btnConfirm.setOnClickListener(v -> {
+        });
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
@@ -583,7 +585,8 @@ public class MainActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
-        btnConfirm.setOnClickListener(v -> {});
+        btnConfirm.setOnClickListener(v -> {
+        });
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
@@ -610,7 +613,7 @@ public class MainActivity extends AppCompatActivity {
                         new int[]{-android.R.attr.state_checked}, //disabled
                         new int[]{android.R.attr.state_checked} //enabled
                 },
-                new int[] {
+                new int[]{
                         Color.BLACK, //disabled
                         getResources().getColor(R.color.colorPrimary) //enabled
                 }

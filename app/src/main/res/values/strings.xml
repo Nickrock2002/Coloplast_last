@@ -60,6 +60,7 @@
     <string name="time_of_day">Time of day</string>
     <string name="warning">Warning</string>
     <string name="lead_r">Lead R</string>
+    <string name="lead_i">Lead I</string>
     <string name="implant_serial">Implant Serial #</string>
     <string name="implant_model">Implant Model</string>
     <string name="interrogate">Interrogate</string>
@@ -67,6 +68,16 @@
     <string name="_1_5v">1.50 V</string>
     <string name="off">Off</string>
     <string name="implant_battery">Implant Battery</string>
+    <string name="software_version">Software Version</string>
+    <string name="battery_replacement_time_rrt">Battery Replacement Time (RRT)</string>
+    <string name="company_info"><b>Coloplast Corporation</b>\n<br/>+1-800-258-3476 \n<br/>IFU link: <href url="intibia.com/IFU">intibia.com/IFU</href></string>
+    <string name="company_address">1601 West River Road \nMinneapolis, MN 55411 \nUnited States of America</string>
+    <string name="close_application">Close Application</string>
+    <string name="reset_date_and_time">Reset Date and Time</string>
+    <string name="set_language">Set Language</string>
+    <string name="time">Time:</string>
+    <string name="language">Language:</string>
+    <string name="date">Date:</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>
