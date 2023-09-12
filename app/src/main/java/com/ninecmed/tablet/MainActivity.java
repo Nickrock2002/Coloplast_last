@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 initBluetooth();
             } else {
                 // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
-                showProgramItnsSuccessDialog();
+                //showBackToStartDialog();
             }
         }
     }
@@ -665,6 +665,45 @@ public class MainActivity extends AppCompatActivity {
         Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to show Back to Start dialog.
+    public void showBackToStartDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_back_to_start);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to show Back to Start dialog.
+    public void showCloseAppDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_close_app);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        Button btnYesClose = (Button) dialog.findViewById(R.id.btn_yes_close);
+        btnYesClose.setOnClickListener(v -> {
+            finish();
         });
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
