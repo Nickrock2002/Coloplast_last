@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import com.ninecmed.tablet.events.MessageEvent;
+import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,7 +42,7 @@ public class FeatureSelectionFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
+    public void onMessageEvent(UIUpdateEvent event) {
         Toast.makeText(requireContext(), "event sent", Toast.LENGTH_SHORT).show();
     }
 

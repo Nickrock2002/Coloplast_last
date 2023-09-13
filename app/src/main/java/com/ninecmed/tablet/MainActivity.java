@@ -36,6 +36,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
+import com.ninecmed.tablet.events.OnConnectedUIEvent;
+import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
+import com.ninecmed.tablet.events.TabEnum;
+import com.ninecmed.tablet.events.UIUpdateEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import me.aflak.bluetooth.Bluetooth;
@@ -199,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 initBluetooth();
             } else {
                 // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
-                showSetTimeForTherapyDialog();
+                //showBackToStartDialog();
             }
         }
     }
@@ -212,13 +220,16 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
         updateBatteryStatus();
 
-        /*ImageView intibiaLogo = findViewById(R.id.ivBatteryPer);
+        //just for event testing purpose
+        ImageView intibiaLogo = findViewById(R.id.intibia_logo);
         intibiaLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new MessageEvent());
+                UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                uiUpdateEvent.setTabEnum(TabEnum.ITNS);
+                EventBus.getDefault().post(uiUpdateEvent);
             }
-        });*/
+        });
     }
 
     private void initBluetooth() {
@@ -320,56 +331,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void UpdateUIFragments(final int frag, final boolean success) {
-        //TODO add event to dashboard fragment
-//        MainActivity.this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (frag == WandComm.frags.EXTERNAL) {
-//                    ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
-//                    external.UIUpdate(success);
-//                }
-//
-//                if (frag == WandComm.frags.ITNS) {
-//                    ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//                    itns.UIUpdate(success);
-//                }
-//            }
-//        });
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (frag == WandComm.frags.EXTERNAL) {
+                    UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                    uiUpdateEvent.setTabEnum(TabEnum.EXTERNAL);
+                    uiUpdateEvent.setUiUpdateSuccess(success);
+                    EventBus.getDefault().post(uiUpdateEvent);
+                }
+
+                if (frag == WandComm.frags.ITNS) {
+                    UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                    uiUpdateEvent.setTabEnum(TabEnum.ITNS);
+                    uiUpdateEvent.setUiUpdateSuccess(success);
+                    EventBus.getDefault().post(uiUpdateEvent);
+                }
+            }
+        });
     }
 
     public void UpdateUI(final boolean success) {
-        //TODO add event to dashboard fragment
-//        if (success) {
-//            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
-//                ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
-//                external.OnConnected();
-//
-//                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//                itns.OnConnected();
-//            }
-//        } else {
-//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-//
-//            alertDialog.setTitle(R.string.main_wand_error_title);
-//            alertDialog.setMessage(R.string.main_wand_error_msg);
-//
-//            alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                    dialogInterface.dismiss();
-//                }
-//            });
-//            alertDialog.show();
-//
-//            ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
-//            external.OnDisconnected();
-//
-//            ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//            itns.OnDisconnected();
-//        }
+        if (success) {
+            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
+                OnConnectedUIEvent externalOnConnectedUIEvent = new OnConnectedUIEvent();
+                externalOnConnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
+                EventBus.getDefault().post(externalOnConnectedUIEvent);
+
+                OnConnectedUIEvent itnsOnConnectedUIEvent = new OnConnectedUIEvent();
+                itnsOnConnectedUIEvent.setTabEnum(TabEnum.ITNS);
+                EventBus.getDefault().post(itnsOnConnectedUIEvent);
+            }
+        } else {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+
+            alertDialog.setTitle(R.string.main_wand_error_title);
+            alertDialog.setMessage(R.string.main_wand_error_msg);
+
+            alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialog.show();
+
+            OnDisconnectedUIEvent externalOnDisconnectedUIEvent = new OnDisconnectedUIEvent();
+            externalOnDisconnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
+            EventBus.getDefault().post(externalOnDisconnectedUIEvent);
+
+            OnDisconnectedUIEvent itnsOnDisconnectedUIEvent = new OnDisconnectedUIEvent();
+            itnsOnDisconnectedUIEvent.setTabEnum(TabEnum.ITNS);
+            EventBus.getDefault().post(itnsOnDisconnectedUIEvent);
+        }
     }
 
     public void UpdateItnsAmplitude() {
+        ItnsUpdateAmpEvent itnsUpdateAmpEvent = new ItnsUpdateAmpEvent();
+        EventBus.getDefault().post(itnsUpdateAmpEvent);
         //TODO add event to dashboard fragment
 //        MainActivity.this.runOnUiThread(new Runnable() {
 //            @Override
@@ -629,6 +648,81 @@ public class MainActivity extends AppCompatActivity {
         radioGroupPlus.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton rb = (RadioButton) dialog.findViewById(checkedId);
             Toast.makeText(getApplicationContext(), rb.getText(), Toast.LENGTH_SHORT).show();
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to set Program ITNS from Program therapy.
+    public void showProgramItnsDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_program_itns);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(v -> {
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to set Program ITNS from Program therapy.
+    public void showProgramItnsSuccessDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_program_itns_success);
+
+        Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to show Back to Start dialog.
+    public void showBackToStartDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_back_to_start);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    //TODO: Imp call this when we want to show Back to Start dialog.
+    public void showCloseAppDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_close_app);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        Button btnYesClose = (Button) dialog.findViewById(R.id.btn_yes_close);
+        btnYesClose.setOnClickListener(v -> {
+            finish();
         });
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
