@@ -285,8 +285,8 @@ public class MainActivity extends AppCompatActivity {
                 BatteryAlert();
         }
 
-        ImageView ivBatteryPer = findViewById(R.id.ivBatteryPer);
-        TextView tvBatteryPer = findViewById(R.id.tvBatteryPer);
+        ImageView ivBatteryPer = findViewById(R.id.iv_battery_per);
+        TextView tvBatteryPer = findViewById(R.id.tv_battery_per);
 
         tvBatteryPer.setText(String.valueOf(batteryPct).concat("%"));
 
