@@ -36,6 +36,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
+import com.ninecmed.tablet.events.OnConnectedUIEvent;
+import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -349,38 +352,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void UpdateUI(final boolean success) {
-        //TODO add event to dashboard fragment
-//        if (success) {
-//            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
-//                ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
-//                external.OnConnected();
-//
-//                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//                itns.OnConnected();
-//            }
-//        } else {
-//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-//
-//            alertDialog.setTitle(R.string.main_wand_error_title);
-//            alertDialog.setMessage(R.string.main_wand_error_msg);
-//
-//            alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                    dialogInterface.dismiss();
-//                }
-//            });
-//            alertDialog.show();
-//
-//            ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
-//            external.OnDisconnected();
-//
-//            ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//            itns.OnDisconnected();
-//        }
+        if (success) {
+            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
+                OnConnectedUIEvent externalOnConnectedUIEvent = new OnConnectedUIEvent();
+                externalOnConnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
+                EventBus.getDefault().post(externalOnConnectedUIEvent);
+
+                OnConnectedUIEvent itnsOnConnectedUIEvent = new OnConnectedUIEvent();
+                itnsOnConnectedUIEvent.setTabEnum(TabEnum.ITNS);
+                EventBus.getDefault().post(itnsOnConnectedUIEvent);
+            }
+        } else {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+
+            alertDialog.setTitle(R.string.main_wand_error_title);
+            alertDialog.setMessage(R.string.main_wand_error_msg);
+
+            alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialog.show();
+
+            OnDisconnectedUIEvent externalOnDisconnectedUIEvent = new OnDisconnectedUIEvent();
+            externalOnDisconnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
+            EventBus.getDefault().post(externalOnDisconnectedUIEvent);
+
+            OnDisconnectedUIEvent itnsOnDisconnectedUIEvent = new OnDisconnectedUIEvent();
+            itnsOnDisconnectedUIEvent.setTabEnum(TabEnum.ITNS);
+            EventBus.getDefault().post(itnsOnDisconnectedUIEvent);
+        }
     }
 
     public void UpdateItnsAmplitude() {
+        ItnsUpdateAmpEvent itnsUpdateAmpEvent = new ItnsUpdateAmpEvent();
+        EventBus.getDefault().post(itnsUpdateAmpEvent);
         //TODO add event to dashboard fragment
 //        MainActivity.this.runOnUiThread(new Runnable() {
 //            @Override

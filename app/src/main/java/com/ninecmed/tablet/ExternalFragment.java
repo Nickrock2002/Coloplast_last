@@ -21,6 +21,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.ninecmed.tablet.events.OnConnectedUIEvent;
+import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -218,6 +220,20 @@ public class ExternalFragment extends Fragment {
                 return true;
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OnConnectedUIEvent event) {
+        if (event.getTabEnum() == TabEnum.EXTERNAL) {
+            OnConnected();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OnDisconnectedUIEvent event) {
+        if (event.getTabEnum() == TabEnum.EXTERNAL) {
+            OnDisconnected();
+        }
     }
 
     public void OnConnected() {

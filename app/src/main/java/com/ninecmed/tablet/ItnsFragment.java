@@ -30,6 +30,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
+import com.ninecmed.tablet.events.OnConnectedUIEvent;
+import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -524,6 +527,11 @@ public class ItnsFragment extends Fragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ItnsUpdateAmpEvent event) {
+        UpdateAmplitude();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeAmpControls(View view) {
         final ImageButton plus = view.findViewById(R.id.ibItnsPlus);
@@ -608,17 +616,30 @@ public class ItnsFragment extends Fragment {
         });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OnConnectedUIEvent event) {
+        if (event.getTabEnum() == TabEnum.ITNS) {
+            OnConnected();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OnDisconnectedUIEvent event) {
+        if (event.getTabEnum() == TabEnum.ITNS) {
+            OnDisconnected();
+        }
+    }
+
     public void OnConnected() {
         View view = getView();
 
-        TextView tv = Objects.requireNonNull(view).findViewById(R.id.tvItnsBtStatus);
+        /*TextView tv = Objects.requireNonNull(view).findViewById(R.id.tvItnsBtStatus);
         tv.setText(getString(R.string.link_msg));
 
         ImageView iv = view.findViewById(R.id.ivItnsLink);
-        iv.setImageResource(R.drawable.ic_link);
+        iv.setImageResource(R.drawable.ic_link);*/
 
         EnableInterrogateButton(true, true);
-        EnableProgramButton(false, true);
         EnableStimTestButton(true);
 
         SetChangedParametersEnable(true, true);
@@ -630,23 +651,18 @@ public class ItnsFragment extends Fragment {
 
         View view = getView();
 
-        TextView tv = Objects.requireNonNull(view).findViewById(R.id.tvItnsBtStatus);
-        tv.setText(getString(R.string.no_link_msg));
+        /*TextView tv = Objects.requireNonNull(view).findViewById(R.id.tvItnsBtStatus);
+        tv.setText(getString(R.string.no_link_msg));*/
 
         ImageView iv = view.findViewById(R.id.ivItnsLink);
         iv.setImageResource(R.drawable.ic_link_off);
 
-        StopProgressBar();
+        //StopProgressBar();
         ResetChangedParameters();
         SetChangedParametersEnable(false, true);
 
         EnableInterrogateButton(false, true);
-        EnableProgramButton(false, true);
         EnableStimTestButton(false);
-
-        // Hide controls
-        /*Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-        gp.setVisibility(View.GONE);*/
     }
 
     @Override
@@ -679,8 +695,6 @@ public class ItnsFragment extends Fragment {
 
     public void UIUpdate(boolean success) {
         View view = getView();
-        StopProgressBar();
-        mMainActivity.EnableTabs(true);
 
         if(success) {
             if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -947,11 +961,11 @@ public class ItnsFragment extends Fragment {
     }
 
     private void StopProgressBar() {
-        /*bTouch = false;
+        bTouch = false;
         ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItns);
         progressBar.setVisibility(View.INVISIBLE);
         Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-*/    }
+    }
 
     private void StartStimProgressBar() {
         ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItnsStim);
@@ -980,23 +994,10 @@ public class ItnsFragment extends Fragment {
     public void UpdateAmplitude() {
         View view = getView();
 
-        if(!mMainActivity.wandComm.AnyProgramChangesOtherThanAmplitude()) {
-            EnableProgramButton(false, true);
-        }
-
-        TextView ampRO = Objects.requireNonNull(view).findViewById(R.id.tvItnsAmplitudeRO);
-        ampRO.setText(WandData.GetAmplitude());
-
         TextView amp = view.findViewById(R.id.tvItnsAmplitude);
         amp.setText(WandData.GetAmplitude());
         amp.setTextColor(Color.BLACK);
         mAmplitudePos = WandData.GetAmplitudePos();
-
-        ImageButton plus = view.findViewById(R.id.ibItnsPlus);
-        plus.setBackgroundResource(R.color.colorControlNoChange);
-
-        ImageButton minus = view.findViewById(R.id.ibItnsMinus);
-        minus.setBackgroundResource(R.color.colorControlNoChange);
     }
 
     private void EnableInterrogateButton(boolean enable, boolean change_alpha) {
