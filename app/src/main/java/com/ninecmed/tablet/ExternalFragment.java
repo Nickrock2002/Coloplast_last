@@ -1,6 +1,7 @@
 package com.ninecmed.tablet;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -20,6 +21,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.ninecmed.tablet.events.TabEnum;
+import com.ninecmed.tablet.events.UIUpdateEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Objects;
 
 public class ExternalFragment extends Fragment {
@@ -32,6 +40,25 @@ public class ExternalFragment extends Fragment {
     private boolean mStimEnabled = false;
     private AlertDialog mAlertDialog;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UIUpdateEvent event) {
+        if (event.getTabEnum() == TabEnum.EXTERNAL) {
+            UIUpdate(event.isUiUpdateSuccess());
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
@@ -243,11 +270,11 @@ public class ExternalFragment extends Fragment {
             TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvExternalAmplitude);
             amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
-            TextView leadi = getView().findViewById(R.id.tvExternalLeadI);
+            /*TextView leadi = getView().findViewById(R.id.tvExternalLeadI);
             leadi.setText(WandData.GetStimLeadI());
 
             TextView leadr = getView().findViewById(R.id.tvExternalLeadR);
-            leadr.setText(WandData.GetStimLeadR());
+            leadr.setText(WandData.GetStimLeadR());*/
         }
         else {
             View view = getView();

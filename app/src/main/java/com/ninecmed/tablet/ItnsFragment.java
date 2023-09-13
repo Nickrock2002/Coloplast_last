@@ -30,6 +30,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.ninecmed.tablet.events.TabEnum;
+import com.ninecmed.tablet.events.UIUpdateEvent;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -71,7 +77,7 @@ public class ItnsFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeInterrogateButton(View view) {
-        final Button interrogate = view.findViewById(R.id.btn_interrogate);
+        final Button interrogate = view.findViewById(R.id.btItnsInterrogate);
 
         //TODO: remove comment after BT
         /*interrogate.setEnabled(false);
@@ -511,6 +517,13 @@ public class ItnsFragment extends Fragment {
         });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UIUpdateEvent event) {
+        if (event.getTabEnum() == TabEnum.ITNS) {
+            UIUpdate(event.isUiUpdateSuccess());
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeAmpControls(View view) {
         final ImageButton plus = view.findViewById(R.id.ibItnsPlus);
@@ -661,7 +674,7 @@ public class ItnsFragment extends Fragment {
 
     private void OnHidden() {
         // Always make sure buttons are enabled when leaving window
-        Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void UIUpdate(boolean success) {
@@ -687,7 +700,7 @@ public class ItnsFragment extends Fragment {
                 leadr.setText(WandData.GetLeadR());*/
             }
             else {
-                MakeTone(ToneGenerator.TONE_CDMA_PIP);
+                //MakeTone(ToneGenerator.TONE_CDMA_PIP);
 
                 /*if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE) {
                     Group gp = Objects.requireNonNull(view).findViewById(R.id.ghITNS);
@@ -853,13 +866,15 @@ public class ItnsFragment extends Fragment {
     }
 
     private void msg (String s) {
-        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(requireActivity().getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
     private void SetChangedParametersEnable(boolean enable, boolean change_alpha) {
         View view = getView();
 
-        Spinner therapydd = Objects.requireNonNull(view).findViewById(R.id.ddItnsTherapy);
+
+        //TODO following will go to Program Therapy fragment
+        /*Spinner therapydd = Objects.requireNonNull(view).findViewById(R.id.ddItnsTherapy);
         therapydd.setEnabled(enable);
         if(change_alpha) therapydd.setAlpha(enable ? 1f : 0.5f);
 
@@ -869,7 +884,7 @@ public class ItnsFragment extends Fragment {
 
         TextView time = view.findViewById(R.id.tvItnsTime);
         time.setEnabled(enable);
-        if(change_alpha) time.setAlpha(enable ? 1f : 0.5f);
+        if(change_alpha) time.setAlpha(enable ? 1f : 0.5f);*/
 
         ImageButton plus = view.findViewById(R.id.ibItnsPlus);
         plus.setEnabled(enable);
@@ -985,13 +1000,13 @@ public class ItnsFragment extends Fragment {
     }
 
     private void EnableInterrogateButton(boolean enable, boolean change_alpha) {
-        Button interrogate = Objects.requireNonNull(getView()).findViewById(R.id.btItnsInterrogate);
+        Button interrogate = requireView().findViewById(R.id.btItnsInterrogate);
         interrogate.setEnabled(enable);
         if(change_alpha) interrogate.setAlpha(enable ? 1f : 0.5f);
     }
 
     private void EnableProgramButton(boolean enable, boolean change_alpha) {
-        Button program = Objects.requireNonNull(getView()).findViewById(R.id.btItnsProgram);
+        Button program = requireView().findViewById(R.id.btItnsProgram);
 
         if(enable && mMainActivity.wandComm.AnyProgramChanges()) {
             program.setEnabled(true);
@@ -1004,7 +1019,7 @@ public class ItnsFragment extends Fragment {
     }
 
     private void EnableStimTestButton(boolean enable) {
-        Button test = Objects.requireNonNull(getView()).findViewById(R.id.btItnsStartStim);
+        Button test = requireView().findViewById(R.id.btItnsStartStim);
         test.setEnabled(enable);
         test.setAlpha(enable ? 1f : 0.5f);
     }

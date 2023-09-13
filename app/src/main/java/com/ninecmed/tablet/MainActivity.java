@@ -36,6 +36,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ninecmed.tablet.events.TabEnum;
+import com.ninecmed.tablet.events.UIUpdateEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import me.aflak.bluetooth.Bluetooth;
@@ -212,13 +217,16 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
         updateBatteryStatus();
 
-        /*ImageView intibiaLogo = findViewById(R.id.ivBatteryPer);
+        //just for event testing purpose
+        ImageView intibiaLogo = findViewById(R.id.intibia_logo);
         intibiaLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new MessageEvent());
+                UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                uiUpdateEvent.setTabEnum(TabEnum.ITNS);
+                EventBus.getDefault().post(uiUpdateEvent);
             }
-        });*/
+        });
     }
 
     private void initBluetooth() {
@@ -320,21 +328,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void UpdateUIFragments(final int frag, final boolean success) {
-        //TODO add event to dashboard fragment
-//        MainActivity.this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (frag == WandComm.frags.EXTERNAL) {
-//                    ExternalFragment external = (ExternalFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.EXT);
-//                    external.UIUpdate(success);
-//                }
-//
-//                if (frag == WandComm.frags.ITNS) {
-//                    ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//                    itns.UIUpdate(success);
-//                }
-//            }
-//        });
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (frag == WandComm.frags.EXTERNAL) {
+                    UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                    uiUpdateEvent.setTabEnum(TabEnum.EXTERNAL);
+                    uiUpdateEvent.setUiUpdateSuccess(success);
+                    EventBus.getDefault().post(uiUpdateEvent);
+                }
+
+                if (frag == WandComm.frags.ITNS) {
+                    UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                    uiUpdateEvent.setTabEnum(TabEnum.ITNS);
+                    uiUpdateEvent.setUiUpdateSuccess(success);
+                    EventBus.getDefault().post(uiUpdateEvent);
+                }
+            }
+        });
     }
 
     public void UpdateUI(final boolean success) {
