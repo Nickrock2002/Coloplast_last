@@ -3,6 +3,7 @@ package com.ninecmed.tablet;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -36,6 +37,7 @@ import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -51,6 +53,19 @@ public class ItnsFragment extends Fragment {
     private boolean mStimEnabled = false;
     private AlertDialog mAlertDialog;
     private boolean bTouch = false;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

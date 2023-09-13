@@ -45,7 +45,6 @@ public class ExternalFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         EventBus.getDefault().register(this);
     }
 
