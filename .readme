@@ -1,0 +1,7 @@
+The code in this repository is intended to meet the specifications as defined in:
+VV-0357055 Intibia Software Design Input Requirements
+
+The binary outputs will be stored in 
+VV-0521838 Intibia Tablet Application
+which shall contain a viewable rendition that points to this repository
+ as well as the Software Design Requirements
