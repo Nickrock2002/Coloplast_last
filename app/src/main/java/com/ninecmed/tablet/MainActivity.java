@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         launchFeatureSelectionFragment();
 
-        mHandler.postDelayed(MinuteTimer, 60000);
+        mHandler.postDelayed(MinuteTimer, 2000);
         // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
@@ -299,9 +299,35 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             updateBatteryStatus();
-            mHandler.postDelayed(MinuteTimer, 60000);
+            updateAppTime();
+            mHandler.postDelayed(MinuteTimer, 2000);
         }
     };
+
+    private void updateAppTime() {
+        //TextView tvAppTime = findViewById(R.id.tv_app_time);
+
+        // Get the current date and time from the device
+        Calendar currentCalendar = Calendar.getInstance();
+        long currentTimeMillis = currentCalendar.getTimeInMillis() + timeDifferenceMillis;
+
+        // Format the time in "2:00 PM" format
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        String timeToShow = timeFormat.format(currentTimeMillis);
+
+        // Format the date in "01/10/2023" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        String dateToShow = dateFormat.format(currentTimeMillis);
+
+        //TODO send this timeToShow and dateToShow via Eventbus to ProgramTherapy fragment
+
+        // following was for testing
+        /*// Combine the formatted time and date
+        String result = timeToShow + " - " + dateToShow;
+
+        // Display the result in the TextView
+        tvAppTime.setText(result);*/
+    }
 
     void updateBatteryStatus() {
         BatteryManager bm = (BatteryManager) getApplicationContext().getSystemService(BATTERY_SERVICE);
