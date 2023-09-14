@@ -70,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
     Dialog wandConnDialog;
 
+    private long timeDifferenceMillis = 0;
+
+    private int selectedHour = 0;
+    private int selectedMinutes = 0;
+    private int selectedYear = 0;
+    private int selectedMonth = 0;
+    private int selectedDay = 0;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -515,8 +523,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 formattedTime = "";
                 formattedDate = "";
-
-                //TODO: save delta time
+                calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
                 dialog.dismiss();
             }
         });
@@ -555,6 +562,9 @@ public class MainActivity extends AppCompatActivity {
                 // Format the time in 12-hour format with AM/PM
                 DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
                 formattedTime = timeFormat.format(calendar.getTime());
+
+                selectedHour = hourOfDay;
+                selectedMinutes = minute;
             }
         });
 
@@ -573,6 +583,9 @@ public class MainActivity extends AppCompatActivity {
                     // Format the time in 12-hour format with AM/PM
                     DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
                     formattedTime = timeFormat.format(calendar.getTime());
+
+                    selectedHour = hour;
+                    selectedMinutes = minute;
                 }
                 showSetDateTimeDialog();
                 dialog.dismiss();
@@ -604,6 +617,10 @@ public class MainActivity extends AppCompatActivity {
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
                     formattedDate = dateFormat.format(calendar.getTime());
+
+                    selectedYear = year;
+                    selectedMonth = month;
+                    selectedDay = day;
                 }
                 showSetDateTimeDialog();
                 dialog.dismiss();
@@ -622,6 +639,10 @@ public class MainActivity extends AppCompatActivity {
 
                         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
                         formattedDate = dateFormat.format(calendar.getTime());
+
+                        selectedYear = year;
+                        selectedMonth = month;
+                        selectedDay = day;
                     }
             );
         }
@@ -630,27 +651,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
-
-    public void showBluetoothPermissionRequiredDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_bluetooth_permission_required);
-
-        Button btnOkCloseApp = (Button) dialog.findViewById(R.id.btn_ok_close_app);
-        btnOkCloseApp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                finish();
-            }
-        });
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
-    }
-
 
     //TODO: Imp call this when we want to set Day/Date from Program therapy.
     public void showSetDayForTherapyDialog() {
@@ -806,5 +806,23 @@ public class MainActivity extends AppCompatActivity {
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
+    }
+
+    private void calculateTimeDifference(int year, int month, int day, int hour, int minute) {
+
+        // Create a Calendar object for the user-selected date and time
+        Calendar userSelectedCalendar = Calendar.getInstance();
+        userSelectedCalendar.set(year, month, day, hour, minute);
+
+        // Get the current date and time from the device
+        Calendar currentCalendar = Calendar.getInstance();
+
+        // Calculate the time difference in milliseconds
+        timeDifferenceMillis = userSelectedCalendar.getTimeInMillis() - currentCalendar.getTimeInMillis();
+    }
+
+    //TODO : Use this time in during program
+    public long getTimeDifferenceMillis() {
+        return timeDifferenceMillis;
     }
 }
