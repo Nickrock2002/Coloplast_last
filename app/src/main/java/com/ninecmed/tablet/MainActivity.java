@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -128,16 +129,45 @@ public class MainActivity extends AppCompatActivity {
             // You can proceed with your Bluetooth functionality
             initBluetooth();
         }
+
+        setUpToolbarClickEvents();
+    }
+
+    private void setUpToolbarClickEvents() {
+        final ImageView ivHamburger = findViewById(R.id.iv_hamburger);
+        final ImageView ivBack = findViewById(R.id.iv_back);
+        ivHamburger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchHamburgerFragment();
+                updateToolbarColor(true);
+                ivHamburger.setVisibility(View.INVISIBLE);
+                ivBack.setVisibility(View.VISIBLE);
+            }
+        });
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchFeatureSelectionFragment();
+                updateToolbarColor(false);
+                ivHamburger.setVisibility(View.VISIBLE);
+                ivBack.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     public void updateToolbarColor(boolean isInside) {
+        ConstraintLayout toolbar = findViewById(R.id.ll_toolbar);
+        ImageView intibiaIv = findViewById(R.id.intibia_logo);
         if (isInside) {
-            LinearLayoutCompat toolbar = findViewById(R.id.ll_toolbar);
             toolbar.setBackgroundColor(ActivityCompat.getColor(this,
                     R.color.colorGreyThreeHundred));
-
-            ImageView intibiaIv = findViewById(R.id.intibia_logo);
             intibiaIv.setVisibility(View.VISIBLE);
+        } else {
+            toolbar.setBackgroundColor(ActivityCompat.getColor(this,
+                    R.color.colorBaseGrayFifty));
+            intibiaIv.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -186,6 +216,26 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         DashboardFragment dashboardFragment = new DashboardFragment();
         fragmentTransaction.replace(R.id.fl_fragment, dashboardFragment);
+
+        fragmentTransaction.commit();
+    }
+
+    private void launchProgramTherapyFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ProgramTherapyFragment programTherapyFragment = new ProgramTherapyFragment();
+        fragmentTransaction.replace(R.id.fl_fragment, programTherapyFragment);
+
+        fragmentTransaction.commit();
+    }
+
+    private void launchHamburgerFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        HamburgerFragment hamburgerFragment = new HamburgerFragment();
+        fragmentTransaction.replace(R.id.fl_fragment, hamburgerFragment);
 
         fragmentTransaction.commit();
     }
@@ -339,8 +389,8 @@ public class MainActivity extends AppCompatActivity {
                 BatteryAlert();
         }
 
-        ImageView ivBatteryPer = findViewById(R.id.ivBatteryPer);
-        TextView tvBatteryPer = findViewById(R.id.tvBatteryPer);
+        ImageView ivBatteryPer = findViewById(R.id.iv_battery_per);
+        TextView tvBatteryPer = findViewById(R.id.tv_battery_per);
 
         tvBatteryPer.setText(String.valueOf(batteryPct).concat("%"));
 
@@ -551,6 +601,7 @@ public class MainActivity extends AppCompatActivity {
                 formattedDate = "";
                 calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
                 dialog.dismiss();
+                launchProgramTherapyFragment();
             }
         });
 

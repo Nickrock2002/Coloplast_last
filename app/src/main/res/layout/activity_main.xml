@@ -5,22 +5,38 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorBaseGrayFifty"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:paddingHorizontal="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/iv_hamburger"
             android:layout_width="35dp"
             android:layout_height="40dp"
-            android:src="@drawable/cp_menu" />
+            android:src="@drawable/cp_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/ll_top_bar_logo"/>
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:src="@drawable/cp_navigate_back"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/ll_top_bar_logo" />
 
         <TextView
             android:id="@+id/tv_app_time"
@@ -32,12 +48,16 @@
             />
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/llTopBarLogo"
+            android:id="@+id/ll_top_bar_logo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_hamburger"
+            app:layout_constraintEnd_toStartOf="@id/iv_battery_per">
 
             <ImageView
                 android:id="@+id/intibia_logo"
@@ -48,17 +68,25 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <ImageView
-            android:id="@+id/ivBatteryPer"
+            android:id="@+id/iv_battery_per"
             android:layout_width="35dp"
-            android:layout_height="40dp" />
+            android:layout_height="40dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ll_top_bar_logo"
+            app:layout_constraintEnd_toStartOf="@id/tv_battery_per" />
 
         <TextView
-            android:id="@+id/tvBatteryPer"
+            android:id="@+id/tv_battery_per"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBaseDeepBlue"
-            android:textSize="24sp" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            android:textSize="24sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_battery_per"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/fl_fragment"

@@ -51,9 +51,9 @@ public class HamburgerFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.fragment_hamburger, container, false);
 
-        InitializeStimulationButton(view);
+//        InitializeStimulationButton(view);
         InitializeInterrogateButton(view);
-        InitializeAmpControls(view);
+//        InitializeAmpControls(view);
 
         mTabLayout = view.findViewById(R.id.tabs);
         mTabLayout.addTab(mTabLayout.newTab().setText("Intibia ITNS Information and Settings"));
@@ -169,7 +169,7 @@ public class HamburgerFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeStimulationButton(View view) {
+    /*private void InitializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btItnsStartStim);
         //TODO:IMP remove comment after BT
         //stimulate.setEnabled(false);
@@ -187,11 +187,11 @@ public class HamburgerFragment extends Fragment {
                             stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
 
-                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
+                            *//*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
                             leadi.setText(WandData.GetLeadI());
 
                             TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());*/
+                            leadr.setText(WandData.GetLeadR());*//*
                             // Disable changed parameters during test stim. Only re-enable once
                             // job is completed. Even though controls are disabled, don't change
                             // alpha, meaning don't gray out the controls, otherwise it appears
@@ -243,7 +243,7 @@ public class HamburgerFragment extends Fragment {
                 return true;
             }
         });
-    }
+    }*/
 
     private final Runnable HoldStimulation = new Runnable() {
         @Override
@@ -505,7 +505,7 @@ public class HamburgerFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeAmpControls(View view) {
+    /*private void InitializeAmpControls(View view) {
         final ImageButton plus = view.findViewById(R.id.ibItnsPlus);
         final ImageButton minus = view.findViewById(R.id.ibItnsMinus);
         // Use OnTouchListener rather than onClickListener so that we register the change
@@ -531,16 +531,16 @@ public class HamburgerFragment extends Fragment {
                         //mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
 
 
-                        /*amp.setTextColor(Color.BLACK);
+                        *//*amp.setTextColor(Color.BLACK);
                         plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
-                        minus.setBackgroundResource(R.color.colorControlNoChange);*/
+                        minus.setBackgroundResource(R.color.colorControlNoChange);*//*
                     } else {
                         //TODO: Imp remove following line after BT
                         //mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
 
-                        /*amp.setTextColor(Color.RED);
+                        *//*amp.setTextColor(Color.RED);
                         plus.setBackgroundResource(R.color.colorControlChange);
-                        minus.setBackgroundResource(R.color.colorControlChange);*/
+                        minus.setBackgroundResource(R.color.colorControlChange);*//*
                     }
 
                     //EnableProgramButton(true, true);
@@ -568,15 +568,15 @@ public class HamburgerFragment extends Fragment {
 
                     if(WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                       /* amp.setTextColor(Color.BLACK);
+                       *//* amp.setTextColor(Color.BLACK);
                         minus.setBackgroundResource(R.color.colorControlNoChange);
-                        plus.setBackgroundResource(R.color.colorControlNoChange);*/
+                        plus.setBackgroundResource(R.color.colorControlNoChange);*//*
                     }
                     else {
                         mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                       /* amp.setTextColor(Color.RED);
+                       *//* amp.setTextColor(Color.RED);
                         minus.setBackgroundResource(R.color.colorControlChange);
-                        plus.setBackgroundResource(R.color.colorControlChange);*/
+                        plus.setBackgroundResource(R.color.colorControlChange);*//*
                     }
 
                     //EnableProgramButton(true, true);
@@ -587,7 +587,7 @@ public class HamburgerFragment extends Fragment {
             }
         });
     }
-
+*/
     public void OnConnected() {
         View view = getView();
 
