@@ -34,7 +34,6 @@ import java.util.Objects;
 
 public class ExternalFragment extends Fragment {
     private static final String TAG = "ExternalFragment";
-//    private MainActivity mMainActivity = null;
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 8;                                                                   // Set default position ot 1.5V
     private long mNow;
