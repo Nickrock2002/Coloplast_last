@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         launchFeatureSelectionFragment();
 
-        mHandler.postDelayed(MinuteTimer, 2000);
+        mHandler.postDelayed(MinuteTimer, 60000);
         // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             updateBatteryStatus();
             updateAppTime();
-            mHandler.postDelayed(MinuteTimer, 2000);
+            mHandler.postDelayed(MinuteTimer, 60000);
         }
     };
 
