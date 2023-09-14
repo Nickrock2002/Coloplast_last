@@ -601,6 +601,7 @@ public class MainActivity extends AppCompatActivity {
                 formattedDate = "";
                 calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
                 dialog.dismiss();
+                launchProgramTherapyFragment();
             }
         });
 
