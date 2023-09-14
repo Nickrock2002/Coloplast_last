@@ -24,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,11 @@ import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import me.aflak.bluetooth.Bluetooth;
 import me.aflak.bluetooth.interfaces.DeviceCallback;
@@ -58,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
     protected boolean mRunBT = false;
     public WandComm wandComm = null;
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
+
+    private String formattedTime = "";
+
+    private String formattedDate = "";
 
     Dialog wandConnDialog;
 
@@ -467,6 +476,16 @@ public class MainActivity extends AppCompatActivity {
         Button btnTime = (Button) dialog.findViewById(R.id.btn_time);
         Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
         Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+
+        if (!formattedTime.isEmpty()){
+            btnTime.setText(formattedTime.toUpperCase());
+            btnTime.setPressed(true);
+        }
+        if (!formattedDate.isEmpty()){
+            btnDate.setText(formattedDate);
+            btnDate.setPressed(true);
+        }
+
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -486,6 +505,7 @@ public class MainActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                formattedTime = "";
                 dialog.dismiss();
             }
         });
@@ -493,6 +513,9 @@ public class MainActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                formattedTime = "";
+                formattedDate = "";
+
                 //TODO: save delta time
                 dialog.dismiss();
             }
@@ -510,9 +533,47 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_time_picker);
 
         Button btnConfirmTime = (Button) dialog.findViewById(R.id.btn_confirm_time);
+
+        TimePicker timePicker = (TimePicker) dialog.findViewById(R.id.timePicker);
+        timePicker.setIs24HourView(false); // Set to true if you want 24-hour format
+
+        // Set a default time (optional)
+        Calendar currentTime = Calendar.getInstance();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
+        timePicker.setHour(hour);
+        timePicker.setMinute(minute);
+
+        // Set a listener to the time picker
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                // Format the time in 12-hour format with AM/PM
+                DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
+                formattedTime = timeFormat.format(calendar.getTime());
+            }
+        });
+
         btnConfirmTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (formattedTime.isEmpty()){
+                    Calendar currentTime = Calendar.getInstance();
+                    int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+                    int minute = currentTime.get(Calendar.MINUTE);
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                    calendar.set(Calendar.MINUTE, minute);
+
+                    // Format the time in 12-hour format with AM/PM
+                    DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
+                    formattedTime = timeFormat.format(calendar.getTime());
+                }
                 showSetDateTimeDialog();
                 dialog.dismiss();
             }
@@ -529,23 +590,40 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_date_picker);
 
+        DatePicker datePicker = dialog.findViewById(R.id.datePicker);
         Button btnConfirmDate = (Button) dialog.findViewById(R.id.btn_confirm_date);
         btnConfirmDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (formattedDate.isEmpty()) {
+                    int year = datePicker.getYear();
+                    int month = datePicker.getMonth();
+                    int day = datePicker.getDayOfMonth();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(year, month, day);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                    formattedDate = dateFormat.format(calendar.getTime());
+                }
                 showSetDateTimeDialog();
                 dialog.dismiss();
             }
         });
 
-        DatePicker datePicker = dialog.findViewById(R.id.datePicker);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
-                @Override
-                public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            // Set a listener to the date picker
+            datePicker.init(
+                    datePicker.getYear(),
+                    datePicker.getMonth(),
+                    datePicker.getDayOfMonth(),
+                    (view, year, month, day) -> {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(year, month, day);
 
-                }
-            });
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                        formattedDate = dateFormat.format(calendar.getTime());
+                    }
+            );
         }
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);

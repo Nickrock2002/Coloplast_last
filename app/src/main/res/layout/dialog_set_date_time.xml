@@ -30,13 +30,14 @@
 
     <Button
         android:id="@+id/btn_date"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corners_button"
         android:text="Date"
         android:textAllCaps="false"
         android:textSize="20sp"
+        android:layout_marginHorizontal="60dp"
         android:paddingHorizontal="40dp"
         android:textColor="@color/cardview_light_background"
         app:layout_constraintBottom_toTopOf="@+id/btn_time"
@@ -48,15 +49,15 @@
 
     <Button
         android:id="@+id/btn_time"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corners_button"
         android:text="Time"
         android:textAllCaps="false"
+        android:layout_marginHorizontal="60dp"
         android:textColor="@color/cardview_light_background"
         android:textSize="20sp"
-        android:paddingHorizontal="40dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
