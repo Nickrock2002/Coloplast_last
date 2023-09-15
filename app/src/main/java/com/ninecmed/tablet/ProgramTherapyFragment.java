@@ -46,11 +46,11 @@ public class ProgramTherapyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
-        View view = inflater.inflate(R.layout.itns_fragment_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_program_therapy, container, false);
 
-        InitializeStimulationButton(view);
-        InitializeInterrogateButton(view);
-        InitializeAmpControls(view);
+//        InitializeStimulationButton(view);
+//        InitializeInterrogateButton(view);
+//        InitializeAmpControls(view);
 
         /*InitializeProgramButton(view);
 
