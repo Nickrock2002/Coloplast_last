@@ -53,7 +53,7 @@ public class DashboardFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        mSectionsPageAdapter = new SectionsPageAdapter(getFragmentManager());
+        mSectionsPageAdapter = new SectionsPageAdapter(getChildFragmentManager());
 
         // Setup ViewPager with the sections adapter
         CustomViewPager mViewPager = view.findViewById(R.id.container);
