@@ -34,7 +34,6 @@ import java.util.Objects;
 
 public class ExternalFragment extends Fragment {
     private static final String TAG = "ExternalFragment";
-//    private MainActivity mMainActivity = null;
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 8;                                                                   // Set default position ot 1.5V
     private long mNow;
@@ -80,8 +79,6 @@ public class ExternalFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btExternalStartStim);
-        //stimulate.setEnabled(false);
-        //stimulate.setAlpha(0.5f);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -91,9 +88,11 @@ public class ExternalFragment extends Fragment {
                             stimulate.setPressed(true);
                             //TODO:IMP remove comment after BT
                             //mMainActivity.wandComm.SetStimulationExt(true);
-                            MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
+
+                            mNow = System.currentTimeMillis();
+                            mStimEnabled = true;
 
                             /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
                             leadi.setText(WandData.GetLeadI());
@@ -115,9 +114,7 @@ public class ExternalFragment extends Fragment {
                             //EnableInterrogateButton(false, false);
                             //EnableProgramButton(false, false);
                             //StartStimProgressBar();
-                            mMainActivity.EnableTabs(false);
-                            mNow = System.currentTimeMillis();
-                            mStimEnabled = true;
+                            //mMainActivity.EnableTabs(false);
                         }
                         break;
 
@@ -139,7 +136,7 @@ public class ExternalFragment extends Fragment {
                                 //mMainActivity.wandComm.SetStimulationExt(false);
 
                                 //StopStimProgressBar();
-                                MakeTone(ToneGenerator.TONE_PROP_NACK);
+                                //MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 mStimEnabled = false;
                             } else {
                                 //TODO:IMP remove comment after BT
@@ -166,16 +163,7 @@ public class ExternalFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeAmplitudeButton(View view) {
         final ImageButton plus = view.findViewById(R.id.ibExternalPlus);
-
-        //TODO:Imp remove comment after BT
-        /*plus.setEnabled(false);
-        plus.setAlpha(0.5f);*/
-
         final ImageButton minus = view.findViewById(R.id.ibExternalMinus);
-
-        //TODO:Imp remove comment after BT
-        /*minus.setEnabled(false);
-        minus.setAlpha(0.5f);*/
 
         plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -189,8 +177,7 @@ public class ExternalFragment extends Fragment {
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
 
-                    //TODO:Imp remove comment after BT
-                    //UIUpdate(true);
+                    UIUpdate(true);
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plus.setPressed(false);
                 }
@@ -210,8 +197,7 @@ public class ExternalFragment extends Fragment {
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
 
-                    //TODO:Imp remove comment after BT
-                    //UIUpdate(true);
+                    UIUpdate(true);
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minus.setPressed(false);
                 }
@@ -224,14 +210,16 @@ public class ExternalFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OnConnectedUIEvent event) {
         if (event.getTabEnum() == TabEnum.EXTERNAL) {
-            OnConnected();
+            //TODO : check if really required
+            //OnConnected();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OnDisconnectedUIEvent event) {
         if (event.getTabEnum() == TabEnum.EXTERNAL) {
-            OnDisconnected();
+            //TODO : check if really required
+            //OnDisconnected();
         }
     }
 
@@ -247,7 +235,7 @@ public class ExternalFragment extends Fragment {
         stim.setEnabled(true);
         stim.setAlpha(1f);
 
-        SetAmplitudeParameterEnabled(true, true);
+        //SetAmplitudeParameterEnabled(true, true);
     }
 
     public void OnDisconnected() {
@@ -264,8 +252,8 @@ public class ExternalFragment extends Fragment {
         stim.setEnabled(false);
         stim.setAlpha(0.5f);
 
-        SetAmplitudeParameterEnabled(false, true);
-        StopProgressBar();
+        //SetAmplitudeParameterEnabled(false, true);
+        //StopProgressBar();
         mMainActivity.EnableTabs(true);
     }
 
@@ -276,7 +264,7 @@ public class ExternalFragment extends Fragment {
         if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             // Re-enable the test stim button) only when UIUpdate is called -
             // meaning that the state machine has finished its tasks
-            SetAmplitudeParameterEnabled(true, false);
+            //SetAmplitudeParameterEnabled(true, false);
             Button stimulate = Objects.requireNonNull(getView()).findViewById(R.id.btExternalStartStim);
             stimulate.setEnabled(true);
         }

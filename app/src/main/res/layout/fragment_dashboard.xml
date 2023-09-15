@@ -32,10 +32,11 @@
             android:id="@+id/tv_time_program_therepy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            tools:text="TextView"
             android:visibility="gone"
             android:layout_marginTop="1dp"
             android:layout_marginStart="8dp"
+            android:textColor="@color/cardview_dark_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="TextView"
+            tools:text="TextView"
+            android:textColor="@color/cardview_dark_background"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/tv_time_program_therepy"
             app:layout_constraintStart_toStartOf="parent" />
