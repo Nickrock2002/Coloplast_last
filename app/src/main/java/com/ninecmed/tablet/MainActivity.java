@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
         });
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
+        setTheSystemButtonsHidden(wandConnDialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
         wandConnDialog.show();
@@ -503,6 +504,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        setTheSystemButtonsHidden(dialog);
         dialog.show();
     }
 
@@ -558,6 +560,7 @@ public class MainActivity extends AppCompatActivity {
             launchDashboardFragment(true);
         });
 
+        setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -616,6 +619,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
         });
 
+        setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -668,6 +672,7 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
+        setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -687,6 +692,7 @@ public class MainActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(v -> {
         });
 
+        setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -706,6 +712,7 @@ public class MainActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(v -> {
         });
 
+        setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -749,6 +756,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), rb.getText(), Toast.LENGTH_SHORT).show();
         });
 
+        setTheSystemButtonsHidden(dialog);
+
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -768,6 +777,8 @@ public class MainActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(v -> {
         });
 
+        setTheSystemButtonsHidden(dialog);
+
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -784,6 +795,8 @@ public class MainActivity extends AppCompatActivity {
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
         });
+
+        setTheSystemButtonsHidden(dialog);
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
@@ -802,6 +815,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
         });
 
+        setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -824,6 +838,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         });
 
+        setTheSystemButtonsHidden(dialog);
+
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
@@ -840,6 +856,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Calculate the time difference in milliseconds
         timeDifferenceMillis = userSelectedCalendar.getTimeInMillis() - currentCalendar.getTimeInMillis();
+    }
+
+    private void setTheSystemButtonsHidden(Dialog dialog){
+        // Hide the system navigation bar
+        View decorView = dialog.getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
     }
 
     //TODO : Use this time in during program
