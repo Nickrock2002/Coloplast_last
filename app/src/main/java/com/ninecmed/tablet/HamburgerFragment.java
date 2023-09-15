@@ -55,11 +55,27 @@ public class HamburgerFragment extends Fragment {
         InitializeInterrogateButton(view);
 //        InitializeAmpControls(view);
 
+        initializeCloseAppButton(view);
+
         mTabLayout = view.findViewById(R.id.tabs);
         mTabLayout.addTab(mTabLayout.newTab().setText("Intibia ITNS Information and Settings"));
 
         mMainActivity = (MainActivity) getActivity();
         return view;
+    }
+
+    private void initializeCloseAppButton(View view) {
+        Button closeAppBtn = view.findViewById(R.id.bt_close_app);
+        closeAppBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCloseAppDialog();
+            }
+        });
+    }
+
+    private void showCloseAppDialog() {
+        mMainActivity.showCloseAppDialog();
     }
 
     @SuppressLint("ClickableViewAccessibility")
