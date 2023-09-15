@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     private void launchFeatureSelectionFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
         fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
 

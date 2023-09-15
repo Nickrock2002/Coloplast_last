@@ -38,15 +38,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintRight_toLeftOf="@id/ll_top_bar_logo" />
 
-        <TextView
-            android:id="@+id/tv_app_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="time"
-            android:visibility="gone"
-            />
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_top_bar_logo"
             android:layout_width="0dp"
@@ -56,7 +47,7 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_hamburger"
+            app:layout_constraintStart_toEndOf="@+id/iv_back"
             app:layout_constraintEnd_toStartOf="@id/iv_battery_per">
 
             <ImageView

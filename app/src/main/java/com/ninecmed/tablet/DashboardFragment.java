@@ -14,8 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.ninecmed.tablet.events.TabEnum;
-import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -69,7 +67,7 @@ public class DashboardFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UpdateCurrentTimeEvent event) {
-        if (isClinicVisit){
+        if (isClinicVisit) {
             tvCurrentDate.setText(event.getDate());
             tvCurrentTime.setText(event.getTime());
         }
@@ -117,9 +115,9 @@ public class DashboardFragment extends Fragment {
     }
 
     private void SetupViewPager(ViewPager viewPager) {
-        if (isClinicVisit){
+        if (isClinicVisit) {
             mSectionsPageAdapter.AddFragment(new ProgramTherapyFragment(), "Program therapy");
-        }else {
+        } else {
             mSectionsPageAdapter.AddFragment(new ExternalFragment(), getResources().getString(R.string.external_title));
             mSectionsPageAdapter.AddFragment(new ItnsFragment(), getResources().getString(R.string.itns_title));
         }
@@ -128,7 +126,7 @@ public class DashboardFragment extends Fragment {
         viewPager.setOffscreenPageLimit(2);                                                         // Set page limit to 2 when using two fragments
     }
 
-    private void getTimeAndDateForFirstTime(){
+    private void getTimeAndDateForFirstTime() {
         // Get the current date and time from the device
         Calendar currentCalendar = Calendar.getInstance();
         long currentTimeMillis = currentCalendar.getTimeInMillis() + mainActivity.getTimeDifferenceMillis();
