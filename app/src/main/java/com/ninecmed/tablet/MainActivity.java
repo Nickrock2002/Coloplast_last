@@ -43,6 +43,7 @@ import com.ninecmed.tablet.events.OnConnectedUIEvent;
 import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
+import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -183,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isClinicVisit) {
                     showSetDateTimeDialog();
                 } else {
-                    launchSurgeryFragment();
+                    launchDashboardFragment(false);
                 }
                 wandConnDialog.dismiss();
             }
@@ -210,22 +211,13 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void launchSurgeryFragment() {
+    private void launchDashboardFragment(boolean isClinicVisit) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         DashboardFragment dashboardFragment = new DashboardFragment();
+        dashboardFragment.setClinicVisit(isClinicVisit);
         fragmentTransaction.replace(R.id.fl_fragment, dashboardFragment);
-
-        fragmentTransaction.commit();
-    }
-
-    private void launchProgramTherapyFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ProgramTherapyFragment programTherapyFragment = new ProgramTherapyFragment();
-        fragmentTransaction.replace(R.id.fl_fragment, programTherapyFragment);
 
         fragmentTransaction.commit();
     }
@@ -369,14 +361,11 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
         String dateToShow = dateFormat.format(currentTimeMillis);
 
-        //TODO send this timeToShow and dateToShow via Eventbus to ProgramTherapy fragment
+        UpdateCurrentTimeEvent updateCurrentTimeEvent = new UpdateCurrentTimeEvent();
+        updateCurrentTimeEvent.setTime(timeToShow);
+        updateCurrentTimeEvent.setDate(dateToShow);
 
-        // following was for testing
-        /*// Combine the formatted time and date
-        String result = timeToShow + " - " + dateToShow;
-
-        // Display the result in the TextView
-        tvAppTime.setText(result);*/
+        EventBus.getDefault().post(updateCurrentTimeEvent);
     }
 
     void updateBatteryStatus() {
@@ -609,7 +598,7 @@ public class MainActivity extends AppCompatActivity {
                 formattedDate = "";
                 calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
                 dialog.dismiss();
-                launchProgramTherapyFragment();
+                launchDashboardFragment(true);
             }
         });
 
