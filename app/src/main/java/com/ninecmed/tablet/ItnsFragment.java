@@ -214,7 +214,7 @@ public class ItnsFragment extends Fragment {
                             stimulate.setPressed(true);
                             //TODO: IMP remove comment after BT
                             //mMainActivity.wandComm.SetStimulation(true);
-                            MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                            //MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
 
