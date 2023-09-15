@@ -560,14 +560,21 @@ public class MainActivity extends AppCompatActivity {
         Button btnTime = (Button) dialog.findViewById(R.id.btn_time);
         Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
         Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        Button btnConfirmDisabled = (Button) dialog.findViewById(R.id.btn_confirm_disabled);
 
-        if (!formattedTime.isEmpty()){
+        if (!formattedTime.isEmpty()) {
             btnTime.setText(formattedTime.toUpperCase());
             btnTime.setPressed(true);
+            btnConfirmDisabled.setVisibility(View.GONE);
+            btnConfirm.setVisibility(View.VISIBLE);
+            btnConfirm.setClickable(true);
         }
         if (!formattedDate.isEmpty()){
             btnDate.setText(formattedDate);
             btnDate.setPressed(true);
+            btnConfirmDisabled.setVisibility(View.GONE);
+            btnConfirm.setVisibility(View.VISIBLE);
+            btnConfirm.setClickable(true);
         }
 
         btnDate.setOnClickListener(new View.OnClickListener() {
@@ -590,6 +597,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 formattedTime = "";
+                formattedDate = "";
                 dialog.dismiss();
             }
         });
