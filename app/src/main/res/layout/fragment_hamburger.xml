@@ -367,7 +367,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
         <Button
-            android:id="@+id/btn_amplitude_val"
+            android:id="@+id/btn_set_date_time"
             android:layout_width="260dp"
             android:layout_height="64dp"
             android:layout_gravity="start"
@@ -376,13 +376,13 @@
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@id/btn_frequency_val"
+            app:layout_constraintBottom_toTopOf="@id/btn_set_language"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btn_frequency_val"
+            android:id="@+id/btn_set_language"
             android:layout_width="260dp"
             android:layout_height="64dp"
             android:layout_gravity="start"
@@ -394,7 +394,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
-            app:layout_constraintTop_toBottomOf="@id/btn_amplitude_val" />
+            app:layout_constraintTop_toBottomOf="@id/btn_set_date_time" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
