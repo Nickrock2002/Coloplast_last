@@ -79,11 +79,17 @@ public class MainActivity extends AppCompatActivity {
     private int selectedMonth = 0;
     private int selectedDay = 0;
 
+    private ImageView ivHamburger;
+    private ImageView ivBack;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ivHamburger = findViewById(R.id.iv_hamburger);
+        ivBack = findViewById(R.id.iv_back);
 
         // This hides the status bar at the top
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -91,16 +97,13 @@ public class MainActivity extends AppCompatActivity {
 
         // And this hides the navigation bar at the bottom - along with the code in onResume()
         final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-                }
+        decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                decorView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             }
         });
 
@@ -134,26 +137,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpToolbarClickEvents() {
-        final ImageView ivHamburger = findViewById(R.id.iv_hamburger);
-        final ImageView ivBack = findViewById(R.id.iv_back);
-        ivHamburger.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchHamburgerFragment();
-                updateToolbarColor(true);
-                ivHamburger.setVisibility(View.INVISIBLE);
-                ivBack.setVisibility(View.VISIBLE);
-            }
+        ivHamburger.setOnClickListener(view -> {
+            launchHamburgerFragment();
+            updateToolbarColor(true);
+            ivHamburger.setVisibility(View.INVISIBLE);
+            ivBack.setVisibility(View.VISIBLE);
         });
 
-        ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchFeatureSelectionFragment();
-                updateToolbarColor(false);
-                ivHamburger.setVisibility(View.VISIBLE);
-                ivBack.setVisibility(View.INVISIBLE);
-            }
+        ivBack.setOnClickListener(view -> {
+            launchFeatureSelectionFragment();
+            updateToolbarColor(false);
+            ivHamburger.setVisibility(View.VISIBLE);
+            ivBack.setVisibility(View.INVISIBLE);
         });
     }
 
@@ -177,23 +172,15 @@ public class MainActivity extends AppCompatActivity {
         wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
 
         AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
-        btConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isClinicVisit) {
-                    showSetDateTimeDialog();
-                } else {
-                    launchSurgeryFragment();
-                }
-                wandConnDialog.dismiss();
+        btConfirm.setOnClickListener(view -> {
+            if (isClinicVisit) {
+                showSetDateTimeDialog();
+            } else {
+                launchSurgeryFragment();
             }
+            wandConnDialog.dismiss();
         });
-        wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wandConnDialog.dismiss();
-            }
-        });
+        wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
@@ -289,13 +276,10 @@ public class MainActivity extends AppCompatActivity {
 
         //just for event testing purpose
         ImageView intibiaLogo = findViewById(R.id.intibia_logo);
-        intibiaLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
-                uiUpdateEvent.setTabEnum(TabEnum.ITNS);
-                EventBus.getDefault().post(uiUpdateEvent);
-            }
+        intibiaLogo.setOnClickListener(v -> {
+            UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+            uiUpdateEvent.setTabEnum(TabEnum.ITNS);
+            EventBus.getDefault().post(uiUpdateEvent);
         });
     }
 
@@ -337,12 +321,7 @@ public class MainActivity extends AppCompatActivity {
         mRunBT = false;
     }
 
-    protected final Runnable Reconnect = new Runnable() {
-        @Override
-        public void run() {
-            mBluetooth.connectToDevice(mBTDevice);
-        }
-    };
+    protected final Runnable Reconnect = () -> mBluetooth.connectToDevice(mBTDevice);
 
     private final Runnable MinuteTimer = new Runnable() {
         @SuppressLint("DefaultLocale")
@@ -410,12 +389,9 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setTitle(R.string.main_lowbat_title);
         alertDialog.setMessage(R.string.main_lowbat_msg);
 
-        alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                mLowBatDialog = null;
-            }
+        alertDialog.setPositiveButton(getString(all_ok), (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            mLowBatDialog = null;
         });
 
         mLowBatDialog = alertDialog.create();
@@ -424,22 +400,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void UpdateUIFragments(final int frag, final boolean success) {
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (frag == WandComm.frags.EXTERNAL) {
-                    UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
-                    uiUpdateEvent.setTabEnum(TabEnum.EXTERNAL);
-                    uiUpdateEvent.setUiUpdateSuccess(success);
-                    EventBus.getDefault().post(uiUpdateEvent);
-                }
+        MainActivity.this.runOnUiThread(() -> {
+            if (frag == WandComm.frags.EXTERNAL) {
+                UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                uiUpdateEvent.setTabEnum(TabEnum.EXTERNAL);
+                uiUpdateEvent.setUiUpdateSuccess(success);
+                EventBus.getDefault().post(uiUpdateEvent);
+            }
 
-                if (frag == WandComm.frags.ITNS) {
-                    UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
-                    uiUpdateEvent.setTabEnum(TabEnum.ITNS);
-                    uiUpdateEvent.setUiUpdateSuccess(success);
-                    EventBus.getDefault().post(uiUpdateEvent);
-                }
+            if (frag == WandComm.frags.ITNS) {
+                UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+                uiUpdateEvent.setTabEnum(TabEnum.ITNS);
+                uiUpdateEvent.setUiUpdateSuccess(success);
+                EventBus.getDefault().post(uiUpdateEvent);
             }
         });
     }
@@ -461,12 +434,7 @@ public class MainActivity extends AppCompatActivity {
             alertDialog.setTitle(R.string.main_wand_error_title);
             alertDialog.setMessage(R.string.main_wand_error_msg);
 
-            alertDialog.setPositiveButton(getString(all_ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
+            alertDialog.setPositiveButton(getString(all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
             alertDialog.show();
 
             OnDisconnectedUIEvent externalOnDisconnectedUIEvent = new OnDisconnectedUIEvent();
@@ -570,39 +538,27 @@ public class MainActivity extends AppCompatActivity {
             btnDate.setPressed(true);
         }
 
-        btnDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog();
-                dialog.dismiss();
-            }
+        btnDate.setOnClickListener(v -> {
+            showDatePickerDialog();
+            dialog.dismiss();
         });
 
-        btnTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimePickerDialog();
-                dialog.dismiss();
-            }
+        btnTime.setOnClickListener(v -> {
+            showTimePickerDialog();
+            dialog.dismiss();
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                formattedTime = "";
-                dialog.dismiss();
-            }
+        btnCancel.setOnClickListener(v -> {
+            formattedTime = "";
+            dialog.dismiss();
         });
 
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                formattedTime = "";
-                formattedDate = "";
-                calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
-                dialog.dismiss();
-                launchProgramTherapyFragment();
-            }
+        btnConfirm.setOnClickListener(v -> {
+            formattedTime = "";
+            formattedDate = "";
+            calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
+            dialog.dismiss();
+            launchProgramTherapyFragment();
         });
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
@@ -629,44 +585,38 @@ public class MainActivity extends AppCompatActivity {
         timePicker.setMinute(minute);
 
         // Set a listener to the time picker
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+        timePicker.setOnTimeChangedListener((view, hourOfDay, minute12) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute12);
+
+            // Format the time in 12-hour format with AM/PM
+            DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
+            formattedTime = timeFormat.format(calendar.getTime());
+
+            selectedHour = hourOfDay;
+            selectedMinutes = minute12;
+        });
+
+        btnConfirmTime.setOnClickListener(v -> {
+            if (formattedTime.isEmpty()){
+                Calendar currentTime1 = Calendar.getInstance();
+                int hour1 = currentTime1.get(Calendar.HOUR_OF_DAY);
+                int minute1 = currentTime1.get(Calendar.MINUTE);
+
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
+                calendar.set(Calendar.HOUR_OF_DAY, hour1);
+                calendar.set(Calendar.MINUTE, minute1);
 
                 // Format the time in 12-hour format with AM/PM
                 DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
                 formattedTime = timeFormat.format(calendar.getTime());
 
-                selectedHour = hourOfDay;
-                selectedMinutes = minute;
+                selectedHour = hour1;
+                selectedMinutes = minute1;
             }
-        });
-
-        btnConfirmTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (formattedTime.isEmpty()){
-                    Calendar currentTime = Calendar.getInstance();
-                    int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-                    int minute = currentTime.get(Calendar.MINUTE);
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, hour);
-                    calendar.set(Calendar.MINUTE, minute);
-
-                    // Format the time in 12-hour format with AM/PM
-                    DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
-                    formattedTime = timeFormat.format(calendar.getTime());
-
-                    selectedHour = hour;
-                    selectedMinutes = minute;
-                }
-                showSetDateTimeDialog();
-                dialog.dismiss();
-            }
+            showSetDateTimeDialog();
+            dialog.dismiss();
         });
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
@@ -680,28 +630,25 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_date_picker);
 
-        DatePicker datePicker = dialog.findViewById(R.id.datePicker);
+        final DatePicker datePicker = dialog.findViewById(R.id.datePicker);
         Button btnConfirmDate = (Button) dialog.findViewById(R.id.btn_confirm_date);
-        btnConfirmDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (formattedDate.isEmpty()) {
-                    int year = datePicker.getYear();
-                    int month = datePicker.getMonth();
-                    int day = datePicker.getDayOfMonth();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(year, month, day);
+        btnConfirmDate.setOnClickListener(v -> {
+            if (formattedDate.isEmpty()) {
+                int year = datePicker.getYear();
+                int month = datePicker.getMonth();
+                int day = datePicker.getDayOfMonth();
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
-                    formattedDate = dateFormat.format(calendar.getTime());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                formattedDate = dateFormat.format(calendar.getTime());
 
-                    selectedYear = year;
-                    selectedMonth = month;
-                    selectedDay = day;
-                }
-                showSetDateTimeDialog();
-                dialog.dismiss();
+                selectedYear = year;
+                selectedMonth = month;
+                selectedDay = day;
             }
+            showSetDateTimeDialog();
+            dialog.dismiss();
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
