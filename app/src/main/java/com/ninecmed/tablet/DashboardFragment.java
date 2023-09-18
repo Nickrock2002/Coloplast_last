@@ -2,6 +2,7 @@ package com.ninecmed.tablet;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +35,6 @@ public class DashboardFragment extends Fragment {
     private TextView tvCurrentTime;
 
     private TextView tvCurrentDate;
-    private String timeToShowFirst = "";
-    private String dateToShowFirst = "";
 
     public void setClinicVisit(boolean clinicVisit) {
         isClinicVisit = clinicVisit;
@@ -81,9 +80,9 @@ public class DashboardFragment extends Fragment {
             tvCurrentDate = view.findViewById(R.id.tv_date_program_therepy);
             tvCurrentDate.setVisibility(View.VISIBLE);
             tvCurrentTime.setVisibility(View.VISIBLE);
-            getTimeAndDateForFirstTime();
-            tvCurrentDate.setText(dateToShowFirst);
-            tvCurrentTime.setText(timeToShowFirst);
+            Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTime(mainActivity.getTimeDifferenceMillis());
+            tvCurrentDate.setText(dateTimePair.first);
+            tvCurrentTime.setText(dateTimePair.second);
         }
     }
 
@@ -124,19 +123,5 @@ public class DashboardFragment extends Fragment {
 
         viewPager.setAdapter(mSectionsPageAdapter);
         viewPager.setOffscreenPageLimit(2);                                                         // Set page limit to 2 when using two fragments
-    }
-
-    private void getTimeAndDateForFirstTime() {
-        // Get the current date and time from the device
-        Calendar currentCalendar = Calendar.getInstance();
-        long currentTimeMillis = currentCalendar.getTimeInMillis() + mainActivity.getTimeDifferenceMillis();
-
-        // Format the time in "2:00 PM" format
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-        timeToShowFirst = timeFormat.format(currentTimeMillis);
-
-        // Format the date in "01/10/2023" format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-        dateToShowFirst = dateFormat.format(currentTimeMillis);
     }
 }

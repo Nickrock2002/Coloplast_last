@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -30,10 +31,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -49,6 +57,9 @@ public class HamburgerFragment extends Fragment {
     private boolean bTouch = false;
     private TabLayout mTabLayout;
     private Button setLanguage;
+    private Button resetDateTime;
+    private TextView tvDateVal;
+    private TextView tvTimeVal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,6 +72,8 @@ public class HamburgerFragment extends Fragment {
 
         initializeCloseAppButton(view);
 
+        tvDateVal = view.findViewById(R.id.tv_date_val);
+        tvTimeVal = view.findViewById(R.id.tv_time_val);
         mTabLayout = view.findViewById(R.id.tabs);
         mTabLayout.addTab(mTabLayout.newTab().setText("Intibia ITNS Information and Settings"));
         setLanguage = view.findViewById(R.id.btn_set_language);
@@ -68,8 +81,39 @@ public class HamburgerFragment extends Fragment {
             showChangeLanguageDialogue();
         });
 
-        mMainActivity = (MainActivity) getActivity();
+        resetDateTime = view.findViewById(R.id.btn_set_date_time);
+        resetDateTime.setOnClickListener(v -> {
+            mMainActivity.showSetDateTimeDialog(true);
+        });
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTime(mMainActivity.getTimeDifferenceMillis());
+        tvDateVal.setText(dateTimePair.first);
+        tvTimeVal.setText(dateTimePair.second);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mMainActivity = (MainActivity) getActivity();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UpdateCurrentTimeEvent event) {
+        tvDateVal.setText(event.getDate());
+        tvTimeVal.setText(event.getTime());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initializeCloseAppButton(View view) {

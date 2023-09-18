@@ -6,7 +6,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -31,7 +30,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -175,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
         btConfirm.setOnClickListener(view -> {
             if (isClinicVisit) {
-                showSetDateTimeDialog();
+                showSetDateTimeDialog(false);
             } else {
                 launchDashboardFragment(false);
             }
@@ -509,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO- call this method once the bluetooth dialog setup flow is done
-    public void showSetDateTimeDialog() {
+    public void showSetDateTimeDialog(boolean isFromHamburger) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -528,7 +526,7 @@ public class MainActivity extends AppCompatActivity {
             btnConfirm.setVisibility(View.VISIBLE);
             btnConfirm.setClickable(true);
         }
-        if (!formattedDate.isEmpty()){
+        if (!formattedDate.isEmpty()) {
             btnDate.setText(formattedDate);
             btnDate.setPressed(true);
             btnConfirmDisabled.setVisibility(View.GONE);
@@ -537,12 +535,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         btnDate.setOnClickListener(v -> {
-            showDatePickerDialog();
+            showDatePickerDialog(isFromHamburger);
             dialog.dismiss();
         });
 
         btnTime.setOnClickListener(v -> {
-            showTimePickerDialog();
+            showTimePickerDialog(isFromHamburger);
             dialog.dismiss();
         });
 
@@ -557,7 +555,12 @@ public class MainActivity extends AppCompatActivity {
             formattedDate = "";
             calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
             dialog.dismiss();
-            launchDashboardFragment(true);
+
+            if (!isFromHamburger) {
+                launchDashboardFragment(true);
+            } else {
+                updateAppTime();
+            }
         });
 
         setTheSystemButtonsHidden(dialog);
@@ -566,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void showTimePickerDialog() {
+    public void showTimePickerDialog(boolean isFromHamburger) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -599,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnConfirmTime.setOnClickListener(v -> {
-            if (formattedTime.isEmpty()){
+            if (formattedTime.isEmpty()) {
                 Calendar currentTime1 = Calendar.getInstance();
                 int hour1 = currentTime1.get(Calendar.HOUR_OF_DAY);
                 int minute1 = currentTime1.get(Calendar.MINUTE);
@@ -615,7 +618,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedHour = hour1;
                 selectedMinutes = minute1;
             }
-            showSetDateTimeDialog();
+            showSetDateTimeDialog(isFromHamburger);
             dialog.dismiss();
         });
 
@@ -625,7 +628,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void showDatePickerDialog() {
+    public void showDatePickerDialog(boolean isFromHamburger) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -648,7 +651,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedMonth = month;
                 selectedDay = day;
             }
-            showSetDateTimeDialog();
+            showSetDateTimeDialog(isFromHamburger);
             dialog.dismiss();
         });
 
@@ -858,7 +861,7 @@ public class MainActivity extends AppCompatActivity {
         timeDifferenceMillis = userSelectedCalendar.getTimeInMillis() - currentCalendar.getTimeInMillis();
     }
 
-    private void setTheSystemButtonsHidden(Dialog dialog){
+    private void setTheSystemButtonsHidden(Dialog dialog) {
         // Hide the system navigation bar
         View decorView = dialog.getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
