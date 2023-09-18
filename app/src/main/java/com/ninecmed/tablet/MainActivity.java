@@ -1,6 +1,7 @@
 package com.ninecmed.tablet;
 
 import static com.ninecmed.tablet.R.string.all_ok;
+import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

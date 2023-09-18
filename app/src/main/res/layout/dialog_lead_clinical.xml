@@ -9,7 +9,7 @@
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FF0000"
+        android:background="@color/colorOrange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -37,7 +37,7 @@
         android:layout_marginTop="32dp"
         android:text="Lead R is above normal range"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
         android:layout_marginTop="32dp"
         android:text="Lead R:"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/tv_reset_counter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
@@ -62,7 +62,7 @@
         android:layout_marginTop="8dp"
         android:text="Lead I:"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/tv_lead_r"
         app:layout_constraintTop_toBottomOf="@+id/tv_lead_r" />
 
@@ -74,7 +74,7 @@
         android:layout_marginTop="32dp"
         android:text="2000 ohms"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_reset_counter"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
@@ -86,7 +86,7 @@
         android:layout_marginTop="8dp"
         android:text="2.4 mA"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/tv_lead_r_val"
         app:layout_constraintTop_toBottomOf="@+id/tv_lead_r" />
 
@@ -111,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:layout_marginHorizontal="64dp"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
@@ -126,7 +126,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:layout_marginHorizontal="64dp"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"

@@ -316,9 +316,9 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetLeadI() {
+    static float GetLeadI() {
         if(mLeadI[CURRENT] == -1)
-            return null;
+            return 0.0f;
         else {
             float amp = GetAmpFromPos(amplitude[CURRENT]);
 
@@ -337,12 +337,14 @@ class WandData {
             if(leadr > 2000.0f)
                 leadi = 0.0f;
 
-            if(leadi < 0.1f)
+            return leadi;
+
+            /*if(leadi < 0.1f)
                 return String.format("%.3f mA", leadi);
             else if(leadi < 1.0f)
                 return String.format("%.2f mA", leadi);
             else
-                return String.format("%.1f mA", leadi);
+                return String.format("%.1f mA", leadi);*/
         }
     }
 
@@ -434,22 +436,23 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetLeadR() {
+    static float GetLeadR() {
 
         if(mLeadI[CURRENT] == -1)
-            return null;
+            return 0f;
         else {
             if (mLeadI[CURRENT] == 0)
-                return null;
+                return 0f;
 
             // Don't allow amplitude values less than 2.25
             float amp = GetAmpFromPos(amplitude[CURRENT]);
             amp = max(amp, 2.25f);
             float leadr = amp / (mLeadI[CURRENT] * 0.00003922f);                                    // leadi = (n*FVR)/(1024*51ohms)
-            if(leadr <= 2000.0)
+            /*if(leadr <= 2000.0)
                 return String.format("%.0f ohms", leadr);
             else
-                return "> 2000 ohms";
+                return "> 2000 ohms";*/
+            return leadr;
         }
     }
 
