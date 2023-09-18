@@ -1,6 +1,7 @@
 package com.ninecmed.tablet;
 
 import static com.ninecmed.tablet.R.string.all_ok;
+import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -856,14 +857,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Calculate the time difference in milliseconds
         timeDifferenceMillis = userSelectedCalendar.getTimeInMillis() - currentCalendar.getTimeInMillis();
-    }
-
-    private void setTheSystemButtonsHidden(Dialog dialog){
-        // Hide the system navigation bar
-        View decorView = dialog.getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setSystemUiVisibility(uiOptions);
     }
 
     //TODO : Use this time in during program
