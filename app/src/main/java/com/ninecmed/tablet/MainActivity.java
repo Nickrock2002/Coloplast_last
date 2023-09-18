@@ -51,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import me.aflak.bluetooth.Bluetooth;
 import me.aflak.bluetooth.interfaces.DeviceCallback;
@@ -180,11 +181,13 @@ public class MainActivity extends AppCompatActivity {
             }
             wandConnDialog.dismiss();
         });
+        btConfirm.setClickable(false);
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
         setTheSystemButtonsHidden(wandConnDialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        wandConnDialog.setCancelable(false);
         wandConnDialog.show();
     }
 
@@ -229,8 +232,7 @@ public class MainActivity extends AppCompatActivity {
             wandConnDialog.findViewById(R.id.iv_header_image).setBackgroundResource(R.drawable.connection_full_element_white);
             ((TextView) wandConnDialog.findViewById(R.id.tv_connection_status)).setText(R.string.wand_is_comm);
             AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
-            btConfirm.setEnabled(true);
-            btConfirm.setAlpha(1);
+            btConfirm.setClickable(true);
             btConfirm.setBackgroundResource(R.drawable.bt_dialogue_wand_comm_active);
             btConfirm.setTextColor(ActivityCompat.getColor(this, R.color.txt_dialogue_wand_comm_active));
         }
@@ -284,19 +286,23 @@ public class MainActivity extends AppCompatActivity {
 
         mBluetooth.onStart();
 
-        List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
-        for (BluetoothDevice bt : btDevices) {
-            mBTDevice = bt;
-        }
-
-        //TODO remove this when publishing
-        //mBluetooth.connectToDevice(mBTDevice);
-
         if (mBluetooth.isEnabled()) {
             Log.d(TAG, "BT was enabled");
         } else {
             mBluetooth.enable();
         }
+
+        List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
+        for (BluetoothDevice bt : btDevices) {
+//            just for testing
+//            if(bt.getAddress().equals("08:E4:DF:6E:20:61")) {
+//                mBTDevice = bt;
+//            }
+            mBTDevice = bt;
+        }
+
+        //TODO remove this when publishing
+        mBluetooth.connectToDevice(mBTDevice);
 
         mRunBT = true;
     }
@@ -322,6 +328,8 @@ public class MainActivity extends AppCompatActivity {
             updateBatteryStatus();
             updateAppTime();
             mHandler.postDelayed(MinuteTimer, 60000);
+            //TODO only for testing remove in production
+//            showWandConnectionInActiveMode();
         }
     };
 
@@ -461,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDeviceConnected(BluetoothDevice device) {
             wandComm.InitWand();
+            showWandConnectionInActiveMode();
         }
 
         @Override
@@ -566,7 +575,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
