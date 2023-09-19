@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="The Intibia ITNS reset recently"
+        android:text="@string/the_intibia_itns_reset_recently"
         android:textColor="@color/cardview_dark_background"
         android:textSize="18sp"
         android:textStyle="bold"
