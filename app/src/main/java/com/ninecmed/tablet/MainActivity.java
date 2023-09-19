@@ -7,7 +7,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -32,7 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -53,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import me.aflak.bluetooth.Bluetooth;
 import me.aflak.bluetooth.interfaces.DeviceCallback;
@@ -176,17 +175,19 @@ public class MainActivity extends AppCompatActivity {
         AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
         btConfirm.setOnClickListener(view -> {
             if (isClinicVisit) {
-                showSetDateTimeDialog();
+                showSetDateTimeDialog(false);
             } else {
                 launchDashboardFragment(false);
             }
             wandConnDialog.dismiss();
         });
+        btConfirm.setClickable(false);
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
         setTheSystemButtonsHidden(wandConnDialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        wandConnDialog.setCancelable(false);
         wandConnDialog.show();
     }
 
@@ -231,8 +232,7 @@ public class MainActivity extends AppCompatActivity {
             wandConnDialog.findViewById(R.id.iv_header_image).setBackgroundResource(R.drawable.connection_full_element_white);
             ((TextView) wandConnDialog.findViewById(R.id.tv_connection_status)).setText(R.string.wand_is_comm);
             AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
-            btConfirm.setEnabled(true);
-            btConfirm.setAlpha(1);
+            btConfirm.setClickable(true);
             btConfirm.setBackgroundResource(R.drawable.bt_dialogue_wand_comm_active);
             btConfirm.setTextColor(ActivityCompat.getColor(this, R.color.txt_dialogue_wand_comm_active));
         }
@@ -286,19 +286,23 @@ public class MainActivity extends AppCompatActivity {
 
         mBluetooth.onStart();
 
-        List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
-        for (BluetoothDevice bt : btDevices) {
-            mBTDevice = bt;
-        }
-
-        //TODO remove this when publishing
-        //mBluetooth.connectToDevice(mBTDevice);
-
         if (mBluetooth.isEnabled()) {
             Log.d(TAG, "BT was enabled");
         } else {
             mBluetooth.enable();
         }
+
+        List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
+        for (BluetoothDevice bt : btDevices) {
+//            just for testing
+//            if(bt.getAddress().equals("08:E4:DF:6E:20:61")) {
+//                mBTDevice = bt;
+//            }
+            mBTDevice = bt;
+        }
+
+        //TODO remove this when publishing
+        mBluetooth.connectToDevice(mBTDevice);
 
         mRunBT = true;
     }
@@ -324,6 +328,8 @@ public class MainActivity extends AppCompatActivity {
             updateBatteryStatus();
             updateAppTime();
             mHandler.postDelayed(MinuteTimer, 60000);
+            //TODO only for testing remove in production
+//            showWandConnectionInActiveMode();
         }
     };
 
@@ -463,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDeviceConnected(BluetoothDevice device) {
             wandComm.InitWand();
+            showWandConnectionInActiveMode();
         }
 
         @Override
@@ -510,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO- call this method once the bluetooth dialog setup flow is done
-    public void showSetDateTimeDialog() {
+    public void showSetDateTimeDialog(boolean isFromHamburger) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -529,7 +536,7 @@ public class MainActivity extends AppCompatActivity {
             btnConfirm.setVisibility(View.VISIBLE);
             btnConfirm.setClickable(true);
         }
-        if (!formattedDate.isEmpty()){
+        if (!formattedDate.isEmpty()) {
             btnDate.setText(formattedDate);
             btnDate.setPressed(true);
             btnConfirmDisabled.setVisibility(View.GONE);
@@ -538,12 +545,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         btnDate.setOnClickListener(v -> {
-            showDatePickerDialog();
+            showDatePickerDialog(isFromHamburger);
             dialog.dismiss();
         });
 
         btnTime.setOnClickListener(v -> {
-            showTimePickerDialog();
+            showTimePickerDialog(isFromHamburger);
             dialog.dismiss();
         });
 
@@ -558,16 +565,21 @@ public class MainActivity extends AppCompatActivity {
             formattedDate = "";
             calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
             dialog.dismiss();
-            launchDashboardFragment(true);
+
+            if (!isFromHamburger) {
+                launchDashboardFragment(true);
+            } else {
+                updateAppTime();
+            }
         });
 
         setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
-    public void showTimePickerDialog() {
+    public void showTimePickerDialog(boolean isFromHamburger) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -600,7 +612,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnConfirmTime.setOnClickListener(v -> {
-            if (formattedTime.isEmpty()){
+            if (formattedTime.isEmpty()) {
                 Calendar currentTime1 = Calendar.getInstance();
                 int hour1 = currentTime1.get(Calendar.HOUR_OF_DAY);
                 int minute1 = currentTime1.get(Calendar.MINUTE);
@@ -616,7 +628,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedHour = hour1;
                 selectedMinutes = minute1;
             }
-            showSetDateTimeDialog();
+            showSetDateTimeDialog(isFromHamburger);
             dialog.dismiss();
         });
 
@@ -626,7 +638,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void showDatePickerDialog() {
+    public void showDatePickerDialog(boolean isFromHamburger) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -649,7 +661,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedMonth = month;
                 selectedDay = day;
             }
-            showSetDateTimeDialog();
+            showSetDateTimeDialog(isFromHamburger);
             dialog.dismiss();
         });
 
@@ -857,6 +869,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Calculate the time difference in milliseconds
         timeDifferenceMillis = userSelectedCalendar.getTimeInMillis() - currentCalendar.getTimeInMillis();
+    }
+
+    private void setTheSystemButtonsHidden(Dialog dialog) {
+        // Hide the system navigation bar
+        View decorView = dialog.getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
     }
 
     //TODO : Use this time in during program
