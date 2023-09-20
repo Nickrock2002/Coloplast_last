@@ -1,7 +1,6 @@
 package com.ninecmed.tablet;
 
 import static com.ninecmed.tablet.R.string.all_ok;
-import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -58,6 +57,7 @@ import me.aflak.bluetooth.interfaces.DeviceCallback;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private boolean isBluetoothPermissionGranted = false;
     private AlertDialog mLowBatDialog = null;
     protected BluetoothDevice mBTDevice = null;
     protected Bluetooth mBluetooth = null;
@@ -111,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
         launchFeatureSelectionFragment();
 
         mHandler.postDelayed(MinuteTimer, 60000);
-        // Check for both BLUETOOTH_CONNECT and BLUETOOTH_SCAN permissions
+
+        requestBluetoothPermission();
+        setUpToolbarClickEvents();
+    }
+
+    private void requestBluetoothPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
                     != PackageManager.PERMISSION_GRANTED ||
@@ -126,15 +131,18 @@ public class MainActivity extends AppCompatActivity {
                         REQUEST_BLUETOOTH_PERMISSION);
             } else {
                 // Both permissions are granted, proceed with Bluetooth functionality
-                initBluetooth();
+                isBluetoothPermissionGranted = true;
+                //TODO Remote this in final release
+//                initBluetooth();
             }
         } else {
+            isBluetoothPermissionGranted = true;
             // For devices below Android 12, the permission is granted at install time
             // You can proceed with your Bluetooth functionality
-            initBluetooth();
-        }
 
-        setUpToolbarClickEvents();
+            //TODO Remote this in final release
+//            initBluetooth();
+        }
     }
 
     private void setUpToolbarClickEvents() {
@@ -189,6 +197,11 @@ public class MainActivity extends AppCompatActivity {
         wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
         wandConnDialog.setCancelable(false);
         wandConnDialog.show();
+        if (isBluetoothPermissionGranted) {
+            initBluetooth();
+        } else {
+            requestBluetoothPermission();
+        }
     }
 
     private void launchFeatureSelectionFragment() {
@@ -252,10 +265,12 @@ public class MainActivity extends AppCompatActivity {
 
             if (allPermissionsGranted) {
                 // Both permissions are granted, proceed with Bluetooth functionality
-                initBluetooth();
+                isBluetoothPermissionGranted = true;
+                //TODO Remote this in final release
+//                initBluetooth();
             } else {
                 // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
-                //showBackToStartDialog();
+                isBluetoothPermissionGranted = false;
             }
         }
     }
