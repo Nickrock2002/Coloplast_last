@@ -380,22 +380,6 @@ public class MainActivity extends AppCompatActivity {
             ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_empty);
     }
 
-    private void BatteryAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-        alertDialog.setTitle(R.string.main_lowbat_title);
-        alertDialog.setMessage(R.string.main_lowbat_msg);
-
-        alertDialog.setPositiveButton(getString(all_ok), (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-            mLowBatDialog = null;
-        });
-
-        mLowBatDialog = alertDialog.create();
-        mLowBatDialog.setCancelable(false);
-        mLowBatDialog.show();
-    }
-
     public void UpdateUIFragments(final int frag, final boolean success) {
         MainActivity.this.runOnUiThread(() -> {
             if (frag == WandComm.frags.EXTERNAL) {
