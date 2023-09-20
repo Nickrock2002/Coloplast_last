@@ -237,9 +237,6 @@ public class ItnsFragment extends Fragment {
                             TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
                             leadr.setText(WandData.GetLeadR());*/
 
-                            float leadRValue = WandData.GetLeadR();
-                            showLeadRWarningIfFound();
-
                             // Disable changed parameters during test stim. Only re-enable once
                             // job is completed. Even though controls are disabled, don't change
                             // alpha, meaning don't gray out the controls, otherwise it appears
@@ -932,26 +929,29 @@ public class ItnsFragment extends Fragment {
     private void CheckForReset() {
         int resets = WandData.GetResets();
         if (resets > 0) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getView()).getContext());
-
-            alertDialog.setTitle(String.format(getString(R.string.itns_resets_detected_msg), resets));
-            alertDialog.setMessage(getString(R.string.itns_resets_continue_msg));
-
-            alertDialog.setPositiveButton(getString(R.string.all_clear), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    StartProgressBar();
-                    mMainActivity.wandComm.ClearResetCounter();
-                }
-            });
-            alertDialog.setNegativeButton(getString(R.string.all_cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            alertDialog.show();
+            showItnsResetDialog(resets);
         }
+    }
+
+    public void showItnsResetDialog(int count) {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_reset_counter);
+
+        Button btnResetCounter = (Button) dialog.findViewById(R.id.btn_reset_counter_confirm);
+        btnResetCounter.setOnClickListener(v -> {
+            mMainActivity.wandComm.ClearResetCounter();
+        });
+
+        TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
+        tvCount.setText("Implant Reset Counter: " + count);
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
     }
 
     private void msg(String s) {

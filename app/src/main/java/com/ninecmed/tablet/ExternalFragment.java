@@ -3,10 +3,14 @@ package com.ninecmed.tablet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -66,6 +70,7 @@ public class ExternalFragment extends Fragment {
 
         InitializeStimulationButton(view);
         InitializeAmplitudeButton(view);
+        initializeTitle(view);
 
         // Must redraw the icon for this fragment and not for the itns fragment.
         // Not sure why since both imageviews are visible.
@@ -74,6 +79,27 @@ public class ExternalFragment extends Fragment {
 
         mMainActivity = (MainActivity) getActivity();
         return view;
+    }
+
+    private void initializeTitle(View view) {
+        TextView textView = view.findViewById(R.id.tv_implant_title);
+        String text = textView.getText().toString();
+
+        // Create a SpannableString to apply styles
+        SpannableString spannableString = new SpannableString(text);
+
+        // Apply bold style to "Implant Tool Tunnelling"
+        int startIndex1 = text.indexOf("Implant Tool Tunnelling");
+        int endIndex1 = startIndex1 + "Implant Tool Tunnelling".length();
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex1, endIndex1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Apply bold style to "ITNS Interrogation Tab"
+        int startIndex2 = text.indexOf("ITNS Interrogation Tab");
+        int endIndex2 = startIndex2 + "ITNS Interrogation Tab".length();
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex2, endIndex2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Set the modified text in the TextView
+        textView.setText(spannableString);
     }
 
     @SuppressLint("ClickableViewAccessibility")

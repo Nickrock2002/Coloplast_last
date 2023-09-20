@@ -78,6 +78,7 @@
     <string name="time">Time:</string>
     <string name="language">Language:</string>
     <string name="date">Date:</string>
+    <string name="the_intibia_itns_reset_recently">The Intibia ITNS reset recently</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>

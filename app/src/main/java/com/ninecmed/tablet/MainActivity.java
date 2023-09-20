@@ -149,29 +149,28 @@ public class MainActivity extends AppCompatActivity {
         ivHamburger.setOnClickListener(view -> {
             launchHamburgerFragment();
             updateToolbarColor(true);
-            ivHamburger.setVisibility(View.INVISIBLE);
+            ivHamburger.setVisibility(View.GONE);
             ivBack.setVisibility(View.VISIBLE);
         });
 
         ivBack.setOnClickListener(view -> {
-            launchFeatureSelectionFragment();
-            updateToolbarColor(false);
-            ivHamburger.setVisibility(View.VISIBLE);
-            ivBack.setVisibility(View.INVISIBLE);
+            showBackToStartDialog();
         });
     }
 
     public void updateToolbarColor(boolean isInside) {
         ConstraintLayout toolbar = findViewById(R.id.ll_toolbar);
-        ImageView intibiaIv = findViewById(R.id.intibia_logo);
+        ImageView intibiaIv = findViewById(R.id.iv_intbia_logo);
         if (isInside) {
             toolbar.setBackgroundColor(ActivityCompat.getColor(this,
                     R.color.colorGreyThreeHundred));
             intibiaIv.setVisibility(View.VISIBLE);
+            ivBack.setVisibility(View.VISIBLE);
         } else {
             toolbar.setBackgroundColor(ActivityCompat.getColor(this,
                     R.color.colorBaseGrayFifty));
             intibiaIv.setVisibility(View.INVISIBLE);
+            ivBack.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -282,14 +281,6 @@ public class MainActivity extends AppCompatActivity {
         final View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(uiOptions);
         updateBatteryStatus();
-
-        //just for event testing purpose
-        ImageView intibiaLogo = findViewById(R.id.intibia_logo);
-        intibiaLogo.setOnClickListener(v -> {
-            UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
-            uiUpdateEvent.setTabEnum(TabEnum.ITNS);
-            EventBus.getDefault().post(uiUpdateEvent);
-        });
     }
 
     private void initBluetooth() {
@@ -317,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //TODO remove this when publishing
-        mBluetooth.connectToDevice(mBTDevice);
+        if (mBTDevice != null) mBluetooth.connectToDevice(mBTDevice);
 
         mRunBT = true;
     }
@@ -377,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (batteryPct <= 15 && !batteryCharging) {
             if (mLowBatDialog == null)
-                BatteryAlert();
+                showBatteryWarnDialog();
         }
 
         ImageView ivBatteryPer = findViewById(R.id.iv_battery_per);
@@ -393,22 +384,6 @@ public class MainActivity extends AppCompatActivity {
             ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_level_2);
         else
             ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_empty);
-    }
-
-    private void BatteryAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-        alertDialog.setTitle(R.string.main_lowbat_title);
-        alertDialog.setMessage(R.string.main_lowbat_msg);
-
-        alertDialog.setPositiveButton(getString(all_ok), (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-            mLowBatDialog = null;
-        });
-
-        mLowBatDialog = alertDialog.create();
-        mLowBatDialog.setCancelable(false);
-        mLowBatDialog.show();
     }
 
     public void UpdateUIFragments(final int frag, final boolean success) {
@@ -831,7 +806,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    //TODO: Imp call this when we want to show Back to Start dialog.
     public void showBackToStartDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -843,13 +817,20 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
         });
 
+        Button btnGoBack = (Button) dialog.findViewById(R.id.btn_yes_go_back);
+        btnGoBack.setOnClickListener(v -> {
+            dialog.dismiss();
+            launchFeatureSelectionFragment();
+            updateToolbarColor(false);
+            ivHamburger.setVisibility(View.VISIBLE);
+        });
+
         setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
-    //TODO: Imp call this when we want to show Back to Start dialog.
     public void showCloseAppDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -864,6 +845,24 @@ public class MainActivity extends AppCompatActivity {
         Button btnYesClose = (Button) dialog.findViewById(R.id.btn_yes_close);
         btnYesClose.setOnClickListener(v -> {
             finish();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showBatteryWarnDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_tablet_battery_low);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_batt);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
         });
 
         setTheSystemButtonsHidden(dialog);
