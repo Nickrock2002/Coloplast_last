@@ -237,9 +237,6 @@ public class ItnsFragment extends Fragment {
                             TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
                             leadr.setText(WandData.GetLeadR());*/
 
-                            float leadRValue = WandData.GetLeadR();
-                            showLeadRWarningIfFound();
-
                             // Disable changed parameters during test stim. Only re-enable once
                             // job is completed. Even though controls are disabled, don't change
                             // alpha, meaning don't gray out the controls, otherwise it appears
