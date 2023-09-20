@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (batteryPct <= 15 && !batteryCharging) {
             if (mLowBatDialog == null)
-                BatteryAlert();
+                showBatteryWarnDialog();
         }
 
         ImageView ivBatteryPer = findViewById(R.id.iv_battery_per);
@@ -834,7 +834,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    //TODO: Imp call this when we want to show Back to Start dialog.
     public void showCloseAppDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -849,6 +848,24 @@ public class MainActivity extends AppCompatActivity {
         Button btnYesClose = (Button) dialog.findViewById(R.id.btn_yes_close);
         btnYesClose.setOnClickListener(v -> {
             finish();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showBatteryWarnDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_tablet_battery_low);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_batt);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
         });
 
         setTheSystemButtonsHidden(dialog);
