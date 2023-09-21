@@ -112,8 +112,7 @@ public class ExternalFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         if(mNow + 500 < System.currentTimeMillis()) {
                             stimulate.setPressed(true);
-                            //TODO:IMP remove comment after BT
-                            //mMainActivity.wandComm.SetStimulationExt(true);
+                            mMainActivity.wandComm.SetStimulationExt(true);
                             stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
 
@@ -158,15 +157,13 @@ public class ExternalFragment extends Fragment {
                             //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                //TODO:IMP remove comment after BT
-                                //mMainActivity.wandComm.SetStimulationExt(false);
+                                mMainActivity.wandComm.SetStimulationExt(false);
 
                                 //StopStimProgressBar();
                                 //MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 mStimEnabled = false;
                             } else {
-                                //TODO:IMP remove comment after BT
-                                //mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
                         }
                         break;
