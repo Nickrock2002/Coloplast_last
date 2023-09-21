@@ -200,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
         if (isBluetoothPermissionGranted) {
             if (!isDeviceConnected && mBTDevice == null) {
                 initBluetooth();
+            } else {
+                runOnUiThread(this::showWandConnectionInActiveMode);
             }
         } else {
             requestBluetoothPermission();
@@ -464,7 +466,6 @@ public class MainActivity extends AppCompatActivity {
             isDeviceConnected = true;
             wandComm.InitWand();
             runOnUiThread(() -> showWandConnectionInActiveMode());
-
         }
 
         @Override
