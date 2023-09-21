@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isBluetoothPermissionGranted = false;
     private AlertDialog mLowBatDialog = null;
     protected BluetoothDevice mBTDevice = null;
+    private boolean isDeviceConnected;
     protected Bluetooth mBluetooth = null;
     protected final Handler mHandler = new Handler();
     protected boolean mRunBT = false;
@@ -197,7 +198,9 @@ public class MainActivity extends AppCompatActivity {
         wandConnDialog.setCancelable(false);
         wandConnDialog.show();
         if (isBluetoothPermissionGranted) {
-            initBluetooth();
+            if (!isDeviceConnected && mBTDevice == null) {
+                initBluetooth();
+            }
         } else {
             requestBluetoothPermission();
         }
@@ -458,12 +461,14 @@ public class MainActivity extends AppCompatActivity {
     private final DeviceCallback deviceCallback = new DeviceCallback() {
         @Override
         public void onDeviceConnected(BluetoothDevice device) {
+            isDeviceConnected = true;
             wandComm.InitWand();
             showWandConnectionInActiveMode();
         }
 
         @Override
         public void onDeviceDisconnected(BluetoothDevice device, String message) {
+            isDeviceConnected = false;
             wandComm.ResetWandComm();
             // Reconnect
             mBluetooth.connectToDevice(MainActivity.this.mBTDevice);

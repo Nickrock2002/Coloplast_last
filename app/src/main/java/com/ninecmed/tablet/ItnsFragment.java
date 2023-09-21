@@ -130,7 +130,7 @@ public class ItnsFragment extends Fragment {
                     //bTouch = true;
 
                     //TODO: remove comment after BT
-                    //mMainActivity.wandComm.Interrogate();
+                    mMainActivity.wandComm.Interrogate();
                     //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     //StartProgressBar();
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
