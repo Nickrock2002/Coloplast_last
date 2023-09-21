@@ -57,9 +57,11 @@ public class ItnsFragment extends Fragment {
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
     private AlertDialog mAlertDialog;
-
     private Button btnLeadRWarn;
     private boolean bTouch = false;
+
+    private TextView tvLeadR;
+
 
     @Override
     public void onAttach(Context context) {
@@ -103,6 +105,7 @@ public class ItnsFragment extends Fragment {
 
     private void initializeLeadRWarnButton(View view) {
         btnLeadRWarn = view.findViewById(R.id.btn_lead_r_warn);
+        tvLeadR = view.findViewById(R.id.tv_lead_r_val);
         btnLeadRWarn.setOnClickListener(v -> {
             showLeadRWarningIfFound();
         });
@@ -895,6 +898,8 @@ public class ItnsFragment extends Fragment {
             } else if (leadRValue < 250) {
                 title.setText("Lead R is < 250 ohms");
                 tvElectrodeTip.setText("Use a different Intibia ITNS");
+            }else {
+                tvLeadR.setText("OK");
             }
 
             TextView tvLeadRV = (TextView) dialog.findViewById(R.id.tv_lead_r_val);
