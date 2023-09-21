@@ -56,7 +56,7 @@ public class ProgramTherapyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_program_therapy, container, false);
 
 //        InitializeStimulationButton(view);
-//        InitializeInterrogateButton(view);
+        initializeInterrogateButton(view);
 //        InitializeAmpControls(view);
 
         /*InitializeProgramButton(view);
@@ -77,12 +77,11 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeInterrogateButton(View view) {
+    private void initializeInterrogateButton(View view) {
         final Button interrogate = view.findViewById(R.id.btn_interrogate);
 
-        //TODO: remove comment after BT
-        /*interrogate.setEnabled(false);
-        interrogate.setAlpha(0.5f);*/
+        interrogate.setEnabled(false);
+        interrogate.setAlpha(0.5f);
         interrogate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -98,8 +97,8 @@ public class ProgramTherapyFragment extends Fragment {
                     //bTouch = true;
 
                     //TODO: remove comment after BT
-                    //mMainActivity.wandComm.Interrogate();
-                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                    mMainActivity.wandComm.Interrogate();
+                    MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     //StartProgressBar();
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                     interrogate.setPressed(false);
@@ -682,7 +681,7 @@ public class ProgramTherapyFragment extends Fragment {
 //        StopProgressBar();
 //        mMainActivity.EnableTabs(true);
 
-        if (success) {
+        if (success && view != null) {
             if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
                 // Re-enable changed parameters (and the test stim button) only when
                 // UIUpdate is called - meaning that the state machine has finished its tasks
@@ -693,22 +692,13 @@ public class ProgramTherapyFragment extends Fragment {
                 /*EnableProgramButton(true, true);
                 EnableStimTestButton(true);*/
 
-                /*TextView leadi = Objects.requireNonNull(view).findViewById(R.id.tvItnsLeadI);
-                leadi.setText(WandData.GetLeadI());
+//                TextView leadi = Objects.requireNonNull(view).findViewById(R.id.tvItnsLeadI);
+//                leadi.setText(WandData.GetLeadI());
 
-                TextView leadr = view.findViewById(R.id.tvItnsLeadR);
-                leadr.setText(WandData.GetLeadR());*/
+                TextView leadr = view.findViewById(R.id.tv_lead_r_val);
+                leadr.setText(String.valueOf(WandData.GetLeadR()));
             } else {
                 MakeTone(ToneGenerator.TONE_CDMA_PIP);
-
-                /*if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE) {
-                    Group gp = Objects.requireNonNull(view).findViewById(R.id.ghITNS);
-                    gp.setVisibility(View.VISIBLE);
-                }
-
-                if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
-                    EnableProgramButton(false, true);
-                }*/
 
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
                 mn.setText((WandData.GetModelNumber(view.getContext())));

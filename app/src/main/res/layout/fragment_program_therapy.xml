@@ -161,7 +161,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_implant_battery_title" />
 
         <Button
-            android:id="@+id/tv_lead_r_status"
+            android:id="@+id/btn_lead_r_status"
             android:layout_width="260dp"
             android:layout_height="64dp"
             android:layout_gravity="start"
@@ -175,10 +175,10 @@
             android:textColor="@color/cardview_dark_background"
             android:textSize="24sp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/btn_lead_r_warn"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tv_implant_battery_val" />
 
         <TextView
             android:id="@+id/tv_implant_battery_val"

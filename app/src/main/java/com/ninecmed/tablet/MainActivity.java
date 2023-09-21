@@ -463,7 +463,8 @@ public class MainActivity extends AppCompatActivity {
         public void onDeviceConnected(BluetoothDevice device) {
             isDeviceConnected = true;
             wandComm.InitWand();
-            showWandConnectionInActiveMode();
+            runOnUiThread(() -> showWandConnectionInActiveMode());
+
         }
 
         @Override
