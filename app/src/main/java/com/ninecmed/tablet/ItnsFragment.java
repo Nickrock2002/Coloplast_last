@@ -111,10 +111,6 @@ public class ItnsFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeInterrogateButton(View view) {
         final Button interrogate = view.findViewById(R.id.btItnsInterrogate);
-
-        //TODO: remove comment after BT
-        /*interrogate.setEnabled(false);
-        interrogate.setAlpha(0.5f);*/
         interrogate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -129,7 +125,6 @@ public class ItnsFragment extends Fragment {
                     interrogate.setPressed(true);
                     //bTouch = true;
 
-                    //TODO: remove comment after BT
                     mMainActivity.wandComm.Interrogate();
                     //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     //StartProgressBar();
@@ -215,9 +210,6 @@ public class ItnsFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btItnsStartStim);
-        //TODO:IMP remove comment after BT
-        //stimulate.setEnabled(false);
-        //stimulate.setAlpha(0.5f);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -225,8 +217,7 @@ public class ItnsFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulate.setPressed(true);
-                            //TODO: IMP remove comment after BT
-                            //mMainActivity.wandComm.SetStimulation(true);
+                            mMainActivity.wandComm.SetStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
@@ -272,15 +263,13 @@ public class ItnsFragment extends Fragment {
                             //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                //TODO:IMP remove comment after BT
-                                //mMainActivity.wandComm.SetStimulation(false);
+                                mMainActivity.wandComm.SetStimulation(false);
 
                                 //StopStimProgressBar();
                                 MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 mStimEnabled = false;
                             } else {
-                                //TODO:IMP remove comment after BT
-                                //mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
                         }
                         break;
@@ -294,7 +283,7 @@ public class ItnsFragment extends Fragment {
         @Override
         public void run() {
             mMainActivity.wandComm.SetStimulation(false);
-            MakeTone(ToneGenerator.TONE_PROP_NACK);
+            //MakeTone(ToneGenerator.TONE_PROP_NACK);
             //StopStimProgressBar();
             mStimEnabled = false;
         }
@@ -581,16 +570,14 @@ public class ItnsFragment extends Fragment {
 
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
 
-                        //TODO: Imp remove following line after BT
-                        //mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
 
 
                         /*amp.setTextColor(Color.BLACK);
                         plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
                         minus.setBackgroundResource(R.color.colorControlNoChange);*/
                     } else {
-                        //TODO: Imp remove following line after BT
-                        //mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
 
                         /*amp.setTextColor(Color.RED);
                         plus.setBackgroundResource(R.color.colorControlChange);
