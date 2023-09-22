@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class Utility {
-    static Pair<Integer, Integer> getDimensionsForDialogue(Context context) {
+    public static Pair<Integer, Integer> getDimensionsForDialogue(Context context) {
         Pair<Integer, Integer> dimensions = null;
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
@@ -29,7 +29,7 @@ public class Utility {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    static Pair<String, String> getTimeAndDateForFirstTime(long timeInMilis) {
+    public static Pair<String, String> getTimeAndDateForFirstTime(long timeInMilis) {
         Pair<String, String> dateTimePair;
         // Get the current date and time from the device
         Calendar currentCalendar = Calendar.getInstance();

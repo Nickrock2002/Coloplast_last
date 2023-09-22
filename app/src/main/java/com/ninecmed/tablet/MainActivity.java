@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView ivHamburger;
     private ImageView ivBack;
+    private boolean clinicVisitFragmentOpen = false;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -176,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void showWandConnectionDialogue(final boolean isClinicVisit) {
+        clinicVisitFragmentOpen = isClinicVisit;
         wandConnDialog = new Dialog(this);
         wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
@@ -189,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
             }
             wandConnDialog.dismiss();
         });
-        btConfirm.setClickable(false);
+        //TODO 22 Sept remove after testing
+//        btConfirm.setClickable(false);
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
         setTheSystemButtonsHidden(wandConnDialog);
@@ -472,8 +475,10 @@ public class MainActivity extends AppCompatActivity {
         public void onDeviceDisconnected(BluetoothDevice device, String message) {
             isDeviceConnected = false;
             wandComm.ResetWandComm();
+            launchFeatureSelectionFragment();
+            showWandConnectionDialogue(clinicVisitFragmentOpen);
             // Reconnect
-            mBluetooth.connectToDevice(MainActivity.this.mBTDevice);
+            // mBluetooth.connectToDevice(MainActivity.this.mBTDevice);
         }
 
         @Override

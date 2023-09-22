@@ -79,6 +79,12 @@
     <string name="language">Language:</string>
     <string name="date">Date:</string>
     <string name="the_intibia_itns_reset_recently">The Intibia ITNS reset recently</string>
+    <string name="program">Program</string>
+    <string name="lead_r_is_2000_ohms"><![CDATA[Lead R is > 2000 ohms]]></string>
+    <string name="electrode_tip_must_make_contact_with_the_tissue">Electrode tip must make contact with the tissue.</string>
+    <string name="lead_r_is_250_ohms"><![CDATA[Lead R is < 250 ohms]]></string>
+    <string name="use_a_different_intibia_itns">Use a different Intibia ITNS</string>
+    <string name="ok">OK</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>

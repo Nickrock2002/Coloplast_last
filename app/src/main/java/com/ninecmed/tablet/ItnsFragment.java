@@ -893,13 +893,11 @@ public class ItnsFragment extends Fragment {
             TextView title = (TextView) dialog.findViewById(R.id.tv_warn_title);
             TextView tvElectrodeTip = (TextView) dialog.findViewById(R.id.tv_electrode_tip);
             if (leadRValue > 2000) {
-                title.setText("Lead R is > 2000 ohms");
-                tvElectrodeTip.setText("Electrode tip must make contact with the tissue.");
-            } else if (leadRValue < 250) {
-                title.setText("Lead R is < 250 ohms");
-                tvElectrodeTip.setText("Use a different Intibia ITNS");
-            }else {
-                tvLeadR.setText("OK");
+                title.setText(R.string.lead_r_is_2000_ohms);
+                tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
+            } else {
+                title.setText(R.string.lead_r_is_250_ohms);
+                tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
             }
 
             TextView tvLeadRV = (TextView) dialog.findViewById(R.id.tv_lead_r_val);
@@ -913,9 +911,9 @@ public class ItnsFragment extends Fragment {
             dialog.getWindow().setLayout(dimensions.first, dimensions.second);
             dialog.show();
         } else {
+            tvLeadR.setText(R.string.ok);
             btnLeadRWarn.setVisibility(View.GONE);
         }
-
     }
 
     private void CheckForReset() {

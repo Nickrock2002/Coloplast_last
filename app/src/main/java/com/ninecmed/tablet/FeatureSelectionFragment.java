@@ -52,18 +52,8 @@ public class FeatureSelectionFragment extends Fragment {
         AppCompatButton buttonSurgery = view.findViewById(R.id.bt_surgery);
         AppCompatButton buttonClinicVisit = view.findViewById(R.id.bt_clinic_visit);
 
-        buttonClinicVisit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.showWandConnectionDialogue(true);
-            }
-        });
+        buttonClinicVisit.setOnClickListener(view12 -> mainActivity.showWandConnectionDialogue(true));
 
-        buttonSurgery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.showWandConnectionDialogue(false);
-            }
-        });
+        buttonSurgery.setOnClickListener(view1 -> mainActivity.showWandConnectionDialogue(false));
     }
 }

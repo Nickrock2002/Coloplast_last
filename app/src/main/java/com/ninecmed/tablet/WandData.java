@@ -1,11 +1,11 @@
 package com.ninecmed.tablet;
 
+import static java.lang.Math.max;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 
 import java.util.Calendar;
-
-import static java.lang.Math.max;
 
 class WandData {
     static private final String TAG = "WandData";
@@ -110,17 +110,17 @@ class WandData {
     }
 
     static private void CopyTemporaryValuesToCurrentValues() {
-        therapy[CURRENT]           = therapy[TEMPORARY];
-        dateandtime[CURRENT]       = dateandtime[TEMPORARY];
-        amplitude[CURRENT]         = amplitude[TEMPORARY];
+        therapy[CURRENT] = therapy[TEMPORARY];
+        dateandtime[CURRENT] = dateandtime[TEMPORARY];
+        amplitude[CURRENT] = amplitude[TEMPORARY];
 
-        mSerialNumber[CURRENT]     = mSerialNumber[TEMPORARY];
-        mModelNumber[CURRENT]      = mModelNumber[TEMPORARY];
-        mResets[CURRENT]           = mResets[TEMPORARY];
-        mConfig[CURRENT]           = mConfig[TEMPORARY];
+        mSerialNumber[CURRENT] = mSerialNumber[TEMPORARY];
+        mModelNumber[CURRENT] = mModelNumber[TEMPORARY];
+        mResets[CURRENT] = mResets[TEMPORARY];
+        mConfig[CURRENT] = mConfig[TEMPORARY];
 
         // Don't update these parameter following the first successful interrogation for model 1
-        if(mModelNumber[TEMPORARY] == 1) {
+        if (mModelNumber[TEMPORARY] == 1) {
             if (!mInterrogateSuccessful) {
                 mLeadI[CURRENT] = mLeadI[TEMPORARY];
                 mCellV[CURRENT] = mCellV[TEMPORARY];
@@ -136,26 +136,26 @@ class WandData {
             mRRT[CURRENT] = mRRT[TEMPORARY];
         }
 
-        mClock.mHours[CURRENT]     = mClock.mHours[TEMPORARY];
-        mClock.mMins[CURRENT]      = mClock.mMins[TEMPORARY];
-        mSchedule.mHours[CURRENT]  = mSchedule.mHours[TEMPORARY];
-        mSchedule.mMins[CURRENT]   = mSchedule.mMins[TEMPORARY];
+        mClock.mHours[CURRENT] = mClock.mHours[TEMPORARY];
+        mClock.mMins[CURRENT] = mClock.mMins[TEMPORARY];
+        mSchedule.mHours[CURRENT] = mSchedule.mHours[TEMPORARY];
+        mSchedule.mMins[CURRENT] = mSchedule.mMins[TEMPORARY];
         mSchedule.mAlarms[CURRENT] = mSchedule.mAlarms[TEMPORARY];
     }
 
     static void StimSuccessfull() {
-        amplitude[CURRENT]         = amplitude[TEMPORARY];
-        mLeadI[CURRENT]            = mLeadI[TEMPORARY];
+        amplitude[CURRENT] = amplitude[TEMPORARY];
+        mLeadI[CURRENT] = mLeadI[TEMPORARY];
     }
 
     static void SetIDInformation(byte[] msg) {
-        mSerialNumber[TEMPORARY] =  (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
+        mSerialNumber[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
         mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
         mResets[TEMPORARY] = (msg[6] & 0xff);
 
         mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
 
-        if(IsITNSNew()) {
+        if (IsITNSNew()) {
             mInterrogateSuccessful = false;
         }
     }
@@ -170,9 +170,9 @@ class WandData {
     }
 
     static String GetModelNumber(Context context) {
-        if(mModelNumber[CURRENT] == 1)
+        if (mModelNumber[CURRENT] == 1)
             return context.getString(R.string.all_model_number_one);
-        else if(mModelNumber[CURRENT] == 2)
+        else if (mModelNumber[CURRENT] == 2)
             return context.getString(R.string.all_model_number_two);
         else
             return null;
@@ -183,7 +183,7 @@ class WandData {
     }
 
     static void SetStimI(byte[] msg, int low_or_high) {
-        if(low_or_high == LOW)
+        if (low_or_high == LOW)
             mStimLeadI = (msg[2] & 0xff);
         else
             mStimLeadI += (msg[2] & 0xff) << 8;
@@ -191,7 +191,7 @@ class WandData {
 
     @SuppressLint("DefaultLocale")
     static String GetStimLeadI() {
-        if(mStimLeadI == -1)
+        if (mStimLeadI == -1)
             return null;
         else {
             float amp_setting = (mStimAmplitude & 0xff) * 0.05f;
@@ -203,24 +203,24 @@ class WandData {
             vtank = amp * (608.9f / 500.0f);
 
             // Determine the load resistance
-            leadr = (7150.0f * 7150.0f * imeas) / (imeas * (7218.9f) - vtank) -40.0f -7150.0f;
-            if(leadr <= 0.0f)
+            leadr = (7150.0f * 7150.0f * imeas) / (imeas * (7218.9f) - vtank) - 40.0f - 7150.0f;
+            if (leadr <= 0.0f)
                 leadr = 10000.0f;
 
             // Then calculate lead current
             leadi = 1000.0f * (7150.0f * imeas) / (7190.0f + leadr);
 
             // If lead current is greater than 2000 ohms, then display 0 mA
-            if(leadr > 2000.0f)
+            if (leadr > 2000.0f)
                 leadi = 0.0f;
 
             // Adjust lead current based on voltage setting for voltages < 2.25 V
-            if(amp_setting < 2.25f)
+            if (amp_setting < 2.25f)
                 leadi = leadi * amp_setting / 2.25f;
 
-            if(leadi < 0.1f)
+            if (leadi < 0.1f)
                 return String.format("%.3f mA", leadi);
-            else if(leadi < 1.0f)
+            else if (leadi < 1.0f)
                 return String.format("%.2f mA", leadi);
             else
                 return String.format("%.1f mA", leadi);
@@ -228,10 +228,9 @@ class WandData {
     }
 
     static void SetAmplitude(byte[] msg) {
-        if((msg[2] & 0xff) <= 10) {
+        if ((msg[2] & 0xff) <= 10) {
             amplitude[TEMPORARY] = (byte) ((msg[2] & 0xff) / 2 - 1);
-        }
-        else
+        } else
             amplitude[TEMPORARY] = (byte) ((msg[2] & 0xff) / 5 + 2);
     }
 
@@ -240,7 +239,7 @@ class WandData {
     }
 
     static float GetAmpFromPos(int pos) {
-        if(pos <= 4)
+        if (pos <= 4)
             return (pos + 1) * 0.1f;
         else
             return (pos + 1) * 0.25f - 0.75f;
@@ -257,7 +256,7 @@ class WandData {
 
         // For each model, check to see if therapy is active. If so, then update therapy and
         // update mRRT
-        if(mModelNumber[TEMPORARY] == 1) {
+        if (mModelNumber[TEMPORARY] == 1) {
             if ((mConfig[TEMPORARY] & 0x01) > 0) {
                 if ((mConfig[TEMPORARY] & 0x02) > 0)
                     therapy[TEMPORARY] = 1;                                                         // Daily
@@ -273,10 +272,9 @@ class WandData {
                     mRRT[TEMPORARY] = 0;
             } else
                 mRRT[TEMPORARY] = -1;                                                               // Otherwise hide value
-        }
-        else {
+        } else {
             if ((mConfig[TEMPORARY] & 0x01) > 0) {
-                byte config = (byte)(((mConfig[TEMPORARY] & 0x0e) >> 1) + 1);
+                byte config = (byte) (((mConfig[TEMPORARY] & 0x0e) >> 1) + 1);
                 therapy[TEMPORARY] = config;                                                        // Set therapy
             } else
                 therapy[TEMPORARY] = 0;                                                             // Off
@@ -298,9 +296,9 @@ class WandData {
 
     static String GetTherapy(Context context) {
         // Do this for Model 1
-        if(mModelNumber[CURRENT] == 1) {
+        if (mModelNumber[CURRENT] == 1) {
             String[] therapy_array = context.getResources().getStringArray(R.array.itns_therapy_schedule_array_model_one);
-            if(therapy[CURRENT] >= 0 && therapy[CURRENT] <= 2)
+            if (therapy[CURRENT] >= 0 && therapy[CURRENT] <= 2)
                 return therapy_array[therapy[CURRENT]];
             else
                 return "error";
@@ -308,7 +306,7 @@ class WandData {
         // Do this for Model 2
         else {
             String[] therapy_array = context.getResources().getStringArray(R.array.itns_therapy_schedule_array_model_two);
-            if(therapy[CURRENT] >= 0 && therapy[CURRENT] <= 5)
+            if (therapy[CURRENT] >= 0 && therapy[CURRENT] <= 5)
                 return therapy_array[therapy[CURRENT]];
             else
                 return "error";
@@ -317,13 +315,13 @@ class WandData {
 
     @SuppressLint("DefaultLocale")
     static float GetLeadI() {
-        if(mLeadI[CURRENT] == -1)
+        if (mLeadI[CURRENT] == -1)
             return 0.0f;
         else {
             float amp = GetAmpFromPos(amplitude[CURRENT]);
 
             float leadi;
-            if(amp < 2.25f) {
+            if (amp < 2.25f) {
                 leadi = mLeadI[CURRENT] * 0.03922f * amp / 2.25f;                                   // Adjust current based on strength duration curve
             } else {
                 leadi = mLeadI[CURRENT] * 0.03922f;
@@ -334,7 +332,7 @@ class WandData {
             float leadr = amp_setting / (mLeadI[CURRENT] * 0.00003922f);
 
             // And set lead current to 0 mA if load resistance > 2000 ohms.
-            if(leadr > 2000.0f)
+            if (leadr > 2000.0f)
                 leadi = 0.0f;
 
             return leadi;
@@ -359,8 +357,8 @@ class WandData {
     static String GetCellV() {
 
         // For model 1, hide Cell V if -1
-        if(mModelNumber[CURRENT] == 1) {
-            if(mCellV[CURRENT] == -1)
+        if (mModelNumber[CURRENT] == 1) {
+            if (mCellV[CURRENT] == -1)
                 return null;
             else {
                 float cellv = mCellV[CURRENT] * .025f;
@@ -386,10 +384,10 @@ class WandData {
 
     static String GetRRT(Context context) {
 
-        if(mModelNumber[CURRENT] == 1) {
+        if (mModelNumber[CURRENT] == 1) {
             if (mRRT[CURRENT] == 1)
                 return context.getString(R.string.all_yes);
-            else if(mRRT[CURRENT] == 0)
+            else if (mRRT[CURRENT] == 0)
                 return context.getString(R.string.all_no);
             else
                 return null;
@@ -408,7 +406,7 @@ class WandData {
 
     @SuppressLint("DefaultLocale")
     static String GetStimLeadR() {
-        if(mStimLeadI == -1)
+        if (mStimLeadI == -1)
             return null;
         else {
             if (mStimLeadI == 0)
@@ -424,11 +422,11 @@ class WandData {
             vtank = amp * (608.9f / 500.0f);
 
             // Determine the load resistance
-            leadr = (7150.0f * 7150.0f * imeas) / (imeas * (7218.9f) - vtank) -40.0f -7150.0f;
-            if(leadr <= 0.0f)
+            leadr = (7150.0f * 7150.0f * imeas) / (imeas * (7218.9f) - vtank) - 40.0f - 7150.0f;
+            if (leadr <= 0.0f)
                 leadr = 10000.0f;
-            
-            if(leadr <= 2000.0f)
+
+            if (leadr <= 2000.0f)
                 return String.format("%.0f ohms", leadr);
             else
                 return "> 2000 ohms";
@@ -438,7 +436,7 @@ class WandData {
     @SuppressLint("DefaultLocale")
     static float GetLeadR() {
 
-        if(mLeadI[CURRENT] == -1)
+        if (mLeadI[CURRENT] == -1)
             return 0f;
         else {
             if (mLeadI[CURRENT] == 0)
@@ -458,11 +456,10 @@ class WandData {
 
     @SuppressLint("DefaultLocale")
     static String GetDate() {
-        if(therapy[CURRENT] == 0 || (therapy[CURRENT] == 1 && mModelNumber[CURRENT] == 1)) {        // Don't show date if therapy is disabled or if daily therapy
-                                                                                                    // is chosen for the model 1
+        if (therapy[CURRENT] == 0 || (therapy[CURRENT] == 1 && mModelNumber[CURRENT] == 1)) {        // Don't show date if therapy is disabled or if daily therapy
+            // is chosen for the model 1
             return "----";
-        }
-        else {
+        } else {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
             int month = c.get(Calendar.MONTH) + 1;
@@ -473,17 +470,17 @@ class WandData {
     }
 
     static void SetClock(byte[] msg) {
-        mClock.mMins[TEMPORARY]  = ((msg[2] & 0xf0) >> 4) * 10 + (msg[2] & 0x0f);                   // Convert from BCD
+        mClock.mMins[TEMPORARY] = ((msg[2] & 0xf0) >> 4) * 10 + (msg[2] & 0x0f);                   // Convert from BCD
         mClock.mHours[TEMPORARY] = ((msg[3] & 0xf0) >> 4) * 10 + (msg[3] & 0x0f);                   // Convert from BCD
     }
 
     static void SetSchedule(byte[] msg) {
-        mSchedule.mMins[TEMPORARY]   = ((msg[2] & 0xf0) >> 4) * 10 + (msg[2] & 0x0f);               // Convert from BCD
-        mSchedule.mHours[TEMPORARY]  = ((msg[3] & 0xf0) >> 4) * 10 + (msg[3] & 0x0f);               // Convert from BCD
+        mSchedule.mMins[TEMPORARY] = ((msg[2] & 0xf0) >> 4) * 10 + (msg[2] & 0x0f);               // Convert from BCD
+        mSchedule.mHours[TEMPORARY] = ((msg[3] & 0xf0) >> 4) * 10 + (msg[3] & 0x0f);               // Convert from BCD
         mSchedule.mAlarms[TEMPORARY] = msg[4];
 
         // No need to calculate anything since everything is 0xff if therapy is off
-        if(therapy[TEMPORARY] == 0)
+        if (therapy[TEMPORARY] == 0)
             return;
 
         // Calculate the difference between the schedule and clock. If
@@ -496,7 +493,7 @@ class WandData {
                 (mClock.mMins[TEMPORARY] & 0xff) -
                 (mClock.mHours[TEMPORARY] & 0xff) * 60;
 
-        if(minutes_to_alarm >= 0)
+        if (minutes_to_alarm >= 0)
             minutes_to_alarm += ((mSchedule.mAlarms[TEMPORARY] & 0xff) - 1) * 1440;
         else
             minutes_to_alarm += (mSchedule.mAlarms[TEMPORARY] & 0xff) * 1440;
@@ -508,19 +505,18 @@ class WandData {
 
     @SuppressLint("DefaultLocale")
     static String GetTime() {
-        if(therapy[CURRENT] != 0) {
+        if (therapy[CURRENT] != 0) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
             return String.format("%02d:%02d",
                     c.get(Calendar.HOUR_OF_DAY),
                     c.get(Calendar.MINUTE));
-        }
-        else
+        } else
             return "----";
     }
 
     static boolean IsITNSNew() {
-        if(mModelSerial[CURRENT] != mModelSerial[TEMPORARY])
+        if (mModelSerial[CURRENT] != mModelSerial[TEMPORARY])
             return true;
         else
             return false;

@@ -78,7 +78,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_implant_model" />
 
         <TextView
-            android:id="@+id/tvItnsModelNumber"
+            android:id="@+id/tv_itns_model_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -91,7 +91,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvItnsSN"
+            android:id="@+id/tv_itns_serial_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -101,7 +101,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid"
-            app:layout_constraintTop_toBottomOf="@+id/tvItnsModelNumber" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_itns_model_number" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -188,6 +188,7 @@
             android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/btn_lead_r_warn"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
@@ -207,7 +208,7 @@
             android:textAllCaps="false"
             android:textColor="@color/cardview_dark_background"
             android:textSize="24sp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
@@ -371,7 +372,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_bottom_container"
-        android:layout_width="0dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:background="@color/colorBaseGrayFifty"
         android:padding="40dp"
@@ -382,11 +383,11 @@
         app:layout_constraintVertical_weight="0.5">
 
         <Button
-            android:id="@+id/btItnsStartStim"
+            android:id="@+id/btn_program"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="@drawable/rounded_corners_button"
-            android:text="@string/hold_to_deliver_neurostimulation"
+            android:text="@string/program"
             android:textAllCaps="false"
             android:textColor="@color/cardview_light_background"
             android:textSize="24sp"

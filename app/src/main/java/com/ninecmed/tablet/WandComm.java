@@ -453,12 +453,7 @@ class WandComm {
         }
     }
 
-    private final Runnable TimeOut = new Runnable() {
-        @Override
-        public void run() {
-            ProcessStateMachine();
-        }
-    };
+    private final Runnable TimeOut = this::ProcessStateMachine;
 
     /// This timer only gets called if a message to the wand is not acknowledged
     private final Runnable CheckForAcknowledgement = new Runnable() {

@@ -30,6 +30,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.ninecmed.tablet.dialogues.LeadRDialogue;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
@@ -55,7 +56,6 @@ public class ProgramTherapyFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.fragment_program_therapy, container, false);
 
-//        InitializeStimulationButton(view);
         initializeInterrogateButton(view);
 //        InitializeAmpControls(view);
 
@@ -72,41 +72,63 @@ public class ProgramTherapyFragment extends Fragment {
         ProgressBar pb1 = view.findViewById(R.id.pbItnsStim);
         pb1.setVisibility(View.INVISIBLE);*/
 
+        setUpLeadRButtonClick(view);
+        setUpAmplitudeButtonClick(view);
+        setUpFrequencyButtonClick(view);
+        setUpDateButtonClick(view);
+        setUpTimeButtonClick(view);
+
         mMainActivity = (MainActivity) getActivity();
         return view;
+    }
+
+    private void setUpLeadRButtonClick(View rootView) {
+        Button btnLeadRWarn = rootView.findViewById(R.id.btn_lead_r_warn);
+
+        btnLeadRWarn.setOnClickListener(view -> {
+            float leadRValue = WandData.GetLeadR();
+            float leadIValue = WandData.GetLeadI();
+            final LeadRDialogue dialogue = new LeadRDialogue(getActivity());
+            dialogue.setLeadRValue(leadRValue);
+            dialogue.setLeadIValue(leadIValue);
+            dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
+            dialogue.show();
+        });
+    }
+
+    private void setUpAmplitudeButtonClick(View rootView) {
+
+    }
+
+    private void setUpFrequencyButtonClick(View rootView) {
+    }
+
+    private void setUpDateButtonClick(View rootView) {
+
+    }
+
+    private void setUpTimeButtonClick(View rootView) {
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton(View view) {
         final Button interrogate = view.findViewById(R.id.btn_interrogate);
+//
+//        interrogate.setEnabled(false);
+//        interrogate.setAlpha(0.5f);
+        interrogate.setOnTouchListener((view1, motionEvent) -> {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                interrogate.setPressed(true);
 
-        interrogate.setEnabled(false);
-        interrogate.setAlpha(0.5f);
-        interrogate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                // Even though the Interrogate button, and all other buttons are disabled
-                // in the StartProgressBar method by setting
-                // WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, several
-                // ACTION_DOWN events could occur before the window is deactivated.
-                // In order to prevent this, we'll add a flag, bTouch, that's set
-                // on the first touch and only cleared in the EndProgressBar method.
-                // The same steps are required for the Program button.
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN /*&& !bTouch*/) {
-                    interrogate.setPressed(true);
-                    //bTouch = true;
-
-                    //TODO: remove comment after BT
-                    mMainActivity.wandComm.Interrogate();
-                    MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    //StartProgressBar();
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                    interrogate.setPressed(false);
-                }
-                return true;
+                //TODO: remove comment after BT
+                mMainActivity.wandComm.Interrogate();
+                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                //StartProgressBar();
+            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+                interrogate.setPressed(false);
             }
+            return true;
         });
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -178,93 +200,6 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.show();
     }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void InitializeStimulationButton(View view) {
-        final Button stimulate = view.findViewById(R.id.btItnsStartStim);
-        //TODO:IMP remove comment after BT
-        //stimulate.setEnabled(false);
-        //stimulate.setAlpha(0.5f);
-        stimulate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (mNow + 500 < System.currentTimeMillis()) {
-                            stimulate.setPressed(true);
-                            //TODO: IMP remove comment after BT
-                            //mMainActivity.wandComm.SetStimulation(true);
-                            MakeTone(ToneGenerator.TONE_PROP_BEEP);
-                            stimulate.setText("Stimulation Active");
-                            WandData.InvalidateStimLeadI();
-
-                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
-                            leadi.setText(WandData.GetLeadI());
-
-                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());*/
-                            // Disable changed parameters during test stim. Only re-enable once
-                            // job is completed. Even though controls are disabled, don't change
-                            // alpha, meaning don't gray out the controls, otherwise it appears
-                            // strange.
-                            //SetChangedParametersEnable(false, false);
-                            // Also, don't update alpha for the program and interrogate
-                            // buttons either, otherwise pressing the test stim button
-                            // would cause the program and interrogate button to go grey. Since
-                            // this isn't consistent with what we do when the interrogate or
-                            // program button is pressed - we decided to disable other telemetry
-                            // controls when a telemetry command is in progress, but without changing
-                            // the appearance.
-                            //EnableInterrogateButton(false, false);
-                            //EnableProgramButton(false, false);
-                            //StartStimProgressBar();
-                            mMainActivity.EnableTabs(false);
-                            mNow = System.currentTimeMillis();
-                            mStimEnabled = true;
-                        }
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        // Only execute code on up/cancel when mStimEnabled is true,
-                        // otherwise this means that the user pressed the down key too
-                        // quickly and when he let's go, the motion event causes SetTestStimulation
-                        // to be executed again even though it wasn't started. This causes an
-                        // unnecessary beep as well.
-                        if (mStimEnabled) {
-                            stimulate.setPressed(false);
-                            stimulate.setText("Hold to deliver neurostimulation");
-                            //stimulate.setEnabled(false);
-                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                            // Set delay to 1500 to be the same delay as ExternalFragment
-                            if (mNow + 1500 < System.currentTimeMillis()) {
-                                //TODO:IMP remove comment after BT
-                                //mMainActivity.wandComm.SetStimulation(false);
-
-                                //StopStimProgressBar();
-                                MakeTone(ToneGenerator.TONE_PROP_NACK);
-                                mStimEnabled = false;
-                            } else {
-                                //TODO:IMP remove comment after BT
-                                //mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
-                            }
-                        }
-                        break;
-                }
-                return true;
-            }
-        });
-    }
-
-    private final Runnable HoldStimulation = new Runnable() {
-        @Override
-        public void run() {
-            mMainActivity.wandComm.SetStimulation(false);
-            MakeTone(ToneGenerator.TONE_PROP_NACK);
-            //StopStimProgressBar();
-            mStimEnabled = false;
-        }
-    };
 
     private void InitializeTherapySpinner(View view) {
         final Spinner therapy = view.findViewById(R.id.ddItnsTherapy);
@@ -623,44 +558,6 @@ public class ProgramTherapyFragment extends Fragment {
         SetChangedParametersEnable(true, true);
     }
 
-    public void OnDisconnected() {
-        if (mAlertDialog != null)
-            mAlertDialog.dismiss();
-
-        View view = getView();
-
-        TextView tv = Objects.requireNonNull(view).findViewById(R.id.tvItnsBtStatus);
-        tv.setText(getString(R.string.no_link_msg));
-
-        ImageView iv = view.findViewById(R.id.ivItnsLink);
-        iv.setImageResource(R.drawable.ic_link_off);
-
-        StopProgressBar();
-        ResetChangedParameters();
-        SetChangedParametersEnable(false, true);
-
-        EnableInterrogateButton(false, true);
-        EnableProgramButton(false, true);
-        EnableStimTestButton(false);
-
-        // Hide controls
-        /*Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-        gp.setVisibility(View.GONE);*/
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-       /* Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-        gp.setVisibility(View.GONE);*/
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
     // This method is called when the fragment is hidden
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -673,7 +570,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void OnHidden() {
         // Always make sure buttons are enabled when leaving window
-        Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void UIUpdate(boolean success) {
@@ -681,81 +578,62 @@ public class ProgramTherapyFragment extends Fragment {
 //        StopProgressBar();
 //        mMainActivity.EnableTabs(true);
 
-        if (success && view != null) {
-            if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
-                // Re-enable changed parameters (and the test stim button) only when
-                // UIUpdate is called - meaning that the state machine has finished its tasks
-                SetChangedParametersEnable(true, true);
-                mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                EnableInterrogateButton(true, true);
+        if (!WandData.IsITNSNew() && success && view != null) {
+            MakeTone(ToneGenerator.TONE_CDMA_PIP);
 
-                /*EnableProgramButton(true, true);
-                EnableStimTestButton(true);*/
+            TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
+            mn.setText((WandData.GetModelNumber(view.getContext())));
 
-//                TextView leadi = Objects.requireNonNull(view).findViewById(R.id.tvItnsLeadI);
+            TextView sn = view.findViewById(R.id.tv_itns_serial_val);
+            sn.setText(WandData.GetSerialNumber());
+
+            TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+            cellv.setText(WandData.GetCellV());
+
+//                TextView rrt = view.findViewById(R.id.tvItnsRRT);
+//                String rrt_result = WandData.GetRRT(view.getContext());
+//                rrt.setText(rrt_result);
+//                if(rrt_result == getString(R.string.all_yes))
+//                    rrt.setTextColor(Color.RED);
+//                else
+//                    rrt.setTextColor(Color.BLACK);
+
+//                TextView leadi = view.findViewById(R.id.tvItnsLeadI);
 //                leadi.setText(WandData.GetLeadI());
 
-                TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-                leadr.setText(String.valueOf(WandData.GetLeadR()));
-            } else {
-                MakeTone(ToneGenerator.TONE_CDMA_PIP);
 
-                TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
-                mn.setText((WandData.GetModelNumber(view.getContext())));
+            TextView leadr = view.findViewById(R.id.tv_lead_r_val);
+            leadr.setText(String.valueOf(WandData.GetLeadR()));
 
-                TextView sn = view.findViewById(R.id.tvItnsSN);
-                sn.setText(WandData.GetSerialNumber());
+//                Spinner therapySpinner = view.findViewById(R.id.ddItnsTherapy);
+//                ArrayAdapter<CharSequence> adapter;
+//                if(WandData.GetModelNumber() == 2)
+//                     adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getActivity()).getBaseContext(),
+//                             R.array.itns_therapy_schedule_array_model_two, R.layout.custom_spinner);
+//                else
+//                    adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getActivity()).getBaseContext(),
+//                            R.array.itns_therapy_schedule_array_model_one, R.layout.custom_spinner);
+//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                therapySpinner.setAdapter(adapter);
 
-                /*TextView cellv = view.findViewById(R.id.tvItnsCellV);
-                cellv.setText(WandData.GetCellV());
+//                TextView therapy = view.findViewById(R.id.tvItnsTherapy);
+//                therapy.setText(WandData.GetTherapy(view.getContext()));
 
-                TextView rrt = view.findViewById(R.id.tvItnsRRT);
-                String rrt_result = WandData.GetRRT(view.getContext());
-                rrt.setText(rrt_result);
-                if(rrt_result == getString(R.string.all_yes))
-                    rrt.setTextColor(Color.RED);
-                else
-                    rrt.setTextColor(Color.BLACK);
+            Button dateRO = view.findViewById(R.id.btn_start_day);
+            dateRO.setText(WandData.GetDate());
 
-                TextView leadi = view.findViewById(R.id.tvItnsLeadI);
-                leadi.setText(WandData.GetLeadI());*/
+            Button timeRO = view.findViewById(R.id.btn_time_of_day);
+            timeRO.setText(WandData.GetTime());
 
-                //TODO:IMP use below for Lead R warnings and OK
-                //TextView leadr = view.findViewById(R.id.tvItnsLeadR);
-                //leadr.setText(WandData.GetLeadR());
+            Button ampRO = view.findViewById(R.id.btn_amplitude_val);
+            ampRO.setText(WandData.GetAmplitude());
 
-
-                //TODO IMP: Shift below logic to Program Therapy
-                /*Spinner therapySpinner = view.findViewById(R.id.ddItnsTherapy);
-                ArrayAdapter<CharSequence> adapter;
-                if(WandData.GetModelNumber() == 2)
-                     adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getActivity()).getBaseContext(),
-                             R.array.itns_therapy_schedule_array_model_two, R.layout.custom_spinner);
-                else
-                    adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getActivity()).getBaseContext(),
-                            R.array.itns_therapy_schedule_array_model_one, R.layout.custom_spinner);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                therapySpinner.setAdapter(adapter);
-
-                TextView therapy = view.findViewById(R.id.tvItnsTherapy);
-                therapy.setText(WandData.GetTherapy(view.getContext()));
-
-                TextView dateRO = view.findViewById(R.id.tvItnsDateRO);
-                dateRO.setText(WandData.GetDate());
-
-                TextView timeRO = view.findViewById(R.id.tvItnsTimeRO);
-                timeRO.setText(WandData.GetTime());
-
-                TextView ampRO = view.findViewById(R.id.tvItnsAmplitudeRO);
-                ampRO.setText(WandData.GetAmplitude());
-
-                ResetChangedParameters();
-                CheckForReset();*/
-            }
+            ResetChangedParameters();
+            CheckForReset();
         }
         // Here's what happens on fail
         else {
-            if (WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_newitns_title_msg));
