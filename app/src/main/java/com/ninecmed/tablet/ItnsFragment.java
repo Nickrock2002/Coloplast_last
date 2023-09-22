@@ -718,6 +718,7 @@ public class ItnsFragment extends Fragment {
                 SetChangedParametersEnable(true, true);
                 mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                 EnableInterrogateButton(true, true);
+                showLeadRWarningIfFound();
 
                 /*EnableProgramButton(true, true);
                 EnableStimTestButton(true);*/
@@ -727,8 +728,6 @@ public class ItnsFragment extends Fragment {
 
                 TextView leadr = view.findViewById(R.id.tvItnsLeadR);
                 leadr.setText(WandData.GetLeadR());*/
-
-                showLeadRWarningIfFound();
             } else {
 
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
@@ -738,8 +737,8 @@ public class ItnsFragment extends Fragment {
                 sn.setText(WandData.GetSerialNumber());
 
                 showLeadRWarningIfFound();
-
-                CheckForReset();
+                checkForReset();
+                setInitialAmplitude();
 
 
                 //MakeTone(ToneGenerator.TONE_CDMA_PIP);
@@ -850,6 +849,13 @@ public class ItnsFragment extends Fragment {
         }
     }
 
+    private void setInitialAmplitude() {
+        TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
+        amp.setText(WandData.GetAmplitude());
+        mAmplitudePos = WandData.GetAmplitudePos();
+        WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
+    }
+
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.GetLeadR();
         float leadIValue = WandData.GetLeadI();
@@ -893,7 +899,7 @@ public class ItnsFragment extends Fragment {
 
     }
 
-    private void CheckForReset() {
+    private void checkForReset() {
         int resets = WandData.GetResets();
         if (resets > 0) {
             showItnsResetDialog(resets);

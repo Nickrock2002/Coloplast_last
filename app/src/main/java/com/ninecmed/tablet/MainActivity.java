@@ -442,14 +442,6 @@ public class MainActivity extends AppCompatActivity {
     public void UpdateItnsAmplitude() {
         ItnsUpdateAmpEvent itnsUpdateAmpEvent = new ItnsUpdateAmpEvent();
         EventBus.getDefault().post(itnsUpdateAmpEvent);
-        //TODO add event to dashboard fragment
-//        MainActivity.this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//                itns.UpdateAmplitude();
-//            }
-//        });
     }
 
     public void EnableTabs(boolean enable) {
