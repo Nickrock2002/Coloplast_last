@@ -303,19 +303,7 @@ public class ExternalFragment extends Fragment {
             leadr.setText(WandData.GetStimLeadR());*/
         }
         else {
-            View view = getView();
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-            alertDialog.setTitle(getString(R.string.external_comm_error_title_msg));
-            alertDialog.setMessage(getString(R.string.external_comm_error_msg));
-            alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
-            });
-            mAlertDialog = alertDialog.create();
-            mAlertDialog.setCancelable(false);
-            mAlertDialog.show();
+            mMainActivity.showWandTabCommunicationIssueDialog();
         }
     }
 

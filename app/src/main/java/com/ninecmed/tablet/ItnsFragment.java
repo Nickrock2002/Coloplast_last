@@ -843,35 +843,10 @@ public class ItnsFragment extends Fragment {
                 });
                 mAlertDialog = alertDialog.create();
             } else {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
-                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_retry), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE)
-                            mMainActivity.wandComm.Interrogate();
-                        else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
-                            mMainActivity.wandComm.Program();
-                        StartProgressBar();
-                    }
-                });
-                alertDialog.setNegativeButton(getString(R.string.all_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        SetChangedParametersEnable(true, true);
-                        EnableInterrogateButton(true, true);
-                        EnableProgramButton(true, true);
-                        EnableStimTestButton(true);
-                    }
-                });
-                mAlertDialog = alertDialog.create();
+                mMainActivity.showWandTabCommunicationIssueDialog();
             }
-            mAlertDialog.setCancelable(false);
-            mAlertDialog.show();
+            /*mAlertDialog.setCancelable(false);
+            mAlertDialog.show();*/
         }
     }
 

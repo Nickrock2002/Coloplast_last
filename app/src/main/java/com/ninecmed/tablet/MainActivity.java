@@ -879,6 +879,24 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void showWandTabCommunicationIssueDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_wand_tablet_comm_issue);
+
+        Button btnConfirmWandComm = (Button) dialog.findViewById(R.id.btn_confirm_wand_comm);
+        btnConfirmWandComm.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
     private void calculateTimeDifference(int year, int month, int day, int hour, int minute) {
 
         // Create a Calendar object for the user-selected date and time
