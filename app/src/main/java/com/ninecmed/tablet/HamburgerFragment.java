@@ -1,5 +1,7 @@
 package com.ninecmed.tablet;
 
+import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -83,11 +85,31 @@ public class HamburgerFragment extends Fragment {
 
         resetDateTime = view.findViewById(R.id.btn_set_date_time);
         resetDateTime.setOnClickListener(v -> {
-            mMainActivity.showSetDateTimeDialog(true);
+           showResetDateTimeConfirmationDialog();
         });
 
         return view;
     }
+
+    public void showResetDateTimeConfirmationDialog() {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_reset_date_time);
+
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm_to_reset);
+        btnConfirm.setOnClickListener(v -> {
+            mMainActivity.showSetDateTimeDialog(true);
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

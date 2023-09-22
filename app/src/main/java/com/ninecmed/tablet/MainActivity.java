@@ -445,14 +445,6 @@ public class MainActivity extends AppCompatActivity {
     public void UpdateItnsAmplitude() {
         ItnsUpdateAmpEvent itnsUpdateAmpEvent = new ItnsUpdateAmpEvent();
         EventBus.getDefault().post(itnsUpdateAmpEvent);
-        //TODO add event to dashboard fragment
-//        MainActivity.this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                ItnsFragment itns = (ItnsFragment) mSectionsPageAdapter.getItem(DashboardFragment.tabs.ITNS);
-//                itns.UpdateAmplitude();
-//            }
-//        });
     }
 
     public void EnableTabs(boolean enable) {
@@ -874,6 +866,24 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_batt);
         btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showWandTabCommunicationIssueDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_wand_tablet_comm_issue);
+
+        Button btnConfirmWandComm = (Button) dialog.findViewById(R.id.btn_confirm_wand_comm);
+        btnConfirmWandComm.setOnClickListener(v -> {
             dialog.dismiss();
         });
 

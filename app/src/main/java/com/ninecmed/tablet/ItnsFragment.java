@@ -718,6 +718,7 @@ public class ItnsFragment extends Fragment {
                 SetChangedParametersEnable(true, true);
                 mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                 EnableInterrogateButton(true, true);
+                showLeadRWarningIfFound();
 
                 /*EnableProgramButton(true, true);
                 EnableStimTestButton(true);*/
@@ -727,8 +728,6 @@ public class ItnsFragment extends Fragment {
 
                 TextView leadr = view.findViewById(R.id.tvItnsLeadR);
                 leadr.setText(WandData.GetLeadR());*/
-
-                showLeadRWarningIfFound();
             } else {
 
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
@@ -738,8 +737,8 @@ public class ItnsFragment extends Fragment {
                 sn.setText(WandData.GetSerialNumber());
 
                 showLeadRWarningIfFound();
-
-                CheckForReset();
+                checkForReset();
+                setInitialAmplitude();
 
 
                 //MakeTone(ToneGenerator.TONE_CDMA_PIP);
@@ -843,36 +842,18 @@ public class ItnsFragment extends Fragment {
                 });
                 mAlertDialog = alertDialog.create();
             } else {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
-                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_retry), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE)
-                            mMainActivity.wandComm.Interrogate();
-                        else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
-                            mMainActivity.wandComm.Program();
-                        StartProgressBar();
-                    }
-                });
-                alertDialog.setNegativeButton(getString(R.string.all_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        SetChangedParametersEnable(true, true);
-                        EnableInterrogateButton(true, true);
-                        EnableProgramButton(true, true);
-                        EnableStimTestButton(true);
-                    }
-                });
-                mAlertDialog = alertDialog.create();
+                mMainActivity.showWandTabCommunicationIssueDialog();
             }
-            mAlertDialog.setCancelable(false);
-            mAlertDialog.show();
+            /*mAlertDialog.setCancelable(false);
+            mAlertDialog.show();*/
         }
+    }
+
+    private void setInitialAmplitude() {
+        TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
+        amp.setText(WandData.GetAmplitude());
+        mAmplitudePos = WandData.GetAmplitudePos();
+        WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
 
     private void showLeadRWarningIfFound() {
@@ -916,7 +897,7 @@ public class ItnsFragment extends Fragment {
         }
     }
 
-    private void CheckForReset() {
+    private void checkForReset() {
         int resets = WandData.GetResets();
         if (resets > 0) {
             showItnsResetDialog(resets);
