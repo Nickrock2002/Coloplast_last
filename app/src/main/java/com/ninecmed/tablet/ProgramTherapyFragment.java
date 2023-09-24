@@ -3,6 +3,7 @@ package com.ninecmed.tablet;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -27,9 +28,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.ninecmed.tablet.dialogues.AmplitudeDialogue;
+import com.ninecmed.tablet.dialogues.FrequencyDialogue;
 import com.ninecmed.tablet.dialogues.LeadRDialogue;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.TabEnum;
@@ -77,9 +81,14 @@ public class ProgramTherapyFragment extends Fragment {
         setUpFrequencyButtonClick(view);
         setUpDateButtonClick(view);
         setUpTimeButtonClick(view);
+        return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
 
         mMainActivity = (MainActivity) getActivity();
-        return view;
     }
 
     private void setUpLeadRButtonClick(View rootView) {
@@ -96,11 +105,111 @@ public class ProgramTherapyFragment extends Fragment {
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setUpAmplitudeButtonClick(View rootView) {
+        Button btnAmplitudeVal = rootView.findViewById(R.id.btn_amplitude_val);
 
+        btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
+            String amplitudeVal = WandData.GetAmplitude();
+            final AmplitudeDialogue dialogue = new AmplitudeDialogue(getActivity());
+            dialogue.setAmplitude(amplitudeVal);
+            dialogue.setItnsMinusListener((minusButton, motionEvent) -> {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    minusButton.setPressed(true);
+                    if (mAmplitudePos < 42) {
+                        mAmplitudePos += 1;
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                    }
+
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                    TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
+                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                    ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+
+                        //TODO: Imp remove following line after BT
+                        //mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+
+
+                    /*amp.setTextColor(Color.BLACK);
+                    minusButton
+                   .setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
+                    minus.setBackgroundResource(R.color.colorControlNoChange);*/
+                    } else {
+                        //TODO: Imp remove following line after BT
+                        //mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+
+                    /*amp.setTextColor(Color.RED);
+                    minusButton
+                   .setBackgroundResource(R.color.colorControlChange);
+                    minus.setBackgroundResource(R.color.colorControlChange);*/
+                    }
+
+                    //EnableProgramButton(true, true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    minusButton.setPressed(false);
+                }
+                return true;
+            });
+            dialogue.setItnsPlusListener((plusButton, motionEvent) -> {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    plusButton.setPressed(true);
+                    if (mAmplitudePos > 0) {
+                        mAmplitudePos -= 1;
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                    }
+
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                    TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
+                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                    ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                   /* amp.setTextColor(Color.BLACK);
+                    plusButton.setBackgroundResource(R.color.colorControlNoChange);
+                    plus.setBackgroundResource(R.color.colorControlNoChange);*/
+                    } else {
+                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                   /* amp.setTextColor(Color.RED);
+                    plusButton.setBackgroundResource(R.color.colorControlChange);
+                    plus.setBackgroundResource(R.color.colorControlChange);*/
+                    }
+
+                    //EnableProgramButton(true, true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    plusButton.setPressed(false);
+                }
+                return true;
+            });
+            dialogue.setStimulationButtonListener((stimulationButton, motionEvent) -> {
+
+                return false;
+            });
+            dialogue.setCancelButtonListener(cancelView -> {
+                dialogue.dismiss();
+            });
+            dialogue.setConfirmButtonListener(confirmView -> {
+                //add the confirm code here
+            });
+            dialogue.show();
+        });
     }
 
     private void setUpFrequencyButtonClick(View rootView) {
+        Button btnFrequencyVal = rootView.findViewById(R.id.btn_frequency_val);
+
+        btnFrequencyVal.setOnClickListener(frequencyButton -> {
+            final FrequencyDialogue dialogue = new FrequencyDialogue(getActivity());
+            dialogue.setCancelButtonListener(cancelView -> {
+                dialogue.dismiss();
+            });
+            dialogue.setConfirmButtonListener(confirmView -> {
+                //add the confirm code here
+            });
+            dialogue.show();
+        });
     }
 
     private void setUpDateButtonClick(View rootView) {
@@ -128,6 +237,89 @@ public class ProgramTherapyFragment extends Fragment {
                 interrogate.setPressed(false);
             }
             return true;
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void InitializeAmpControls(View view) {
+        final ImageButton plus = view.findViewById(R.id.ibItnsPlus);
+        final ImageButton minus = view.findViewById(R.id.ibItnsMinus);
+        // Use OnTouchListener rather than onClickListener so that we register the change
+        // on the action down, rather that on the action up!
+        plus.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    plus.setPressed(true);
+                    if (mAmplitudePos < 42) {
+                        mAmplitudePos += 1;
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                    }
+
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                    TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
+                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+
+                        //TODO: Imp remove following line after BT
+                        //mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+
+
+                        /*amp.setTextColor(Color.BLACK);
+                        plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
+                        minus.setBackgroundResource(R.color.colorControlNoChange);*/
+                    } else {
+                        //TODO: Imp remove following line after BT
+                        //mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+
+                        /*amp.setTextColor(Color.RED);
+                        plus.setBackgroundResource(R.color.colorControlChange);
+                        minus.setBackgroundResource(R.color.colorControlChange);*/
+                    }
+
+                    //EnableProgramButton(true, true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    plus.setPressed(false);
+                }
+                return true;
+            }
+        });
+
+        minus.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    minus.setPressed(true);
+                    if (mAmplitudePos > 0) {
+                        mAmplitudePos -= 1;
+                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                    }
+
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                    TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
+                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                       /* amp.setTextColor(Color.BLACK);
+                        minus.setBackgroundResource(R.color.colorControlNoChange);
+                        plus.setBackgroundResource(R.color.colorControlNoChange);*/
+                    } else {
+                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                       /* amp.setTextColor(Color.RED);
+                        minus.setBackgroundResource(R.color.colorControlChange);
+                        plus.setBackgroundResource(R.color.colorControlChange);*/
+                    }
+
+                    //EnableProgramButton(true, true);
+                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                    minus.setPressed(false);
+                }
+                return true;
+            }
         });
     }
 
@@ -459,89 +651,6 @@ public class ProgramTherapyFragment extends Fragment {
         UpdateAmplitude();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void InitializeAmpControls(View view) {
-        final ImageButton plus = view.findViewById(R.id.ibItnsPlus);
-        final ImageButton minus = view.findViewById(R.id.ibItnsMinus);
-        // Use OnTouchListener rather than onClickListener so that we register the change
-        // on the action down, rather that on the action up!
-        plus.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    plus.setPressed(true);
-                    if (mAmplitudePos < 42) {
-                        mAmplitudePos += 1;
-                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    }
-
-                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                    TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
-                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
-
-                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-
-                        //TODO: Imp remove following line after BT
-                        //mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-
-
-                        /*amp.setTextColor(Color.BLACK);
-                        plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
-                        minus.setBackgroundResource(R.color.colorControlNoChange);*/
-                    } else {
-                        //TODO: Imp remove following line after BT
-                        //mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-
-                        /*amp.setTextColor(Color.RED);
-                        plus.setBackgroundResource(R.color.colorControlChange);
-                        minus.setBackgroundResource(R.color.colorControlChange);*/
-                    }
-
-                    //EnableProgramButton(true, true);
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    plus.setPressed(false);
-                }
-                return true;
-            }
-        });
-
-        minus.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    minus.setPressed(true);
-                    if (mAmplitudePos > 0) {
-                        mAmplitudePos -= 1;
-                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    }
-
-                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                    TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
-                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
-
-                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                       /* amp.setTextColor(Color.BLACK);
-                        minus.setBackgroundResource(R.color.colorControlNoChange);
-                        plus.setBackgroundResource(R.color.colorControlNoChange);*/
-                    } else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                       /* amp.setTextColor(Color.RED);
-                        minus.setBackgroundResource(R.color.colorControlChange);
-                        plus.setBackgroundResource(R.color.colorControlChange);*/
-                    }
-
-                    //EnableProgramButton(true, true);
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    minus.setPressed(false);
-                }
-                return true;
-            }
-        });
-    }
-
     public void OnConnected() {
         View view = getView();
 
@@ -630,6 +739,7 @@ public class ProgramTherapyFragment extends Fragment {
 
             ResetChangedParameters();
             CheckForReset();
+            setInitialAmplitude();
         }
         // Here's what happens on fail
         else {
@@ -705,6 +815,13 @@ public class ProgramTherapyFragment extends Fragment {
             mAlertDialog.setCancelable(false);
             mAlertDialog.show();
         }
+    }
+
+    private void setInitialAmplitude() {
+        TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
+        amp.setText(WandData.GetAmplitude());
+        mAmplitudePos = WandData.GetAmplitudePos();
+        WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
 
     private void CheckForReset() {

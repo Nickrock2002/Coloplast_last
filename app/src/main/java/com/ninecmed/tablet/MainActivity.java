@@ -732,12 +732,12 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_set_frequency);
 
-        RadioButton radioButton1 = (RadioButton) dialog.findViewById(R.id.radio1);
-        RadioButton radioButton2 = (RadioButton) dialog.findViewById(R.id.radio2);
-        RadioButton radioButton3 = (RadioButton) dialog.findViewById(R.id.radio3);
-        RadioButton radioButton4 = (RadioButton) dialog.findViewById(R.id.radio4);
-        RadioButton radioButton5 = (RadioButton) dialog.findViewById(R.id.radio5);
-        RadioButton radioButton6 = (RadioButton) dialog.findViewById(R.id.radio6);
+        RadioButton radioButtonOff = (RadioButton) dialog.findViewById(R.id.radio_off);
+        RadioButton radioButtonDaily = (RadioButton) dialog.findViewById(R.id.radio_daily);
+        RadioButton radioButtonWeekly = (RadioButton) dialog.findViewById(R.id.radio_weekly);
+        RadioButton radioButtonFortNightly = (RadioButton) dialog.findViewById(R.id.radio_fort_nightly);
+        RadioButton radioButtonMonthly = (RadioButton) dialog.findViewById(R.id.radio_monthly);
+        RadioButton radioButtonAuto = (RadioButton) dialog.findViewById(R.id.radio_auto);
 
         RadioGroupPlus radioGroupPlus = (RadioGroupPlus) dialog.findViewById(R.id.frequencyRadioGroup);
         ColorStateList colorStateList = new ColorStateList(
@@ -751,12 +751,12 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        radioButton1.setButtonTintList(colorStateList);
-        radioButton2.setButtonTintList(colorStateList);
-        radioButton3.setButtonTintList(colorStateList);
-        radioButton4.setButtonTintList(colorStateList);
-        radioButton5.setButtonTintList(colorStateList);
-        radioButton6.setButtonTintList(colorStateList);
+        radioButtonOff.setButtonTintList(colorStateList);
+        radioButtonDaily.setButtonTintList(colorStateList);
+        radioButtonWeekly.setButtonTintList(colorStateList);
+        radioButtonFortNightly.setButtonTintList(colorStateList);
+        radioButtonMonthly.setButtonTintList(colorStateList);
+        radioButtonAuto.setButtonTintList(colorStateList);
 
         radioGroupPlus.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton rb = (RadioButton) dialog.findViewById(checkedId);

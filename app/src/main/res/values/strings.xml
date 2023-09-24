@@ -85,6 +85,11 @@
     <string name="lead_r_is_250_ohms"><![CDATA[Lead R is < 250 ohms]]></string>
     <string name="use_a_different_intibia_itns">Use a different Intibia ITNS</string>
     <string name="ok">OK</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="_14_day">14-day</string>
+    <string name="_28_day">28-day</string>
+    <string name="auto">Auto</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>

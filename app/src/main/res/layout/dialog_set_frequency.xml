@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:padding="32dp"
-            android:text="Frequency"
+            android:text="@string/frequency"
             android:textColor="@color/design_default_color_surface"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,47 +45,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <RadioButton
-                    android:id="@+id/radio1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:padding="32dp"
-                    android:text="Off"
-                    android:buttonTint="@color/cardview_dark_background"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/radio2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:padding="32dp"
-                    android:text="Daily"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/radio3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:padding="32dp"
-                    android:text="Weekly"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Second Column Radio Group -->
-            <com.ninecmed.tablet.RadioGroupPlus
-                android:id="@+id/secondColumnRadioGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -93,37 +53,73 @@
                     android:orientation="vertical">
 
                     <RadioButton
-                        android:id="@+id/radio4"
+                        android:id="@+id/radio_off"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/cardview_dark_background"
                         android:checked="false"
                         android:padding="32dp"
-                        android:text="14-day"
+                        android:text="@string/off"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <RadioButton
-                        android:id="@+id/radio5"
+                        android:id="@+id/radio_daily"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="false"
                         android:padding="32dp"
-                        android:text="28-day"
+                        android:text="@string/daily"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <RadioButton
-                        android:id="@+id/radio6"
+                        android:id="@+id/radio_weekly"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="false"
                         android:padding="32dp"
-                        android:text="Auto"
+                        android:text="@string/weekly"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </com.ninecmed.tablet.RadioGroupPlus>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/radio_fort_nightly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:padding="32dp"
+                        android:text="@string/_14_day"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/radio_monthly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:padding="32dp"
+                        android:text="@string/_28_day"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/radio_auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:padding="32dp"
+                        android:text="@string/auto"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
         </com.ninecmed.tablet.RadioGroupPlus>
     </LinearLayout>
 
@@ -142,7 +138,7 @@
             android:layout_marginVertical="18dp"
             android:background="@drawable/rounded_corner_white_button"
             android:paddingHorizontal="40dp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textAllCaps="false"
             android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
@@ -160,7 +156,7 @@
             android:layout_marginVertical="18dp"
             android:background="@drawable/rounded_corners_button"
             android:paddingHorizontal="40dp"
-            android:text="Confirm"
+            android:text="@string/confirm"
             android:textAllCaps="false"
             android:textColor="@color/cardview_light_background"
             android:textSize="20sp"

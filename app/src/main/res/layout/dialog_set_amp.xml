@@ -41,35 +41,35 @@
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
     <ImageButton
-        android:id="@+id/ibItnsMinus"
+        android:id="@+id/ib_itns_minus"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/button_circular"
         android:contentDescription="ic_plus"
         android:gravity="center_vertical|center_horizontal"
         android:src="@drawable/ic_plus_white"
-        app:layout_constraintBottom_toBottomOf="@+id/tvItnsAmplitude"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_itns_amplitude"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvItnsAmplitude"
-        app:layout_constraintTop_toTopOf="@+id/tvItnsAmplitude" />
+        app:layout_constraintStart_toEndOf="@+id/tv_itns_amplitude"
+        app:layout_constraintTop_toTopOf="@+id/tv_itns_amplitude" />
 
     <TextView
-        android:id="@+id/tvItnsAmplitude"
+        android:id="@+id/tv_itns_amplitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0.0V"
         android:textColor="@color/cardview_dark_background"
         android:textSize="48sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/ibItnsPlus"
-        app:layout_constraintEnd_toStartOf="@+id/ibItnsMinus"
+        app:layout_constraintBottom_toBottomOf="@+id/ib_itns_plus"
+        app:layout_constraintEnd_toStartOf="@+id/ib_itns_minus"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/ibItnsPlus"
-        app:layout_constraintTop_toTopOf="@+id/ibItnsPlus" />
+        app:layout_constraintStart_toEndOf="@+id/ib_itns_plus"
+        app:layout_constraintTop_toTopOf="@+id/ib_itns_plus" />
 
     <ImageButton
-        android:id="@+id/ibItnsPlus"
+        android:id="@+id/ib_itns_plus"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="40dp"
@@ -78,7 +78,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:src="@drawable/ic_minus_white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tvItnsAmplitude"
+        app:layout_constraintEnd_toStartOf="@+id/tv_itns_amplitude"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
@@ -91,10 +91,10 @@
         android:background="@color/colorBaseGrayFifty"
         android:paddingVertical="40dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintTop_toBottomOf="@+id/tvItnsAmplitude">
+        app:layout_constraintTop_toBottomOf="@+id/tv_itns_amplitude">
 
         <Button
-            android:id="@+id/btItnsStartStim"
+            android:id="@+id/bt_itns_start_stim"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginHorizontal="40dp"
