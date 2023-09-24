@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
 
     <Button
-        android:id="@+id/btn_cancel"
+        android:id="@+id/bt_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
@@ -65,13 +65,13 @@
         android:textSize="18sp"
         android:paddingHorizontal="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_confirm"
+        app:layout_constraintEnd_toStartOf="@+id/bt_confirm"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btn_confirm"
+        android:id="@+id/bt_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
@@ -84,5 +84,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_cancel" />
+        app:layout_constraintStart_toEndOf="@+id/bt_cancel" />
 </androidx.constraintlayout.widget.ConstraintLayout>

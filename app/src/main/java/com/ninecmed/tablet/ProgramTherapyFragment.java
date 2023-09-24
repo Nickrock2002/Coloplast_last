@@ -23,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -35,6 +36,8 @@ import androidx.fragment.app.Fragment;
 import com.ninecmed.tablet.dialogues.AmplitudeDialogue;
 import com.ninecmed.tablet.dialogues.FrequencyDialogue;
 import com.ninecmed.tablet.dialogues.LeadRDialogue;
+import com.ninecmed.tablet.dialogues.ProgramTherapyDayDateDialogue;
+import com.ninecmed.tablet.dialogues.ProgramTherapyTimeOfDayDialogue;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
@@ -208,15 +211,42 @@ public class ProgramTherapyFragment extends Fragment {
             dialogue.setConfirmButtonListener(confirmView -> {
                 //add the confirm code here
             });
+            dialogue.setCheckedChangeListener((group, checkedId) -> {
+                RadioButton rb = (RadioButton) dialogue.findViewById(checkedId);
+                Toast.makeText(getContext(), rb.getText(), Toast.LENGTH_SHORT).show();
+            });
             dialogue.show();
         });
     }
 
     private void setUpDateButtonClick(View rootView) {
+        Button btnDayDateVal = rootView.findViewById(R.id.btn_start_day);
 
+        btnDayDateVal.setOnClickListener(dayDateButton -> {
+            final ProgramTherapyDayDateDialogue dialogue = new ProgramTherapyDayDateDialogue(getActivity());
+            dialogue.setCancelButtonListener(cancelView -> {
+                dialogue.dismiss();
+            });
+            dialogue.setConfirmButtonListener(confirmView -> {
+                //add the confirm code here
+            });
+            dialogue.show();
+        });
     }
 
     private void setUpTimeButtonClick(View rootView) {
+        Button btnTimeOfDayVal = rootView.findViewById(R.id.btn_time_of_day);
+
+        btnTimeOfDayVal.setOnClickListener(timeOfDayButton -> {
+            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity());
+            dialogue.setCancelButtonListener(cancelView -> {
+                dialogue.dismiss();
+            });
+            dialogue.setConfirmButtonListener(confirmView -> {
+                //add the confirm code here
+            });
+            dialogue.show();
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")

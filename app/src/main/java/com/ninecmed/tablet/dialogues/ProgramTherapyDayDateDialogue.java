@@ -22,20 +22,19 @@ import com.ninecmed.tablet.Utility;
 
 import java.util.Objects;
 
-public class FrequencyDialogue extends Dialog {
+public class ProgramTherapyDayDateDialogue extends Dialog {
     private View.OnClickListener cancelButtonListener = null;
     private View.OnClickListener confirmButtonListener = null;
-    private RadioGroupPlus.OnCheckedChangeListener checkedChangeListener = null;
 
-    public FrequencyDialogue(Context context) {
+    public ProgramTherapyDayDateDialogue(Context context) {
         super(context);
     }
 
-    public FrequencyDialogue(Context context, int themeResId) {
+    public ProgramTherapyDayDateDialogue(Context context, int themeResId) {
         super(context, themeResId);
     }
 
-    protected FrequencyDialogue(Context context, boolean cancelable, OnCancelListener cancelListener) {
+    protected ProgramTherapyDayDateDialogue(Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
     }
 
@@ -45,33 +44,13 @@ public class FrequencyDialogue extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCancelable(false);
-        setContentView(R.layout.dialog_set_frequency);
-
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked}, //disabled
-                        new int[]{android.R.attr.state_checked} //enabled
-                },
-                new int[]{
-                        Color.BLACK, //disabled
-                        ActivityCompat.getColor(getContext(), R.color.colorPrimary) //enabled
-                }
-        );
-        ((RadioButton) findViewById(R.id.radio_off)).setButtonTintList(colorStateList);
-        ((RadioButton) findViewById(R.id.radio_daily)).setButtonTintList(colorStateList);
-        ((RadioButton) findViewById(R.id.radio_weekly)).setButtonTintList(colorStateList);
-        ((RadioButton) findViewById(R.id.radio_fort_nightly)).setButtonTintList(colorStateList);
-        ((RadioButton) findViewById(R.id.radio_monthly)).setButtonTintList(colorStateList);
-        ((RadioButton) findViewById(R.id.radio_auto)).setButtonTintList(colorStateList);
+        setContentView(R.layout.dialog_set_start_day_therapy);
 
         Button btCancel = (Button) findViewById(R.id.bt_cancel);
         btCancel.setOnClickListener(cancelButtonListener);
 
         Button btConfirm = (Button) findViewById(R.id.bt_confirm);
         btConfirm.setOnClickListener(confirmButtonListener);
-
-        RadioGroupPlus radioGroupPlus = (RadioGroupPlus) findViewById(R.id.frequencyRadioGroup);
-        radioGroupPlus.setOnCheckedChangeListener(checkedChangeListener);
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
@@ -84,9 +63,5 @@ public class FrequencyDialogue extends Dialog {
 
     public void setConfirmButtonListener(View.OnClickListener onClickListener) {
         this.confirmButtonListener = onClickListener;
-    }
-
-    public void setCheckedChangeListener(RadioGroupPlus.OnCheckedChangeListener checkedChangeListener) {
-        this.checkedChangeListener = checkedChangeListener;
     }
 }

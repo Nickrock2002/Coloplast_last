@@ -692,10 +692,10 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_set_start_day_therapy);
 
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Button btnCancel = (Button) dialog.findViewById(R.id.bt_cancel);
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
-        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        Button btnConfirm = (Button) dialog.findViewById(R.id.bt_confirm);
         btnConfirm.setOnClickListener(v -> {
         });
 
@@ -712,10 +712,10 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_set_time_therapy);
 
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Button btnCancel = (Button) dialog.findViewById(R.id.bt_cancel);
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
-        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        Button btnConfirm = (Button) dialog.findViewById(R.id.bt_confirm);
         btnConfirm.setOnClickListener(v -> {
         });
 
