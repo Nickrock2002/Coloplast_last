@@ -1,7 +1,10 @@
 package com.ninecmed.tablet;
 
+import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,10 +14,12 @@ import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -57,6 +62,9 @@ public class ProgramTherapyFragment extends Fragment {
     private boolean mStimEnabled = false;
     private AlertDialog mAlertDialog;
     private boolean bTouch = false;
+
+    private int checkedRadioButtonId = -1;
+    private String lastCheckedText = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -209,13 +217,145 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
-                //add the confirm code here
+                WandData.therapy[WandData.FUTURE] = checkedRadioButtonId;
+                if (!lastCheckedText.isEmpty()) btnFrequencyVal.setText(lastCheckedText);
+
+                if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
+                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.THERAPY);
+
+                    // Clear date and time...
+                    WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis(WandData.dateandtime[WandData.CURRENT]);
+
+                    Button date = (Button) rootView.findViewById(R.id.btn_start_day);
+                    date.setText(WandData.GetDate());
+                    date.setEnabled(true);
+
+                    // Enable control if therapy is weekly for model 1
+                    if (WandData.GetModelNumber() == 1)
+                        date.setClickable(WandData.therapy[WandData.CURRENT] == R.id.radio_weekly);
+                        // else enable control if therapy daily, weekly, etc. for model 2
+                    else
+                        date.setClickable(WandData.therapy[WandData.FUTURE] == R.id.radio_daily || WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto);
+
+                    Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
+                    time.setText(WandData.GetTime());
+                    time.setEnabled(true);
+
+                    // Enable control if therapy is enabled
+                    time.setClickable(WandData.therapy[WandData.CURRENT] != R.id.radio_off);
+                } else {
+                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.THERAPY);
+
+                    Calendar c = Calendar.getInstance();
+                    long timeDifferenceMillis = mMainActivity.getTimeDifferenceMillis();
+                    c.setTimeInMillis(c.getTimeInMillis() + timeDifferenceMillis);
+
+                    int modelNumber =  WandData.GetModelNumber();
+                    modelNumber = 1;
+
+                    // If therapy set to daily for the model 1...
+                    if (WandData.therapy[WandData.FUTURE] == R.id.radio_daily && modelNumber == 1) {
+                        c.set(Calendar.HOUR_OF_DAY, 8);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.SECOND, 0);
+                        c.add(Calendar.HOUR, 24);
+                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
+
+                        Button date = (Button) rootView.findViewById(R.id.btn_start_day);
+                        //date.setBackgroundResource(R.color.colorControlNoChange);
+                        date.setText("----");
+                        date.setEnabled(true);
+                        date.setClickable(false);
+
+                        Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
+                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
+                        time.setEnabled(true);
+                        time.setClickable(true);
+                    }
+                    // Else, therapy set to weekly for Model 1
+                    else if (WandData.therapy[WandData.FUTURE] == R.id.radio_weekly && modelNumber == 1) {
+                        c.set(Calendar.HOUR_OF_DAY, 8);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.SECOND, 0);
+                        c.add(Calendar.HOUR, 24 * 7);
+                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
+
+                        Button date = (Button) rootView.findViewById(R.id.btn_start_day);
+                        //date.setTextColor(Color.RED);
+                        //date.setBackgroundResource(R.color.colorControlChange);
+                        date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
+                        date.setEnabled(true);
+                        date.setClickable(true);
+
+                        Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
+                        //time.setTextColor(Color.RED);
+                        //time.setBackgroundResource(R.color.colorControlChange);
+                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
+                        time.setEnabled(true);
+                        time.setClickable(true);
+                    }
+                    // Else, if therapy is set for weekly, fortnightly or monthly for Model 2
+                    else if ((WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto) && modelNumber == 2) {
+                        c.set(Calendar.HOUR_OF_DAY, 8);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.SECOND, 0);
+                        if (WandData.therapy[WandData.FUTURE] == R.id.radio_auto)
+                            c.add(Calendar.HOUR, 24 * 7 * 3);                               // If Auto mode, set default time to 3 weeks from now
+                        else
+                            c.add(Calendar.HOUR, 24 * 7);                                   // Else set one week ahead
+
+                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
+
+                        Button date = (Button) rootView.findViewById(R.id.btn_start_day);
+                        //date.setTextColor(Color.RED);
+                        //date.setBackgroundResource(R.color.colorControlChange);
+                        date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
+                        date.setEnabled(true);
+                        date.setClickable(true);
+
+                        Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
+                        //time.setTextColor(Color.RED);
+                        //time.setBackgroundResource(R.color.colorControlChange);
+                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
+                        time.setEnabled(true);
+                        time.setClickable(true);
+                    }
+                    // Else, therapy is off
+                    else {
+                        Button date = (Button) rootView.findViewById(R.id.btn_start_day);
+                        if (WandData.therapy[WandData.CURRENT] != R.id.radio_daily) {
+                            //date.setTextColor(Color.RED);
+                            //date.setBackgroundResource(R.color.colorControlChange);
+                        }
+                        date.setText("----");
+                        date.setEnabled(true);
+                        date.setClickable(false);
+
+                        Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
+                        //time.setTextColor(Color.RED);
+                        //time.setBackgroundResource(R.color.colorControlChange);
+                        time.setText("----");
+                        time.setEnabled(true);
+                        time.setClickable(false);
+                    }
+                }
+                dialogue.dismiss();
             });
             dialogue.setCheckedChangeListener((group, checkedId) -> {
-                RadioButton rb = (RadioButton) dialogue.findViewById(checkedId);
-                Toast.makeText(getContext(), rb.getText(), Toast.LENGTH_SHORT).show();
+                RadioButton checkedRadioButton = (RadioButton) dialogue.findViewById(checkedId);
+                checkedRadioButtonId = checkedId;
+                lastCheckedText = checkedRadioButton.getText().toString();
             });
             dialogue.show();
+            if (checkedRadioButtonId != -1){
+                RadioButton rb = (RadioButton) dialogue.findViewById(checkedRadioButtonId);
+                rb.setChecked(true);
+            }else {
+                RadioButton rb = (RadioButton) dialogue.findViewById(R.id.radio_off);
+                rb.setChecked(true);
+            }
         });
     }
 
@@ -423,158 +563,6 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.show();
     }
 
-    private void InitializeTherapySpinner(View view) {
-        final Spinner therapy = view.findViewById(R.id.ddItnsTherapy);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getActivity()).getBaseContext(),
-                R.array.itns_therapy_schedule_array_model_one, R.layout.custom_spinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        therapy.setAdapter(adapter);
-
-        // Call setSelection before onItemsSelected. This avoids onItemSelected being called
-        // when the view is first created.
-        therapy.setSelection(0, false);
-        therapy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @SuppressLint({"ResourceAsColor", "DefaultLocale"})
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Update FUTURE position
-                WandData.therapy[WandData.FUTURE] = (byte) position;
-
-                if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
-                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.THERAPY);
-                    ((TextView) parent.getChildAt(0)).setTextColor(Color.BLACK);
-                    parent.getChildAt(0).setBackgroundResource(R.color.colorControlNoChange);
-
-                    // Clear date and time...
-                    WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
-                    Calendar c = Calendar.getInstance();
-                    c.setTimeInMillis(WandData.dateandtime[WandData.CURRENT]);
-
-                    View appview = getView();
-                    TextView date = Objects.requireNonNull(appview).findViewById(R.id.tvItnsDate);
-                    date.setTextColor(Color.BLACK);
-                    date.setBackgroundResource(R.color.colorControlNoChange);
-                    date.setText(WandData.GetDate());
-
-                    // Enable control if therapy is weekly for model 1
-                    if (WandData.GetModelNumber() == 1)
-                        date.setEnabled(WandData.therapy[WandData.CURRENT] >= 2);
-                        // else enable control if therapy daily, weekly, etc. for model 2
-                    else
-                        date.setEnabled(WandData.therapy[WandData.CURRENT] >= 1);
-
-                    TextView time = appview.findViewById(R.id.tvItnsTime);
-                    time.setTextColor(Color.BLACK);
-                    time.setBackgroundResource(R.color.colorControlNoChange);
-                    time.setText(WandData.GetTime());
-
-                    // Enable control if therapy is enabled
-                    time.setEnabled(WandData.therapy[WandData.CURRENT] != 0);
-                } else {
-                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.THERAPY);
-                    ((TextView) parent.getChildAt(0)).setTextColor(Color.RED);
-                    parent.getChildAt(0).setBackgroundResource(R.color.colorControlChange);
-
-                    Calendar c = Calendar.getInstance();
-
-                    // If therapy set to daily for the model 1...
-                    if (WandData.therapy[WandData.FUTURE] == 1 && WandData.GetModelNumber() == 1) {
-                        c.set(Calendar.HOUR_OF_DAY, 8);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.SECOND, 0);
-                        c.add(Calendar.HOUR, 24);
-                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
-
-                        View appview = getView();
-                        TextView date = Objects.requireNonNull(appview).findViewById(R.id.tvItnsDate);
-                        date.setTextColor(Color.BLACK);
-                        date.setBackgroundResource(R.color.colorControlNoChange);
-                        date.setText("----");
-                        date.setEnabled(false);
-
-                        TextView time = appview.findViewById(R.id.tvItnsTime);
-                        time.setTextColor(Color.RED);
-                        time.setBackgroundResource(R.color.colorControlChange);
-                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
-                        time.setEnabled(true);
-                    }
-                    // Else, therapy set to weekly for Model 1
-                    else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.GetModelNumber() == 1) {
-                        c.set(Calendar.HOUR_OF_DAY, 8);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.SECOND, 0);
-                        c.add(Calendar.HOUR, 24 * 7);
-                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
-
-                        View appview = getView();
-                        TextView date = Objects.requireNonNull(appview).findViewById(R.id.tvItnsDate);
-                        date.setTextColor(Color.RED);
-                        date.setBackgroundResource(R.color.colorControlChange);
-                        date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
-                        date.setEnabled(true);
-
-                        TextView time = appview.findViewById(R.id.tvItnsTime);
-                        time.setTextColor(Color.RED);
-                        time.setBackgroundResource(R.color.colorControlChange);
-                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
-                        time.setEnabled(true);
-                    }
-                    // Else, if therapy is set for weekly, fortnightly or monthly for Model 2
-                    else if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.GetModelNumber() == 2) {
-                        c.set(Calendar.HOUR_OF_DAY, 8);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.SECOND, 0);
-                        if (WandData.therapy[WandData.FUTURE] == 5)
-                            c.add(Calendar.HOUR, 24 * 7 * 3);                               // If Auto mode, set default time to 3 weeks from now
-                        else
-                            c.add(Calendar.HOUR, 24 * 7);                                   // Else set one week ahead
-
-                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
-
-                        View appview = getView();
-                        TextView date = Objects.requireNonNull(appview).findViewById(R.id.tvItnsDate);
-                        date.setTextColor(Color.RED);
-                        date.setBackgroundResource(R.color.colorControlChange);
-                        date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
-                        date.setEnabled(true);
-
-                        TextView time = appview.findViewById(R.id.tvItnsTime);
-                        time.setTextColor(Color.RED);
-                        time.setBackgroundResource(R.color.colorControlChange);
-                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
-                        time.setEnabled(true);
-                    }
-                    // Else, therapy is off
-                    else {
-                        View appview = getView();
-                        // Only highlight a change if the the current therapy is not daily
-                        TextView date = Objects.requireNonNull(appview).findViewById(R.id.tvItnsDate);
-                        if (WandData.therapy[WandData.CURRENT] != 1) {
-                            date.setTextColor(Color.RED);
-                            date.setBackgroundResource(R.color.colorControlChange);
-                        }
-                        date.setText("----");
-                        date.setEnabled(false);
-
-                        TextView time = appview.findViewById(R.id.tvItnsTime);
-                        time.setTextColor(Color.RED);
-                        time.setBackgroundResource(R.color.colorControlChange);
-                        time.setText("----");
-                        time.setEnabled(false);
-                    }
-                }
-
-                EnableProgramButton(true, true);
-                Log.d(TAG, (String) parent.getItemAtPosition(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
     private void InitializeDate(View view) {
         final TextView date = view.findViewById(R.id.tvItnsDate);
         date.setOnClickListener(new View.OnClickListener() {
@@ -768,7 +756,7 @@ public class ProgramTherapyFragment extends Fragment {
             ampRO.setText(WandData.GetAmplitude());
 
             ResetChangedParameters();
-            CheckForReset();
+            checkForReset();
             setInitialAmplitude();
         }
         // Here's what happens on fail
@@ -854,29 +842,32 @@ public class ProgramTherapyFragment extends Fragment {
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
 
-    private void CheckForReset() {
+    private void checkForReset() {
         int resets = WandData.GetResets();
         if (resets > 0) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getView()).getContext());
-
-            alertDialog.setTitle(String.format(getString(R.string.itns_resets_detected_msg), resets));
-            alertDialog.setMessage(getString(R.string.itns_resets_continue_msg));
-
-            alertDialog.setPositiveButton(getString(R.string.all_clear), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    StartProgressBar();
-                    mMainActivity.wandComm.ClearResetCounter();
-                }
-            });
-            alertDialog.setNegativeButton(getString(R.string.all_cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            alertDialog.show();
+            showItnsResetDialog(resets);
         }
+    }
+
+    public void showItnsResetDialog(int count) {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_reset_counter);
+
+        Button btnResetCounter = (Button) dialog.findViewById(R.id.btn_reset_counter_confirm);
+        btnResetCounter.setOnClickListener(v -> {
+            mMainActivity.wandComm.ClearResetCounter();
+        });
+
+        TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
+        tvCount.setText("Implant Reset Counter: " + count);
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
     }
 
     private void msg(String s) {
