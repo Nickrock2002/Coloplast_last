@@ -35,7 +35,7 @@
         android:calendarViewShown="false"
         android:datePickerMode="calendar"
         android:theme="@style/DatePickerDialogTheme"
-        app:layout_constraintBottom_toTopOf="@+id/btn_cancel"
+        app:layout_constraintBottom_toTopOf="@+id/bt_confirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
