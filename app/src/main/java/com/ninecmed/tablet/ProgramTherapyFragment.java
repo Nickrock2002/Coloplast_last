@@ -255,7 +255,6 @@ public class ProgramTherapyFragment extends Fragment {
                     c.setTimeInMillis(c.getTimeInMillis() + timeDifferenceMillis);
 
                     int modelNumber =  WandData.GetModelNumber();
-                    modelNumber = 1;
 
                     // If therapy set to daily for the model 1...
                     if (WandData.therapy[WandData.FUTURE] == R.id.radio_daily && modelNumber == 1) {
