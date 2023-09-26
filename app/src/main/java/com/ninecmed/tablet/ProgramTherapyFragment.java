@@ -29,7 +29,6 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -57,14 +56,13 @@ public class ProgramTherapyFragment extends Fragment {
     private static final String TAG = "ItnsFragment";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 0;
-    private AlertDialog mAlertDialog;
     private boolean bTouch = false;
-
     private int checkedRadioButtonId = -1;
     private String lastCheckedText = "";
     Button btnImplantBatteryStatus;
     Button btnLeadRWarn;
     TextView tvLeadRVal;
+    Button btnAmplitudeVal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,12 +76,6 @@ public class ProgramTherapyFragment extends Fragment {
 //        InitializeTherapySpinner(view);
 //        InitializeDate(view);
 //        InitializeTime(view);
-
-        /*ProgressBar pb = view.findViewById(R.id.pbItns);
-        pb.setVisibility(View.INVISIBLE);
-
-        ProgressBar pb1 = view.findViewById(R.id.pbItnsStim);
-        pb1.setVisibility(View.INVISIBLE);*/
 
         setUpRRTButtonClick(view);
         setUpLeadRButtonClick(view);
@@ -132,7 +124,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpAmplitudeButtonClick(View rootView) {
-        Button btnAmplitudeVal = rootView.findViewById(R.id.btn_amplitude_val);
+        btnAmplitudeVal = rootView.findViewById(R.id.btn_amplitude_val);
 
         btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
             String amplitudeVal = WandData.GetAmplitude();
@@ -150,13 +142,12 @@ public class ProgramTherapyFragment extends Fragment {
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                        //TODO enable all these 4 lines while testing
 //                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.BLACK);
-//                        minusButton.setBackgroundResource(R.color.colorControlNoChange);
                     } else {
 //                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.RED);
-//                        minusButton.setBackgroundResource(R.color.colorControlChange);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minusButton.setPressed(false);
@@ -178,11 +169,9 @@ public class ProgramTherapyFragment extends Fragment {
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
 //                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.BLACK);
-//                        plusButton.setBackgroundResource(R.color.colorControlNoChange);
                     } else {
 //                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.RED);
-//                        plusButton.setBackgroundResource(R.color.colorControlChange);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
@@ -428,11 +417,8 @@ public class ProgramTherapyFragment extends Fragment {
         interrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 interrogate.setPressed(true);
-
-                //TODO: remove comment after BT
                 mMainActivity.wandComm.Interrogate();
                 MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                //StartProgressBar();
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 interrogate.setPressed(false);
             }
@@ -482,7 +468,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 mMainActivity.wandComm.Program();
                 MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                StartProgressBar();
+//                StartProgressBar();
             }
             return true;
         });
@@ -640,38 +626,48 @@ public class ProgramTherapyFragment extends Fragment {
     public void UIUpdate(boolean success) {
         View view = getView();
 
-        if (!WandData.IsITNSNew() && success && view != null) {
-            MakeTone(ToneGenerator.TONE_CDMA_PIP);
+        if (success & view != null) {
+            if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+                // Re-enable changed parameters (and the test stim button) only when
+                // UIUpdate is called - meaning that the state machine has finished its tasks
+                mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
 
-            TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
-            mn.setText((WandData.GetModelNumber(view.getContext())));
+                tvLeadRVal.setText(String.valueOf(WandData.GetLeadR()));
+                showLeadRWarningIfFound();
 
-            TextView sn = view.findViewById(R.id.tv_itns_serial_val);
-            sn.setText(WandData.GetSerialNumber());
-
-            TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-            cellv.setText(WandData.GetCellV());
-
-            String rrt_result = WandData.GetRRT(view.getContext());
-            if (rrt_result.equals(getString(R.string.all_yes))) {
-                btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
-                cellv.setVisibility(View.VISIBLE);
             } else {
-                btnImplantBatteryStatus.setVisibility(View.VISIBLE);
-                cellv.setVisibility(View.INVISIBLE);
+//            MakeTone(ToneGenerator.TONE_CDMA_PIP);
+
+                TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
+                mn.setText((WandData.GetModelNumber(view.getContext())));
+
+                TextView sn = view.findViewById(R.id.tv_itns_serial_val);
+                sn.setText(WandData.GetSerialNumber());
+
+                TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+                cellv.setText(WandData.GetCellV());
+
+                String rrt_result = WandData.GetRRT(view.getContext());
+                if (rrt_result.equals(getString(R.string.all_yes))) {
+                    btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
+                    cellv.setVisibility(View.VISIBLE);
+                } else {
+                    btnImplantBatteryStatus.setVisibility(View.VISIBLE);
+                    cellv.setVisibility(View.INVISIBLE);
+                }
+
+                showLeadRWarningIfFound();
+
+                tvLeadRVal.setText(String.valueOf(WandData.GetLeadR()));
+                ((Button) view.findViewById(R.id.btn_start_day)).setText(WandData.GetDate());
+                ((Button) view.findViewById(R.id.btn_time_of_day)).setText(WandData.GetTime());
+
+                ResetChangedParameters();
+                checkForReset();
+                setInitialAmplitude();
             }
-
-            showLeadRWarningIfFound();
-
-            tvLeadRVal.setText(String.valueOf(WandData.GetLeadR()));
-            ((Button) view.findViewById(R.id.btn_start_day)).setText(WandData.GetDate());
-            ((Button) view.findViewById(R.id.btn_time_of_day)).setText(WandData.GetTime());
-            ((Button) view.findViewById(R.id.btn_amplitude_val)).setText(WandData.GetAmplitude());
-
-            ResetChangedParameters();
-            checkForReset();
-            setInitialAmplitude();
         } else {// Here's what happens on fail
+            AlertDialog mAlertDialog;
             if (mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
@@ -724,7 +720,7 @@ public class ProgramTherapyFragment extends Fragment {
                             mMainActivity.wandComm.Interrogate();
                         else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
                             mMainActivity.wandComm.Program();
-                        StartProgressBar();
+//                        StartProgressBar();
                     }
                 });
                 alertDialog.setNegativeButton(getString(R.string.all_cancel), new DialogInterface.OnClickListener() {
@@ -758,8 +754,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void setInitialAmplitude() {
-        TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
-        amp.setText(WandData.GetAmplitude());
+        btnAmplitudeVal.setText(WandData.GetAmplitude());
         mAmplitudePos = WandData.GetAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
@@ -820,59 +815,29 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void ResetChangedParameters() {
-        View view = getView();
 
-        Spinner therapydd = Objects.requireNonNull(view).findViewById(R.id.ddItnsTherapy);
-        therapydd.setSelection(WandData.GetTherapyPos());
-        // ((TextView) therapydd.getChildAt(0)).setTextColor(Color.BLACK);
-        // Normally, therapydd.getChildAt() would work fine. However, the spinner contents depend
-        // on the model number, so the adapter is changed just before getChildAt is called.
-        // This results in a null exception when calling getChildAt().
-        // See, https://stackoverflow.com/questions/31206674/listview-getchildat-return-null
-        // for the fix.
-        ((TextView) therapydd.getAdapter().getView(0, null, therapydd)).setTextColor(Color.BLACK);
-        therapydd.getAdapter().getView(0, null, therapydd).setBackgroundResource(R.color.colorControlNoChange);
         WandData.therapy[WandData.FUTURE] = WandData.therapy[WandData.CURRENT];
 
-        TextView date = view.findViewById(R.id.tvItnsDate);
-        date.setText(WandData.GetDate());
-        date.setTextColor(Color.BLACK);
-        date.setBackgroundResource(R.color.colorControlNoChange);
-
-        TextView time = view.findViewById(R.id.tvItnsTime);
-        time.setText(WandData.GetTime());
-        time.setTextColor(Color.BLACK);
-        time.setBackgroundResource(R.color.colorControlNoChange);
         WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
 
-        TextView amp = view.findViewById(R.id.tvItnsAmplitude);
-        amp.setText(WandData.GetAmplitude());
-        amp.setTextColor(Color.BLACK);
         mAmplitudePos = WandData.GetAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
-
-        ImageButton plus = view.findViewById(R.id.ibItnsPlus);
-        plus.setBackgroundResource(R.color.colorControlNoChange);
-
-        ImageButton minus = view.findViewById(R.id.ibItnsMinus);
-        minus.setBackgroundResource(R.color.colorControlNoChange);
 
         mMainActivity.wandComm.RemoveAllProgramChanges();
     }
 
-    private void StartProgressBar() {
+   /* private void StartProgressBar() {
         ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItns);
         progressBar.setVisibility(View.VISIBLE);
         Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
+    }*/
 
-    private void StopProgressBar() {
-        /*bTouch = false;
+    /*private void StopProgressBar() {
+        bTouch = false;
         ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItns);
         progressBar.setVisibility(View.INVISIBLE);
         Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-*/
-    }
+    }*/
 
     private void StartStimProgressBar() {
         ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItnsStim);
@@ -899,25 +864,18 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void UpdateAmplitude() {
-        View view = getView();
-
-        if (!mMainActivity.wandComm.AnyProgramChangesOtherThanAmplitude()) {
-            EnableProgramButton(false, true);
-        }
-
-        Button ampRO = Objects.requireNonNull(view).findViewById(R.id.btn_amplitude_val);
-        ampRO.setText(WandData.GetAmplitude());
+        btnAmplitudeVal.setText(WandData.GetAmplitude());
         mAmplitudePos = WandData.GetAmplitudePos();
     }
 
     private void EnableInterrogateButton(boolean enable, boolean change_alpha) {
-        Button interrogate = Objects.requireNonNull(getView()).findViewById(R.id.btItnsInterrogate);
+        Button interrogate = requireView().findViewById(R.id.btItnsInterrogate);
         interrogate.setEnabled(enable);
         if (change_alpha) interrogate.setAlpha(enable ? 1f : 0.5f);
     }
 
     private void EnableProgramButton(boolean enable, boolean change_alpha) {
-        Button program = Objects.requireNonNull(getView()).findViewById(R.id.btItnsProgram);
+        Button program = requireView().findViewById(R.id.btItnsProgram);
 
         if (enable && mMainActivity.wandComm.AnyProgramChanges()) {
             program.setEnabled(true);
