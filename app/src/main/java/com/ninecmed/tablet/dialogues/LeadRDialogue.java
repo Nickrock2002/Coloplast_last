@@ -63,7 +63,6 @@ public class LeadRDialogue extends Dialog {
 
 
         Button confirmButton = (Button) findViewById(R.id.btn_confirm_lead_r);
-//        confirmButton.setOnClickListener(v -> dismiss());
         confirmButton.setOnClickListener(confirmButtonListener);
 
     }

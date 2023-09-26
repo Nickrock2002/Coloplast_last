@@ -90,6 +90,10 @@
     <string name="_14_day">14-day</string>
     <string name="_28_day">28-day</string>
     <string name="auto">Auto</string>
+    <string name="rrt_dialogue_disc">The Intibia ITNS must be replaced soon. \n Contact Coloplast</string>
+    <string name="battery_voltage_1230_v">Battery Voltage: 1230 V</string>
+    <string name="rrt_dialogue_title">The Intibia ITNS reached its Battery Replacement Time (RRT)</string>
+    <string name="intibia_itns_rrt">Intibia ITNS RRT</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>
