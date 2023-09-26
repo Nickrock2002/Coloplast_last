@@ -526,13 +526,13 @@ public class MainActivity extends AppCompatActivity {
         if (!formattedTime.isEmpty()) {
             btnTime.setText(formattedTime.toUpperCase());
             btnTime.setPressed(true);
-            btnConfirmDisabled.setVisibility(View.GONE);
-            btnConfirm.setVisibility(View.VISIBLE);
-            btnConfirm.setClickable(true);
         }
         if (!formattedDate.isEmpty()) {
             btnDate.setText(formattedDate);
             btnDate.setPressed(true);
+        }
+
+        if (!formattedDate.isEmpty() && !formattedTime.isEmpty()){
             btnConfirmDisabled.setVisibility(View.GONE);
             btnConfirm.setVisibility(View.VISIBLE);
             btnConfirm.setClickable(true);
