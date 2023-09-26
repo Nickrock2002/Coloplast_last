@@ -282,14 +282,10 @@ public class ItnsFragment extends Fragment {
         });
     }
 
-    private final Runnable HoldStimulation = new Runnable() {
-        @Override
-        public void run() {
-            mMainActivity.wandComm.SetStimulation(false);
-            //MakeTone(ToneGenerator.TONE_PROP_NACK);
-            //StopStimProgressBar();
-            mStimEnabled = false;
-        }
+    private final Runnable HoldStimulation = () -> {
+        mMainActivity.wandComm.SetStimulation(false);
+        //MakeTone(ToneGenerator.TONE_PROP_NACK);
+        mStimEnabled = false;
     };
 
     private void InitializeTherapySpinner(View view) {

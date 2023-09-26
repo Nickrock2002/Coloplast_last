@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -63,6 +64,9 @@ public class ProgramTherapyFragment extends Fragment {
     Button btnLeadRWarn;
     TextView tvLeadRVal;
     Button btnAmplitudeVal;
+    private long mNow;
+    private final Handler mHandler = new Handler();
+    private boolean mStimEnabled = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -143,10 +147,10 @@ public class ProgramTherapyFragment extends Fragment {
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         //TODO enable all these 4 lines while testing
-//                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.BLACK);
                     } else {
-//                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.RED);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
@@ -167,10 +171,10 @@ public class ProgramTherapyFragment extends Fragment {
                     ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-//                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.BLACK);
                     } else {
-//                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.RED);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
@@ -179,8 +183,68 @@ public class ProgramTherapyFragment extends Fragment {
                 return true;
             });
             dialogue.setStimulationButtonListener((stimulationButton, motionEvent) -> {
+                switch (motionEvent.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (mNow + 500 < System.currentTimeMillis()) {
+                            stimulationButton.setPressed(true);
+                            mMainActivity.wandComm.SetStimulation(true);
+                            //MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                            ((Button) stimulationButton).setText("Stimulation Active");
+                            WandData.InvalidateStimLeadI();
 
-                return false;
+                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
+                            leadi.setText(WandData.GetLeadI());
+
+                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
+                            leadr.setText(WandData.GetLeadR());*/
+
+                            // Disable changed parameters during test stim. Only re-enable once
+                            // job is completed. Even though controls are disabled, don't change
+                            // alpha, meaning don't gray out the controls, otherwise it appears
+                            // strange.
+                            //SetChangedParametersEnable(false, false);
+                            // Also, don't update alpha for the program and interrogate
+                            // buttons either, otherwise pressing the test stim button
+                            // would cause the program and interrogate button to go grey. Since
+                            // this isn't consistent with what we do when the interrogate or
+                            // program button is pressed - we decided to disable other telemetry
+                            // controls when a telemetry command is in progress, but without changing
+                            // the appearance.
+                            //EnableInterrogateButton(false, false);
+                            //EnableProgramButton(false, false);
+                            //StartStimProgressBar();
+                            mMainActivity.EnableTabs(false);
+                            mNow = System.currentTimeMillis();
+                            mStimEnabled = true;
+                        }
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // Only execute code on up/cancel when mStimEnabled is true,
+                        // otherwise this means that the user pressed the down key too
+                        // quickly and when he let's go, the motion event causes SetTestStimulation
+                        // to be executed again even though it wasn't started. This causes an
+                        // unnecessary beep as well.
+                        if (mStimEnabled) {
+                            stimulationButton.setPressed(false);
+                            ((Button) stimulationButton).setText("Hold to deliver neurostimulation");
+                            //stimulate.setEnabled(false);
+                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            // Set delay to 1500 to be the same delay as ExternalFragment
+                            if (mNow + 1500 < System.currentTimeMillis()) {
+                                mMainActivity.wandComm.SetStimulation(false);
+
+                                //StopStimProgressBar();
+                                MakeTone(ToneGenerator.TONE_PROP_NACK);
+                                mStimEnabled = false;
+                            } else {
+                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                            }
+                        }
+                        break;
+                }
+                return true;
             });
             dialogue.setCancelButtonListener(cancelView -> {
                 dialogue.dismiss();
@@ -192,6 +256,12 @@ public class ProgramTherapyFragment extends Fragment {
             dialogue.show();
         });
     }
+
+    private final Runnable HoldStimulation = () -> {
+        mMainActivity.wandComm.SetStimulation(false);
+        //MakeTone(ToneGenerator.TONE_PROP_NACK);
+        mStimEnabled = false;
+    };
 
     private void setUpFrequencyButtonClick(View rootView) {
         Button btnFrequencyVal = rootView.findViewById(R.id.btn_frequency_val);
