@@ -50,7 +50,9 @@ import com.ninecmed.tablet.events.UIUpdateEvent;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Objects;
 
 public class ProgramTherapyFragment extends Fragment {
@@ -285,7 +287,10 @@ public class ProgramTherapyFragment extends Fragment {
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
                         //date.setTextColor(Color.RED);
                         //date.setBackgroundResource(R.color.colorControlChange);
-                        date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                        String formattedDate = dateFormat.format(c.getTime());
+                        date.setText(formattedDate);
+                        //date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
                         date.setEnabled(true);
                         date.setClickable(true);
 
@@ -311,7 +316,10 @@ public class ProgramTherapyFragment extends Fragment {
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
                         //date.setTextColor(Color.RED);
                         //date.setBackgroundResource(R.color.colorControlChange);
-                        date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                        String formattedDate = dateFormat.format(c.getTime());
+                        date.setText(formattedDate);
+                        //date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
                         date.setEnabled(true);
                         date.setClickable(true);
 
@@ -368,7 +376,29 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
-                //add the confirm code here
+                DatePicker datePicker = dialogue.findViewById(R.id.datePicker);
+                int year = datePicker.getYear();
+                int month = datePicker.getMonth();
+                int day = datePicker.getDayOfMonth();
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                String formattedDate = dateFormat.format(calendar.getTime());
+
+                calendar.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);       // Set Calendar object to future time
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+                WandData.dateandtime[WandData.FUTURE] = calendar.getTimeInMillis();
+
+                if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
+                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.DATE);
+                } else {
+                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.DATE);
+                }
+                btnDayDateVal.setText(formattedDate);
+                dialogue.dismiss();
             });
             dialogue.show();
         });
