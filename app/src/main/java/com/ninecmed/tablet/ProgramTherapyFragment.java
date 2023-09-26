@@ -21,8 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -254,15 +252,11 @@ public class ProgramTherapyFragment extends Fragment {
                     long timeDifferenceMillis = mMainActivity.getTimeDifferenceMillis();
                     c.setTimeInMillis(c.getTimeInMillis() + timeDifferenceMillis);
 
-                    int modelNumber =  WandData.GetModelNumber();
+                    int modelNumber = WandData.GetModelNumber();
+                    modelNumber = 1;
 
                     // If therapy set to daily for the model 1...
                     if (WandData.therapy[WandData.FUTURE] == R.id.radio_daily && modelNumber == 1) {
-                        c.set(Calendar.HOUR_OF_DAY, 8);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.SECOND, 0);
-                        c.add(Calendar.HOUR, 24);
-                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
 
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
                         //date.setBackgroundResource(R.color.colorControlNoChange);
@@ -271,38 +265,26 @@ public class ProgramTherapyFragment extends Fragment {
                         date.setClickable(false);
 
                         Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
-                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
+                        time.setText("----");
                         time.setEnabled(true);
                         time.setClickable(true);
                     }
                     // Else, therapy set to weekly for Model 1
                     else if (WandData.therapy[WandData.FUTURE] == R.id.radio_weekly && modelNumber == 1) {
-                        c.set(Calendar.HOUR_OF_DAY, 8);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.SECOND, 0);
-                        c.add(Calendar.HOUR, 24 * 7);
-                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
 
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
-                        //date.setTextColor(Color.RED);
-                        //date.setBackgroundResource(R.color.colorControlChange);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
-                        String formattedDate = dateFormat.format(c.getTime());
-                        date.setText(formattedDate);
-                        //date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
+                        date.setText("----");
                         date.setEnabled(true);
                         date.setClickable(true);
 
                         Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
-                        //time.setTextColor(Color.RED);
-                        //time.setBackgroundResource(R.color.colorControlChange);
-                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
+                        time.setText("----");
                         time.setEnabled(true);
                         time.setClickable(true);
                     }
                     // Else, if therapy is set for weekly, fortnightly or monthly for Model 2
                     else if ((WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto) && modelNumber == 2) {
-                        c.set(Calendar.HOUR_OF_DAY, 8);
+                        /*c.set(Calendar.HOUR_OF_DAY, 8);
                         c.set(Calendar.MINUTE, 0);
                         c.set(Calendar.SECOND, 0);
                         if (WandData.therapy[WandData.FUTURE] == R.id.radio_auto)
@@ -310,22 +292,15 @@ public class ProgramTherapyFragment extends Fragment {
                         else
                             c.add(Calendar.HOUR, 24 * 7);                                   // Else set one week ahead
 
-                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();
+                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();*/
 
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
-                        //date.setTextColor(Color.RED);
-                        //date.setBackgroundResource(R.color.colorControlChange);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
-                        String formattedDate = dateFormat.format(c.getTime());
-                        date.setText(formattedDate);
-                        //date.setText(String.format("%02d/%02d/%4d", c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.YEAR)));
+                        date.setText("----");
                         date.setEnabled(true);
                         date.setClickable(true);
 
                         Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
-                        //time.setTextColor(Color.RED);
-                        //time.setBackgroundResource(R.color.colorControlChange);
-                        time.setText(String.format("%02d:%02d", c.get(Calendar.HOUR), c.get(Calendar.MINUTE)));
+                        time.setText("----");
                         time.setEnabled(true);
                         time.setClickable(true);
                     }
@@ -356,10 +331,10 @@ public class ProgramTherapyFragment extends Fragment {
                 lastCheckedText = checkedRadioButton.getText().toString();
             });
             dialogue.show();
-            if (checkedRadioButtonId != -1){
+            if (checkedRadioButtonId != -1) {
                 RadioButton rb = (RadioButton) dialogue.findViewById(checkedRadioButtonId);
                 rb.setChecked(true);
-            }else {
+            } else {
                 RadioButton rb = (RadioButton) dialogue.findViewById(R.id.radio_off);
                 rb.setChecked(true);
             }
@@ -412,7 +387,40 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
-                //add the confirm code here
+                TimePicker timePicker = dialogue.findViewById(R.id.timePicker);
+
+                // Get the selected hour and minute from the TimePicker
+                int hour = timePicker.getHour();
+                int minute = timePicker.getMinute();
+
+                // Determine if it's AM or PM
+                String amPm;
+                if (hour < 12) {
+                    amPm = "AM";
+                } else {
+                    amPm = "PM";
+                    if (hour > 12) {
+                        hour -= 12;
+                    }
+                }
+
+                // Update the button text with the formatted time
+                String formattedTime = String.format("%02d:%02d %s", hour, minute, amPm);
+                btnTimeOfDayVal.setText(formattedTime);
+
+                Calendar futuretime = Calendar.getInstance();
+                futuretime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
+                futuretime.set(Calendar.MINUTE, minute);
+                futuretime.set(Calendar.HOUR_OF_DAY, hour);
+                WandData.dateandtime[WandData.FUTURE] = futuretime.getTimeInMillis();
+
+                if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
+                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
+                } else {
+                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
+                }
+
+                dialogue.dismiss();
             });
             dialogue.show();
         });
