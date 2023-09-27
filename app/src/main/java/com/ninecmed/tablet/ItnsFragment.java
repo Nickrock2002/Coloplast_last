@@ -66,7 +66,6 @@ public class ItnsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         EventBus.getDefault().register(this);
     }
 
@@ -840,8 +839,6 @@ public class ItnsFragment extends Fragment {
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }
-            /*mAlertDialog.setCancelable(false);
-            mAlertDialog.show();*/
         }
     }
 

@@ -1,6 +1,9 @@
 package com.ninecmed.tablet;
 
+import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
+
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -12,10 +15,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,7 +48,10 @@ public class ExternalFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
-    private AlertDialog mAlertDialog;
+
+    private Button btnLeadRWarn;
+
+    private TextView tvLeadR;
 
     @Override
     public void onAttach(Context context) {
@@ -55,6 +63,7 @@ public class ExternalFragment extends Fragment {
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.EXTERNAL) {
             UIUpdate(event.isUiUpdateSuccess());
+            showLeadRWarningIfFound();
         }
     }
 
@@ -71,6 +80,8 @@ public class ExternalFragment extends Fragment {
         InitializeStimulationButton(view);
         InitializeAmplitudeButton(view);
         initializeTitle(view);
+        initializeLeadRWarnButton(view);
+
 
         // Must redraw the icon for this fragment and not for the itns fragment.
         // Not sure why since both imageviews are visible.
@@ -262,7 +273,7 @@ public class ExternalFragment extends Fragment {
     }
 
     public void OnDisconnected() {
-        if(mAlertDialog != null)
+        /*if(mAlertDialog != null)
             mAlertDialog.dismiss();
 
         TextView tv = Objects.requireNonNull(getView()).findViewById(R.id.tvExternalBtStatus);
@@ -277,7 +288,7 @@ public class ExternalFragment extends Fragment {
 
         //SetAmplitudeParameterEnabled(false, true);
         //StopProgressBar();
-        mMainActivity.EnableTabs(true);
+        mMainActivity.EnableTabs(true);*/
     }
 
     @SuppressLint("DefaultLocale")
@@ -295,15 +306,41 @@ public class ExternalFragment extends Fragment {
         if(success) {
             TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvExternalAmplitude);
             amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
-
-            /*TextView leadi = getView().findViewById(R.id.tvExternalLeadI);
-            leadi.setText(WandData.GetStimLeadI());
-
-            TextView leadr = getView().findViewById(R.id.tvExternalLeadR);
-            leadr.setText(WandData.GetStimLeadR());*/
         }
         else {
             mMainActivity.showWandTabCommunicationIssueDialog();
+        }
+    }
+
+    private void initializeLeadRWarnButton(View view) {
+        btnLeadRWarn = view.findViewById(R.id.btn_lead_r_warn);
+        tvLeadR = view.findViewById(R.id.tv_lead_r_val);
+        btnLeadRWarn.setOnClickListener(v -> {
+            showLeadRWarningIfFound();
+        });
+    }
+
+    private void showLeadRWarningIfFound() {
+        float leadRValue = WandData.GetStimLeadR();
+        boolean isWarningFound;
+        isWarningFound = leadRValue > 2000;
+        if (isWarningFound) {
+            btnLeadRWarn.setVisibility(View.VISIBLE);
+            final Dialog dialog = new Dialog(requireContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.dialog_leadr_implant_tunneling);
+
+            Button dialogButton = (Button) dialog.findViewById(R.id.btn_confirm_lead_r);
+            dialogButton.setOnClickListener(v -> dialog.dismiss());
+
+            setTheSystemButtonsHidden(dialog);
+            Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+            dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+            dialog.show();
+        } else {
+            tvLeadR.setText(R.string.ok);
+            btnLeadRWarn.setVisibility(View.GONE);
         }
     }
 

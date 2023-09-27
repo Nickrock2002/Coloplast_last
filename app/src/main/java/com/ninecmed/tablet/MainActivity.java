@@ -7,8 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,10 +19,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -489,26 +485,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void showResetCounterDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_time_picker);
-
-        /*TextView text = (TextView) dialog.findViewById(R.id.tv_reset_counter);
-        //text.setText("msg");
-
-        Button dialogButton = (Button) dialog.findViewById(R.id.btn_reset_counter);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });*/
-
-        setTheSystemButtonsHidden(dialog);
-        dialog.show();
-    }
 
     //TODO- call this method once the bluetooth dialog setup flow is done
     public void showSetDateTimeDialog(boolean isFromHamburger) {
@@ -532,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
             btnDate.setPressed(true);
         }
 
-        if (!formattedDate.isEmpty() && !formattedTime.isEmpty()){
+        if (!formattedDate.isEmpty() && !formattedTime.isEmpty()) {
             btnConfirmDisabled.setVisibility(View.GONE);
             btnConfirm.setVisibility(View.VISIBLE);
             btnConfirm.setClickable(true);
@@ -680,91 +656,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setTheSystemButtonsHidden(dialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
-    }
-
-    //TODO: Imp call this when we want to set Day/Date from Program therapy.
-    public void showSetDayForTherapyDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_set_start_day_therapy);
-
-        Button btnCancel = (Button) dialog.findViewById(R.id.bt_cancel);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        Button btnConfirm = (Button) dialog.findViewById(R.id.bt_confirm);
-        btnConfirm.setOnClickListener(v -> {
-        });
-
-        setTheSystemButtonsHidden(dialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
-    }
-
-    //TODO: Imp call this when we want to set Day/Date from Program therapy.
-    public void showSetTimeForTherapyDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_set_time_therapy);
-
-        Button btnCancel = (Button) dialog.findViewById(R.id.bt_cancel);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        Button btnConfirm = (Button) dialog.findViewById(R.id.bt_confirm);
-        btnConfirm.setOnClickListener(v -> {
-        });
-
-        setTheSystemButtonsHidden(dialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
-    }
-
-    //TODO: Imp call this when we want to set frequency from Program therapy.
-    public void showSetFrequencyDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_set_frequency);
-
-        RadioButton radioButtonOff = (RadioButton) dialog.findViewById(R.id.radio_off);
-        RadioButton radioButtonDaily = (RadioButton) dialog.findViewById(R.id.radio_daily);
-        RadioButton radioButtonWeekly = (RadioButton) dialog.findViewById(R.id.radio_weekly);
-        RadioButton radioButtonFortNightly = (RadioButton) dialog.findViewById(R.id.radio_fort_nightly);
-        RadioButton radioButtonMonthly = (RadioButton) dialog.findViewById(R.id.radio_monthly);
-        RadioButton radioButtonAuto = (RadioButton) dialog.findViewById(R.id.radio_auto);
-
-        RadioGroupPlus radioGroupPlus = (RadioGroupPlus) dialog.findViewById(R.id.frequencyRadioGroup);
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked}, //disabled
-                        new int[]{android.R.attr.state_checked} //enabled
-                },
-                new int[]{
-                        Color.BLACK, //disabled
-                        getResources().getColor(R.color.colorPrimary) //enabled
-                }
-        );
-
-        radioButtonOff.setButtonTintList(colorStateList);
-        radioButtonDaily.setButtonTintList(colorStateList);
-        radioButtonWeekly.setButtonTintList(colorStateList);
-        radioButtonFortNightly.setButtonTintList(colorStateList);
-        radioButtonMonthly.setButtonTintList(colorStateList);
-        radioButtonAuto.setButtonTintList(colorStateList);
-
-        radioGroupPlus.setOnCheckedChangeListener((group, checkedId) -> {
-            RadioButton rb = (RadioButton) dialog.findViewById(checkedId);
-            Toast.makeText(getApplicationContext(), rb.getText(), Toast.LENGTH_SHORT).show();
-        });
-
-        setTheSystemButtonsHidden(dialog);
-
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
