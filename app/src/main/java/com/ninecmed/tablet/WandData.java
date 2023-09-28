@@ -405,12 +405,12 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetStimLeadR() {
+    static float GetStimLeadR() {
         if (mStimLeadI == -1)
-            return null;
+            return 0f;
         else {
             if (mStimLeadI == 0)
-                return null;
+                return 0f;
 
             // Don't allow amplitude values less than 2.25
             float amp = (mStimAmplitude & 0xff) * 0.05f;
@@ -426,10 +426,7 @@ class WandData {
             if (leadr <= 0.0f)
                 leadr = 10000.0f;
 
-            if (leadr <= 2000.0f)
-                return String.format("%.0f ohms", leadr);
-            else
-                return "> 2000 ohms";
+            return leadr;
         }
     }
 

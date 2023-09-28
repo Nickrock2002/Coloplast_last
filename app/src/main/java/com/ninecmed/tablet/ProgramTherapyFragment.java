@@ -45,6 +45,7 @@ import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -88,13 +89,6 @@ public class ProgramTherapyFragment extends Fragment {
         setUpDateButtonClick(view);
         setUpTimeButtonClick(view);
         return view;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        mMainActivity = (MainActivity) getActivity();
     }
 
     private void setUpRRTButtonClick(View rootView) {
@@ -499,14 +493,14 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeProgramButton(View view) {
         Button program = view.findViewById(R.id.btn_program);
-//        program.setEnabled(false);
-//        program.setAlpha(0.5f);
+        /*program.setEnabled(false);
+        program.setAlpha(0.5f);*/
         program.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
                 bTouch = true;
                 Calendar c = Calendar.getInstance();
                 long future = WandData.dateandtime[WandData.FUTURE];
-                long now = c.getTimeInMillis();
+                long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
 
                 // Check date range for weekly, fortnightly and monthly therapy for Model 2
                 if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.GetModelNumber() == 2) {
@@ -537,7 +531,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
 
                 mMainActivity.wandComm.Program();
-                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
 //                StartProgressBar();
             }
             return true;
@@ -661,6 +655,19 @@ public class ProgramTherapyFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ItnsUpdateAmpEvent event) {
         UpdateAmplitude();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mMainActivity = (MainActivity) getActivity();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
     }
 
     public void OnConnected() {

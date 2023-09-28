@@ -18,6 +18,103 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/cv_bottom_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/colorBaseGrayFifty"
+        app:layout_constraintTop_toBottomOf="@+id/tv_implant_title">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_mid_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/tv_lead_r_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="40dp"
+            android:text="Lead R"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_lead_r_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="_"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_ext_lead_r_warn"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:background="@drawable/rounded_corners_btn_error"
+            android:text="Warning"
+            android:visibility="gone"
+            android:drawableStart="@drawable/ic_error"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="24sp"
+            android:drawablePadding="5dp"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:paddingStart="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_lead_r_warn"
+            android:layout_width="260dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:background="@drawable/rounded_corners_btn_error"
+            android:drawableStart="@drawable/ic_error"
+            android:drawablePadding="5dp"
+            android:paddingStart="60dp"
+            android:text="Warning"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="24sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_bottom_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -72,7 +169,7 @@
             android:id="@+id/tvExternalAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.0V"
+            android:text="1.5V"
             android:textColor="@color/cardview_dark_background"
             android:textSize="18sp"
             android:textStyle="bold"
