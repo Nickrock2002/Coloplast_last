@@ -499,8 +499,8 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeProgramButton(View view) {
         Button program = view.findViewById(R.id.btn_program);
-        program.setEnabled(false);
-        program.setAlpha(0.5f);
+//        program.setEnabled(false);
+//        program.setAlpha(0.5f);
         program.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
                 bTouch = true;
