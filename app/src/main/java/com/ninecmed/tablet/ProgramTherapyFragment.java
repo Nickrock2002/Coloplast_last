@@ -31,7 +31,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -229,8 +228,7 @@ public class ProgramTherapyFragment extends Fragment {
                             if (mNow + 1500 < System.currentTimeMillis()) {
                                 mMainActivity.wandComm.SetStimulation(false);
 
-                                //StopStimProgressBar();
-                                MakeTone(ToneGenerator.TONE_PROP_NACK);
+//                                MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 mStimEnabled = false;
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
@@ -302,7 +300,6 @@ public class ProgramTherapyFragment extends Fragment {
                     c.setTimeInMillis(c.getTimeInMillis() + timeDifferenceMillis);
 
                     int modelNumber = WandData.GetModelNumber();
-                    modelNumber = 1;
 
                     // If therapy set to daily for the model 1...
                     if (WandData.therapy[WandData.FUTURE] == R.id.radio_daily && modelNumber == 1) {
@@ -333,15 +330,6 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                     // Else, if therapy is set for weekly, fortnightly or monthly for Model 2
                     else if ((WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto) && modelNumber == 2) {
-                        /*c.set(Calendar.HOUR_OF_DAY, 8);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.SECOND, 0);
-                        if (WandData.therapy[WandData.FUTURE] == R.id.radio_auto)
-                            c.add(Calendar.HOUR, 24 * 7 * 3);                               // If Auto mode, set default time to 3 weeks from now
-                        else
-                            c.add(Calendar.HOUR, 24 * 7);                                   // Else set one week ahead
-
-                        WandData.dateandtime[WandData.FUTURE] = c.getTimeInMillis();*/
 
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
                         date.setText("----");
@@ -482,7 +470,7 @@ public class ProgramTherapyFragment extends Fragment {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 interrogate.setPressed(true);
                 mMainActivity.wandComm.Interrogate();
-                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+//                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 interrogate.setPressed(false);
             }
@@ -557,94 +545,6 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.show();
     }
 
-    private void InitializeDate(View view) {
-        final TextView date = view.findViewById(R.id.tvItnsDate);
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final Calendar c = Calendar.getInstance();
-                final DatePickerDialog dp = new DatePickerDialog(requireContext(), (view1, year, month, dayOfMonth) -> {
-                    date.setText(String.format("%02d/%02d/%4d", month + 1, dayOfMonth, year));
-
-                    // ITNS Model 1 can only be programmed one week ahead.  Model 2 can be programmed 31 days ahead
-                    Calendar selected_date = Calendar.getInstance();
-                    selected_date.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);       // Set Calendar object to future time
-                    selected_date.set(Calendar.YEAR, year);
-                    selected_date.set(Calendar.MONTH, month);
-                    selected_date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    WandData.dateandtime[WandData.FUTURE] = selected_date.getTimeInMillis();
-
-                    if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.DATE);
-                        date.setTextColor(Color.BLACK);
-                        date.setBackgroundResource(R.color.colorControlNoChange);
-                    } else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.DATE);
-                        date.setTextColor(Color.RED);
-                        date.setBackgroundResource(R.color.colorControlChange);
-                    }
-
-                    EnableProgramButton(true, true);
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-
-                // Model 1 and 2 should start from today, except if Model 1 and the schedule = auto,
-                // we should start 15 days ahead.
-                if ((WandData.GetModelNumber() == 2) && (WandData.therapy[WandData.FUTURE] == 5))
-                    dp.getDatePicker().setMinDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 15L);
-                else dp.getDatePicker().setMinDate(c.getTimeInMillis());
-
-                // If Model 1 do this...
-                if (WandData.GetModelNumber() == 1)
-                    dp.getDatePicker().setMaxDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 7L);      // Set max date 7 days ahead.
-                    // If Model 2 do this...
-                else
-                    dp.getDatePicker().setMaxDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 31L);     // Set max date 31 days ahead.
-                dp.show();
-            }
-        });
-    }
-
-    private void InitializeTime(View view) {
-        final TextView time = view.findViewById(R.id.tvItnsTime);
-        time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int min = c.get(Calendar.MINUTE);
-
-                TimePickerDialog tp = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @SuppressLint("DefaultLocale")
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        time.setText(String.format("%02d:%02d", h, m));
-
-                        Calendar futuretime = Calendar.getInstance();
-                        futuretime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
-                        futuretime.set(Calendar.MINUTE, m);
-                        futuretime.set(Calendar.HOUR_OF_DAY, h);
-                        WandData.dateandtime[WandData.FUTURE] = futuretime.getTimeInMillis();
-
-                        if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                            mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
-                            time.setTextColor(Color.BLACK);
-                            time.setBackgroundResource(R.color.colorControlNoChange);
-                        } else {
-                            mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
-                            time.setTextColor(Color.RED);
-                            time.setBackgroundResource(R.color.colorControlChange);
-                        }
-
-                        EnableProgramButton(true, true);
-                    }
-                }, hour, min, false);
-                tp.show();
-            }
-        });
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.ITNS) {
@@ -709,7 +609,6 @@ public class ProgramTherapyFragment extends Fragment {
                 // UIUpdate is called - meaning that the state machine has finished its tasks
                 mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
 
-                tvLeadRVal.setText(String.valueOf(WandData.GetLeadR()));
                 showLeadRWarningIfFound();
 
             } else {
@@ -721,27 +620,20 @@ public class ProgramTherapyFragment extends Fragment {
                 TextView sn = view.findViewById(R.id.tv_itns_serial_val);
                 sn.setText(WandData.GetSerialNumber());
 
-                TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-                cellv.setText(WandData.GetCellV());
-
-                String rrt_result = WandData.GetRRT(view.getContext());
-                if (rrt_result.equals(getString(R.string.all_yes))) {
-                    btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
-                    cellv.setVisibility(View.VISIBLE);
-                } else {
-                    btnImplantBatteryStatus.setVisibility(View.VISIBLE);
-                    cellv.setVisibility(View.INVISIBLE);
-                }
-
+                showBatteryWarningIfLow(view);
                 showLeadRWarningIfFound();
+                setInitialAmplitude();
 
-                tvLeadRVal.setText(String.valueOf(WandData.GetLeadR()));
-                ((Button) view.findViewById(R.id.btn_start_day)).setText(WandData.GetDate());
-                ((Button) view.findViewById(R.id.btn_time_of_day)).setText(WandData.GetTime());
+                String date = WandData.GetDate();
+                String time = WandData.GetTime();
+
+                if (!date.isEmpty())
+                    ((Button) view.findViewById(R.id.btn_start_day)).setText(date);
+                if (!time.isEmpty())
+                    ((Button) view.findViewById(R.id.btn_time_of_day)).setText(time);
 
                 ResetChangedParameters();
                 checkForReset();
-                setInitialAmplitude();
             }
         } else {// Here's what happens on fail
             AlertDialog mAlertDialog;
@@ -751,16 +643,8 @@ public class ProgramTherapyFragment extends Fragment {
                 alertDialog.setTitle(getString(R.string.itns_newitns_title_msg));
                 alertDialog.setMessage(getString(R.string.itns_newitns_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        SetChangedParametersEnable(true, true);
-                        EnableInterrogateButton(true, true);
-                        EnableProgramButton(false, true);
-                        /*Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-                        gp.setVisibility(View.GONE);*/
-                    }
+                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
                 });
                 mAlertDialog = alertDialog.create();
                 mAlertDialog.setCancelable(false);
@@ -768,20 +652,16 @@ public class ProgramTherapyFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
-                //StopStimProgressBar();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
                 alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        SetChangedParametersEnable(true, true);
-                        EnableInterrogateButton(true, true);
-                        EnableProgramButton(true, true);
-                    }
+                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+//                    SetChangedParametersEnable(true, true);
+//                    EnableInterrogateButton(true, true);
+//                    EnableProgramButton(true, true);
                 });
                 mAlertDialog = alertDialog.create();
             } else {
@@ -790,29 +670,35 @@ public class ProgramTherapyFragment extends Fragment {
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
                 alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_retry), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE)
-                            mMainActivity.wandComm.Interrogate();
-                        else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
-                            mMainActivity.wandComm.Program();
-//                        StartProgressBar();
-                    }
+                alertDialog.setPositiveButton(getString(R.string.all_retry), (dialogInterface, i) -> {
+                    if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE)
+                        mMainActivity.wandComm.Interrogate();
+                    else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
+                        mMainActivity.wandComm.Program();
                 });
-                alertDialog.setNegativeButton(getString(R.string.all_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        SetChangedParametersEnable(true, true);
-                        EnableInterrogateButton(true, true);
-                        EnableProgramButton(true, true);
-                    }
+                alertDialog.setNegativeButton(getString(R.string.all_cancel), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+//                    SetChangedParametersEnable(true, true);
+//                    EnableInterrogateButton(true, true);
+//                    EnableProgramButton(true, true);
                 });
                 mAlertDialog = alertDialog.create();
             }
             mAlertDialog.setCancelable(false);
             mAlertDialog.show();
+        }
+    }
+
+    private void showBatteryWarningIfLow(View view) {
+        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+        String rrt_result = WandData.GetRRT(view.getContext());
+        if (rrt_result != null && rrt_result.equals(getString(R.string.all_yes))) {
+            btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
+            cellv.setVisibility(View.VISIBLE);
+            cellv.setText(R.string.ok);
+        } else {
+            btnImplantBatteryStatus.setVisibility(View.VISIBLE);
+            cellv.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -831,6 +717,8 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void setInitialAmplitude() {
+        btnAmplitudeVal.setEnabled(true);
+        btnAmplitudeVal.setClickable(true);
         btnAmplitudeVal.setText(WandData.GetAmplitude());
         mAmplitudePos = WandData.GetAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
@@ -901,35 +789,6 @@ public class ProgramTherapyFragment extends Fragment {
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
 
         mMainActivity.wandComm.RemoveAllProgramChanges();
-    }
-
-   /* private void StartProgressBar() {
-        ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItns);
-        progressBar.setVisibility(View.VISIBLE);
-        Objects.requireNonNull(getActivity()).getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }*/
-
-    /*private void StopProgressBar() {
-        bTouch = false;
-        ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItns);
-        progressBar.setVisibility(View.INVISIBLE);
-        Objects.requireNonNull(getActivity()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }*/
-
-    private void StartStimProgressBar() {
-        ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItnsStim);
-        progressBar.setVisibility(View.VISIBLE);
-
-        TextView tv = getView().findViewById(R.id.tvItnsStimProgress);
-        tv.setVisibility((View.VISIBLE));
-    }
-
-    private void StopStimProgressBar() {
-        ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbItnsStim);
-        progressBar.setVisibility(View.INVISIBLE);
-
-        TextView tv = getView().findViewById(R.id.tvItnsStimProgress);
-        tv.setVisibility((View.INVISIBLE));
     }
 
     private void MakeTone(int sound) {
