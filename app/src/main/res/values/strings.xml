@@ -108,7 +108,7 @@
         <item>Auto</item>
     </string-array>
     <string-array name="languages">
-        <item>Change Language</item>
+        <item>Select Language</item>
         <item>English</item>
     </string-array>
 
