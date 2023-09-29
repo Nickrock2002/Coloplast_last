@@ -631,7 +631,7 @@ public class ProgramTherapyFragment extends Fragment {
                     ((Button) view.findViewById(R.id.btn_start_day)).setText(date);
                 if (!time.isEmpty())
                     ((Button) view.findViewById(R.id.btn_time_of_day)).setText(time);
-
+                ((Button) view.findViewById(R.id.btn_frequency_val)).setText(WandData.GetTherapy(requireContext()));
                 ResetChangedParameters();
                 checkForReset();
             }
