@@ -738,6 +738,7 @@ public class ProgramTherapyFragment extends Fragment {
                 tvLeadRVal.setText(String.valueOf(WandData.GetLeadR()));
                 ((Button) view.findViewById(R.id.btn_start_day)).setText(WandData.GetDate());
                 ((Button) view.findViewById(R.id.btn_time_of_day)).setText(WandData.GetTime());
+                ((Button) view.findViewById(R.id.btn_frequency_val)).setText(WandData.GetTherapy(requireContext()));
 
                 ResetChangedParameters();
                 checkForReset();
