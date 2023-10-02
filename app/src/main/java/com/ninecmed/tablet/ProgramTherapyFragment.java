@@ -62,6 +62,9 @@ public class ProgramTherapyFragment extends Fragment {
     TextView tvLeadRVal;
     Button btnAmplitudeVal;
     Button btnInterrogate;
+    Button btnFrequencyVal;
+    Button btnDayDateVal;
+    Button btnTimeOfDayVal;
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
@@ -231,7 +234,7 @@ public class ProgramTherapyFragment extends Fragment {
     };
 
     private void setUpFrequencyButtonClick(View rootView) {
-        Button btnFrequencyVal = rootView.findViewById(R.id.btn_frequency_val);
+        btnFrequencyVal = rootView.findViewById(R.id.btn_frequency_val);
 
         btnFrequencyVal.setOnClickListener(frequencyButton -> {
             final FrequencyDialogue dialogue = new FrequencyDialogue(getActivity());
@@ -281,12 +284,12 @@ public class ProgramTherapyFragment extends Fragment {
 
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
                         //date.setBackgroundResource(R.color.colorControlNoChange);
-                        date.setText("----");
+                        date.setText(R.string._3_dash);
                         date.setEnabled(true);
                         date.setClickable(false);
 
                         Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
-                        time.setText("----");
+                        time.setText(R.string._3_dash);
                         time.setEnabled(true);
                         time.setClickable(true);
                     }
@@ -294,12 +297,12 @@ public class ProgramTherapyFragment extends Fragment {
                     else if (WandData.therapy[WandData.FUTURE] == R.id.radio_weekly && modelNumber == 1) {
 
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
-                        date.setText("----");
+                        date.setText(R.string._3_dash);
                         date.setEnabled(true);
                         date.setClickable(true);
 
                         Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
-                        time.setText("----");
+                        time.setText(R.string._3_dash);
                         time.setEnabled(true);
                         time.setClickable(true);
                     }
@@ -307,12 +310,12 @@ public class ProgramTherapyFragment extends Fragment {
                     else if ((WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto) && modelNumber == 2) {
 
                         Button date = (Button) rootView.findViewById(R.id.btn_start_day);
-                        date.setText("----");
+                        date.setText(R.string._3_dash);
                         date.setEnabled(true);
                         date.setClickable(true);
 
                         Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
-                        time.setText("----");
+                        time.setText(R.string._3_dash);
                         time.setEnabled(true);
                         time.setClickable(true);
                     }
@@ -323,14 +326,14 @@ public class ProgramTherapyFragment extends Fragment {
                             //date.setTextColor(Color.RED);
                             //date.setBackgroundResource(R.color.colorControlChange);
                         }
-                        date.setText("----");
+                        date.setText(R.string._3_dash);
                         date.setEnabled(true);
                         date.setClickable(false);
 
                         Button time = (Button) rootView.findViewById(R.id.btn_time_of_day);
                         //time.setTextColor(Color.RED);
                         //time.setBackgroundResource(R.color.colorControlChange);
-                        time.setText("----");
+                        time.setText(R.string._3_dash);
                         time.setEnabled(true);
                         time.setClickable(false);
                     }
@@ -354,7 +357,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void setUpDateButtonClick(View rootView) {
-        Button btnDayDateVal = rootView.findViewById(R.id.btn_start_day);
+        btnDayDateVal = rootView.findViewById(R.id.btn_start_day);
 
         btnDayDateVal.setOnClickListener(dayDateButton -> {
             final ProgramTherapyDayDateDialogue dialogue = new ProgramTherapyDayDateDialogue(getActivity());
@@ -391,7 +394,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void setUpTimeButtonClick(View rootView) {
-        Button btnTimeOfDayVal = rootView.findViewById(R.id.btn_time_of_day);
+        btnTimeOfDayVal = rootView.findViewById(R.id.btn_time_of_day);
 
         btnTimeOfDayVal.setOnClickListener(timeOfDayButton -> {
             final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity());
@@ -564,11 +567,12 @@ public class ProgramTherapyFragment extends Fragment {
                 // UIUpdate is called - meaning that the state machine has finished its tasks
                 mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                 showLeadRWarningIfFound();
+                btnFrequencyVal.setEnabled(true);
+                btnFrequencyVal.setClickable(true);
             } else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
                 ResetChangedParameters();
-
-            } else {
-                /* This is interrogate callback */
+                // TODO reset all the values here
+            } else { /* This is interrogate callback */
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
                 btnInterrogate.setClickable(true);
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
@@ -579,16 +583,28 @@ public class ProgramTherapyFragment extends Fragment {
 
                 showBatteryWarningIfLow(view);
                 showLeadRWarningIfFound();
+
+                btnAmplitudeVal.setEnabled(true);
+                btnAmplitudeVal.setClickable(true);
+
                 setInitialAmplitudeAndEnableAmplitudeButton();
+
+                String toolFrequency = WandData.GetTherapy(requireContext());
+                btnFrequencyVal.setText(toolFrequency);
+
+                if(toolFrequency!= null && !toolFrequency.isEmpty()) {
+                    btnFrequencyVal.setEnabled(true);
+                    btnFrequencyVal.setClickable(true);
+                }
 
                 String date = WandData.GetDate();
                 String time = WandData.GetTime();
 
                 if (!date.isEmpty())
-                    ((Button) view.findViewById(R.id.btn_start_day)).setText(date);
+                    btnDayDateVal.setText(date);
                 if (!time.isEmpty())
-                    ((Button) view.findViewById(R.id.btn_time_of_day)).setText(time);
-                ((Button) view.findViewById(R.id.btn_frequency_val)).setText(WandData.GetTherapy(requireContext()));
+                    btnTimeOfDayVal.setText(time);
+
                 ResetChangedParameters();
                 checkForReset();
             }
@@ -617,9 +633,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
                     dialogInterface.dismiss();
-//                    SetChangedParametersEnable(true, true);
-//                    EnableInterrogateButton(true, true);
-//                    EnableProgramButton(true, true);
+                    // TODO enable interrogate & program button
                 });
                 mAlertDialog = alertDialog.create();
             } else {
@@ -636,9 +650,7 @@ public class ProgramTherapyFragment extends Fragment {
                 });
                 alertDialog.setNegativeButton(getString(R.string.all_cancel), (dialogInterface, i) -> {
                     dialogInterface.dismiss();
-//                    SetChangedParametersEnable(true, true);
-//                    EnableInterrogateButton(true, true);
-//                    EnableProgramButton(true, true);
+                    // TODO enable interrogate & program button
                 });
                 mAlertDialog = alertDialog.create();
             }
@@ -675,8 +687,6 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void setInitialAmplitudeAndEnableAmplitudeButton() {
-        btnAmplitudeVal.setEnabled(true);
-        btnAmplitudeVal.setClickable(true);
         btnAmplitudeVal.setText(WandData.GetAmplitude());
         mAmplitudePos = WandData.GetAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
@@ -708,33 +718,6 @@ public class ProgramTherapyFragment extends Fragment {
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
-    }
-
-    private void SetChangedParametersEnable(boolean enable, boolean change_alpha) {
-        View view = getView();
-
-        Spinner therapydd = Objects.requireNonNull(view).findViewById(R.id.ddItnsTherapy);
-        therapydd.setEnabled(enable);
-        if (change_alpha) therapydd.setAlpha(enable ? 1f : 0.5f);
-
-        TextView date = view.findViewById(R.id.tvItnsDate);
-        date.setEnabled(enable);
-        if (change_alpha) date.setAlpha(enable ? 1f : 0.5f);
-
-        TextView time = view.findViewById(R.id.tvItnsTime);
-        time.setEnabled(enable);
-        if (change_alpha) time.setAlpha(enable ? 1f : 0.5f);
-
-        ImageButton plus = view.findViewById(R.id.ibItnsPlus);
-        plus.setEnabled(enable);
-        if (change_alpha) plus.setAlpha(enable ? 1f : 0.5f);
-
-        ImageButton minus = view.findViewById(R.id.ibItnsMinus);
-        minus.setEnabled(enable);
-        if (change_alpha) minus.setAlpha(enable ? 1f : 0.5f);
-
-        TextView amp = view.findViewById(R.id.tvItnsAmplitude);
-        if (change_alpha) amp.setAlpha(enable ? 1f : 0.5f);
     }
 
     private void ResetChangedParameters() {

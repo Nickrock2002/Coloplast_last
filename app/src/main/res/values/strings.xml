@@ -96,6 +96,7 @@
     <string name="intibia_itns_rrt">Intibia ITNS RRT</string>
     <string name="stimulation_active">Stimulation Active</string>
     <string name="implant_reset_counter">"Implant Reset Counter: "</string>
+    <string name="_3_dash">----</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>
