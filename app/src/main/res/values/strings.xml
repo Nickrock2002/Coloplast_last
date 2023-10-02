@@ -95,6 +95,7 @@
     <string name="rrt_dialogue_title">The Intibia ITNS reached its Battery Replacement Time (RRT)</string>
     <string name="intibia_itns_rrt">Intibia ITNS RRT</string>
     <string name="stimulation_active">Stimulation Active</string>
+    <string name="implant_reset_counter">"Implant Reset Counter: "</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>
@@ -109,7 +110,7 @@
         <item>Auto</item>
     </string-array>
     <string-array name="languages">
-        <item>Change Language</item>
+        <item>Select Language</item>
         <item>English</item>
     </string-array>
 

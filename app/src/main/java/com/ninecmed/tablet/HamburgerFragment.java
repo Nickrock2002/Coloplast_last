@@ -49,7 +49,7 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class HamburgerFragment extends Fragment {
-    private static final String TAG = "ItnsFragment";
+    private static final String TAG = "HamburgerFragment";
     private MainActivity mMainActivity = null;
     private AlertDialog mAlertDialog;
     private boolean bTouch = false;
@@ -154,10 +154,13 @@ public class HamburgerFragment extends Fragment {
                 R.array.languages, R.layout.change_language_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguages.setAdapter(adapter);
+        spinnerLanguages.setSelection(1);
         spinnerLanguages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                if (i == 0){
+                    spinnerLanguages.setSelection(1);
+                }
             }
 
             @Override
