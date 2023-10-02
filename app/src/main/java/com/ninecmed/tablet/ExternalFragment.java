@@ -293,7 +293,6 @@ public class ExternalFragment extends Fragment {
 
     @SuppressLint("DefaultLocale")
     public void UIUpdate(boolean success) {
-        mMainActivity.EnableTabs(true);
 
         if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             // Re-enable the test stim button) only when UIUpdate is called -

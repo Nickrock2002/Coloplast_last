@@ -3,12 +3,11 @@ package com.ninecmed.tablet;
 import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
@@ -24,8 +23,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -64,6 +61,7 @@ public class ProgramTherapyFragment extends Fragment {
     Button btnLeadRWarn;
     TextView tvLeadRVal;
     Button btnAmplitudeVal;
+    Button btnInterrogate;
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
@@ -74,12 +72,7 @@ public class ProgramTherapyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_program_therapy, container, false);
 
         initializeInterrogateButton(view);
-
         InitializeProgramButton(view);
-
-//        InitializeTherapySpinner(view);
-//        InitializeDate(view);
-//        InitializeTime(view);
 
         setUpRRTButtonClick(view);
         setUpLeadRButtonClick(view);
@@ -122,9 +115,8 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void setUpAmplitudeButtonClick(View rootView) {
         btnAmplitudeVal = rootView.findViewById(R.id.btn_amplitude_val);
-
         btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
-            String amplitudeVal = WandData.GetAmplitude();
+            String amplitudeVal = String.valueOf(WandData.GetAmpFromPos(mAmplitudePos));
             final AmplitudeDialogue dialogue = new AmplitudeDialogue(getActivity());
             dialogue.setAmplitude(amplitudeVal);
             dialogue.setItnsMinusListener((minusButton, motionEvent) -> {
@@ -139,7 +131,6 @@ public class ProgramTherapyFragment extends Fragment {
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        //TODO enable all these 4 lines while testing
                         mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
                         amp.setTextColor(Color.BLACK);
                     } else {
@@ -148,6 +139,8 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minusButton.setPressed(false);
+                    Drawable drawable = (Drawable) minusButton.getBackground().mutate();
+                    drawable.setTint(getResources().getColor(R.color.colorBaseDeepBlue));
                 }
                 return true;
             });
@@ -172,6 +165,8 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
+                    Drawable drawable = (Drawable) plusButton.getBackground().mutate();
+                    drawable.setTint(getResources().getColor(R.color.colorBaseDeepBlue));
                 }
                 return true;
             });
@@ -182,31 +177,9 @@ public class ProgramTherapyFragment extends Fragment {
                             stimulationButton.setPressed(true);
                             mMainActivity.wandComm.SetStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
-                            ((Button) stimulationButton).setText("Stimulation Active");
+                            ((Button) stimulationButton).setText(R.string.stimulation_active);
                             WandData.InvalidateStimLeadI();
 
-                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
-                            leadi.setText(WandData.GetLeadI());
-
-                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());*/
-
-                            // Disable changed parameters during test stim. Only re-enable once
-                            // job is completed. Even though controls are disabled, don't change
-                            // alpha, meaning don't gray out the controls, otherwise it appears
-                            // strange.
-                            //SetChangedParametersEnable(false, false);
-                            // Also, don't update alpha for the program and interrogate
-                            // buttons either, otherwise pressing the test stim button
-                            // would cause the program and interrogate button to go grey. Since
-                            // this isn't consistent with what we do when the interrogate or
-                            // program button is pressed - we decided to disable other telemetry
-                            // controls when a telemetry command is in progress, but without changing
-                            // the appearance.
-                            //EnableInterrogateButton(false, false);
-                            //EnableProgramButton(false, false);
-                            //StartStimProgressBar();
-                            mMainActivity.EnableTabs(false);
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
                         }
@@ -221,7 +194,7 @@ public class ProgramTherapyFragment extends Fragment {
                         // unnecessary beep as well.
                         if (mStimEnabled) {
                             stimulationButton.setPressed(false);
-                            ((Button) stimulationButton).setText("Hold to deliver neurostimulation");
+                            ((Button) stimulationButton).setText(R.string.hold_to_deliver_neurostimulation);
                             //stimulate.setEnabled(false);
                             //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             // Set delay to 1500 to be the same delay as ExternalFragment
@@ -243,6 +216,8 @@ public class ProgramTherapyFragment extends Fragment {
             });
             dialogue.setConfirmButtonListener(confirmView -> {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                Drawable drawable = (Drawable) amplitudeButton.getBackground().mutate();
+                drawable.setTint(getResources().getColor(R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
             });
             dialogue.show();
@@ -420,9 +395,7 @@ public class ProgramTherapyFragment extends Fragment {
 
         btnTimeOfDayVal.setOnClickListener(timeOfDayButton -> {
             final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity());
-            dialogue.setCancelButtonListener(cancelView -> {
-                dialogue.dismiss();
-            });
+            dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
                 TimePicker timePicker = dialogue.findViewById(R.id.timePicker);
 
@@ -465,14 +438,15 @@ public class ProgramTherapyFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton(View view) {
-        final Button interrogate = view.findViewById(R.id.btn_interrogate);
-        interrogate.setOnTouchListener((view1, motionEvent) -> {
+        btnInterrogate = view.findViewById(R.id.btn_interrogate);
+        btnInterrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                interrogate.setPressed(true);
+                btnInterrogate.setPressed(true);
                 mMainActivity.wandComm.Interrogate();
+                btnInterrogate.setClickable(false);
 //                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                interrogate.setPressed(false);
+                btnInterrogate.setPressed(false);
             }
             return true;
         });
@@ -481,8 +455,6 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeProgramButton(View view) {
         Button program = view.findViewById(R.id.btn_program);
-        /*program.setEnabled(false);
-        program.setAlpha(0.5f);*/
         program.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
                 bTouch = true;
@@ -519,8 +491,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
 
                 mMainActivity.wandComm.Program();
-                //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-//                StartProgressBar();
+//                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
             }
             return true;
         });
@@ -570,21 +541,6 @@ public class ProgramTherapyFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    public void OnConnected() {
-        View view = getView();
-
-        TextView tv = Objects.requireNonNull(view).findViewById(R.id.tvItnsBtStatus);
-        tv.setText(getString(R.string.link_msg));
-
-        ImageView iv = view.findViewById(R.id.ivItnsLink);
-        iv.setImageResource(R.drawable.ic_link);
-
-        EnableInterrogateButton(true, true);
-        EnableProgramButton(false, true);
-
-        SetChangedParametersEnable(true, true);
-    }
-
     // This method is called when the fragment is hidden
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -602,18 +558,19 @@ public class ProgramTherapyFragment extends Fragment {
 
     public void UIUpdate(boolean success) {
         View view = getView();
-
         if (success & view != null) {
             if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
                 // Re-enable changed parameters (and the test stim button) only when
                 // UIUpdate is called - meaning that the state machine has finished its tasks
                 mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-
                 showLeadRWarningIfFound();
+            } else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
+                ResetChangedParameters();
 
             } else {
-//            MakeTone(ToneGenerator.TONE_CDMA_PIP);
-
+                /* This is interrogate callback */
+//                MakeTone(ToneGenerator.TONE_CDMA_PIP);
+                btnInterrogate.setClickable(true);
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
                 mn.setText((WandData.GetModelNumber(view.getContext())));
 
@@ -622,7 +579,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 showBatteryWarningIfLow(view);
                 showLeadRWarningIfFound();
-                setInitialAmplitude();
+                setInitialAmplitudeAndEnableAmplitudeButton();
 
                 String date = WandData.GetDate();
                 String time = WandData.GetTime();
@@ -635,7 +592,8 @@ public class ProgramTherapyFragment extends Fragment {
                 ResetChangedParameters();
                 checkForReset();
             }
-        } else {// Here's what happens on fail
+        } else {
+            // Here's what happens on fail
             AlertDialog mAlertDialog;
             if (mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
@@ -716,7 +674,7 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
-    private void setInitialAmplitude() {
+    private void setInitialAmplitudeAndEnableAmplitudeButton() {
         btnAmplitudeVal.setEnabled(true);
         btnAmplitudeVal.setClickable(true);
         btnAmplitudeVal.setText(WandData.GetAmplitude());
@@ -802,23 +760,5 @@ public class ProgramTherapyFragment extends Fragment {
     public void UpdateAmplitude() {
         btnAmplitudeVal.setText(WandData.GetAmplitude());
         mAmplitudePos = WandData.GetAmplitudePos();
-    }
-
-    private void EnableInterrogateButton(boolean enable, boolean change_alpha) {
-        Button interrogate = requireView().findViewById(R.id.btItnsInterrogate);
-        interrogate.setEnabled(enable);
-        if (change_alpha) interrogate.setAlpha(enable ? 1f : 0.5f);
-    }
-
-    private void EnableProgramButton(boolean enable, boolean change_alpha) {
-        Button program = requireView().findViewById(R.id.btItnsProgram);
-
-        if (enable && mMainActivity.wandComm.AnyProgramChanges()) {
-            program.setEnabled(true);
-            if (change_alpha) program.setAlpha(1f);
-        } else {
-            program.setEnabled(false);
-            if (change_alpha) program.setAlpha(0.5f);
-        }
     }
 }

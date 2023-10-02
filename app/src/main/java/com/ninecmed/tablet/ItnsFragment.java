@@ -113,28 +113,25 @@ public class ItnsFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeInterrogateButton(View view) {
         final Button interrogate = view.findViewById(R.id.btItnsInterrogate);
-        interrogate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                // Even though the Interrogate button, and all other buttons are disabled
-                // in the StartProgressBar method by setting
-                // WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, several
-                // ACTION_DOWN events could occur before the window is deactivated.
-                // In order to prevent this, we'll add a flag, bTouch, that's set
-                // on the first touch and only cleared in the EndProgressBar method.
-                // The same steps are required for the Program button.
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN /*&& !bTouch*/) {
-                    interrogate.setPressed(true);
-                    //bTouch = true;
+        interrogate.setOnTouchListener((view1, motionEvent) -> {
+            // Even though the Interrogate button, and all other buttons are disabled
+            // in the StartProgressBar method by setting
+            // WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, several
+            // ACTION_DOWN events could occur before the window is deactivated.
+            // In order to prevent this, we'll add a flag, bTouch, that's set
+            // on the first touch and only cleared in the EndProgressBar method.
+            // The same steps are required for the Program button.
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN /*&& !bTouch*/) {
+                interrogate.setPressed(true);
+                //bTouch = true;
 
-                    mMainActivity.wandComm.Interrogate();
-                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    //StartProgressBar();
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                    interrogate.setPressed(false);
-                }
-                return true;
+                mMainActivity.wandComm.Interrogate();
+                //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                //StartProgressBar();
+            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+                interrogate.setPressed(false);
             }
+            return true;
         });
 
     }
@@ -144,49 +141,46 @@ public class ItnsFragment extends Fragment {
         Button program = view.findViewById(R.id.btItnsProgram);
         program.setEnabled(false);
         program.setAlpha(0.5f);
-        program.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
-                    bTouch = true;
-                    Calendar c = Calendar.getInstance();
-                    long future = WandData.dateandtime[WandData.FUTURE];
-                    long now = c.getTimeInMillis();
+        program.setOnTouchListener((view1, motionEvent) -> {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
+                bTouch = true;
+                Calendar c = Calendar.getInstance();
+                long future = WandData.dateandtime[WandData.FUTURE];
+                long now = c.getTimeInMillis();
 
-                    // Check date range for weekly, fortnightly and monthly therapy for Model 2
-                    if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.GetModelNumber() == 2) {
-                        if (future < (now + 1000L * 3600L)) {
-                            // Don't allow therapy to be set within 1 hour of now because only a
-                            // magnet could stop therapy, telemetry can't interrupt therapy for
-                            // the model 2.
-                            ShowDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                            return true;
-                        } else if (future > (now + 1000L * 3600L * 24L * 31L)) {
-                            ShowDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
-                            return true;
-                        }
+                // Check date range for weekly, fortnightly and monthly therapy for Model 2
+                if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.GetModelNumber() == 2) {
+                    if (future < (now + 1000L * 3600L)) {
+                        // Don't allow therapy to be set within 1 hour of now because only a
+                        // magnet could stop therapy, telemetry can't interrupt therapy for
+                        // the model 2.
+                        ShowDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                        return true;
+                    } else if (future > (now + 1000L * 3600L * 24L * 31L)) {
+                        ShowDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
+                        return true;
                     }
-                    // Only check date range of one week for Model 1
-                    else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.GetModelNumber() == 1) {
-                        if (future < now) {
-                            ShowDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                            return true;
-                        } else if (future > (now + 1000 * 3600 * 24 * 7)) {
-                            ShowDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
-                            return true;
-                        }
-                    }
-
-                    if (mMainActivity.wandComm.AnyAmplitudeChanges()) {
-                        WandData.InvalidateStimLeadI();
-                    }
-
-                    mMainActivity.wandComm.Program();
-                    MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    StartProgressBar();
                 }
-                return true;
+                // Only check date range of one week for Model 1
+                else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.GetModelNumber() == 1) {
+                    if (future < now) {
+                        ShowDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                        return true;
+                    } else if (future > (now + 1000 * 3600 * 24 * 7)) {
+                        ShowDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
+                        return true;
+                    }
+                }
+
+                if (mMainActivity.wandComm.AnyAmplitudeChanges()) {
+                    WandData.InvalidateStimLeadI();
+                }
+
+                mMainActivity.wandComm.Program();
+                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                StartProgressBar();
             }
+            return true;
         });
     }
 
@@ -197,12 +191,9 @@ public class ItnsFragment extends Fragment {
         alertDialog.setTitle(string);
         alertDialog.setMessage(R.string.itns_time_correct_msg);
 
-        alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                bTouch = false;
-            }
+        alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            bTouch = false;
         });
         AlertDialog dialog = alertDialog.create();
         dialog.setCancelable(false);
@@ -212,72 +203,46 @@ public class ItnsFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void InitializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btItnsStartStim);
-        stimulate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (mNow + 500 < System.currentTimeMillis()) {
-                            stimulate.setPressed(true);
-                            mMainActivity.wandComm.SetStimulation(true);
-                            //MakeTone(ToneGenerator.TONE_PROP_BEEP);
-                            stimulate.setText("Stimulation Active");
-                            WandData.InvalidateStimLeadI();
+        stimulate.setOnTouchListener((view1, motionEvent) -> {
+            switch (motionEvent.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (mNow + 500 < System.currentTimeMillis()) {
+                        stimulate.setPressed(true);
+                        mMainActivity.wandComm.SetStimulation(true);
+                        //MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                        stimulate.setText("Stimulation Active");
+                        WandData.InvalidateStimLeadI();
+                        mNow = System.currentTimeMillis();
+                        mStimEnabled = true;
+                    }
+                    break;
 
-                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
-                            leadi.setText(WandData.GetLeadI());
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    // Only execute code on up/cancel when mStimEnabled is true,
+                    // otherwise this means that the user pressed the down key too
+                    // quickly and when he let's go, the motion event causes SetTestStimulation
+                    // to be executed again even though it wasn't started. This causes an
+                    // unnecessary beep as well.
+                    if (mStimEnabled) {
+                        stimulate.setPressed(false);
+                        stimulate.setText("Hold to deliver neurostimulation");
+                        //stimulate.setEnabled(false);
+                        //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        // Set delay to 1500 to be the same delay as ExternalFragment
+                        if (mNow + 1500 < System.currentTimeMillis()) {
+                            mMainActivity.wandComm.SetStimulation(false);
 
-                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());*/
-
-                            // Disable changed parameters during test stim. Only re-enable once
-                            // job is completed. Even though controls are disabled, don't change
-                            // alpha, meaning don't gray out the controls, otherwise it appears
-                            // strange.
-                            //SetChangedParametersEnable(false, false);
-                            // Also, don't update alpha for the program and interrogate
-                            // buttons either, otherwise pressing the test stim button
-                            // would cause the program and interrogate button to go grey. Since
-                            // this isn't consistent with what we do when the interrogate or
-                            // program button is pressed - we decided to disable other telemetry
-                            // controls when a telemetry command is in progress, but without changing
-                            // the appearance.
-                            //EnableInterrogateButton(false, false);
-                            //EnableProgramButton(false, false);
-                            //StartStimProgressBar();
-                            mMainActivity.EnableTabs(false);
-                            mNow = System.currentTimeMillis();
-                            mStimEnabled = true;
+                            //StopStimProgressBar();
+                            MakeTone(ToneGenerator.TONE_PROP_NACK);
+                            mStimEnabled = false;
+                        } else {
+                            mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                         }
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        // Only execute code on up/cancel when mStimEnabled is true,
-                        // otherwise this means that the user pressed the down key too
-                        // quickly and when he let's go, the motion event causes SetTestStimulation
-                        // to be executed again even though it wasn't started. This causes an
-                        // unnecessary beep as well.
-                        if (mStimEnabled) {
-                            stimulate.setPressed(false);
-                            stimulate.setText("Hold to deliver neurostimulation");
-                            //stimulate.setEnabled(false);
-                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                            // Set delay to 1500 to be the same delay as ExternalFragment
-                            if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.SetStimulation(false);
-
-                                //StopStimProgressBar();
-                                MakeTone(ToneGenerator.TONE_PROP_NACK);
-                                mStimEnabled = false;
-                            } else {
-                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
-                            }
-                        }
-                        break;
-                }
-                return true;
+                    }
+                    break;
             }
+            return true;
         });
     }
 
@@ -441,95 +406,81 @@ public class ItnsFragment extends Fragment {
 
     private void InitializeDate(View view) {
         final TextView date = view.findViewById(R.id.tvItnsDate);
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        date.setOnClickListener(v -> {
 
-                final Calendar c = Calendar.getInstance();
-                final DatePickerDialog dp = new DatePickerDialog(Objects.requireNonNull(getContext()),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @SuppressLint("DefaultLocale")
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                date.setText(String.format("%02d/%02d/%4d", month + 1, dayOfMonth, year));
+            final Calendar c = Calendar.getInstance();
+            final DatePickerDialog dp = new DatePickerDialog(Objects.requireNonNull(getContext()),
+                    (view1, year, month, dayOfMonth) -> {
+                        date.setText(String.format("%02d/%02d/%4d", month + 1, dayOfMonth, year));
 
-                                // ITNS Model 1 can only be programmed one week ahead.  Model 2 can be programmed 31 days ahead
-                                Calendar selected_date = Calendar.getInstance();
-                                selected_date.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);       // Set Calendar object to future time
-                                selected_date.set(Calendar.YEAR, year);
-                                selected_date.set(Calendar.MONTH, month);
-                                selected_date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                WandData.dateandtime[WandData.FUTURE] = selected_date.getTimeInMillis();
+                        // ITNS Model 1 can only be programmed one week ahead.  Model 2 can be programmed 31 days ahead
+                        Calendar selected_date = Calendar.getInstance();
+                        selected_date.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);       // Set Calendar object to future time
+                        selected_date.set(Calendar.YEAR, year);
+                        selected_date.set(Calendar.MONTH, month);
+                        selected_date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        WandData.dateandtime[WandData.FUTURE] = selected_date.getTimeInMillis();
 
-                                if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.DATE);
-                                    date.setTextColor(Color.BLACK);
-                                    date.setBackgroundResource(R.color.colorControlNoChange);
-                                } else {
-                                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.DATE);
-                                    date.setTextColor(Color.RED);
-                                    date.setBackgroundResource(R.color.colorControlChange);
-                                }
+                        if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
+                            mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.DATE);
+                            date.setTextColor(Color.BLACK);
+                            date.setBackgroundResource(R.color.colorControlNoChange);
+                        } else {
+                            mMainActivity.wandComm.AddProgramChanges(WandComm.changes.DATE);
+                            date.setTextColor(Color.RED);
+                            date.setBackgroundResource(R.color.colorControlChange);
+                        }
 
-                                EnableProgramButton(true, true);
-                            }
-                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                        EnableProgramButton(true, true);
+                    }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
-                // Model 1 and 2 should start from today, except if Model 1 and the schedule = auto,
-                // we should start 15 days ahead.
-                if ((WandData.GetModelNumber() == 2) && (WandData.therapy[WandData.FUTURE] == 5))
-                    dp.getDatePicker().setMinDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 15L);
-                else
-                    dp.getDatePicker().setMinDate(c.getTimeInMillis());
+            // Model 1 and 2 should start from today, except if Model 1 and the schedule = auto,
+            // we should start 15 days ahead.
+            if ((WandData.GetModelNumber() == 2) && (WandData.therapy[WandData.FUTURE] == 5))
+                dp.getDatePicker().setMinDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 15L);
+            else
+                dp.getDatePicker().setMinDate(c.getTimeInMillis());
 
-                // If Model 1 do this...
-                if (WandData.GetModelNumber() == 1)
-                    dp.getDatePicker().setMaxDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 7L);      // Set max date 7 days ahead.
-                    // If Model 2 do this...
-                else
-                    dp.getDatePicker().setMaxDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 31L);     // Set max date 31 days ahead.
-                dp.show();
-            }
+            // If Model 1 do this...
+            if (WandData.GetModelNumber() == 1)
+                dp.getDatePicker().setMaxDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 7L);      // Set max date 7 days ahead.
+                // If Model 2 do this...
+            else
+                dp.getDatePicker().setMaxDate(c.getTimeInMillis() + 1000L * 3600L * 24L * 31L);     // Set max date 31 days ahead.
+            dp.show();
         });
     }
 
     private void InitializeTime(View view) {
         final TextView time = view.findViewById(R.id.tvItnsTime);
-        time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        time.setOnClickListener(view1 -> {
 
-                final Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int min = c.get(Calendar.MINUTE);
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int min = c.get(Calendar.MINUTE);
 
-                TimePickerDialog tp = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @SuppressLint("DefaultLocale")
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        time.setText(String.format("%02d:%02d", h, m));
+            TimePickerDialog tp = new TimePickerDialog(getContext(), (timePicker, h, m) -> {
+                time.setText(String.format("%02d:%02d", h, m));
 
-                        Calendar futuretime = Calendar.getInstance();
-                        futuretime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
-                        futuretime.set(Calendar.MINUTE, m);
-                        futuretime.set(Calendar.HOUR_OF_DAY, h);
-                        WandData.dateandtime[WandData.FUTURE] = futuretime.getTimeInMillis();
+                Calendar futuretime = Calendar.getInstance();
+                futuretime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
+                futuretime.set(Calendar.MINUTE, m);
+                futuretime.set(Calendar.HOUR_OF_DAY, h);
+                WandData.dateandtime[WandData.FUTURE] = futuretime.getTimeInMillis();
 
-                        if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                            mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
-                            time.setTextColor(Color.BLACK);
-                            time.setBackgroundResource(R.color.colorControlNoChange);
-                        } else {
-                            mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
-                            time.setTextColor(Color.RED);
-                            time.setBackgroundResource(R.color.colorControlChange);
-                        }
+                if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
+                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
+                    time.setTextColor(Color.BLACK);
+                    time.setBackgroundResource(R.color.colorControlNoChange);
+                } else {
+                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
+                    time.setTextColor(Color.RED);
+                    time.setBackgroundResource(R.color.colorControlChange);
+                }
 
-                        EnableProgramButton(true, true);
-                    }
-                }, hour, min, false);
-                tp.show();
-            }
+                EnableProgramButton(true, true);
+            }, hour, min, false);
+            tp.show();
         });
     }
 
@@ -551,78 +502,70 @@ public class ItnsFragment extends Fragment {
         final ImageButton minus = view.findViewById(R.id.ibItnsMinus);
         // Use OnTouchListener rather than onClickListener so that we register the change
         // on the action down, rather that on the action up!
-        plus.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    plus.setPressed(true);
-                    if (mAmplitudePos < 42) {
-                        mAmplitudePos += 1;
-                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    }
-
-                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                    TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
-                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
-
-                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-
-
-                        /*amp.setTextColor(Color.BLACK);
-                        plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
-                        minus.setBackgroundResource(R.color.colorControlNoChange);*/
-                    } else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-
-                        /*amp.setTextColor(Color.RED);
-                        plus.setBackgroundResource(R.color.colorControlChange);
-                        minus.setBackgroundResource(R.color.colorControlChange);*/
-                    }
-
-                    //EnableProgramButton(true, true);
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    plus.setPressed(false);
+        plus.setOnTouchListener((view12, motionEvent) -> {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                plus.setPressed(true);
+                if (mAmplitudePos < 42) {
+                    mAmplitudePos += 1;
+                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                 }
-                return true;
+
+                WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
+                amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+
+                if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+
+                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+
+
+                    /*amp.setTextColor(Color.BLACK);
+                    plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
+                    minus.setBackgroundResource(R.color.colorControlNoChange);*/
+                } else {
+                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+
+                    /*amp.setTextColor(Color.RED);
+                    plus.setBackgroundResource(R.color.colorControlChange);
+                    minus.setBackgroundResource(R.color.colorControlChange);*/
+                }
+
+                //EnableProgramButton(true, true);
+            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                plus.setPressed(false);
             }
+            return true;
         });
 
-        minus.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    minus.setPressed(true);
-                    if (mAmplitudePos > 0) {
-                        mAmplitudePos -= 1;
-                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                    }
-
-                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                    TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
-                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
-
-                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                       /* amp.setTextColor(Color.BLACK);
-                        minus.setBackgroundResource(R.color.colorControlNoChange);
-                        plus.setBackgroundResource(R.color.colorControlNoChange);*/
-                    } else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                       /* amp.setTextColor(Color.RED);
-                        minus.setBackgroundResource(R.color.colorControlChange);
-                        plus.setBackgroundResource(R.color.colorControlChange);*/
-                    }
-
-                    //EnableProgramButton(true, true);
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    minus.setPressed(false);
+        minus.setOnTouchListener((view1, motionEvent) -> {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                minus.setPressed(true);
+                if (mAmplitudePos > 0) {
+                    mAmplitudePos -= 1;
+                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                 }
-                return true;
+
+                WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
+                amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+
+                if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                   /* amp.setTextColor(Color.BLACK);
+                    minus.setBackgroundResource(R.color.colorControlNoChange);
+                    plus.setBackgroundResource(R.color.colorControlNoChange);*/
+                } else {
+                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                   /* amp.setTextColor(Color.RED);
+                    minus.setBackgroundResource(R.color.colorControlChange);
+                    plus.setBackgroundResource(R.color.colorControlChange);*/
+                }
+
+                //EnableProgramButton(true, true);
+            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                minus.setPressed(false);
             }
+            return true;
         });
     }
 
@@ -801,17 +744,14 @@ public class ItnsFragment extends Fragment {
                 alertDialog.setTitle(getString(R.string.itns_newitns_title_msg));
                 alertDialog.setMessage(getString(R.string.itns_newitns_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        SetChangedParametersEnable(true, true);
-                        EnableInterrogateButton(true, true);
-                        EnableProgramButton(false, true);
-                        EnableStimTestButton(true);
-                        /*Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
-                        gp.setVisibility(View.GONE);*/
-                    }
+                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    SetChangedParametersEnable(true, true);
+                    EnableInterrogateButton(true, true);
+                    EnableProgramButton(false, true);
+                    EnableStimTestButton(true);
+                    /*Group gp = Objects.requireNonNull(getView()).findViewById(R.id.ghITNS);
+                    gp.setVisibility(View.GONE);*/
                 });
                 mAlertDialog = alertDialog.create();
                 mAlertDialog.setCancelable(false);
@@ -825,15 +765,12 @@ public class ItnsFragment extends Fragment {
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
                 alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        SetChangedParametersEnable(true, true);
-                        EnableInterrogateButton(true, true);
-                        EnableProgramButton(true, true);
-                        EnableStimTestButton(true);
-                    }
+                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    SetChangedParametersEnable(true, true);
+                    EnableInterrogateButton(true, true);
+                    EnableProgramButton(true, true);
+                    EnableStimTestButton(true);
                 });
                 mAlertDialog = alertDialog.create();
             } else {

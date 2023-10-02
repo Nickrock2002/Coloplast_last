@@ -443,14 +443,6 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().post(itnsUpdateAmpEvent);
     }
 
-    public void EnableTabs(boolean enable) {
-//        LinearLayout tabStrip = ((LinearLayout) mTabLayout.getChildAt(0));
-//        tabStrip.setEnabled(false);
-//        for (int i = 0; i < tabStrip.getChildCount(); i++) {
-//            tabStrip.getChildAt(i).setClickable(enable);
-//        }
-    }
-
     private final DeviceCallback deviceCallback = new DeviceCallback() {
         @Override
         public void onDeviceConnected(BluetoothDevice device) {
