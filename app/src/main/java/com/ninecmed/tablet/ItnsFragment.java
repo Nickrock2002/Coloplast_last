@@ -91,20 +91,9 @@ public class ItnsFragment extends Fragment {
     private void InitializeInterrogateButton(View view) {
         final Button interrogate = view.findViewById(R.id.btItnsInterrogate);
         interrogate.setOnTouchListener((view1, motionEvent) -> {
-            // Even though the Interrogate button, and all other buttons are disabled
-            // in the StartProgressBar method by setting
-            // WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, several
-            // ACTION_DOWN events could occur before the window is deactivated.
-            // In order to prevent this, we'll add a flag, bTouch, that's set
-            // on the first touch and only cleared in the EndProgressBar method.
-            // The same steps are required for the Program button.
-            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN /*&& !bTouch*/) {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 interrogate.setPressed(true);
-                //bTouch = true;
-
                 mMainActivity.wandComm.Interrogate();
-                //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-                //StartProgressBar();
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 interrogate.setPressed(false);
             }
