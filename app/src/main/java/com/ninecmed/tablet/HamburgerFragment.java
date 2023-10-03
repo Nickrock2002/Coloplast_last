@@ -121,9 +121,70 @@ public class HamburgerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupCurrentData(view);
+    }
+
+    private void setupCurrentData(View view) {
+        //Date - time
         Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTime(mMainActivity.getTimeDifferenceMillis());
         tvDateVal.setText(dateTimePair.first);
         tvTimeVal.setText(dateTimePair.second);
+
+        // Model Num
+        TextView mn = view.findViewById(R.id.tv_itns_model_val);
+        String modelNum = WandData.GetModelNumber(view.getContext());
+        if (modelNum != null) {
+            mn.setText(modelNum);
+        } else {
+            mn.setText("_");
+        }
+
+        // Serial Num
+        TextView sn = view.findViewById(R.id.tv_itns_serial_val);
+        String serialNum = WandData.GetSerialNumber();
+        if (serialNum != null) {
+            sn.setText(serialNum);
+        } else {
+            sn.setText("_");
+        }
+
+        // Cell V
+        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+        String cellVoltage = WandData.GetCellV();
+        if (cellVoltage != null) {
+            cellv.setText(cellVoltage);
+        } else {
+            cellv.setText("_");
+        }
+
+        //RRT
+        TextView rrt = view.findViewById(R.id.tv_battery_replace_val);
+        String rrt_result = WandData.GetRRT(view.getContext());
+
+        if (rrt_result != null) {
+            if (rrt_result.equals(getString(R.string.all_yes)))
+                rrt.setText("NOT OK");
+            else
+                rrt.setText("OK");
+        } else {
+            rrt.setText("_");
+        }
+
+        // LEAD I
+        TextView leadi = view.findViewById(R.id.tv_lead_i_val);
+        if (WandData.GetLeadI() == 0.0f) {
+            leadi.setText("_");
+        } else {
+            leadi.setText("" + WandData.GetLeadI() + "mA");
+        }
+
+        // LEAD R
+        TextView leadr = view.findViewById(R.id.tv_lead_r_val);
+        if (WandData.GetLeadR() == 0f) {
+            leadr.setText("_");
+        } else {
+            leadr.setText("" + WandData.GetLeadR() + "Ohms");
+        }
     }
 
     @Override
@@ -231,10 +292,14 @@ public class HamburgerFragment extends Fragment {
             TextView rrt = view.findViewById(R.id.tv_battery_replace_val);
             String rrt_result = WandData.GetRRT(view.getContext());
 
-            if(rrt_result == getString(R.string.all_yes))
-                rrt.setText("NOT OK");
-            else
-                rrt.setText("OK");
+            if (rrt_result != null) {
+                if (rrt_result.equals(getString(R.string.all_yes)))
+                    rrt.setText("NOT OK");
+                else
+                    rrt.setText("OK");
+            } else {
+                rrt.setText("_");
+            }
 
             TextView leadi = view.findViewById(R.id.tv_lead_i_val);
             leadi.setText("" + WandData.GetLeadI() + "mA");

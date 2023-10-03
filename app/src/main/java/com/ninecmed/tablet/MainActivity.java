@@ -654,27 +654,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO: Imp call this when we want to set Program ITNS from Program therapy.
-    public void showProgramItnsDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_program_itns);
-
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
-        btnConfirm.setOnClickListener(v -> {
-        });
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
-    }
-
-    //TODO: Imp call this when we want to set Program ITNS from Program therapy.
     public void showProgramItnsSuccessDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
