@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_top_container"
@@ -20,7 +20,7 @@
             android:drawableStart="@drawable/ic_error"
             android:drawablePadding="10dp"
             android:padding="32dp"
-            android:text="Implant Serial Number Mismatch"
+            android:text="@string/implant_serial_number_mismatch"
             android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -30,46 +30,58 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/tv_reset_counter"
+        android:id="@+id/tv_sub_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="64dp"
-        android:layout_marginTop="32dp"
-        android:text="Attempting to program an implant with an incorrect serial number"
+        android:layout_marginTop="48dp"
+        android:text="@string/attempting_to_program_an_implant_with_an_incorrect_serial_number"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
     <TextView
-        android:id="@+id/tv_lead_r"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="64dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:textAlignment="center"
-        android:text="Re-Interrogate the INTIBIA ITNS"
+        android:text="@string/re_interrogate_the_intibia_itns"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_sub_1" />
 
-    <Button
-        android:id="@+id/btn_confirm_date"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="18dp"
-        android:background="@drawable/rounded_corners_button"
-        android:text="Confirm"
-        android:textAllCaps="false"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="10sp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btn_confirm_mismatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="18dp"
+            android:background="@drawable/rounded_corners_button"
+            android:paddingHorizontal="40dp"
+            android:text="@string/confirm"
+            android:textAllCaps="false"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
