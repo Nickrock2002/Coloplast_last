@@ -5,10 +5,7 @@ import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -24,10 +21,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
@@ -72,6 +67,7 @@ public class ExternalFragment extends Fragment {
         super.onDetach();
         EventBus.getDefault().unregister(this);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
@@ -81,12 +77,6 @@ public class ExternalFragment extends Fragment {
         InitializeAmplitudeButton(view);
         initializeTitle(view);
         initializeLeadRWarnButton(view);
-
-
-        // Must redraw the icon for this fragment and not for the itns fragment.
-        // Not sure why since both imageviews are visible.
-        /*ImageView iv = view.findViewById(R.id.ivExternalLink);
-        iv.setImageResource(R.drawable.ic_link_off);*/
 
         mMainActivity = (MainActivity) getActivity();
         return view;
@@ -121,7 +111,7 @@ public class ExternalFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
-                        if(mNow + 500 < System.currentTimeMillis()) {
+                        if (mNow + 500 < System.currentTimeMillis()) {
                             stimulate.setPressed(true);
                             mMainActivity.wandComm.SetStimulationExt(true);
                             stimulate.setText("Stimulation Active");
@@ -129,49 +119,16 @@ public class ExternalFragment extends Fragment {
 
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
-
-                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
-                            leadi.setText(WandData.GetLeadI());
-
-                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());*/
-                            // Disable changed parameters during test stim. Only re-enable once
-                            // job is completed. Even though controls are disabled, don't change
-                            // alpha, meaning don't gray out the controls, otherwise it appears
-                            // strange.
-                            //SetChangedParametersEnable(false, false);
-                            // Also, don't update alpha for the program and interrogate
-                            // buttons either, otherwise pressing the test stim button
-                            // would cause the program and interrogate button to go grey. Since
-                            // this isn't consistent with what we do when the interrogate or
-                            // program button is pressed - we decided to disable other telemetry
-                            // controls when a telemetry command is in progress, but without changing
-                            // the appearance.
-                            //EnableInterrogateButton(false, false);
-                            //EnableProgramButton(false, false);
-                            //StartStimProgressBar();
-                            //mMainActivity.EnableTabs(false);
                         }
                         break;
 
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
-                        // Only execute code on up/cancel when mStimEnabled is true,
-                        // otherwise this means that the user pressed the down key too
-                        // quickly and when he let's go, the motion event causes SetTestStimulation
-                        // to be executed again even though it wasn't started. This causes an
-                        // unnecessary beep as well.
-                        if(mStimEnabled) {
+                        if (mStimEnabled) {
                             stimulate.setPressed(false);
-                            stimulate.setText("Hold to deliver neurostimulation");
-                            //stimulate.setEnabled(false);
-                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                            // Set delay to 1500 to be the same delay as ExternalFragment
+                            stimulate.setText(R.string.hold_to_deliver_neurostimulation);
                             if (mNow + 1500 < System.currentTimeMillis()) {
                                 mMainActivity.wandComm.SetStimulationExt(false);
-
-                                //StopStimProgressBar();
-                                //MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 mStimEnabled = false;
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
@@ -188,8 +145,6 @@ public class ExternalFragment extends Fragment {
         @Override
         public void run() {
             mMainActivity.wandComm.SetStimulationExt(false);
-            MakeTone(ToneGenerator.TONE_PROP_NACK);
-            //StopStimProgressBar();
             mStimEnabled = false;
         }
     };
@@ -206,7 +161,6 @@ public class ExternalFragment extends Fragment {
                     plus.setPressed(true);
                     if (mAmplitudePos < 42) {
                         mAmplitudePos += 1;
-                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
@@ -226,7 +180,6 @@ public class ExternalFragment extends Fragment {
                     minus.setPressed(true);
                     if (mAmplitudePos > 0) {
                         mAmplitudePos -= 1;
-                        //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
@@ -294,19 +247,15 @@ public class ExternalFragment extends Fragment {
     @SuppressLint("DefaultLocale")
     public void UIUpdate(boolean success) {
 
-        if(mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
-            // Re-enable the test stim button) only when UIUpdate is called -
-            // meaning that the state machine has finished its tasks
-            //SetAmplitudeParameterEnabled(true, false);
-            Button stimulate = Objects.requireNonNull(getView()).findViewById(R.id.btExternalStartStim);
+        if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
+            Button stimulate = requireView().findViewById(R.id.btExternalStartStim);
             stimulate.setEnabled(true);
         }
 
-        if(success) {
-            TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvExternalAmplitude);
+        if (success) {
+            TextView amp = requireView().findViewById(R.id.tvExternalAmplitude);
             amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
-        }
-        else {
+        } else {
             mMainActivity.showWandTabCommunicationIssueDialog();
         }
     }
@@ -341,43 +290,5 @@ public class ExternalFragment extends Fragment {
             tvLeadR.setText(R.string.ok);
             btnLeadRWarn.setVisibility(View.GONE);
         }
-    }
-
-    private void MakeTone(int sound) {
-        ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-        tone.startTone(sound,150);
-        long now = System.currentTimeMillis();
-        while((System.currentTimeMillis() - now) < 150);
-        tone.release();
-    }
-
-    private void StartProgressBar() {
-        ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbExternalStim);
-        progressBar.setVisibility(View.VISIBLE);
-
-        TextView tv= getView().findViewById(R.id.tvExternalStimProgress);
-        tv.setVisibility((View.VISIBLE));
-    }
-
-    private void StopProgressBar() {
-        ProgressBar progressBar = Objects.requireNonNull(getView()).findViewById(R.id.pbExternalStim);
-        progressBar.setVisibility(View.INVISIBLE);
-
-        TextView tv= getView().findViewById(R.id.tvExternalStimProgress);
-        tv.setVisibility((View.INVISIBLE));
-    }
-
-    private void SetAmplitudeParameterEnabled(boolean enable, boolean change_alpha) {
-        ImageButton minus = Objects.requireNonNull(getView()).findViewById(R.id.ibExternalMinus);
-        minus.setEnabled(enable);
-        if(change_alpha) minus.setAlpha(enable ? 1f : 0.5f);
-
-        ImageButton plus = getView().findViewById(R.id.ibExternalPlus);
-        plus.setEnabled(enable);
-        if(change_alpha) plus.setAlpha(enable ? 1f : 0.5f);
-
-        TextView amp = getView().findViewById(R.id.tvExternalAmplitude);
-        amp.setEnabled(enable);
-        if(change_alpha) amp.setAlpha(enable ? 1f : 0.5f);
     }
 }

@@ -50,7 +50,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class ProgramTherapyFragment extends Fragment {
-    private static final String TAG = "ItnsFragment";
+    private static final String TAG = "ProgramTherapyFragment";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 0;
     private boolean bTouch = false;
