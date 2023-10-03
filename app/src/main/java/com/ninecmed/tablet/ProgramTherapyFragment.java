@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -22,13 +21,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.dialogues.AmplitudeDialogue;
@@ -65,6 +63,7 @@ public class ProgramTherapyFragment extends Fragment {
     Button btnFrequencyVal;
     Button btnDayDateVal;
     Button btnTimeOfDayVal;
+    Button btnProgram;
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
@@ -75,7 +74,7 @@ public class ProgramTherapyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_program_therapy, container, false);
 
         initializeInterrogateButton(view);
-        InitializeProgramButton(view);
+        initializeProgramButton(view);
 
         setUpRRTButtonClick(view);
         setUpLeadRButtonClick(view);
@@ -115,7 +114,7 @@ public class ProgramTherapyFragment extends Fragment {
         dialogue.show();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "DefaultLocale"})
     private void setUpAmplitudeButtonClick(View rootView) {
         btnAmplitudeVal = rootView.findViewById(R.id.btn_amplitude_val);
         btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
@@ -135,15 +134,14 @@ public class ProgramTherapyFragment extends Fragment {
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.BLACK);
                     } else {
                         mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.RED);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minusButton.setPressed(false);
                     Drawable drawable = (Drawable) minusButton.getBackground().mutate();
-                    drawable.setTint(getResources().getColor(R.color.colorBaseDeepBlue));
+
+                    drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 }
                 return true;
             });
@@ -161,15 +159,13 @@ public class ProgramTherapyFragment extends Fragment {
 
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.BLACK);
                     } else {
                         mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                        amp.setTextColor(Color.RED);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
                     Drawable drawable = (Drawable) plusButton.getBackground().mutate();
-                    drawable.setTint(getResources().getColor(R.color.colorBaseDeepBlue));
+                    drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 }
                 return true;
             });
@@ -209,6 +205,8 @@ public class ProgramTherapyFragment extends Fragment {
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
+                            dialogue.getConfirmButtonRef().setClickable(true);
+                            dialogue.getConfirmButtonRef().setEnabled(true);
                         }
                         break;
                 }
@@ -220,7 +218,7 @@ public class ProgramTherapyFragment extends Fragment {
             dialogue.setConfirmButtonListener(confirmView -> {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
                 Drawable drawable = (Drawable) amplitudeButton.getBackground().mutate();
-                drawable.setTint(getResources().getColor(R.color.colorBaseDeepBlue));
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
             });
             dialogue.show();
@@ -338,6 +336,10 @@ public class ProgramTherapyFragment extends Fragment {
                         time.setClickable(false);
                     }
                 }
+
+                Drawable drawable = (Drawable) btnFrequencyVal.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+
                 dialogue.dismiss();
             });
             dialogue.setCheckedChangeListener((group, checkedId) -> {
@@ -387,7 +389,11 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.AddProgramChanges(WandComm.changes.DATE);
                 }
                 btnDayDateVal.setText(formattedDate);
+
+                Drawable drawable = (Drawable) btnDayDateVal.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
+
             });
             dialogue.show();
         });
@@ -433,10 +439,17 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
                 }
 
+                Drawable drawable = (Drawable) btnTimeOfDayVal.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
             });
             dialogue.show();
         });
+    }
+// TODO right proper logic for this function
+    private void enableProgramButton() {
+        btnProgram.setClickable(true);
+        btnProgram.setEnabled(true);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -456,9 +469,9 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeProgramButton(View view) {
-        Button program = view.findViewById(R.id.btn_program);
-        program.setOnTouchListener((view1, motionEvent) -> {
+    private void initializeProgramButton(View view) {
+        btnProgram = view.findViewById(R.id.btn_program);
+        btnProgram.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
                 bTouch = true;
                 Calendar c = Calendar.getInstance();
@@ -471,20 +484,20 @@ public class ProgramTherapyFragment extends Fragment {
                         // Don't allow therapy to be set within 1 hour of now because only a
                         // magnet could stop therapy, telemetry can't interrupt therapy for
                         // the model 2.
-                        ShowDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                        showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
                         return true;
                     } else if (future > (now + 1000L * 3600L * 24L * 31L)) {
-                        ShowDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
+                        showDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
                         return true;
                     }
                 }
                 // Only check date range of one week for Model 1
                 else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.GetModelNumber() == 1) {
                     if (future < now) {
-                        ShowDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                        showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
                         return true;
                     } else if (future > (now + 1000 * 3600 * 24 * 7)) {
-                        ShowDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
+                        showDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
                         return true;
                     }
                 }
@@ -500,7 +513,7 @@ public class ProgramTherapyFragment extends Fragment {
         });
     }
 
-    private void ShowDateTimeMsgDialog(String string) {
+    private void showDateTimeMsgDialog(String string) {
         View view = getView();
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
@@ -522,7 +535,7 @@ public class ProgramTherapyFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.ITNS) {
-            UIUpdate(event.isUiUpdateSuccess());
+            updateUI(event.isUiUpdateSuccess());
         }
     }
 
@@ -559,7 +572,7 @@ public class ProgramTherapyFragment extends Fragment {
         requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    public void UIUpdate(boolean success) {
+    public void updateUI(boolean success) {
         View view = getView();
         if (success & view != null) {
             if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -592,7 +605,7 @@ public class ProgramTherapyFragment extends Fragment {
                 String toolFrequency = WandData.GetTherapy(requireContext());
                 btnFrequencyVal.setText(toolFrequency);
 
-                if(toolFrequency!= null && !toolFrequency.isEmpty()) {
+                if (toolFrequency != null && !toolFrequency.isEmpty()) {
                     btnFrequencyVal.setEnabled(true);
                     btnFrequencyVal.setClickable(true);
                 }
@@ -706,9 +719,7 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_reset_counter);
 
         Button btnResetCounter = (Button) dialog.findViewById(R.id.btn_reset_counter_confirm);
-        btnResetCounter.setOnClickListener(v -> {
-            mMainActivity.wandComm.ClearResetCounter();
-        });
+        btnResetCounter.setOnClickListener(v -> mMainActivity.wandComm.ClearResetCounter());
 
         TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
         tvCount.setText("Implant Reset Counter: " + count);

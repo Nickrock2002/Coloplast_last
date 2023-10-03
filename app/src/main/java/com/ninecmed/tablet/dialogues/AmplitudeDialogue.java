@@ -96,4 +96,12 @@ public class AmplitudeDialogue extends Dialog {
     public void setConfirmButtonListener(View.OnClickListener onClickListener) {
         this.confirmButtonListener = onClickListener;
     }
+
+    public Button getConfirmButtonRef() {
+        return (Button) findViewById(R.id.bt_confirm);
+    }
+
+    public void get(View.OnClickListener onClickListener) {
+        this.confirmButtonListener = onClickListener;
+    }
 }
