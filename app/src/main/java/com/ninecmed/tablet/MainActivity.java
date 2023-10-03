@@ -311,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
             mBTDevice = bt;
         }
 
-        //TODO remove this when publishing
         if (mBTDevice != null) mBluetooth.connectToDevice(mBTDevice);
 
         mRunBT = true;

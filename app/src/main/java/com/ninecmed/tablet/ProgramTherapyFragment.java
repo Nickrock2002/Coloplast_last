@@ -50,7 +50,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class ProgramTherapyFragment extends Fragment {
-    private static final String TAG = "ItnsFragment";
+    private static final String TAG = "ProgramTherapyFragment";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 0;
     private boolean bTouch = false;
@@ -569,7 +569,7 @@ public class ProgramTherapyFragment extends Fragment {
         }
         setTheSystemButtonsHidden(dialog);
 
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }

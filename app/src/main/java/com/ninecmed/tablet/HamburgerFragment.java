@@ -227,10 +227,11 @@ public class HamburgerFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguages.setAdapter(adapter);
         spinnerLanguages.setSelection(1);
+        spinnerLanguages.setEnabled(false);
         spinnerLanguages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0){
+                if (i == 0) {
                     spinnerLanguages.setSelection(1);
                 }
             }
