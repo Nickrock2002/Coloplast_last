@@ -19,7 +19,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -178,7 +177,7 @@ public class ItnsFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.ITNS) {
-            UIUpdate(event.isUiUpdateSuccess());
+            updateItnsUI(event.isUiUpdateSuccess());
         }
     }
 
@@ -258,7 +257,7 @@ public class ItnsFragment extends Fragment {
         }
     }
 
-    public void UIUpdate(boolean success) {
+    public void updateItnsUI(boolean success) {
         View view = getView();
 
         if (success) {

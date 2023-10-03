@@ -273,11 +273,11 @@ public class HamburgerFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.ITNS) {
-            updateUI(event.isUiUpdateSuccess());
+            updateHamburgerUI(event.isUiUpdateSuccess());
         }
     }
 
-    public void updateUI(boolean success) {
+    public void updateHamburgerUI(boolean success) {
         View view = getView();
 
         if (success) {

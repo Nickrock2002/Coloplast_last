@@ -221,9 +221,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        DashboardFragment dashboardFragment = new DashboardFragment();
-        dashboardFragment.setClinicVisit(isClinicVisit);
-        fragmentTransaction.replace(R.id.fl_fragment, dashboardFragment);
+        SurgeryFragment surgeryFragment = new SurgeryFragment();
+        surgeryFragment.setClinicVisit(isClinicVisit);
+        fragmentTransaction.replace(R.id.fl_fragment, surgeryFragment);
 
         fragmentTransaction.commit();
     }
