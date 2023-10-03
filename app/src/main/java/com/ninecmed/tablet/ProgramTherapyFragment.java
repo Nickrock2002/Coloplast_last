@@ -36,6 +36,7 @@ import com.ninecmed.tablet.dialogues.LeadRDialogue;
 import com.ninecmed.tablet.dialogues.ProgramTherapyDayDateDialogue;
 import com.ninecmed.tablet.dialogues.ProgramTherapyTimeOfDayDialogue;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
+import com.ninecmed.tablet.events.ProgramSuccessEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -537,6 +538,42 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.show();
     }
 
+    private void showProgramSuccessDialog() {
+        View rootView = getView();
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_program_itns_success);
+
+        Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
+        tvAmpVal.setText(WandData.GetAmplitude());
+
+        TextView tvFreqVal = (TextView) dialog.findViewById(R.id.tv_freq_val);
+        tvFreqVal.setText(WandData.GetTherapy(requireContext()));
+
+        TextView tvDayVal = (TextView) dialog.findViewById(R.id.tv_start_day_date_val);
+        if (rootView != null) {
+            Button dateBtn = (Button) rootView.findViewById(R.id.btn_start_day);
+            tvDayVal.setText(dateBtn.getText().toString());
+        }
+
+        TextView tvTimeVal = dialog.findViewById(R.id.tv_time_val);
+        if (rootView != null) {
+            Button timeBtn = (Button) rootView.findViewById(R.id.btn_time_of_day);
+            tvTimeVal.setText(timeBtn.getText().toString());
+        }
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
     private void ShowDateTimeMsgDialog(String string) {
         View view = getView();
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
@@ -566,6 +603,11 @@ public class ProgramTherapyFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ItnsUpdateAmpEvent event) {
         UpdateAmplitude();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ProgramSuccessEvent event) {
+        showProgramSuccessDialog();
     }
 
     @Override
