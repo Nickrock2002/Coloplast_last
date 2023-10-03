@@ -36,6 +36,7 @@ import com.ninecmed.tablet.dialogues.LeadRDialogue;
 import com.ninecmed.tablet.dialogues.ProgramTherapyDayDateDialogue;
 import com.ninecmed.tablet.dialogues.ProgramTherapyTimeOfDayDialogue;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
+import com.ninecmed.tablet.events.ProgramSuccessEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -474,43 +475,118 @@ public class ProgramTherapyFragment extends Fragment {
         btnProgram.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
                 bTouch = true;
-                Calendar c = Calendar.getInstance();
-                long future = WandData.dateandtime[WandData.FUTURE];
-                long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-
-                // Check date range for weekly, fortnightly and monthly therapy for Model 2
-                if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.GetModelNumber() == 2) {
-                    if (future < (now + 1000L * 3600L)) {
-                        // Don't allow therapy to be set within 1 hour of now because only a
-                        // magnet could stop therapy, telemetry can't interrupt therapy for
-                        // the model 2.
-                        showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                        return true;
-                    } else if (future > (now + 1000L * 3600L * 24L * 31L)) {
-                        showDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
-                        return true;
-                    }
-                }
-                // Only check date range of one week for Model 1
-                else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.GetModelNumber() == 1) {
-                    if (future < now) {
-                        showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                        return true;
-                    } else if (future > (now + 1000 * 3600 * 24 * 7)) {
-                        showDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
-                        return true;
-                    }
-                }
-
-                if (mMainActivity.wandComm.AnyAmplitudeChanges()) {
-                    WandData.InvalidateStimLeadI();
-                }
-
-                mMainActivity.wandComm.Program();
-//                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+                showProgramConfirmationDialog();
             }
             return true;
         });
+    }
+
+    public void showProgramConfirmationDialog() {
+        View rootView = getView();
+
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_program_itns);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(v -> {
+            Calendar c = Calendar.getInstance();
+            long future = WandData.dateandtime[WandData.FUTURE];
+            long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
+
+            // Check date range for weekly, fortnightly and monthly therapy for Model 2
+            if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.GetModelNumber() == 2) {
+                if (future < (now + 1000L * 3600L)) {
+                    // Don't allow therapy to be set within 1 hour of now because only a
+                    // magnet could stop therapy, telemetry can't interrupt therapy for
+                    // the model 2.
+                    showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                    return;
+                } else if (future > (now + 1000L * 3600L * 24L * 31L)) {
+                    showDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
+                    return;
+                }
+            }
+            // Only check date range of one week for Model 1
+            else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.GetModelNumber() == 1) {
+                if (future < now) {
+                    showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                    return;
+                } else if (future > (now + 1000 * 3600 * 24 * 7)) {
+                    showDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
+                    return;
+                }
+            }
+
+            if (mMainActivity.wandComm.AnyAmplitudeChanges()) {
+                WandData.InvalidateStimLeadI();
+            }
+            mMainActivity.wandComm.Program();
+        });
+
+        TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
+        tvAmpVal.setText(WandData.GetAmplitude());
+
+        TextView tvFreqVal = (TextView) dialog.findViewById(R.id.tv_freq_val);
+        tvFreqVal.setText(WandData.GetTherapy(requireContext()));
+
+        TextView tvDayVal = (TextView) dialog.findViewById(R.id.tv_start_day_date_val);
+        if (rootView != null) {
+            Button dateBtn = (Button) rootView.findViewById(R.id.btn_start_day);
+            tvDayVal.setText(dateBtn.getText().toString());
+        }
+
+        TextView tvTimeVal = dialog.findViewById(R.id.tv_time_val);
+        if (rootView != null) {
+            Button timeBtn = (Button) rootView.findViewById(R.id.btn_time_of_day);
+            tvTimeVal.setText(timeBtn.getText().toString());
+        }
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    private void showProgramSuccessDialog() {
+        View rootView = getView();
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_program_itns_success);
+
+        Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
+        tvAmpVal.setText(WandData.GetAmplitude());
+
+        TextView tvFreqVal = (TextView) dialog.findViewById(R.id.tv_freq_val);
+        tvFreqVal.setText(WandData.GetTherapy(requireContext()));
+
+        TextView tvDayVal = (TextView) dialog.findViewById(R.id.tv_start_day_date_val);
+        if (rootView != null) {
+            Button dateBtn = (Button) rootView.findViewById(R.id.btn_start_day);
+            tvDayVal.setText(dateBtn.getText().toString());
+        }
+
+        TextView tvTimeVal = dialog.findViewById(R.id.tv_time_val);
+        if (rootView != null) {
+            Button timeBtn = (Button) rootView.findViewById(R.id.btn_time_of_day);
+            tvTimeVal.setText(timeBtn.getText().toString());
+        }
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
     }
 
     private void showDateTimeMsgDialog(String string) {
@@ -542,6 +618,11 @@ public class ProgramTherapyFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ItnsUpdateAmpEvent event) {
         UpdateAmplitude();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ProgramSuccessEvent event) {
+        showProgramSuccessDialog();
     }
 
     @Override

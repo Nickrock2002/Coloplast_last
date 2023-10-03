@@ -166,7 +166,11 @@ class WandData {
 
     @SuppressLint("DefaultLocale")
     static String GetSerialNumber() {
-        return String.format("%05d", mSerialNumber[CURRENT]);
+        if (mSerialNumber[CURRENT] != 0){
+            return String.format("%05d", mSerialNumber[CURRENT]);
+        }else {
+            return null;
+        }
     }
 
     static String GetModelNumber(Context context) {

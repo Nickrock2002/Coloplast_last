@@ -2,6 +2,11 @@ package com.ninecmed.tablet;
 
 import android.os.Handler;
 import android.util.Log;
+
+import com.ninecmed.tablet.events.ProgramSuccessEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Calendar;
 import me.aflak.bluetooth.Bluetooth;
 
@@ -435,6 +440,8 @@ class WandComm {
                 }
                 else if(mCurrentJob == jobs.PROGRAM) {
                     WandData.ProgramSuccessful();
+                    ProgramSuccessEvent programSuccessEvent = new ProgramSuccessEvent();
+                    EventBus.getDefault().post(programSuccessEvent);
                 }
                 else if(mCurrentJob == jobs.SETRESETCOUNTER) {
                     WandData.ResetSuccessful();
