@@ -45,7 +45,6 @@ public class ItnsFragment extends Fragment {
     private boolean mStimEnabled = false;
     private AlertDialog mAlertDialog;
     private Button btnLeadRWarn;
-    private boolean bTouch = false;
 
     private TextView tvLeadR;
     private ImageButton plus;
@@ -70,9 +69,9 @@ public class ItnsFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.itns_fragment_new, container, false);
 
-        InitializeStimulationButton(view);
-        InitializeInterrogateButton(view);
-        InitializeAmpControls(view);
+        initializeStimulationButton(view);
+        initializeInterrogateButton(view);
+        initializeAmpControls(view);
         initializeLeadRWarnButton(view);
 
         mMainActivity = (MainActivity) getActivity();
@@ -88,7 +87,7 @@ public class ItnsFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeInterrogateButton(View view) {
+    private void initializeInterrogateButton(View view) {
         final Button interrogate = view.findViewById(R.id.btItnsInterrogate);
         interrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
@@ -103,7 +102,7 @@ public class ItnsFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeStimulationButton(View view) {
+    private void initializeStimulationButton(View view) {
         stimulate = view.findViewById(R.id.btItnsStartStim);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -185,11 +184,11 @@ public class ItnsFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ItnsUpdateAmpEvent event) {
-        UpdateAmplitude();
+        updateAmplitude();
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeAmpControls(View view) {
+    private void initializeAmpControls(View view) {
         plus = view.findViewById(R.id.ibItnsPlus);
         minus = view.findViewById(R.id.ibItnsMinus);
 
@@ -203,30 +202,18 @@ public class ItnsFragment extends Fragment {
                 plus.setPressed(true);
                 if (mAmplitudePos < 42) {
                     mAmplitudePos += 1;
-                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                 }
 
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
+                TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
                 amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
 
                     mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-
-
-                    /*amp.setTextColor(Color.BLACK);
-                    plus.setBackgroundResource(mAmplitudePosR.color.colorControlNoChange);
-                    minus.setBackgroundResource(R.color.colorControlNoChange);*/
                 } else {
                     mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-
-                    /*amp.setTextColor(Color.RED);
-                    plus.setBackgroundResource(R.color.colorControlChange);
-                    minus.setBackgroundResource(R.color.colorControlChange);*/
                 }
-
-                //EnableProgramButton(true, true);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 plus.setPressed(false);
             }
@@ -238,26 +225,18 @@ public class ItnsFragment extends Fragment {
                 minus.setPressed(true);
                 if (mAmplitudePos > 0) {
                     mAmplitudePos -= 1;
-                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                 }
 
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                TextView amp = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsAmplitude);
+                TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
                 amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                     mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
-                   /* amp.setTextColor(Color.BLACK);
-                    minus.setBackgroundResource(R.color.colorControlNoChange);
-                    plus.setBackgroundResource(R.color.colorControlNoChange);*/
                 } else {
                     mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
-                   /* amp.setTextColor(Color.RED);
-                    minus.setBackgroundResource(R.color.colorControlChange);
-                    plus.setBackgroundResource(R.color.colorControlChange);*/
                 }
 
-                //EnableProgramButton(true, true);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 minus.setPressed(false);
             }
@@ -426,34 +405,12 @@ public class ItnsFragment extends Fragment {
         dialog.show();
     }
 
-    private void msg(String s) {
-        Toast.makeText(requireActivity().getApplicationContext(), s, Toast.LENGTH_LONG).show();
-    }
-
-    public void UpdateAmplitude() {
+    public void updateAmplitude() {
         View view = getView();
 
         TextView amp = view.findViewById(R.id.tvItnsAmplitude);
         amp.setText(WandData.GetAmplitude());
         amp.setTextColor(Color.BLACK);
         mAmplitudePos = WandData.GetAmplitudePos();
-    }
-
-    private void EnableProgramButton(boolean enable, boolean change_alpha) {
-        Button program = requireView().findViewById(R.id.btItnsProgram);
-
-        if (enable && mMainActivity.wandComm.AnyProgramChanges()) {
-            program.setEnabled(true);
-            if (change_alpha) program.setAlpha(1f);
-        } else {
-            program.setEnabled(false);
-            if (change_alpha) program.setAlpha(0.5f);
-        }
-    }
-
-    private void EnableStimTestButton(boolean enable) {
-        Button test = requireView().findViewById(R.id.btItnsStartStim);
-        test.setEnabled(enable);
-        test.setAlpha(enable ? 1f : 0.5f);
     }
 }

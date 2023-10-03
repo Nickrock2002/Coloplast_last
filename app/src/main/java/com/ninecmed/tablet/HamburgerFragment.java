@@ -50,7 +50,7 @@ public class HamburgerFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.fragment_hamburger, container, false);
 
-        InitializeInterrogateButton(view);
+        initializeInterrogateButton(view);
         initializeCloseAppButton(view);
         initializeAddress(view);
 
@@ -256,7 +256,7 @@ public class HamburgerFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeInterrogateButton(View view) {
+    private void initializeInterrogateButton(View view) {
         final Button interrogate = view.findViewById(R.id.btn_interrogate);
         interrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
@@ -273,11 +273,11 @@ public class HamburgerFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.ITNS) {
-            UIUpdate(event.isUiUpdateSuccess());
+            updateUI(event.isUiUpdateSuccess());
         }
     }
 
-    public void UIUpdate(boolean success) {
+    public void updateUI(boolean success) {
         View view = getView();
 
         if (success) {

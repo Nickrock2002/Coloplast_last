@@ -57,7 +57,7 @@ public class ExternalFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.EXTERNAL) {
-            UIUpdate(event.isUiUpdateSuccess());
+            updateUI(event.isUiUpdateSuccess());
             showLeadRWarningIfFound();
         }
     }
@@ -73,8 +73,8 @@ public class ExternalFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.implant_tunneling_fragment, container, false);
 
-        InitializeStimulationButton(view);
-        InitializeAmplitudeButton(view);
+        initializeStimulationButton(view);
+        initializeAmplitudeButton(view);
         initializeTitle(view);
         initializeLeadRWarnButton(view);
 
@@ -104,7 +104,7 @@ public class ExternalFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeStimulationButton(View view) {
+    private void initializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btExternalStartStim);
         stimulate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -131,7 +131,7 @@ public class ExternalFragment extends Fragment {
                                 mMainActivity.wandComm.SetStimulationExt(false);
                                 mStimEnabled = false;
                             } else {
-                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
+                                mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
                             }
                         }
                         break;
@@ -141,7 +141,7 @@ public class ExternalFragment extends Fragment {
         });
     }
 
-    private final Runnable HoldStimulation = new Runnable() {
+    private final Runnable holdStimulationRunnable = new Runnable() {
         @Override
         public void run() {
             mMainActivity.wandComm.SetStimulationExt(false);
@@ -150,7 +150,7 @@ public class ExternalFragment extends Fragment {
     };
 
     @SuppressLint("ClickableViewAccessibility")
-    private void InitializeAmplitudeButton(View view) {
+    private void initializeAmplitudeButton(View view) {
         final ImageButton plus = view.findViewById(R.id.ibExternalPlus);
         final ImageButton minus = view.findViewById(R.id.ibExternalMinus);
 
@@ -165,7 +165,7 @@ public class ExternalFragment extends Fragment {
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
 
-                    UIUpdate(true);
+                    updateUI(true);
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plus.setPressed(false);
                 }
@@ -184,7 +184,7 @@ public class ExternalFragment extends Fragment {
                     WandData.SetStimAmplitude(mAmplitudePos);
                     WandData.InvalidateStimExtLeadI();
 
-                    UIUpdate(true);
+                    updateUI(true);
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minus.setPressed(false);
                 }
@@ -210,7 +210,7 @@ public class ExternalFragment extends Fragment {
         }
     }
 
-    public void OnConnected() {
+    public void onConnected() {
         TextView tv = Objects.requireNonNull(getView()).findViewById(R.id.tvExternalBtStatus);
         tv.setText(getString(R.string.link_msg));
 
@@ -225,7 +225,7 @@ public class ExternalFragment extends Fragment {
         //SetAmplitudeParameterEnabled(true, true);
     }
 
-    public void OnDisconnected() {
+    public void onDisconnected() {
         /*if(mAlertDialog != null)
             mAlertDialog.dismiss();
 
@@ -245,7 +245,7 @@ public class ExternalFragment extends Fragment {
     }
 
     @SuppressLint("DefaultLocale")
-    public void UIUpdate(boolean success) {
+    public void updateUI(boolean success) {
 
         if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             Button stimulate = requireView().findViewById(R.id.btExternalStartStim);
