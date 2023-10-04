@@ -312,7 +312,7 @@
             android:background="@drawable/rounded_corner_button_dynamic"
             android:clickable="false"
             android:drawablePadding="5dp"
-            android:enabled="true"
+            android:enabled="false"
             android:text="@string/_1_5v"
             android:textAllCaps="false"
             android:textColor="@color/txt_programming_buttons"

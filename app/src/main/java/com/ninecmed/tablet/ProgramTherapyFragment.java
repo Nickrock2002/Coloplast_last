@@ -327,7 +327,7 @@ public class ProgramTherapyFragment extends Fragment {
                         btnTimeOfDayVal.setClickable(false);
                     }*/
                 }
-                if(WandData.therapy[WandData.CURRENT] != R.id.radio_off) {
+                if (WandData.therapy[WandData.CURRENT] != R.id.radio_off) {
                     enableDisableDayDateButton(false);
                     enableDisableTimeOfDayButton(false);
                     enableDisableProgramButton(true);
@@ -389,7 +389,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
                 btnDayDateVal.setText(formattedDate);
 
-                if(!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
+                if (!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
                     enableDisableProgramButton(true);
                 }
 
@@ -441,7 +441,7 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
                 }
 
-                if(!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
+                if (!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
                     enableDisableProgramButton(true);
                 }
 
@@ -804,12 +804,12 @@ public class ProgramTherapyFragment extends Fragment {
         btnResetCounter.setOnClickListener(v -> mMainActivity.wandComm.ClearResetCounter());
 
         TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
-        tvCount.setText("Implant Reset Counter: " + count);
+        tvCount.setText(getString(R.string.implant_reset_counter).concat(String.valueOf(count)));
 
         setTheSystemButtonsHidden(dialog);
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
