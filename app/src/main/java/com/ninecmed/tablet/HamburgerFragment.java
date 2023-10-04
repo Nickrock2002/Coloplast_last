@@ -226,8 +226,6 @@ public class HamburgerFragment extends Fragment {
                 R.array.languages, R.layout.change_language_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguages.setAdapter(adapter);
-        spinnerLanguages.setSelection(1);
-        spinnerLanguages.setEnabled(false);
         spinnerLanguages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -310,21 +308,8 @@ public class HamburgerFragment extends Fragment {
         }
         // Here's what happens on fail
         else {
-            AlertDialog mAlertDialog;
             if (WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_newitns_title_msg));
-                alertDialog.setMessage(getString(R.string.itns_newitns_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                mAlertDialog = alertDialog.create();
-                mAlertDialog.show();
+                mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
             if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -339,8 +324,7 @@ public class HamburgerFragment extends Fragment {
                         dialogInterface.dismiss();
                     }
                 });
-                mAlertDialog = alertDialog.create();
-                mAlertDialog.show();
+                alertDialog.show();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }

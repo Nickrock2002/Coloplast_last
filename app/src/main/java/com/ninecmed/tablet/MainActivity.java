@@ -718,6 +718,24 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void showSerialNumberMismatchWarnDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_serial_mismatch);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_mismatch);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
     public void showWandTabCommunicationIssueDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -757,7 +775,6 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    //TODO : Use this time in during program
     public long getTimeDifferenceMillis() {
         return timeDifferenceMillis;
     }
