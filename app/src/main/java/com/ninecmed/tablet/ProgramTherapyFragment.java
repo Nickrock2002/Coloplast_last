@@ -5,6 +5,7 @@ import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -728,21 +729,10 @@ public class ProgramTherapyFragment extends Fragment {
                 ResetChangedParameters();
                 checkForReset();
             }
-        } else {
-            // Here's what happens on fail
-            AlertDialog mAlertDialog;
-            if (mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_newitns_title_msg));
-                alertDialog.setMessage(getString(R.string.itns_newitns_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                });
-                mAlertDialog = alertDialog.create();
-                mAlertDialog.setCancelable(false);
-                mAlertDialog.show();
+        } // Here's what happens on fail
+        else {
+            if (WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
+                mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
             if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -751,31 +741,16 @@ public class ProgramTherapyFragment extends Fragment {
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
                 alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    // TODO enable interrogate & program button
+                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
                 });
-                mAlertDialog = alertDialog.create();
+                alertDialog.show();
             } else {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
-                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_retry), (dialogInterface, i) -> {
-                    if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.INTERROGATE)
-                        mMainActivity.wandComm.Interrogate();
-                    else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM)
-                        mMainActivity.wandComm.Program();
-                });
-                alertDialog.setNegativeButton(getString(R.string.all_cancel), (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    // TODO enable interrogate & program button
-                });
-                mAlertDialog = alertDialog.create();
+                mMainActivity.showWandTabCommunicationIssueDialog();
             }
-            mAlertDialog.setCancelable(false);
-            mAlertDialog.show();
         }
     }
 

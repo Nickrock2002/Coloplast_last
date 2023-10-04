@@ -42,7 +42,6 @@ public class ItnsFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
-    private AlertDialog mAlertDialog;
     private Button btnLeadRWarn;
 
     private TextView tvLeadR;
@@ -292,20 +291,7 @@ public class ItnsFragment extends Fragment {
         // Here's what happens on fail
         else {
             if (WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_newitns_title_msg));
-                alertDialog.setMessage(getString(R.string.itns_newitns_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                mAlertDialog = alertDialog.create();
-                mAlertDialog.setCancelable(false);
-                mAlertDialog.show();
+                mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
             if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -321,7 +307,7 @@ public class ItnsFragment extends Fragment {
                         dialogInterface.dismiss();
                     }
                 });
-                mAlertDialog = alertDialog.create();
+                alertDialog.show();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }
