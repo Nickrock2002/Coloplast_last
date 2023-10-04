@@ -313,7 +313,6 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                     // Else, therapy is off
                     else {
-
                         if (WandData.therapy[WandData.CURRENT] != R.id.radio_daily) {
                             //btnDayDateVal.setTextColor(Color.RED);
                             //btnDayDateVal.setBackgroundResource(R.color.colorControlChange);
@@ -446,19 +445,16 @@ public class ProgramTherapyFragment extends Fragment {
         btnProgram.setEnabled(enable);
     }
 
-    // TODO right proper logic for this function
     private void enableDisableFrequencyButton(boolean enable) {
         btnFrequencyVal.setClickable(enable);
         btnFrequencyVal.setEnabled(enable);
     }
 
-    // TODO right proper logic for this function
     private void enableDisableDayDateButton(boolean enable) {
         btnDayDateVal.setClickable(enable);
         btnDayDateVal.setEnabled(enable);
     }
 
-    // TODO right proper logic for this function
     private void enableDisableTimeOfDayButton(boolean enable) {
         btnTimeOfDayVal.setClickable(enable);
         btnTimeOfDayVal.setEnabled(enable);
@@ -696,7 +692,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
                     enableDisableFrequencyButton(true);
-                    if (implToolFrequency.equals("Off")) {
+                    if (implToolFrequency.equals(getString(R.string.off))) {
                         enableDisableDayDateButton(false);
                         enableDisableTimeOfDayButton(false);
                     } else {
