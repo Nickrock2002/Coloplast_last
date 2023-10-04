@@ -101,6 +101,14 @@ public class AmplitudeDialogue extends Dialog {
         return (Button) findViewById(R.id.bt_confirm);
     }
 
+    public ImageButton getPlusButtonRef() {
+        return (ImageButton) findViewById(R.id.ib_itns_plus);
+    }
+
+    public ImageButton getMinusButtonRef() {
+        return (ImageButton) findViewById(R.id.ib_itns_minus);
+    }
+
     public void get(View.OnClickListener onClickListener) {
         this.confirmButtonListener = onClickListener;
     }

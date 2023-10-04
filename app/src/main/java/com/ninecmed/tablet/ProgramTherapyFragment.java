@@ -205,6 +205,10 @@ public class ProgramTherapyFragment extends Fragment {
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
+                            Drawable drawablePlus = (Drawable) dialogue.getPlusButtonRef().getBackground().mutate();
+                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                            Drawable drawableMinus = (Drawable) dialogue.getMinusButtonRef().getBackground().mutate();
+                            drawableMinus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                             dialogue.getConfirmButtonRef().setClickable(true);
                             dialogue.getConfirmButtonRef().setEnabled(true);
                         }
@@ -248,13 +252,17 @@ public class ProgramTherapyFragment extends Fragment {
 
                     // Clear date and time...
                     WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
-                    Calendar c = Calendar.getInstance();
-                    c.setTimeInMillis(WandData.dateandtime[WandData.CURRENT]);
+//                    Calendar c = Calendar.getInstance();
+//                    c.setTimeInMillis(WandData.dateandtime[WandData.CURRENT]);
 
+//                    btnDayDateVal.setText(WandData.GetDate());
+//                    btnTimeOfDayVal.setText(WandData.GetTime());
 
-                    btnDayDateVal.setText(WandData.GetDate());
+                    /*
+                    This is old code which was running as per wand's model number.
+                    But this has been commented for future reference as currently only model 2 will be used
+
                     btnDayDateVal.setEnabled(true);
-
                     // Enable control if therapy is weekly for model 1
                     if (WandData.GetModelNumber() == 1)
                         btnDayDateVal.setClickable(WandData.therapy[WandData.CURRENT] == R.id.radio_weekly);
@@ -262,24 +270,23 @@ public class ProgramTherapyFragment extends Fragment {
                     else
                         btnDayDateVal.setClickable(WandData.therapy[WandData.FUTURE] == R.id.radio_daily || WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto);
 
-                    btnTimeOfDayVal.setText(WandData.GetTime());
                     btnTimeOfDayVal.setEnabled(true);
-
-                    // Enable control if therapy is enabled
-                    btnTimeOfDayVal.setClickable(WandData.therapy[WandData.CURRENT] != R.id.radio_off);
+//
+//                    // Enable control if therapy is enabled
+                    btnTimeOfDayVal.setClickable(WandData.therapy[WandData.CURRENT] != R.id.radio_off);*/
                 } else {
                     mMainActivity.wandComm.AddProgramChanges(WandComm.changes.THERAPY);
 
-                    Calendar c = Calendar.getInstance();
-                    long timeDifferenceMillis = mMainActivity.getTimeDifferenceMillis();
-                    c.setTimeInMillis(c.getTimeInMillis() + timeDifferenceMillis);
+//                    Calendar c = Calendar.getInstance();
+//                    long timeDifferenceMillis = mMainActivity.getTimeDifferenceMillis();
+//                    c.setTimeInMillis(c.getTimeInMillis() + timeDifferenceMillis);
 
-                    int modelNumber = WandData.GetModelNumber();
+                    /*
+                    This is old code which was running as per wand's model number.
+                    But this has been commented for future reference as currently only model 2 will be used
 
                     // If therapy set to daily for the model 1...
-                    if (WandData.therapy[WandData.FUTURE] == R.id.radio_daily && modelNumber == 1) {
-
-                        //btnDayDateVal.setBackgroundResource(R.color.colorControlNoChange);
+                    if (WandData.therapy[WandData.FUTURE] == R.id.radio_daily && WandData.GetModelNumber() == 1) {
                         btnDayDateVal.setText(R.string._3_dash);
                         btnDayDateVal.setEnabled(true);
                         btnDayDateVal.setClickable(false);
@@ -289,8 +296,7 @@ public class ProgramTherapyFragment extends Fragment {
                         btnTimeOfDayVal.setClickable(true);
                     }
                     // Else, therapy set to weekly for Model 1
-                    else if (WandData.therapy[WandData.FUTURE] == R.id.radio_weekly && modelNumber == 1) {
-
+                    else if (WandData.therapy[WandData.FUTURE] == R.id.radio_weekly && WandData.GetModelNumber() == 1) {
                         btnDayDateVal.setText(R.string._3_dash);
                         btnDayDateVal.setEnabled(true);
                         btnDayDateVal.setClickable(true);
@@ -300,7 +306,7 @@ public class ProgramTherapyFragment extends Fragment {
                         btnTimeOfDayVal.setClickable(true);
                     }
                     // Else, if therapy is set for weekly, fortnightly or monthly for Model 2
-                    else if ((WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto) && modelNumber == 2) {
+                    else if ((WandData.therapy[WandData.FUTURE] == R.id.radio_weekly || WandData.therapy[WandData.FUTURE] == R.id.radio_fort_nightly || WandData.therapy[WandData.FUTURE] == R.id.radio_monthly || WandData.therapy[WandData.FUTURE] == R.id.radio_auto) && WandData.GetModelNumber() == 2) {
 
                         btnDayDateVal.setText(R.string._3_dash);
                         btnDayDateVal.setEnabled(true);
@@ -312,22 +318,25 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                     // Else, therapy is off
                     else {
-                        if (WandData.therapy[WandData.CURRENT] != R.id.radio_daily) {
-                            //btnDayDateVal.setTextColor(Color.RED);
-                            //btnDayDateVal.setBackgroundResource(R.color.colorControlChange);
-                        }
                         btnDayDateVal.setText(R.string._3_dash);
                         btnDayDateVal.setEnabled(true);
                         btnDayDateVal.setClickable(false);
-
-                        //btnTimeOfDayVal.setTextColor(Color.RED);
-                        //btnTimeOfDayVal.setBackgroundResource(R.color.colorControlChange);
                         btnTimeOfDayVal.setText(R.string._3_dash);
                         btnTimeOfDayVal.setEnabled(true);
                         btnTimeOfDayVal.setClickable(false);
-                    }
+                    }*/
                 }
-
+                if(WandData.therapy[WandData.CURRENT] != R.id.radio_off) {
+                    enableDisableDayDateButton(false);
+                    enableDisableTimeOfDayButton(false);
+                    enableDisableProgramButton(true);
+                } else {
+                    enableDisableDayDateButton(true);
+                    enableDisableTimeOfDayButton(true);
+                    enableDisableProgramButton(false);
+                }
+                btnDayDateVal.setText(R.string._3_dash);
+                btnTimeOfDayVal.setText(R.string._3_dash);
                 Drawable drawable = (Drawable) btnFrequencyVal.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
 
@@ -354,9 +363,7 @@ public class ProgramTherapyFragment extends Fragment {
 
         btnDayDateVal.setOnClickListener(dayDateButton -> {
             final ProgramTherapyDayDateDialogue dialogue = new ProgramTherapyDayDateDialogue(getActivity());
-            dialogue.setCancelButtonListener(cancelView -> {
-                dialogue.dismiss();
-            });
+            dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
                 DatePicker datePicker = dialogue.findViewById(R.id.datePicker);
                 int year = datePicker.getYear();
@@ -381,10 +388,13 @@ public class ProgramTherapyFragment extends Fragment {
                 }
                 btnDayDateVal.setText(formattedDate);
 
+                if(!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
+                    enableDisableProgramButton(true);
+                }
+
                 Drawable drawable = (Drawable) btnDayDateVal.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
-
             });
             dialogue.show();
         });
@@ -418,16 +428,20 @@ public class ProgramTherapyFragment extends Fragment {
                 String formattedTime = String.format("%02d:%02d %s", hour, minute, amPm);
                 btnTimeOfDayVal.setText(formattedTime);
 
-                Calendar futuretime = Calendar.getInstance();
-                futuretime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
-                futuretime.set(Calendar.MINUTE, minute);
-                futuretime.set(Calendar.HOUR_OF_DAY, hour);
-                WandData.dateandtime[WandData.FUTURE] = futuretime.getTimeInMillis();
+                Calendar futureTime = Calendar.getInstance();
+                futureTime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
+                futureTime.set(Calendar.MINUTE, minute);
+                futureTime.set(Calendar.HOUR_OF_DAY, hour);
+                WandData.dateandtime[WandData.FUTURE] = futureTime.getTimeInMillis();
 
                 if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
                     mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
                 } else {
                     mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
+                }
+
+                if(!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
+                    enableDisableProgramButton(true);
                 }
 
                 Drawable drawable = (Drawable) btnTimeOfDayVal.getBackground().mutate();
@@ -569,6 +583,7 @@ public class ProgramTherapyFragment extends Fragment {
         Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(v -> {
             dialog.dismiss();
+            enableDisableProgramButton(false);
         });
 
         TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
