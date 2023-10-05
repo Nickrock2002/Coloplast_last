@@ -54,7 +54,6 @@ import me.aflak.bluetooth.interfaces.DeviceCallback;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private boolean isBluetoothPermissionGranted = false;
-    private AlertDialog mLowBatDialog = null;
     protected BluetoothDevice mBTDevice = null;
     private boolean isDeviceConnected;
     protected Bluetooth mBluetooth = null;
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String formattedDate = "";
 
-    Dialog wandConnDialog;
+    private Dialog wandConnDialog;
 
     private long timeDifferenceMillis = 0;
 
@@ -370,8 +369,7 @@ public class MainActivity extends AppCompatActivity {
         int batteryPct = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
         if (batteryPct <= 15 && !batteryCharging) {
-            if (mLowBatDialog == null)
-                showBatteryWarnDialog();
+            showBatteryWarnDialog();
         }
 
         ImageView ivBatteryPer = findViewById(R.id.iv_battery_per);
