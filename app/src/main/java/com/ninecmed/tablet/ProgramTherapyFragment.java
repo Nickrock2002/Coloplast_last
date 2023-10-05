@@ -18,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
@@ -327,7 +326,7 @@ public class ProgramTherapyFragment extends Fragment {
                         btnTimeOfDayVal.setClickable(false);
                     }*/
                 }
-                if (WandData.therapy[WandData.CURRENT] != R.id.radio_off) {
+                if (WandData.therapy[WandData.CURRENT] == R.id.radio_off) {
                     enableDisableDayDateButton(false);
                     enableDisableTimeOfDayButton(false);
                     enableDisableProgramButton(true);
@@ -459,6 +458,11 @@ public class ProgramTherapyFragment extends Fragment {
         btnProgram.setEnabled(enable);
     }
 
+    private void enableDisableAmplitudeButton(boolean enable) {
+        btnAmplitudeVal.setClickable(enable);
+        btnAmplitudeVal.setEnabled(enable);
+    }
+
     private void enableDisableFrequencyButton(boolean enable) {
         btnFrequencyVal.setClickable(enable);
         btnFrequencyVal.setEnabled(enable);
@@ -583,8 +587,8 @@ public class ProgramTherapyFragment extends Fragment {
 
         Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(v -> {
-            dialog.dismiss();
             enableDisableProgramButton(false);
+            dialog.dismiss();
         });
 
         TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
@@ -665,8 +669,7 @@ public class ProgramTherapyFragment extends Fragment {
                 // UIUpdate is called - meaning that the state machine has finished its tasks
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 showLeadRWarningIfFound();
-                btnFrequencyVal.setEnabled(true);
-                btnFrequencyVal.setClickable(true);
+                enableDisableFrequencyButton(true);
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
                 ResetChangedParameters();
                 // TODO reset all the values here
@@ -682,8 +685,7 @@ public class ProgramTherapyFragment extends Fragment {
                 showBatteryWarningIfLow(view);
                 showLeadRWarningIfFound();
 
-                btnAmplitudeVal.setEnabled(true);
-                btnAmplitudeVal.setClickable(true);
+                enableDisableAmplitudeButton(true);
 
                 setInitialAmplitudeAndEnableAmplitudeButton();
 

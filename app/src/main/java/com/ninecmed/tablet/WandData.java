@@ -5,7 +5,9 @@ import static java.lang.Math.max;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 class WandData {
     static private final String TAG = "WandData";
@@ -459,14 +461,14 @@ class WandData {
     static String GetDate() {
         if (therapy[CURRENT] == 0 || (therapy[CURRENT] == 1 && mModelNumber[CURRENT] == 1)) {        // Don't show date if therapy is disabled or if daily therapy
             // is chosen for the model 1
-            return "----";
+            return "---";
         } else {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
-            int month = c.get(Calendar.MONTH) + 1;
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            int year = c.get(Calendar.YEAR);
-            return String.format("%02d/%02d/%4d", month, day, year);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+
+            return dateFormat.format(c.getTime());
         }
     }
 
@@ -509,11 +511,27 @@ class WandData {
         if (therapy[CURRENT] != 0) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
-            return String.format("%02d:%02d",
-                    c.get(Calendar.HOUR_OF_DAY),
-                    c.get(Calendar.MINUTE));
+
+            // Get the selected hour and minute from the TimePicker
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Determine if it's AM or PM
+            String amPm;
+            if (hour < 12) {
+                amPm = "AM";
+            } else {
+                amPm = "PM";
+                if (hour > 12) {
+                    hour -= 12;
+                }
+            }
+
+            // Update the button text with the formatted time
+
+            return String.format("%02d:%02d %s", hour, minute, amPm);
         } else
-            return "----";
+            return "---";
     }
 
     static boolean IsITNSNew() {
