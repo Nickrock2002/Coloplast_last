@@ -186,8 +186,7 @@ public class MainActivity extends AppCompatActivity {
             }
             wandConnDialog.dismiss();
         });
-        //TODO 22 Sept remove after testing
-//        btConfirm.setClickable(false);
+        btConfirm.setClickable(false);
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
         setTheSystemButtonsHidden(wandConnDialog);

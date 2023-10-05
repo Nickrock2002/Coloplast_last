@@ -105,8 +105,8 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     void displayLeadRDialogue() {
-        float leadRValue = WandData.GetLeadR();
-        float leadIValue = WandData.GetLeadI();
+        float leadRValue = WandData.getLeadR();
+        float leadIValue = WandData.getLeadI();
         final LeadRDialogue dialogue = new LeadRDialogue(getActivity());
         dialogue.setLeadRValue(leadRValue);
         dialogue.setLeadIValue(leadIValue);
@@ -118,7 +118,7 @@ public class ProgramTherapyFragment extends Fragment {
     private void setUpAmplitudeButtonClick(View rootView) {
         btnAmplitudeVal = rootView.findViewById(R.id.btn_amplitude_val);
         btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
-            String amplitudeVal = String.valueOf(WandData.GetAmpFromPos(mAmplitudePos));
+            String amplitudeVal = String.valueOf(WandData.getAmpFromPos(mAmplitudePos));
             final AmplitudeDialogue dialogue = new AmplitudeDialogue(getActivity());
             dialogue.setAmplitude(amplitudeVal);
             dialogue.setItnsMinusListener((minusButton, motionEvent) -> {
@@ -131,7 +131,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                     WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
-                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                    amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                     } else {
@@ -154,8 +154,8 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                    amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
-                    ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                    amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
+                    ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
@@ -177,7 +177,7 @@ public class ProgramTherapyFragment extends Fragment {
                             mMainActivity.wandComm.setStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             ((Button) stimulationButton).setText(R.string.stimulation_active);
-                            WandData.InvalidateStimLeadI();
+                            WandData.invalidateStimLeadI();
 
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
@@ -220,7 +220,7 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
-                ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 Drawable drawable = (Drawable) amplitudeButton.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
@@ -524,7 +524,7 @@ public class ProgramTherapyFragment extends Fragment {
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
 
             // Check date range for weekly, fortnightly and monthly therapy for Model 2
-            if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.GetModelNumber() == 2) {
+            if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.getModelNumber() == 2) {
                 if (future < (now + 1000L * 3600L)) {
                     // Don't allow therapy to be set within 1 hour of now because only a
                     // magnet could stop therapy, telemetry can't interrupt therapy for
@@ -537,7 +537,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
             }
             // Only check date range of one week for Model 1
-            else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.GetModelNumber() == 1) {
+            else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.getModelNumber() == 1) {
                 if (future < now) {
                     showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
                     return;
@@ -548,16 +548,16 @@ public class ProgramTherapyFragment extends Fragment {
             }
 
             if (mMainActivity.wandComm.anyAmplitudeChanges()) {
-                WandData.InvalidateStimLeadI();
+                WandData.invalidateStimLeadI();
             }
             mMainActivity.wandComm.program();
         });
 
         TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
-        tvAmpVal.setText(WandData.GetAmplitude());
+        tvAmpVal.setText(WandData.getAmplitude());
 
         TextView tvFreqVal = (TextView) dialog.findViewById(R.id.tv_freq_val);
-        tvFreqVal.setText(WandData.GetTherapy(requireContext()));
+        tvFreqVal.setText(WandData.getTherapy(requireContext()));
 
         TextView tvDayVal = (TextView) dialog.findViewById(R.id.tv_start_day_date_val);
         if (rootView != null) {
@@ -592,10 +592,10 @@ public class ProgramTherapyFragment extends Fragment {
         });
 
         TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
-        tvAmpVal.setText(WandData.GetAmplitude());
+        tvAmpVal.setText(WandData.getAmplitude());
 
         TextView tvFreqVal = (TextView) dialog.findViewById(R.id.tv_freq_val);
-        tvFreqVal.setText(WandData.GetTherapy(requireContext()));
+        tvFreqVal.setText(WandData.getTherapy(requireContext()));
 
         TextView tvDayVal = (TextView) dialog.findViewById(R.id.tv_start_day_date_val);
         if (rootView != null) {
@@ -677,10 +677,10 @@ public class ProgramTherapyFragment extends Fragment {
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
                 btnInterrogate.setClickable(true);
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
-                mn.setText((WandData.GetModelNumber(view.getContext())));
+                mn.setText((WandData.getModelNumber(view.getContext())));
 
                 TextView sn = view.findViewById(R.id.tv_itns_serial_val);
-                sn.setText(WandData.GetSerialNumber());
+                sn.setText(WandData.getSerialNumber());
 
                 showBatteryWarningIfLow(view);
                 showLeadRWarningIfFound();
@@ -689,7 +689,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 setInitialAmplitudeAndEnableAmplitudeButton();
 
-                String implToolFrequency = WandData.GetTherapy(requireContext());
+                String implToolFrequency = WandData.getTherapy(requireContext());
                 btnFrequencyVal.setText(implToolFrequency);
 
                 if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
@@ -705,8 +705,8 @@ public class ProgramTherapyFragment extends Fragment {
                     enableDisableFrequencyButton(false);
                 }
 
-                String date = WandData.GetDate();
-                String time = WandData.GetTime();
+                String date = WandData.getDate();
+                String time = WandData.getTime();
 
                 if (!date.isEmpty())
                     btnDayDateVal.setText(date);
@@ -718,7 +718,7 @@ public class ProgramTherapyFragment extends Fragment {
             }
         } // Here's what happens on fail
         else {
-            if (WandData.IsITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
@@ -745,7 +745,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void showBatteryWarningIfLow(View view) {
         TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-        String rrt_result = WandData.GetRRT(view.getContext());
+        String rrt_result = WandData.getRRT(view.getContext());
         if (rrt_result != null && rrt_result.equals(getString(R.string.all_yes))) {
             btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
             cellv.setVisibility(View.VISIBLE);
@@ -757,7 +757,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void showLeadRWarningIfFound() {
-        float leadRValue = WandData.GetLeadR();
+        float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
@@ -771,13 +771,13 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void setInitialAmplitudeAndEnableAmplitudeButton() {
-        btnAmplitudeVal.setText(WandData.GetAmplitude());
-        mAmplitudePos = WandData.GetAmplitudePos();
+        btnAmplitudeVal.setText(WandData.getAmplitude());
+        mAmplitudePos = WandData.getAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
 
     private void checkForReset() {
-        int resets = WandData.GetResets();
+        int resets = WandData.getResets();
         if (resets > 0) {
             showItnsResetDialog(resets);
         }
@@ -808,7 +808,7 @@ public class ProgramTherapyFragment extends Fragment {
 
         WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
 
-        mAmplitudePos = WandData.GetAmplitudePos();
+        mAmplitudePos = WandData.getAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
 
         mMainActivity.wandComm.removeAllProgramChanges();
@@ -823,7 +823,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void updateAmplitude() {
-        btnAmplitudeVal.setText(WandData.GetAmplitude());
-        mAmplitudePos = WandData.GetAmplitudePos();
+        btnAmplitudeVal.setText(WandData.getAmplitude());
+        mAmplitudePos = WandData.getAmplitudePos();
     }
 }

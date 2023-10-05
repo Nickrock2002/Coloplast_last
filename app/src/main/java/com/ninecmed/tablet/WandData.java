@@ -65,7 +65,7 @@ class WandData {
     static int LOW = 0;
     static int HIGH = 1;
 
-    static void SetCable(byte[] msg) {
+    static void setCable(byte[] msg) {
         mCable = (msg[2] & 0xff) > 0;
     }
 
@@ -73,45 +73,45 @@ class WandData {
         return mCable;
     }
 
-    static int GetStimAmplitude() {
+    static int getStimAmplitude() {
         return mStimAmplitude;
     }
 
     // Call InvalidateStimLeadI whenever the amplitude is changed.  After the initial
     // interrogation, LeadI should be invalided by any change to amplitude and then
     // display only following test stimulation.
-    static void InvalidateStimLeadI() {
+    static void invalidateStimLeadI() {
         mLeadI[TEMPORARY] = -1;
         mLeadI[CURRENT] = -1;
     }
 
-    static void InvalidateStimExtLeadI() {
+    static void invalidateStimExtLeadI() {
         mStimLeadI = -1;
     }
 
-    static void SetStimAmplitude(int position) {
-        float f = GetAmpFromPos(position);
+    static void setStimAmplitude(int position) {
+        float f = getAmpFromPos(position);
         mStimAmplitude = (byte) (f / .05f);
     }
 
-    static void InterrogateSuccessful() {
-        CopyTemporaryValuesToCurrentValues();
+    static void interrogateSuccessful() {
+        copyTemporaryValuesToCurrentValues();
         mModelSerial[CURRENT] = (mModelNumber[CURRENT] << 16) + mSerialNumber[CURRENT];
         mInterrogateSuccessful = true;
     }
 
-    static void ProgramSuccessful() {
-        CopyTemporaryValuesToCurrentValues();
+    static void programSuccessful() {
+        copyTemporaryValuesToCurrentValues();
     }
 
-    static void ResetSuccessful() {
+    static void resetSuccessful() {
         // When reset is successful, clear mResets[TEMPORARY] otherwise resets
         // will be detected again if the user happens to Program something
         // rather than perform an Interrogate.
         mResets[CURRENT] = mResets[TEMPORARY] = 0;
     }
 
-    static private void CopyTemporaryValuesToCurrentValues() {
+    static private void copyTemporaryValuesToCurrentValues() {
         therapy[CURRENT] = therapy[TEMPORARY];
         dateandtime[CURRENT] = dateandtime[TEMPORARY];
         amplitude[CURRENT] = amplitude[TEMPORARY];
@@ -145,29 +145,29 @@ class WandData {
         mSchedule.mAlarms[CURRENT] = mSchedule.mAlarms[TEMPORARY];
     }
 
-    static void StimSuccessfull() {
+    static void stimSuccessfull() {
         amplitude[CURRENT] = amplitude[TEMPORARY];
         mLeadI[CURRENT] = mLeadI[TEMPORARY];
     }
 
-    static void SetIDInformation(byte[] msg) {
+    static void setIDInformation(byte[] msg) {
         mSerialNumber[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
         mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
         mResets[TEMPORARY] = (msg[6] & 0xff);
 
         mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
 
-        if (IsITNSNew()) {
+        if (isITNSNew()) {
             mInterrogateSuccessful = false;
         }
     }
 
-    static int GetResets() {
+    static int getResets() {
         return mResets[CURRENT];
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetSerialNumber() {
+    static String getSerialNumber() {
         if (mSerialNumber[CURRENT] != 0){
             return String.format("%05d", mSerialNumber[CURRENT]);
         }else {
@@ -175,7 +175,7 @@ class WandData {
         }
     }
 
-    static String GetModelNumber(Context context) {
+    static String getModelNumber(Context context) {
         if (mModelNumber[CURRENT] == 1)
             return context.getString(R.string.all_model_number_one);
         else if (mModelNumber[CURRENT] == 2)
@@ -184,11 +184,11 @@ class WandData {
             return null;
     }
 
-    static int GetModelNumber() {
+    static int getModelNumber() {
         return mModelNumber[CURRENT];
     }
 
-    static void SetStimI(byte[] msg, int low_or_high) {
+    static void setStimI(byte[] msg, int low_or_high) {
         if (low_or_high == LOW)
             mStimLeadI = (msg[2] & 0xff);
         else
@@ -196,7 +196,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetStimLeadI() {
+    static String getStimLeadI() {
         if (mStimLeadI == -1)
             return null;
         else {
@@ -233,18 +233,18 @@ class WandData {
         }
     }
 
-    static void SetAmplitude(byte[] msg) {
+    static void setAmplitude(byte[] msg) {
         if ((msg[2] & 0xff) <= 10) {
             amplitude[TEMPORARY] = (byte) ((msg[2] & 0xff) / 2 - 1);
         } else
             amplitude[TEMPORARY] = (byte) ((msg[2] & 0xff) / 5 + 2);
     }
 
-    static int GetAmplitudePos() {
+    static int getAmplitudePos() {
         return amplitude[CURRENT];
     }
 
-    static float GetAmpFromPos(int pos) {
+    static float getAmpFromPos(int pos) {
         if (pos <= 4)
             return (pos + 1) * 0.1f;
         else
@@ -252,12 +252,12 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetAmplitude() {
-        float amp = GetAmpFromPos(amplitude[CURRENT]);
+    static String getAmplitude() {
+        float amp = getAmpFromPos(amplitude[CURRENT]);
         return String.format("%.2f V", amp);
     }
 
-    static void SetConfig(byte[] msg) {
+    static void setConfig(byte[] msg) {
         mConfig[TEMPORARY] = msg[2] & 0xff;
 
         // For each model, check to see if therapy is active. If so, then update therapy and
@@ -292,15 +292,15 @@ class WandData {
         }
     }
 
-    static int GetConfig() {
+    static int getConfig() {
         return mConfig[CURRENT];
     }
 
-    static int GetTherapyPos() {
+    static int getTherapyPos() {
         return therapy[CURRENT];
     }
 
-    static String GetTherapy(Context context) {
+    static String getTherapy(Context context) {
         // Do this for Model 1
         if (mModelNumber[CURRENT] == 1) {
             String[] therapy_array = context.getResources().getStringArray(R.array.itns_therapy_schedule_array_model_one);
@@ -320,11 +320,11 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static float GetLeadI() {
+    static float getLeadI() {
         if (mLeadI[CURRENT] == -1)
             return 0.0f;
         else {
-            float amp = GetAmpFromPos(amplitude[CURRENT]);
+            float amp = getAmpFromPos(amplitude[CURRENT]);
 
             float leadi;
             if (amp < 2.25f) {
@@ -352,7 +352,7 @@ class WandData {
         }
     }
 
-    static void SetLeadI(byte[] msg) {
+    static void setLeadI(byte[] msg) {
         if ((mConfig[TEMPORARY] & 0x01) > 0 || mInterrogateSuccessful)                              // Show lead I on first interrogate if therapy is set, or if after a successful interrogation
             mLeadI[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
         else
@@ -360,7 +360,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetCellV() {
+    static String getCellV() {
 
         // For model 1, hide Cell V if -1
         if (mModelNumber[CURRENT] == 1) {
@@ -381,14 +381,14 @@ class WandData {
         }
     }
 
-    static void SetCellV(byte[] msg) {
+    static void setCellV(byte[] msg) {
         if (((mConfig[TEMPORARY] & 0x01) > 0) || (mModelNumber[TEMPORARY] == 2))                    // Show cell V on first interrogate if therapy is set or if Model 2
             mCellV[TEMPORARY] = msg[2] & 0xff;
         else
             mCellV[TEMPORARY] = -1;                                                                 // Otherwise hide value
     }
 
-    static String GetRRT(Context context) {
+    static String getRRT(Context context) {
 
         if (mModelNumber[CURRENT] == 1) {
             if (mRRT[CURRENT] == 1)
@@ -411,7 +411,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static float GetStimLeadR() {
+    static float getStimLeadR() {
         if (mStimLeadI == -1)
             return 0f;
         else {
@@ -437,7 +437,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static float GetLeadR() {
+    static float getLeadR() {
 
         if (mLeadI[CURRENT] == -1)
             return 0f;
@@ -446,7 +446,7 @@ class WandData {
                 return 0f;
 
             // Don't allow amplitude values less than 2.25
-            float amp = GetAmpFromPos(amplitude[CURRENT]);
+            float amp = getAmpFromPos(amplitude[CURRENT]);
             amp = max(amp, 2.25f);
             float leadr = amp / (mLeadI[CURRENT] * 0.00003922f);                                    // leadi = (n*FVR)/(1024*51ohms)
             /*if(leadr <= 2000.0)
@@ -458,7 +458,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetDate() {
+    static String getDate() {
         if (therapy[CURRENT] == 0 || (therapy[CURRENT] == 1 && mModelNumber[CURRENT] == 1)) {        // Don't show date if therapy is disabled or if daily therapy
             // is chosen for the model 1
             return "---";
@@ -472,12 +472,12 @@ class WandData {
         }
     }
 
-    static void SetClock(byte[] msg) {
+    static void setClock(byte[] msg) {
         mClock.mMins[TEMPORARY] = ((msg[2] & 0xf0) >> 4) * 10 + (msg[2] & 0x0f);                   // Convert from BCD
         mClock.mHours[TEMPORARY] = ((msg[3] & 0xf0) >> 4) * 10 + (msg[3] & 0x0f);                   // Convert from BCD
     }
 
-    static void SetSchedule(byte[] msg) {
+    static void setSchedule(byte[] msg) {
         mSchedule.mMins[TEMPORARY] = ((msg[2] & 0xf0) >> 4) * 10 + (msg[2] & 0x0f);               // Convert from BCD
         mSchedule.mHours[TEMPORARY] = ((msg[3] & 0xf0) >> 4) * 10 + (msg[3] & 0x0f);               // Convert from BCD
         mSchedule.mAlarms[TEMPORARY] = msg[4];
@@ -507,7 +507,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String GetTime() {
+    static String getTime() {
         if (therapy[CURRENT] != 0) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
@@ -534,7 +534,7 @@ class WandData {
             return "---";
     }
 
-    static boolean IsITNSNew() {
+    static boolean isITNSNew() {
         if (mModelSerial[CURRENT] != mModelSerial[TEMPORARY])
             return true;
         else

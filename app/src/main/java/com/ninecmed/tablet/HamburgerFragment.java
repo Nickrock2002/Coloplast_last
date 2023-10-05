@@ -26,6 +26,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
@@ -78,17 +79,17 @@ public class HamburgerFragment extends Fragment {
         TextView textView = view.findViewById(R.id.tv_company_title);
 
         // Define the text with the link
-        String text = "Coloplast Corporation \n+1-800-258-3476 \nIFU link: intibia.com/IFU";
+        String text = getString(R.string.coloplast_corporation_addr_part_1);
 
         // Create a SpannableString to apply styles to specific parts of the text
         SpannableString spannableString = new SpannableString(text);
 
         // Define the start and end indices of the link within the text
-        int startIndex = text.indexOf("intibia.com/IFU");
-        int endIndex = startIndex + "intibia.com/IFU".length();
+        int startIndex = text.indexOf(getString(R.string.intibia_com_ifu_part_2));
+        int endIndex = startIndex + getString(R.string.intibia_com_ifu_part_2).length();
 
         // Define the color you want for the link
-        int linkColor = getResources().getColor(R.color.colorPrimary);
+        int linkColor = ActivityCompat.getColor(requireContext(), R.color.colorPrimary);
 
         // Apply the color to the link
         spannableString.setSpan(new ForegroundColorSpan(linkColor), startIndex, endIndex, 0);
@@ -132,7 +133,7 @@ public class HamburgerFragment extends Fragment {
 
         // Model Num
         TextView mn = view.findViewById(R.id.tv_itns_model_val);
-        String modelNum = WandData.GetModelNumber(view.getContext());
+        String modelNum = WandData.getModelNumber(view.getContext());
         if (modelNum != null) {
             mn.setText(modelNum);
         } else {
@@ -141,7 +142,7 @@ public class HamburgerFragment extends Fragment {
 
         // Serial Num
         TextView sn = view.findViewById(R.id.tv_itns_serial_val);
-        String serialNum = WandData.GetSerialNumber();
+        String serialNum = WandData.getSerialNumber();
         if (serialNum != null) {
             sn.setText(serialNum);
         } else {
@@ -150,7 +151,7 @@ public class HamburgerFragment extends Fragment {
 
         // Cell V
         TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-        String cellVoltage = WandData.GetCellV();
+        String cellVoltage = WandData.getCellV();
         if (cellVoltage != null) {
             cellv.setText(cellVoltage);
         } else {
@@ -159,7 +160,7 @@ public class HamburgerFragment extends Fragment {
 
         //RRT
         TextView rrt = view.findViewById(R.id.tv_battery_replace_val);
-        String rrt_result = WandData.GetRRT(view.getContext());
+        String rrt_result = WandData.getRRT(view.getContext());
 
         if (rrt_result != null) {
             if (rrt_result.equals(getString(R.string.all_yes)))
@@ -172,18 +173,18 @@ public class HamburgerFragment extends Fragment {
 
         // LEAD I
         TextView leadi = view.findViewById(R.id.tv_lead_i_val);
-        if (WandData.GetLeadI() == 0.0f) {
+        if (WandData.getLeadI() == 0.0f) {
             leadi.setText("_");
         } else {
-            leadi.setText("" + WandData.GetLeadI() + "mA");
+            leadi.setText("" + WandData.getLeadI() + "mA");
         }
 
         // LEAD R
         TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-        if (WandData.GetLeadR() == 0f) {
+        if (WandData.getLeadR() == 0f) {
             leadr.setText("_");
         } else {
-            leadr.setText("" + WandData.GetLeadR() + "Ohms");
+            leadr.setText("" + WandData.getLeadR() + "Ohms");
         }
     }
 
@@ -280,16 +281,16 @@ public class HamburgerFragment extends Fragment {
 
         if (success) {
             TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_val);
-            mn.setText((WandData.GetModelNumber(view.getContext())));
+            mn.setText((WandData.getModelNumber(view.getContext())));
 
             TextView sn = view.findViewById(R.id.tv_itns_serial_val);
-            sn.setText(WandData.GetSerialNumber());
+            sn.setText(WandData.getSerialNumber());
 
             TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-            cellv.setText(WandData.GetCellV());
+            cellv.setText(WandData.getCellV());
 
             TextView rrt = view.findViewById(R.id.tv_battery_replace_val);
-            String rrt_result = WandData.GetRRT(view.getContext());
+            String rrt_result = WandData.getRRT(view.getContext());
 
             if (rrt_result != null) {
                 if (rrt_result.equals(getString(R.string.all_yes)))
@@ -301,14 +302,14 @@ public class HamburgerFragment extends Fragment {
             }
 
             TextView leadi = view.findViewById(R.id.tv_lead_i_val);
-            leadi.setText("" + WandData.GetLeadI() + "mA");
+            leadi.setText("" + WandData.getLeadI() + "mA");
 
             TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-            leadr.setText("" + WandData.GetLeadR() + "Ohms");
+            leadr.setText("" + WandData.getLeadR() + "Ohms");
         }
         // Here's what happens on fail
         else {
-            if (WandData.IsITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }

@@ -281,7 +281,7 @@ class WandComm {
             case tasks.WRTSTIMEXTAMP:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    write_I2C_Stim(1, WandData.GetStimAmplitude());
+                    write_I2C_Stim(1, WandData.getStimAmplitude());
                 } else {
                     mContinue = true;
                 }
@@ -436,18 +436,18 @@ class WandComm {
 
             case tasks.LASTTASK:
                 if(mCurrentJob == jobs.INTERROGATE) {
-                    WandData.InterrogateSuccessful();
+                    WandData.interrogateSuccessful();
                 }
                 else if(mCurrentJob == jobs.PROGRAM) {
-                    WandData.ProgramSuccessful();
+                    WandData.programSuccessful();
                     ProgramSuccessEvent programSuccessEvent = new ProgramSuccessEvent();
                     EventBus.getDefault().post(programSuccessEvent);
                 }
                 else if(mCurrentJob == jobs.SETRESETCOUNTER) {
-                    WandData.ResetSuccessful();
+                    WandData.resetSuccessful();
                 }
                 else if(mCurrentJob == jobs.SETSTIM) {
-                    WandData.StimSuccessfull();
+                    WandData.stimSuccessfull();
                 }
                 updateUIFragments(true);
                 break;
@@ -556,10 +556,10 @@ class WandComm {
     }
 
     private void setTherapy() {
-        byte config = (byte) WandData.GetConfig();
+        byte config = (byte) WandData.getConfig();
 
         // Do this for Model 1
-        if(WandData.GetModelNumber() == 1) {
+        if(WandData.getModelNumber() == 1) {
             switch (WandData.therapy[WandData.FUTURE]) {
                 case R.id.radio_off:                         // Therapy off
                     config &= ~0x01;            // Clear the first bit
@@ -625,16 +625,16 @@ class WandComm {
     }
 
     private void setAmplitude() {
-        float amplitude = WandData.GetAmpFromPos(WandData.amplitude[WandData.FUTURE]);
+        float amplitude = WandData.getAmpFromPos(WandData.amplitude[WandData.FUTURE]);
         byte[] msg = {'I', '6', (byte) (amplitude / 0.05f), 0, 0};
         sendMessage(msg);
     }
 
     private void clearResets() {
-        byte config = (byte) WandData.GetConfig();
+        byte config = (byte) WandData.getConfig();
 
         // Do this for Model 1
-        if(WandData.GetModelNumber() == 1)
+        if(WandData.getModelNumber() == 1)
             config |= 0x88;                     // Set upper bit to change config and bit 3 to clear bReset
         // Do this for Model 2
         else
@@ -697,7 +697,7 @@ class WandComm {
             case tasks.GETCABLE:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETSTATE.");
-                    WandData.SetCable(rxBuffer);
+                    WandData.setCable(rxBuffer);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
@@ -713,7 +713,7 @@ class WandComm {
             case tasks.RDSTIMILOW:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "RDSTIMLOW correct.");
-                    WandData.SetStimI(rxBuffer, WandData.LOW);
+                    WandData.setStimI(rxBuffer, WandData.LOW);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
@@ -729,7 +729,7 @@ class WandComm {
             case tasks.RDSTIMIHIGH:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "RDSTIMHIGH correct.");
-                    WandData.SetStimI(rxBuffer, WandData.HIGH);
+                    WandData.setStimI(rxBuffer, WandData.HIGH);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
@@ -765,10 +765,10 @@ class WandComm {
             case tasks.GETID:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETID.");
-                    WandData.SetIDInformation(rxBuffer);
+                    WandData.setIDInformation(rxBuffer);
                     mRetries = 3;
                     if(mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
-                        if(WandData.IsITNSNew()) {
+                        if(WandData.isITNSNew()) {
                             updateUIFragments(false);
                             return;
                         }
@@ -786,7 +786,7 @@ class WandComm {
             case tasks.GETAMPLITUDE:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETAMPLITUDE.");
-                    WandData.SetAmplitude(rxBuffer);
+                    WandData.setAmplitude(rxBuffer);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;
@@ -800,7 +800,7 @@ class WandComm {
             case tasks.GETCONFIG:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETCONFIG.");
-                    WandData.SetConfig(rxBuffer);
+                    WandData.setConfig(rxBuffer);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;
@@ -814,7 +814,7 @@ class WandComm {
             case tasks.GETLEADI:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETLEADI.");
-                    WandData.SetLeadI(rxBuffer);
+                    WandData.setLeadI(rxBuffer);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;
@@ -828,7 +828,7 @@ class WandComm {
             case tasks.GETCELLV:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETCELLV.");
-                    WandData.SetCellV(rxBuffer);
+                    WandData.setCellV(rxBuffer);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;
@@ -843,7 +843,7 @@ class WandComm {
             case tasks.GETCLOCK:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETCLOCK.");
-                    WandData.SetClock(rxBuffer);
+                    WandData.setClock(rxBuffer);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;
@@ -858,7 +858,7 @@ class WandComm {
             case tasks.GETSCHEDULE:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETSCHEDULE.");
-                    WandData.SetSchedule(rxBuffer);
+                    WandData.setSchedule(rxBuffer);
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;

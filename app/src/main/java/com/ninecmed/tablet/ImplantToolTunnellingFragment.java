@@ -113,7 +113,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                             stimulate.setPressed(true);
                             mMainActivity.wandComm.setStimulationExt(true);
                             stimulate.setText("Stimulation Active");
-                            WandData.InvalidateStimLeadI();
+                            WandData.invalidateStimLeadI();
 
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
@@ -160,8 +160,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
                     if (mAmplitudePos < 42) {
                         mAmplitudePos += 1;
                     }
-                    WandData.SetStimAmplitude(mAmplitudePos);
-                    WandData.InvalidateStimExtLeadI();
+                    WandData.setStimAmplitude(mAmplitudePos);
+                    WandData.invalidateStimExtLeadI();
 
                     updateImplantTunnellingUI(true);
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
@@ -179,8 +179,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
                     if (mAmplitudePos > 0) {
                         mAmplitudePos -= 1;
                     }
-                    WandData.SetStimAmplitude(mAmplitudePos);
-                    WandData.InvalidateStimExtLeadI();
+                    WandData.setStimAmplitude(mAmplitudePos);
+                    WandData.invalidateStimExtLeadI();
 
                     updateImplantTunnellingUI(true);
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
@@ -252,7 +252,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
         if (success) {
             TextView amp = requireView().findViewById(R.id.tvExternalAmplitude);
-            amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+            amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
         } else {
             mMainActivity.showWandTabCommunicationIssueDialog();
         }
@@ -267,7 +267,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     }
 
     private void showLeadRWarningIfFound() {
-        float leadRValue = WandData.GetStimLeadR();
+        float leadRValue = WandData.getStimLeadR();
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000;
         if (isWarningFound) {

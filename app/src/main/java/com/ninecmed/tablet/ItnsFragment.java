@@ -112,7 +112,7 @@ public class ItnsFragment extends Fragment {
                             mMainActivity.wandComm.setStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             stimulate.setText(R.string.stimulation_active);
-                            WandData.InvalidateStimLeadI();
+                            WandData.invalidateStimLeadI();
 
                             /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
                             leadi.setText(WandData.GetLeadI());
@@ -204,7 +204,7 @@ public class ItnsFragment extends Fragment {
 
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                 TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
-                amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
 
@@ -227,7 +227,7 @@ public class ItnsFragment extends Fragment {
 
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                 TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
-                amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
+                amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                     mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
@@ -264,10 +264,10 @@ public class ItnsFragment extends Fragment {
                 showLeadRWarningIfFound();
             } else {
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
-                mn.setText((WandData.GetModelNumber(view.getContext())));
+                mn.setText((WandData.getModelNumber(view.getContext())));
 
                 TextView sn = view.findViewById(R.id.tvItnsSN);
-                sn.setText(WandData.GetSerialNumber());
+                sn.setText(WandData.getSerialNumber());
 
                 plus.setEnabled(true);
                 plus.setImageResource(R.drawable.ic_plus_white);
@@ -290,7 +290,7 @@ public class ItnsFragment extends Fragment {
         }
         // Here's what happens on fail
         else {
-            if (WandData.IsITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
@@ -316,14 +316,14 @@ public class ItnsFragment extends Fragment {
 
     private void setInitialAmplitude() {
         TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
-        amp.setText(WandData.GetAmplitude());
-        mAmplitudePos = WandData.GetAmplitudePos();
+        amp.setText(WandData.getAmplitude());
+        mAmplitudePos = WandData.getAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
 
     private void showLeadRWarningIfFound() {
-        float leadRValue = WandData.GetLeadR();
-        float leadIValue = WandData.GetLeadI();
+        float leadRValue = WandData.getLeadR();
+        float leadIValue = WandData.getLeadI();
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
@@ -363,7 +363,7 @@ public class ItnsFragment extends Fragment {
     }
 
     private void checkForReset() {
-        int resets = WandData.GetResets();
+        int resets = WandData.getResets();
         if (resets > 0) {
             showItnsResetDialog(resets);
         }
@@ -394,8 +394,8 @@ public class ItnsFragment extends Fragment {
         View view = getView();
 
         TextView amp = view.findViewById(R.id.tvItnsAmplitude);
-        amp.setText(WandData.GetAmplitude());
+        amp.setText(WandData.getAmplitude());
         amp.setTextColor(Color.BLACK);
-        mAmplitudePos = WandData.GetAmplitudePos();
+        mAmplitudePos = WandData.getAmplitudePos();
     }
 }

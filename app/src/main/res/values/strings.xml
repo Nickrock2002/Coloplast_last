@@ -137,6 +137,8 @@
     <string name="attempting_to_program_an_implant_with_an_incorrect_serial_number">Attempting to program an implant with an incorrect serial number</string>
     <string name="re_interrogate_the_intibia_itns">Re-Interrogate the INTIBIA ITNS</string>
     <string name="ensure_wand_communicae_with_itns">Ensure the Wand is communicating with the ITNS and try programming again.</string>
+    <string name="coloplast_corporation_addr_part_1">Coloplast Corporation \n+1-800-258-3476 \nIFU link: intibia.com/IFU</string>
+    <string name="intibia_com_ifu_part_2">intibia.com/IFU</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>
