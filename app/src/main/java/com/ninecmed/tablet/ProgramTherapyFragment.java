@@ -657,21 +657,6 @@ public class ProgramTherapyFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    // This method is called when the fragment is hidden
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (!isVisibleToUser && getView() != null) {
-            OnHidden();
-        }
-    }
-
-    private void OnHidden() {
-        // Always make sure buttons are enabled when leaving window
-        requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
     public void updateUI(boolean success) {
         View view = getView();
         if (success & view != null) {
