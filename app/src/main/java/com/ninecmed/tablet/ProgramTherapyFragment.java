@@ -748,6 +748,8 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 });
                 alertDialog.show();
+            } else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
+                mMainActivity.showProgramUnsuccessfulWarnDialog();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }

@@ -736,6 +736,24 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void showProgramUnsuccessfulWarnDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_programming_unsuccessful);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
     public void showWandTabCommunicationIssueDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
