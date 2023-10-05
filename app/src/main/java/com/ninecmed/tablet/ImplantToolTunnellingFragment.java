@@ -34,8 +34,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Objects;
-
 public class ImplantToolTunnellingFragment extends Fragment {
     private static final String TAG = "ImplantToolTunnellingFragment";
     private MainActivity mMainActivity = null;
@@ -113,7 +111,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulate.setPressed(true);
-                            mMainActivity.wandComm.SetStimulationExt(true);
+                            mMainActivity.wandComm.setStimulationExt(true);
                             stimulate.setText("Stimulation Active");
                             WandData.InvalidateStimLeadI();
 
@@ -128,7 +126,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                             stimulate.setPressed(false);
                             stimulate.setText(R.string.hold_to_deliver_neurostimulation);
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.SetStimulationExt(false);
+                                mMainActivity.wandComm.setStimulationExt(false);
                                 mStimEnabled = false;
                             } else {
                                 mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
@@ -144,7 +142,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     private final Runnable holdStimulationRunnable = new Runnable() {
         @Override
         public void run() {
-            mMainActivity.wandComm.SetStimulationExt(false);
+            mMainActivity.wandComm.setStimulationExt(false);
             mStimEnabled = false;
         }
     };
@@ -247,7 +245,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     @SuppressLint("DefaultLocale")
     public void updateImplantTunnellingUI(boolean success) {
 
-        if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIMEXT) {
+        if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             Button stimulate = requireView().findViewById(R.id.btExternalStartStim);
             stimulate.setEnabled(true);
         }

@@ -80,35 +80,35 @@ class WandComm {
         this.mainActivity = mainActivity;
     }
 
-    int GetCurrentJob() {
+    int getCurrentJob() {
         return mCurrentJob;
     }
 
-    void InitWand() {
+    void initWand() {
         task_list[tasks.SETUSERNAME] = true;
         task_list[tasks.SETPASSWORD] = true;
 
         mCurrentJob = jobs.INITWAND;
         mState = 0;
-        ProcessStateMachine();
+        processStateMachine();
     }
 
-    void SetStimulation(boolean enable) {
+    void setStimulation(boolean enable) {
         mCurrentJob = jobs.SETSTIM;
         mEnableStim = enable;
-        mHandler.removeCallbacks(RestartTestBurst);
-        mHandler.removeCallbacks(TimeOut);
-        mHandler.removeCallbacks(CheckForAcknowledgement);
+        mHandler.removeCallbacks(restartTestBurst);
+        mHandler.removeCallbacks(timeOut);
+        mHandler.removeCallbacks(checkForAcknowledgement);
         if (enable) {
             task_list[tasks.GETID] = true;
-            if (AnyAmplitudeChanges()) {
+            if (anyAmplitudeChanges()) {
                 task_list[tasks.SETAMPLITUDE] = true;
             }
             task_list[tasks.SENDTESTBURST] = true;
             mState = 0;
             mRetries = 3;
             mJobCancelled = false;
-            ProcessStateMachine();
+            processStateMachine();
             Log.d(TAG, "Stim Start.");
         } else {
             if(mJobCancelled) {
@@ -121,17 +121,17 @@ class WandComm {
             task_list[tasks.GETLEADI] = true;
             mState = 0;
             mRetries = 3;
-            mHandler.postDelayed(TimeOut, 2500);                                          // Wait until test burst is completed
+            mHandler.postDelayed(timeOut, 2500);                                          // Wait until test burst is completed
             Log.d(TAG, "Stim Stop.");
         }
     }
 
-    void SetStimulationExt(boolean enable) {
+    void setStimulationExt(boolean enable) {
         mCurrentJob = jobs.SETSTIMEXT;
         mEnableStim = enable;
-        mHandler.removeCallbacks(RestartTestBurstExt);
-        mHandler.removeCallbacks(TimeOut);
-        mHandler.removeCallbacks(CheckForAcknowledgement);
+        mHandler.removeCallbacks(restartTestBurstExt);
+        mHandler.removeCallbacks(timeOut);
+        mHandler.removeCallbacks(checkForAcknowledgement);
         // When enabled, set the amplitude. When disabled, read lead I
         if(enable) {
             task_list[tasks.WRTSTIMEXTAMP] = true;
@@ -139,7 +139,7 @@ class WandComm {
             mState = 0;
             mRetries = 3;
             mJobCancelled = false;
-            ProcessStateMachine();
+            processStateMachine();
         } else {
             if (mJobCancelled) {
                 Log.d(TAG, "Test Stim Cancelled.");
@@ -150,13 +150,13 @@ class WandComm {
                 task_list[tasks.RDSTIMIHIGH] = true;
                 mState = 0;
                 mRetries = 3;
-                mHandler.postDelayed(TimeOut, 1000);
+                mHandler.postDelayed(timeOut, 1000);
                 Log.d(TAG, "Stim Stop.");
             }
         }
     }
 
-    void Interrogate() {
+    void interrogate() {
         task_list[tasks.GETSTATE] = true;
         task_list[tasks.GETID] = true;
         task_list[tasks.GETCONFIG] = true;
@@ -169,10 +169,10 @@ class WandComm {
         mCurrentJob = jobs.INTERROGATE;
         mState = 0;
         mRetries = 3;
-        ProcessStateMachine();
+        processStateMachine();
     }
 
-    void Program() {
+    void program() {
         mCurrentJob = jobs.PROGRAM;
         mState = 0;
         mRetries = 3;
@@ -190,22 +190,22 @@ class WandComm {
         if(change_list[changes.AMPLITUDE]) {
             task_list[tasks.SETAMPLITUDE] = true;
         }
-        ProcessStateMachine();
+        processStateMachine();
     }
 
-    void CheckCable() {
+    void checkCable() {
         task_list[tasks.GETCABLE] = true;
 
         mCurrentJob = jobs.CHECKCABLE;
         mState = 0;
-        ProcessStateMachine();
+        processStateMachine();
     }
 
-    void AddProgramChanges(int change) {
+    void addProgramChanges(int change) {
         change_list[change] = true;
     }
 
-    void RemoveProgramChanges(int change) {
+    void removeProgramChanges(int change) {
         change_list[change] = false;
     }
 
@@ -218,17 +218,17 @@ class WandComm {
         return false;
     }
 
-    void RemoveAllProgramChanges() {
+    void removeAllProgramChanges() {
         for(int i = 0; i < change_list.length; i++) {
             change_list[i] = false;
         }
     }
 
-    boolean AnyAmplitudeChanges() {
+    boolean anyAmplitudeChanges() {
         return change_list[changes.AMPLITUDE];
     }
 
-    boolean AnyProgramChangesOtherThanAmplitude() {
+    boolean anyProgramChangesOtherThanAmplitude() {
         if(change_list[changes.TIME])
             return true;
         else if(change_list[changes.THERAPY])
@@ -239,22 +239,22 @@ class WandComm {
             return false;
     }
 
-    void ClearResetCounter() {
+    void clearResetCounter() {
         task_list[tasks.CLRRESETS] = true;
         mCurrentJob = jobs.SETRESETCOUNTER;
         mState = 0;
         mRetries = 3;
-        ProcessStateMachine();
+        processStateMachine();
     }
 
     // The order of the states in this machine are important, so don't rearrange them
     // unless you understand what you're doing!
-    private void ProcessStateMachine() {
+    private void processStateMachine() {
         switch(mState) {
             case tasks.SETUSERNAME:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    SetUsername();
+                    setUsername();
                 } else {
                     mContinue = true;
                 }
@@ -263,7 +263,7 @@ class WandComm {
             case tasks.SETPASSWORD:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    SetPassword();
+                    setPassword();
                 } else {
                     mContinue = true;
                 }
@@ -272,7 +272,7 @@ class WandComm {
             case tasks.GETCABLE:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetCable();
+                    getCable();
                 } else {
                     mContinue = true;
                 }
@@ -281,7 +281,7 @@ class WandComm {
             case tasks.WRTSTIMEXTAMP:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    Write_I2C_Stim(1, WandData.GetStimAmplitude());
+                    write_I2C_Stim(1, WandData.GetStimAmplitude());
                 } else {
                     mContinue = true;
                 }
@@ -290,7 +290,7 @@ class WandComm {
             case tasks.RDSTIMILOW:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    Read_I2C_Stim(2);
+                    read_I2C_Stim(2);
                 } else {
                     mContinue = true;
                 }
@@ -299,7 +299,7 @@ class WandComm {
             case tasks.RDSTIMIHIGH:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    Read_I2C_Stim(3);
+                    read_I2C_Stim(3);
                 } else {
                     mContinue = true;
                 }
@@ -308,7 +308,7 @@ class WandComm {
             case tasks.GETSTATE:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetState();
+                    getState();
                 } else {
                     mContinue = true;
                 }
@@ -317,7 +317,7 @@ class WandComm {
             case tasks.GETID:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetID();
+                    getID();
                 } else {
                     mContinue = true;
                 }
@@ -326,7 +326,7 @@ class WandComm {
             case tasks.GETAMPLITUDE:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetAmplitude();
+                    getAmplitude();
                 } else {
                     mContinue = true;
                 }
@@ -335,7 +335,7 @@ class WandComm {
             case tasks.GETCONFIG:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetConfig();
+                    getConfig();
                 } else {
                     mContinue = true;
                 }
@@ -344,7 +344,7 @@ class WandComm {
             case tasks.GETLEADI:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetLeadI();
+                    getLeadI();
                 } else {
                     mContinue = true;
                 }
@@ -353,7 +353,7 @@ class WandComm {
             case tasks.GETCELLV:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetCellV();
+                    getCellV();
                 } else {
                     mContinue = true;
                 }
@@ -362,7 +362,7 @@ class WandComm {
             case tasks.GETCLOCK:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetClock();
+                    getClock();
                 } else {
                     mContinue = true;
                 }
@@ -370,7 +370,7 @@ class WandComm {
             case tasks.GETSCHEDULE:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    GetSchedule();
+                    getSchedule();
                 } else {
                     mContinue = true;
                 }
@@ -379,7 +379,7 @@ class WandComm {
             case tasks.SETSCHEDULE:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    SetSchedule();
+                    setSchedule();
                 } else {
                     mContinue = true;
                 }
@@ -390,7 +390,7 @@ class WandComm {
             case tasks.SETTHERAPY:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    SetTherapy();
+                    setTherapy();
                 } else {
                     mContinue = true;
                 }
@@ -399,7 +399,7 @@ class WandComm {
             case tasks.SETAMPLITUDE:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    SetAmplitude();
+                    setAmplitude();
                 } else {
                     mContinue = true;
                 }
@@ -408,7 +408,7 @@ class WandComm {
             case tasks.CLRRESETS:
                 if(task_list[mState]) {
                     mCurrentTask = mState;
-                    ClearResets();
+                    clearResets();
                 } else {
                     mContinue = true;
                 }
@@ -418,7 +418,7 @@ class WandComm {
                 if(task_list[mState] && mEnableStim) {
                     mCurrentTask = mState;
                     Log.d(TAG, "Send Test Burst.");
-                    SendTestBurst();
+                    sendTestBurst();
                 } else {
                     mContinue = true;
                 }
@@ -428,7 +428,7 @@ class WandComm {
                 if(task_list[mState] && mEnableStim) {
                     mCurrentTask = mState;
                     Log.d(TAG, "Send Test Burst Ext.");
-                    SendTestBurstExt();
+                    sendTestBurstExt();
                 } else {
                     mContinue = true;
                 }
@@ -449,100 +449,100 @@ class WandComm {
                 else if(mCurrentJob == jobs.SETSTIM) {
                     WandData.StimSuccessfull();
                 }
-                UpdateUIFragments(true);
+                updateUIFragments(true);
                 break;
         }
 
         mState += 1;
         if(mContinue) {
             mContinue = false;
-            mHandler.postDelayed(TimeOut, 0);
+            mHandler.postDelayed(timeOut, 0);
         }
     }
 
-    private final Runnable TimeOut = this::ProcessStateMachine;
+    private final Runnable timeOut = this::processStateMachine;
 
     /// This timer only gets called if a message to the wand is not acknowledged
-    private final Runnable CheckForAcknowledgement = new Runnable() {
+    private final Runnable checkForAcknowledgement = new Runnable() {
         @Override
         public void run() {
             if(mRetries > 0) {
                 mRetries--;
                 mState -= 1;
-                ProcessStateMachine();
+                processStateMachine();
             }
             else {
-                UpdateUIFragments(false);
+                updateUIFragments(false);
             }
         }
     };
 
-    private void Write_I2C_Stim(int address, int data) {
+    private void write_I2C_Stim(int address, int data) {
         byte[] msg = {'W', 'W', (byte) address, (byte) data, 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void Read_I2C_Stim(int address) {
+    private void read_I2C_Stim(int address) {
         byte[] msg = {'W', 'R', (byte) address, 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void SetPassword() {
+    private void setPassword() {
         byte[] msg = {'W', 'p', 'U', 'c', 'w', '1', '5', 't', 'h', 'U', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void SetUsername() {
+    private void setUsername() {
         byte[] msg = {'W', 'u', 'N', 'i', 'n', 'e', 'C', 'M', 'e', 'd', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetCable() {
+    private void getCable() {
         byte[] msg = {'W', 'c', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetState() {
+    private void getState() {
         byte[] msg = {'W', '1', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetID() {
+    private void getID() {
         byte[] msg = {'I', '0', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetAmplitude() {
+    private void getAmplitude() {
         byte[] msg = {'I', '1', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetConfig() {
+    private void getConfig() {
         byte[] msg = {'I', '2', 0, 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetLeadI() {
+    private void getLeadI() {
         byte[] msg = {'I', '3', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetCellV() {
+    private void getCellV() {
         byte[] msg = {'I', '4', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetClock() {
+    private void getClock() {
         byte[] msg = {'I', '9', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void GetSchedule() {
+    private void getSchedule() {
         byte[] msg = {'I', 'a', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void SetSchedule() {
+    private void setSchedule() {
         long now_in_ms = Calendar.getInstance().getTimeInMillis();
         long next_therapy_date_in_ms = WandData.dateandtime[WandData.FUTURE];
         long deltat = (next_therapy_date_in_ms - now_in_ms) / 1000;                                 // Calculate delta t in seconds
@@ -552,10 +552,10 @@ class WandComm {
         byte mins = (byte) ((deltat - days * 86400 - hours * 3600) / 60);
 
         byte[] msg = {'I', '7', mins, hours, days, 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void SetTherapy() {
+    private void setTherapy() {
         byte config = (byte) WandData.GetConfig();
 
         // Do this for Model 1
@@ -621,16 +621,16 @@ class WandComm {
         config |= 0x80;                     // Set upper bit to change config
 
         byte[] msg = {'I', '2', config, 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void SetAmplitude () {
+    private void setAmplitude() {
         float amplitude = WandData.GetAmpFromPos(WandData.amplitude[WandData.FUTURE]);
         byte[] msg = {'I', '6', (byte) (amplitude / 0.05f), 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void ClearResets() {
+    private void clearResets() {
         byte config = (byte) WandData.GetConfig();
 
         // Do this for Model 1
@@ -641,19 +641,19 @@ class WandComm {
             config |= 0xa0;                     // Set upper bit to change config and bit 5 to clear bReset
 
         byte[] msg = {'I', '2', config, 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void SendTestBurst() {
+    private void sendTestBurst() {
         byte[] msg = {'I', '8', 0, 0};
-        SendMessage(msg);
+        sendMessage(msg);
     }
 
-    private void SendTestBurstExt() {
-        Write_I2C_Stim(0x00, 0x01);
+    private void sendTestBurstExt() {
+        write_I2C_Stim(0x00, 0x01);
     }
 
-    private void SendMessage(byte[] msg) {
+    private void sendMessage(byte[] msg) {
         int crc = CRC.Crc16(msg, msg.length - 2);
         msg[msg.length - 2] = (byte) (crc >> 8);
         msg[msg.length - 1] = (byte) (crc & 0xff);
@@ -665,12 +665,12 @@ class WandComm {
         // Call timer to verify that every message to the wand is acknowledged
         // 1200 seems to work well when the wand battery is low. Shorter durations
         // seem to fail on the setschedule command
-        mHandler.postDelayed(CheckForAcknowledgement, 1200);
+        mHandler.postDelayed(checkForAcknowledgement, 1200);
     }
 
-    void ReturnMessage(byte[] message) {
+    void returnMessage(byte[] message) {
         // Kill the timer that checks for a message acknowledgement
-        mHandler.removeCallbacks(CheckForAcknowledgement);
+        mHandler.removeCallbacks(checkForAcknowledgement);
 
         byte[] rxBuffer;
 
@@ -689,7 +689,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 } else {
                     Log.d(TAG, "CRC incorrect, stop trying.");
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -705,7 +705,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 } else {
                     Log.d(TAG, "CRC incorrect, stop trying.");
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -721,7 +721,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 } else {
                     Log.d(TAG, "CRC incorrect, stop trying.");
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -737,7 +737,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 } else {
                     Log.d(TAG, "CRC incorrect, stop trying.");
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -747,7 +747,7 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETSTATE.");
                     int state = rxBuffer[2];
                     if (state != 6) {
-                        UpdateUIFragments(false);
+                        updateUIFragments(false);
                         return;
                     }
                     mRetries = 3;
@@ -757,7 +757,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 } else {
                     Log.d(TAG, "CRC incorrect, stop trying.");
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -769,7 +769,7 @@ class WandComm {
                     mRetries = 3;
                     if(mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
                         if(WandData.IsITNSNew()) {
-                            UpdateUIFragments(false);
+                            updateUIFragments(false);
                             return;
                         }
                     }
@@ -778,7 +778,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -792,7 +792,7 @@ class WandComm {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
                 } else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -806,7 +806,7 @@ class WandComm {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
                 } else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -820,7 +820,7 @@ class WandComm {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
                 } else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -835,7 +835,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                     }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -850,7 +850,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -865,7 +865,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -885,7 +885,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -907,7 +907,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -927,7 +927,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -941,7 +941,7 @@ class WandComm {
                     mState -= 1;            // Backup state machine and try again
                 }
                 else {
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
                 break;
@@ -952,7 +952,7 @@ class WandComm {
                     mRetries = 1;
                     // A delay of 2450 from the receipt of the burst to the start of the
                     // next command results in a cycle of 3 seconds!
-                    mHandler.postDelayed(RestartTestBurst, 2450);
+                    mHandler.postDelayed(restartTestBurst, 2450);
                     return;
                 } else if(mRetries > 0) {
                     Log.d(TAG, "CRC incorrect, retry.");
@@ -962,7 +962,7 @@ class WandComm {
                 }
                 else {
                     Log.d(TAG, "CRC incorrect, don't retry.");
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
 
@@ -974,7 +974,7 @@ class WandComm {
                     // next command results in a cycle of approx 3 seconds!  Note that the
                     // Wand only listens for tablet commands approximately every 300 ms, so
                     // the burst will actually occur only when the wand processes the command.
-                    mHandler.postDelayed(RestartTestBurstExt, 2920);
+                    mHandler.postDelayed(restartTestBurstExt, 2920);
                     return;
                 } else if(mRetries > 0) {
                     Log.d(TAG, "CRC incorrect, retry.");
@@ -984,48 +984,48 @@ class WandComm {
                 }
                 else {
                     Log.d(TAG, "CRC incorrect, don't retry.");
-                    UpdateUIFragments(false);
+                    updateUIFragments(false);
                     return;
                 }
         }
 
-        ProcessStateMachine();
+        processStateMachine();
     }
 
-    private final Runnable RestartTestBurst = new Runnable() {
+    private final Runnable restartTestBurst = new Runnable() {
         @Override
         public void run() {
             if(mEnableStim) {
                 mState = tasks.SENDTESTBURST;
-                ProcessStateMachine();
+                processStateMachine();
             }
         }
     };
 
-    private final Runnable RestartTestBurstExt = new Runnable() {
+    private final Runnable restartTestBurstExt = new Runnable() {
         @Override
         public void run() {
             if(mEnableStim) {
                 mState = tasks.SENDTESTBURSTEXT;
-                ProcessStateMachine();
+                processStateMachine();
             }
         }
     };
 
-    private void ResetTaskList() {
+    private void resetTaskList() {
         for(int i = 0; i < task_list.length; i++) {
             task_list[i] = false;
         }
     }
 
-    private void ResetChangeList() {
+    private void resetChangeList() {
         for(int i = 0; i < change_list.length; i++) {
             change_list[i] = false;
         }
     }
 
-    private void UpdateUIFragments(boolean success) {
-        ResetTaskList();
+    private void updateUIFragments(boolean success) {
+        resetTaskList();
 
         if(jobs.INTERROGATE == mCurrentJob
                 || jobs.PROGRAM == mCurrentJob
@@ -1047,20 +1047,20 @@ class WandComm {
                 change_list[changes.AMPLITUDE] = false;
            }
        }
-       ResetWandComm();
+       resetWandComm();
     }
 
-    public void ResetWandComm() {
+    public void resetWandComm() {
         // Don't reset change list or current job as these
         // are required when WandComm completes in case of retry
 
-        mHandler.removeCallbacks(RestartTestBurst);
-        mHandler.removeCallbacks(RestartTestBurstExt);
-        mHandler.removeCallbacks(CheckForAcknowledgement);
+        mHandler.removeCallbacks(restartTestBurst);
+        mHandler.removeCallbacks(restartTestBurstExt);
+        mHandler.removeCallbacks(checkForAcknowledgement);
         mEnableStim = false;
         mRetries = 0;
         mCurrentTask = 0;
         mJobCancelled = true;
-        ResetTaskList();
+        resetTaskList();
     }
 }

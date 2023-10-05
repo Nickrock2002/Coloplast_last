@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void UpdateUI(final boolean success) {
         if (success) {
-            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
+            if (wandComm.getCurrentJob() == WandComm.jobs.INITWAND) {
                 OnConnectedUIEvent externalOnConnectedUIEvent = new OnConnectedUIEvent();
                 externalOnConnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
                 EventBus.getDefault().post(externalOnConnectedUIEvent);
@@ -446,14 +446,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDeviceConnected(BluetoothDevice device) {
             isDeviceConnected = true;
-            wandComm.InitWand();
+            wandComm.initWand();
             runOnUiThread(() -> showWandConnectionInActiveMode());
         }
 
         @Override
         public void onDeviceDisconnected(BluetoothDevice device, String message) {
             isDeviceConnected = false;
-            wandComm.ResetWandComm();
+            wandComm.resetWandComm();
             launchFeatureSelectionFragment();
             showWandConnectionDialogue(clinicVisitFragmentOpen);
             // Reconnect
@@ -462,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onMessage(byte[] message) {
-            wandComm.ReturnMessage(message);
+            wandComm.returnMessage(message);
         }
 
         @Override

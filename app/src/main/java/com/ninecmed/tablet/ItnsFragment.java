@@ -90,7 +90,7 @@ public class ItnsFragment extends Fragment {
         interrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 interrogate.setPressed(true);
-                mMainActivity.wandComm.Interrogate();
+                mMainActivity.wandComm.interrogate();
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 interrogate.setPressed(false);
             }
@@ -109,7 +109,7 @@ public class ItnsFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulate.setPressed(true);
-                            mMainActivity.wandComm.SetStimulation(true);
+                            mMainActivity.wandComm.setStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             stimulate.setText(R.string.stimulation_active);
                             WandData.InvalidateStimLeadI();
@@ -154,7 +154,7 @@ public class ItnsFragment extends Fragment {
                             //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.SetStimulation(false);
+                                mMainActivity.wandComm.setStimulation(false);
                                 mStimEnabled = false;
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
@@ -168,7 +168,7 @@ public class ItnsFragment extends Fragment {
     }
 
     private final Runnable HoldStimulation = () -> {
-        mMainActivity.wandComm.SetStimulation(false);
+        mMainActivity.wandComm.setStimulation(false);
         //MakeTone(ToneGenerator.TONE_PROP_NACK);
         mStimEnabled = false;
     };
@@ -208,9 +208,9 @@ public class ItnsFragment extends Fragment {
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
 
-                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                    mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 } else {
-                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                    mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                 }
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 plus.setPressed(false);
@@ -230,9 +230,9 @@ public class ItnsFragment extends Fragment {
                 amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                    mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 } else {
-                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                    mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                 }
 
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
@@ -260,7 +260,7 @@ public class ItnsFragment extends Fragment {
         View view = getView();
 
         if (success) {
-            if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 showLeadRWarningIfFound();
             } else {
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
@@ -290,11 +290,11 @@ public class ItnsFragment extends Fragment {
         }
         // Here's what happens on fail
         else {
-            if (WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (WandData.IsITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
-            if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 //StopStimProgressBar();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
@@ -377,7 +377,7 @@ public class ItnsFragment extends Fragment {
 
         Button btnResetCounter = (Button) dialog.findViewById(R.id.btn_reset_counter_confirm);
         btnResetCounter.setOnClickListener(v -> {
-            mMainActivity.wandComm.ClearResetCounter();
+            mMainActivity.wandComm.clearResetCounter();
         });
 
         TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
