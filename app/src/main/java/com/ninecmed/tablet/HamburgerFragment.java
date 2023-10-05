@@ -259,7 +259,7 @@ public class HamburgerFragment extends Fragment {
         interrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 interrogate.setPressed(true);
-                mMainActivity.wandComm.Interrogate();
+                mMainActivity.wandComm.interrogate();
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 interrogate.setPressed(false);
             }
@@ -308,11 +308,11 @@ public class HamburgerFragment extends Fragment {
         }
         // Here's what happens on fail
         else {
-            if (WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (WandData.IsITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
-            if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));

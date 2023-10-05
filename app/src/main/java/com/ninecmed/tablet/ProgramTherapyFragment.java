@@ -134,9 +134,9 @@ public class ProgramTherapyFragment extends Fragment {
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                     } else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minusButton.setPressed(false);
@@ -159,9 +159,9 @@ public class ProgramTherapyFragment extends Fragment {
                     ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.GetAmpFromPos(mAmplitudePos)));
 
                     if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                     } else {
-                        mMainActivity.wandComm.AddProgramChanges(WandComm.changes.AMPLITUDE);
+                        mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                     }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
@@ -175,7 +175,7 @@ public class ProgramTherapyFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulationButton.setPressed(true);
-                            mMainActivity.wandComm.SetStimulation(true);
+                            mMainActivity.wandComm.setStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             ((Button) stimulationButton).setText(R.string.stimulation_active);
                             WandData.InvalidateStimLeadI();
@@ -199,7 +199,7 @@ public class ProgramTherapyFragment extends Fragment {
                             //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.SetStimulation(false);
+                                mMainActivity.wandComm.setStimulation(false);
 
 //                                MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 mStimEnabled = false;
@@ -231,7 +231,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private final Runnable HoldStimulation = () -> {
-        mMainActivity.wandComm.SetStimulation(false);
+        mMainActivity.wandComm.setStimulation(false);
         //MakeTone(ToneGenerator.TONE_PROP_NACK);
         mStimEnabled = false;
     };
@@ -249,7 +249,7 @@ public class ProgramTherapyFragment extends Fragment {
                 if (!lastCheckedText.isEmpty()) btnFrequencyVal.setText(lastCheckedText);
 
                 if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
-                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.THERAPY);
+                    mMainActivity.wandComm.removeProgramChanges(WandComm.changes.THERAPY);
 
                     // Clear date and time...
                     WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
@@ -276,7 +276,7 @@ public class ProgramTherapyFragment extends Fragment {
 //                    // Enable control if therapy is enabled
                     btnTimeOfDayVal.setClickable(WandData.therapy[WandData.CURRENT] != R.id.radio_off);*/
                 } else {
-                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.THERAPY);
+                    mMainActivity.wandComm.addProgramChanges(WandComm.changes.THERAPY);
 
 //                    Calendar c = Calendar.getInstance();
 //                    long timeDifferenceMillis = mMainActivity.getTimeDifferenceMillis();
@@ -383,9 +383,9 @@ public class ProgramTherapyFragment extends Fragment {
                 WandData.dateandtime[WandData.FUTURE] = calendar.getTimeInMillis();
 
                 if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.DATE);
+                    mMainActivity.wandComm.removeProgramChanges(WandComm.changes.DATE);
                 } else {
-                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.DATE);
+                    mMainActivity.wandComm.addProgramChanges(WandComm.changes.DATE);
                 }
                 btnDayDateVal.setText(formattedDate);
 
@@ -436,9 +436,9 @@ public class ProgramTherapyFragment extends Fragment {
                 WandData.dateandtime[WandData.FUTURE] = futureTime.getTimeInMillis();
 
                 if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
-                    mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.TIME);
+                    mMainActivity.wandComm.removeProgramChanges(WandComm.changes.TIME);
                 } else {
-                    mMainActivity.wandComm.AddProgramChanges(WandComm.changes.TIME);
+                    mMainActivity.wandComm.addProgramChanges(WandComm.changes.TIME);
                 }
 
                 if (!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
@@ -480,7 +480,7 @@ public class ProgramTherapyFragment extends Fragment {
         btnInterrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 btnInterrogate.setPressed(true);
-                mMainActivity.wandComm.Interrogate();
+                mMainActivity.wandComm.interrogate();
                 btnInterrogate.setClickable(false);
 //                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
@@ -543,10 +543,10 @@ public class ProgramTherapyFragment extends Fragment {
                 }
             }
 
-            if (mMainActivity.wandComm.AnyAmplitudeChanges()) {
+            if (mMainActivity.wandComm.anyAmplitudeChanges()) {
                 WandData.InvalidateStimLeadI();
             }
-            mMainActivity.wandComm.Program();
+            mMainActivity.wandComm.program();
         });
 
         TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
@@ -636,7 +636,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ItnsUpdateAmpEvent event) {
-        UpdateAmplitude();
+        updateAmplitude();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -657,32 +657,17 @@ public class ProgramTherapyFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    // This method is called when the fragment is hidden
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (!isVisibleToUser && getView() != null) {
-            OnHidden();
-        }
-    }
-
-    private void OnHidden() {
-        // Always make sure buttons are enabled when leaving window
-        requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
     public void updateUI(boolean success) {
         View view = getView();
         if (success & view != null) {
-            if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 // Re-enable changed parameters (and the test stim button) only when
                 // UIUpdate is called - meaning that the state machine has finished its tasks
-                mMainActivity.wandComm.RemoveProgramChanges(WandComm.changes.AMPLITUDE);
+                mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 showLeadRWarningIfFound();
                 btnFrequencyVal.setEnabled(true);
                 btnFrequencyVal.setClickable(true);
-            } else if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.PROGRAM) {
+            } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
                 ResetChangedParameters();
                 // TODO reset all the values here
             } else { /* This is interrogate callback */
@@ -731,11 +716,11 @@ public class ProgramTherapyFragment extends Fragment {
             }
         } // Here's what happens on fail
         else {
-            if (WandData.IsITNSNew() && mMainActivity.wandComm.GetCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (WandData.IsITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
                 return;
             }
-            if (mMainActivity.wandComm.GetCurrentJob() == WandComm.jobs.SETSTIM) {
+            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
@@ -748,6 +733,8 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 });
                 alertDialog.show();
+            } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
+                mMainActivity.showProgramUnsuccessfulWarnDialog();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }
@@ -801,7 +788,7 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_reset_counter);
 
         Button btnResetCounter = (Button) dialog.findViewById(R.id.btn_reset_counter_confirm);
-        btnResetCounter.setOnClickListener(v -> mMainActivity.wandComm.ClearResetCounter());
+        btnResetCounter.setOnClickListener(v -> mMainActivity.wandComm.clearResetCounter());
 
         TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
         tvCount.setText(getString(R.string.implant_reset_counter).concat(String.valueOf(count)));
@@ -822,10 +809,10 @@ public class ProgramTherapyFragment extends Fragment {
         mAmplitudePos = WandData.GetAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
 
-        mMainActivity.wandComm.RemoveAllProgramChanges();
+        mMainActivity.wandComm.removeAllProgramChanges();
     }
 
-    private void MakeTone(int sound) {
+    private void makeTone(int sound) {
         ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
         tone.startTone(sound, 150);
         long now = System.currentTimeMillis();
@@ -833,7 +820,7 @@ public class ProgramTherapyFragment extends Fragment {
         tone.release();
     }
 
-    public void UpdateAmplitude() {
+    public void updateAmplitude() {
         btnAmplitudeVal.setText(WandData.GetAmplitude());
         mAmplitudePos = WandData.GetAmplitudePos();
     }

@@ -54,7 +54,6 @@ import me.aflak.bluetooth.interfaces.DeviceCallback;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private boolean isBluetoothPermissionGranted = false;
-    private AlertDialog mLowBatDialog = null;
     protected BluetoothDevice mBTDevice = null;
     private boolean isDeviceConnected;
     protected Bluetooth mBluetooth = null;
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String formattedDate = "";
 
-    Dialog wandConnDialog;
+    private Dialog wandConnDialog;
 
     private long timeDifferenceMillis = 0;
 
@@ -370,8 +369,7 @@ public class MainActivity extends AppCompatActivity {
         int batteryPct = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
         if (batteryPct <= 15 && !batteryCharging) {
-            if (mLowBatDialog == null)
-                showBatteryWarnDialog();
+            showBatteryWarnDialog();
         }
 
         ImageView ivBatteryPer = findViewById(R.id.iv_battery_per);
@@ -409,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void UpdateUI(final boolean success) {
         if (success) {
-            if (wandComm.GetCurrentJob() == WandComm.jobs.INITWAND) {
+            if (wandComm.getCurrentJob() == WandComm.jobs.INITWAND) {
                 OnConnectedUIEvent externalOnConnectedUIEvent = new OnConnectedUIEvent();
                 externalOnConnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
                 EventBus.getDefault().post(externalOnConnectedUIEvent);
@@ -446,14 +444,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDeviceConnected(BluetoothDevice device) {
             isDeviceConnected = true;
-            wandComm.InitWand();
+            wandComm.initWand();
             runOnUiThread(() -> showWandConnectionInActiveMode());
         }
 
         @Override
         public void onDeviceDisconnected(BluetoothDevice device, String message) {
             isDeviceConnected = false;
-            wandComm.ResetWandComm();
+            wandComm.resetWandComm();
             launchFeatureSelectionFragment();
             showWandConnectionDialogue(clinicVisitFragmentOpen);
             // Reconnect
@@ -462,7 +460,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onMessage(byte[] message) {
-            wandComm.ReturnMessage(message);
+            wandComm.returnMessage(message);
         }
 
         @Override
@@ -725,6 +723,24 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_serial_mismatch);
 
         Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_mismatch);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    public void showProgramUnsuccessfulWarnDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_programming_unsuccessful);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
         });
