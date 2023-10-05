@@ -388,7 +388,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
                 btnDayDateVal.setText(formattedDate);
 
-                if (!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
+                if (!btnDayDateVal.getText().toString().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().toString().equals(getString(R.string._3_dash))) {
                     enableDisableProgramButton(true);
                 }
 
@@ -440,7 +440,7 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.TIME);
                 }
 
-                if (!btnDayDateVal.getText().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().equals(getString(R.string._3_dash))) {
+                if (!btnDayDateVal.getText().toString().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().toString().equals(getString(R.string._3_dash))) {
                     enableDisableProgramButton(true);
                 }
 
