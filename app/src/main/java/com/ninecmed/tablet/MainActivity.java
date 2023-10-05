@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbarClickEvents();
     }
 
+    public boolean isDeviceConnected() {
+        return isDeviceConnected;
+    }
+
     private void requestBluetoothPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
@@ -195,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         wandConnDialog.setCancelable(false);
         wandConnDialog.show();
         if (isBluetoothPermissionGranted) {
-            if (!isDeviceConnected && mBTDevice == null) {
+            if (!isDeviceConnected) {
                 initBluetooth();
             } else {
                 runOnUiThread(this::showWandConnectionInActiveMode);

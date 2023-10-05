@@ -51,7 +51,6 @@ public class HamburgerFragment extends Fragment {
         Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.fragment_hamburger, container, false);
 
-        initializeInterrogateButton(view);
         initializeCloseAppButton(view);
         initializeAddress(view);
 
@@ -122,6 +121,7 @@ public class HamburgerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initializeInterrogateButton(view);
         setupCurrentData(view);
     }
 
@@ -256,17 +256,24 @@ public class HamburgerFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton(View view) {
-        final Button interrogate = view.findViewById(R.id.btn_interrogate);
-        interrogate.setOnTouchListener((view1, motionEvent) -> {
+        Button btnInterrogate = view.findViewById(R.id.btn_interrogate);
+        btnInterrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                interrogate.setPressed(true);
+                btnInterrogate.setPressed(true);
                 mMainActivity.wandComm.interrogate();
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                interrogate.setPressed(false);
+                btnInterrogate.setPressed(false);
             }
             return true;
         });
 
+        if (mMainActivity.isDeviceConnected()) {
+            btnInterrogate.setEnabled(true);
+            btnInterrogate.setClickable(true);
+        } else {
+            btnInterrogate.setEnabled(false);
+            btnInterrogate.setClickable(false);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
