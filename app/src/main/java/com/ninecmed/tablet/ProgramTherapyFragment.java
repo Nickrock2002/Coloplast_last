@@ -52,7 +52,6 @@ public class ProgramTherapyFragment extends Fragment {
     private static final String TAG = "ProgramTherapyFragment";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 0;
-    private boolean bTouch = false;
     private int checkedRadioButtonId = -1;
     Button btnImplantBatteryStatus;
     Button btnLeadRWarn;
@@ -502,8 +501,7 @@ public class ProgramTherapyFragment extends Fragment {
     private void initializeProgramButton(View view) {
         btnProgram = view.findViewById(R.id.btn_program);
         btnProgram.setOnTouchListener((view1, motionEvent) -> {
-            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN && !bTouch) {
-                bTouch = true;
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 showProgramConfirmationDialog();
             }
             return true;
@@ -628,7 +626,6 @@ public class ProgramTherapyFragment extends Fragment {
 
         alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
             dialogInterface.dismiss();
-            bTouch = false;
         });
         AlertDialog dialog = alertDialog.create();
         dialog.setCancelable(false);
