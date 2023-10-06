@@ -176,7 +176,7 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadI() == 0.0f) {
             leadi.setText("_");
         } else {
-            String formattedLeadI =  String.format("%.1f mA", leadi);
+            String formattedLeadI =  String.format("%.1f mA", WandData.getLeadI());
             leadi.setText(formattedLeadI);
         }
 
