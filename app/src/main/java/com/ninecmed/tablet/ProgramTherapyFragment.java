@@ -252,27 +252,7 @@ public class ProgramTherapyFragment extends Fragment {
                 btnFrequencyVal.setText(checkedRadioButton.getText().toString());
 
                 byte position = 0;
-                switch (checkedRadioButtonId) {
-                    case R.id.radio_off:
-                        position = 0;
-                        break;
-                    case R.id.radio_daily:
-                        position = 1;
-                        break;
-                    case R.id.radio_weekly:
-                        position = 2;
-                        break;
-                    case R.id.radio_fort_nightly:
-                        position = 3;
-                        break;
-                    case R.id.radio_monthly:
-                        position = 4;
-                        break;
-                    case R.id.radio_auto:
-                        position = 5;
-                        break;
-                }
-
+                position = Byte.parseByte(checkedRadioButton.getTag().toString());
                 WandData.therapy[WandData.FUTURE] = position;
 
                 if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
