@@ -176,7 +176,8 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadI() == 0.0f) {
             leadi.setText("_");
         } else {
-            leadi.setText("" + WandData.getLeadI() + "mA");
+            String formattedLeadI =  String.format("%.1f mA", leadi);
+            leadi.setText(formattedLeadI);
         }
 
         // LEAD R
@@ -184,7 +185,8 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadR() == 0f) {
             leadr.setText("_");
         } else {
-            leadr.setText("" + WandData.getLeadR() + "Ohms");
+            String formattedLeadR = String.format("%.0f Ohms", WandData.getLeadR());
+            leadr.setText(formattedLeadR);
         }
     }
 
