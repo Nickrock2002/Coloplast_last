@@ -88,7 +88,7 @@ public class HamburgerFragment extends Fragment {
         int endIndex = startIndex + getString(R.string.intibia_com_ifu_part_2).length();
 
         // Define the color you want for the link
-        int linkColor = ActivityCompat.getColor(requireContext(), R.color.co);
+        int linkColor = ActivityCompat.getColor(requireContext(), R.color.colorPrimary);
 
         // Apply the color to the link
         spannableString.setSpan(new ForegroundColorSpan(linkColor), startIndex, endIndex, 0);
