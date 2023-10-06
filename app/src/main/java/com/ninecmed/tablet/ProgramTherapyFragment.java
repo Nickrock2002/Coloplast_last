@@ -554,10 +554,10 @@ public class ProgramTherapyFragment extends Fragment {
                     // the model 2.
                     showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
                     return;
-                } else if (future > (now + 1000L * 3600L * 24L * 31L)) {
+                } /*else if (future > (now + 1000L * 3600L * 24L * 31L)) {
                     showDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
                     return;
-                }
+                }*/
             }
             // Only check date range of one week for Model 1
             else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.getModelNumber() == 1) {
