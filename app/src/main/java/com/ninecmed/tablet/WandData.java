@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-class WandData {
+public class WandData {
     static private final String TAG = "WandData";
 
     // All implant parameters are stored in a 3 element array.  The first element is for TEMPORARY
@@ -360,7 +360,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String getCellV() {
+    public static String getCellV() {
 
         // For model 1, hide Cell V if -1
         if (mModelNumber[CURRENT] == 1) {
