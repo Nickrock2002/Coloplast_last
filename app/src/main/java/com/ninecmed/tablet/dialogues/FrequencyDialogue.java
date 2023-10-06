@@ -25,18 +25,10 @@ import java.util.Objects;
 public class FrequencyDialogue extends Dialog {
     private View.OnClickListener cancelButtonListener = null;
     private View.OnClickListener confirmButtonListener = null;
-    private RadioGroupPlus.OnCheckedChangeListener checkedChangeListener = null;
+    private RadioGroupPlus radioGroupPlus = null;
 
     public FrequencyDialogue(Context context) {
         super(context);
-    }
-
-    public FrequencyDialogue(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
-    protected FrequencyDialogue(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -70,12 +62,15 @@ public class FrequencyDialogue extends Dialog {
         Button btConfirm = (Button) findViewById(R.id.bt_confirm);
         btConfirm.setOnClickListener(confirmButtonListener);
 
-        RadioGroupPlus radioGroupPlus = (RadioGroupPlus) findViewById(R.id.frequencyRadioGroup);
-        radioGroupPlus.setOnCheckedChangeListener(checkedChangeListener);
+        radioGroupPlus = (RadioGroupPlus) findViewById(R.id.frequencyRadioGroup);
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
         Objects.requireNonNull(getWindow()).setLayout(dimensions.first, dimensions.second);
+    }
+
+    public int getCheckedButtonId() {
+        return radioGroupPlus.getCheckedRadioButtonId();
     }
 
     public void setCancelButtonListener(View.OnClickListener onClickListener) {
@@ -84,9 +79,5 @@ public class FrequencyDialogue extends Dialog {
 
     public void setConfirmButtonListener(View.OnClickListener onClickListener) {
         this.confirmButtonListener = onClickListener;
-    }
-
-    public void setCheckedChangeListener(RadioGroupPlus.OnCheckedChangeListener checkedChangeListener) {
-        this.checkedChangeListener = checkedChangeListener;
     }
 }
