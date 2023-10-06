@@ -765,11 +765,11 @@ public class ProgramTherapyFragment extends Fragment {
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
             btnLeadRWarn.setVisibility(View.VISIBLE);
-            tvLeadRVal.setVisibility(View.GONE);
+            tvLeadRVal.setVisibility(View.INVISIBLE);
             displayLeadRDialogue();
         } else {
             tvLeadRVal.setText(R.string.ok);
-            btnLeadRWarn.setVisibility(View.GONE);
+            btnLeadRWarn.setVisibility(View.INVISIBLE);
         }
     }
 
