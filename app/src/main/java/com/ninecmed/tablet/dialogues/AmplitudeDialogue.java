@@ -48,7 +48,7 @@ public class AmplitudeDialogue extends Dialog {
         setContentView(R.layout.dialog_set_amp);
 
         TextView tvItnsAmplitude = findViewById(R.id.tv_itns_amplitude);
-        tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V", amplitude));
+        tvItnsAmplitude.setText(String.format( "%.2f V", amplitude));
 
         ImageButton ibItnsPlus = findViewById(R.id.ib_itns_plus);
         ibItnsPlus.setOnTouchListener(itnsPlusListener);
