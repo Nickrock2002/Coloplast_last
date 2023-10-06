@@ -112,7 +112,7 @@
     <string name="connect_the_tablet_to_an_external_charger">Connect the tablet to an external charger.</string>
     <string name="tablet_battery_capacity_is_less_than_15">Tablet battery capacity is less than 15%</string>
     <string name="set_time">Set Time</string>
-    <string name="back_to_start_screen">Back to Start screen?</string>
+    <string name="back_to_start_screen">Back to Previous Screen?</string>
     <string name="do_you_want_to_close_app">Do you want to close the Intibia ITNS application?</string>
     <string name="set_date">Set Date</string>
     <string name="lead_r_2000_ohms"><![CDATA[Lead R > 2000 ohms]]></string>

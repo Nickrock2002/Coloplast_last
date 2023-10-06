@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class SurgeryFragment extends Fragment {
+public class BaseTabFragment extends Fragment {
     private SectionsPageAdapter mSectionsPageAdapter;
     private TabLayout mTabLayout;
     private MainActivity mainActivity;
@@ -54,8 +54,6 @@ public class SurgeryFragment extends Fragment {
 
         mTabLayout = view.findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
-
-        ((MainActivity) getActivity()).updateToolbarColor(true);
 
         return view;
     }
