@@ -385,7 +385,7 @@ public class ProgramTherapyFragment extends Fragment {
         btnDayDateVal = rootView.findViewById(R.id.btn_start_day);
 
         btnDayDateVal.setOnClickListener(dayDateButton -> {
-            final ProgramTherapyDayDateDialogue dialogue = new ProgramTherapyDayDateDialogue(getActivity());
+            final ProgramTherapyDayDateDialogue dialogue = new ProgramTherapyDayDateDialogue(getActivity(), mMainActivity.getTimeDifferenceMillis());
             dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
                 DatePicker datePicker = dialogue.findViewById(R.id.datePicker);
