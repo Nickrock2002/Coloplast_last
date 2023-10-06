@@ -96,7 +96,7 @@
     <string name="intibia_itns_rrt">Intibia ITNS RRT</string>
     <string name="stimulation_active">Stimulation Active</string>
     <string name="implant_reset_counter">"Implant Reset Counter: "</string>
-    <string name="_3_dash">---</string>
+    <string name="_3_dash">_ _ _</string>
     <string name="amplitude_with_colon">Amplitude:</string>
     <string name="tablet_and_wand_communication_issue">Tablet and Wand Communication issue</string>
     <string name="the_communication_between_the_wand_and_the_tablet_has_been_lost">The communication between the Wand and the Tablet has been lost</string>
