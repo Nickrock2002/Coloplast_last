@@ -553,6 +553,7 @@ public class ProgramTherapyFragment extends Fragment {
                 WandData.invalidateStimLeadI();
             }
             mMainActivity.wandComm.program();
+            dialog.dismiss();
         });
 
         TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
