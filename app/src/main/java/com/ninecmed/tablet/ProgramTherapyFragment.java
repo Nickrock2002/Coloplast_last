@@ -54,7 +54,6 @@ public class ProgramTherapyFragment extends Fragment {
     private int mAmplitudePos = 0;
     private boolean bTouch = false;
     private int checkedRadioButtonId = -1;
-    private String lastCheckedText = "";
     Button btnImplantBatteryStatus;
     Button btnLeadRWarn;
     TextView tvLeadRVal;
@@ -243,6 +242,10 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
+                checkedRadioButtonId = dialogue.getCheckedButtonId();
+                RadioButton checkedRadioButton = (RadioButton) dialogue.findViewById(checkedRadioButtonId);
+                btnFrequencyVal.setText(checkedRadioButton.getText().toString());
+
                 byte position = 0;
                 switch (checkedRadioButtonId) {
                     case R.id.radio_off:
@@ -266,8 +269,6 @@ public class ProgramTherapyFragment extends Fragment {
                 }
 
                 WandData.therapy[WandData.FUTURE] = position;
-
-                if (!lastCheckedText.isEmpty()) btnFrequencyVal.setText(lastCheckedText);
 
                 if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
                     mMainActivity.wandComm.removeProgramChanges(WandComm.changes.THERAPY);
@@ -363,11 +364,6 @@ public class ProgramTherapyFragment extends Fragment {
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
 
                 dialogue.dismiss();
-            });
-            dialogue.setCheckedChangeListener((group, checkedId) -> {
-                RadioButton checkedRadioButton = (RadioButton) dialogue.findViewById(checkedId);
-                checkedRadioButtonId = checkedId;
-                lastCheckedText = checkedRadioButton.getText().toString();
             });
             dialogue.show();
             RadioButton rb;
