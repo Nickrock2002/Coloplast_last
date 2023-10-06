@@ -117,6 +117,7 @@ public class ProgramTherapyFragment extends Fragment {
     private void setUpAmplitudeButtonClick(View rootView) {
         btnAmplitudeVal = rootView.findViewById(R.id.btn_amplitude_val);
         btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
+            mAmplitudePos = 0;
             String amplitudeVal = String.valueOf(WandData.getAmpFromPos(mAmplitudePos));
             final AmplitudeDialogue dialogue = new AmplitudeDialogue(getActivity());
             dialogue.setAmplitude(amplitudeVal);

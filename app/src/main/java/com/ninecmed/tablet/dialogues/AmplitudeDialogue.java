@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class AmplitudeDialogue extends Dialog {
@@ -46,22 +47,22 @@ public class AmplitudeDialogue extends Dialog {
         setCancelable(false);
         setContentView(R.layout.dialog_set_amp);
 
-        TextView tvItnsAmplitude = (TextView) findViewById(R.id.tv_itns_amplitude);
-        tvItnsAmplitude.setText(amplitude);
+        TextView tvItnsAmplitude = findViewById(R.id.tv_itns_amplitude);
+        tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V", amplitude));
 
-        ImageButton ibItnsPlus = (ImageButton) findViewById(R.id.ib_itns_plus);
+        ImageButton ibItnsPlus = findViewById(R.id.ib_itns_plus);
         ibItnsPlus.setOnTouchListener(itnsPlusListener);
 
-        ImageButton ibItnsMinus = (ImageButton) findViewById(R.id.ib_itns_minus);
+        ImageButton ibItnsMinus = findViewById(R.id.ib_itns_minus);
         ibItnsMinus.setOnTouchListener(itnsMinusListener);
 
-        Button btItnsStartStim = (Button) findViewById(R.id.bt_itns_start_stim);
+        Button btItnsStartStim = findViewById(R.id.bt_itns_start_stim);
         btItnsStartStim.setOnTouchListener(stimulationButtonListener);
 
-        Button btCancel = (Button) findViewById(R.id.bt_cancel);
+        Button btCancel = findViewById(R.id.bt_cancel);
         btCancel.setOnClickListener(cancelButtonListener);
 
-        Button btConfirm = (Button) findViewById(R.id.bt_confirm);
+        Button btConfirm = findViewById(R.id.bt_confirm);
         btConfirm.setOnClickListener(confirmButtonListener);
 
         setTheSystemButtonsHidden(this);
@@ -98,15 +99,15 @@ public class AmplitudeDialogue extends Dialog {
     }
 
     public Button getConfirmButtonRef() {
-        return (Button) findViewById(R.id.bt_confirm);
+        return findViewById(R.id.bt_confirm);
     }
 
     public ImageButton getPlusButtonRef() {
-        return (ImageButton) findViewById(R.id.ib_itns_plus);
+        return findViewById(R.id.ib_itns_plus);
     }
 
     public ImageButton getMinusButtonRef() {
-        return (ImageButton) findViewById(R.id.ib_itns_minus);
+        return findViewById(R.id.ib_itns_minus);
     }
 
     public void get(View.OnClickListener onClickListener) {
