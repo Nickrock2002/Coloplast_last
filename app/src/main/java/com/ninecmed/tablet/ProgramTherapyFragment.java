@@ -750,12 +750,12 @@ public class ProgramTherapyFragment extends Fragment {
         TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
         String rrt_result = WandData.getRRT(view.getContext());
         if (rrt_result != null && rrt_result.equals(getString(R.string.all_yes))) {
+            btnImplantBatteryStatus.setVisibility(View.VISIBLE);
+            cellv.setVisibility(View.INVISIBLE);
+        } else {
             btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
             cellv.setVisibility(View.VISIBLE);
             cellv.setText(R.string.ok);
-        } else {
-            btnImplantBatteryStatus.setVisibility(View.VISIBLE);
-            cellv.setVisibility(View.INVISIBLE);
         }
     }
 

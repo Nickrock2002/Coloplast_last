@@ -52,7 +52,7 @@ public class HamburgerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hamburger, container, false);
 
         initializeCloseAppButton(view);
-        initializeAddress(view);
+        //initializeAddress(view);
 
         TextView tvSoftwareVersion = view.findViewById(R.id.tv_software_version_val);
         tvSoftwareVersion.setText(BuildConfig.VERSION_NAME);
