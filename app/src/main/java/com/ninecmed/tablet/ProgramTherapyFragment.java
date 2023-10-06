@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -19,12 +18,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -697,7 +693,7 @@ public class ProgramTherapyFragment extends Fragment {
                 showLeadRWarningIfFound();
                 enableDisableFrequencyButton(true);
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
-                ResetChangedParameters();
+                resetChangedParameters();
                 // TODO reset all the values here
             } else { /* This is interrogate callback */
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
@@ -739,7 +735,7 @@ public class ProgramTherapyFragment extends Fragment {
                 if (!time.isEmpty())
                     btnTimeOfDayVal.setText(time);
 
-                ResetChangedParameters();
+                resetChangedParameters();
                 checkForReset();
             }
         } // Here's what happens on fail
@@ -828,7 +824,7 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.show();
     }
 
-    private void ResetChangedParameters() {
+    private void resetChangedParameters() {
 
         WandData.therapy[WandData.FUTURE] = WandData.therapy[WandData.CURRENT];
 
@@ -837,6 +833,21 @@ public class ProgramTherapyFragment extends Fragment {
         mAmplitudePos = WandData.getAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
 
+        //set radio button id after getting on the response.
+        int position = WandData.getTherapyPos();
+        if (position == 0) {
+            checkedRadioButtonId = R.id.off;
+        } else if (position == 1) {
+            checkedRadioButtonId = R.id.radio_daily;
+        } else if (position == 2) {
+            checkedRadioButtonId = R.id.radio_weekly;
+        } else if (position == 3) {
+            checkedRadioButtonId = R.id.radio_fort_nightly;
+        } else if (position == 4) {
+            checkedRadioButtonId = R.id.radio_monthly;
+        } else if (position == 5) {
+            checkedRadioButtonId = R.id.radio_auto;
+        }
         mMainActivity.wandComm.removeAllProgramChanges();
     }
 

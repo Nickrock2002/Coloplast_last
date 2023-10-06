@@ -296,11 +296,11 @@ public class WandData {
         return mConfig[CURRENT];
     }
 
-    static int getTherapyPos() {
+    public static int getTherapyPos() {
         return therapy[CURRENT];
     }
 
-    static String getTherapy(Context context) {
+    public static String getTherapy(Context context) {
         // Do this for Model 1
         if (mModelNumber[CURRENT] == 1) {
             String[] therapy_array = context.getResources().getStringArray(R.array.itns_therapy_schedule_array_model_one);
