@@ -128,19 +128,15 @@ public class ProgramTherapyFragment extends Fragment {
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
 
-                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
-                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                        mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
-                    } else {
-                        mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
-                    }
+
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minusButton.setPressed(false);
-                    Drawable drawable = (Drawable) minusButton.getBackground().mutate();
-
+                    Drawable drawable =  dialogue.getMinusButtonRef().getBackground().mutate();
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                    Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
+                    drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 }
                 return true;
             });
@@ -152,19 +148,19 @@ public class ProgramTherapyFragment extends Fragment {
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
-                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                     amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
-                    ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
-                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                   /* if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                     } else {
                         mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
-                    }
+                    }*/
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
-                    Drawable drawable = (Drawable) plusButton.getBackground().mutate();
+                    Drawable drawable =  dialogue.getMinusButtonRef().getBackground().mutate();
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                    Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
+                    drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 }
                 return true;
             });
@@ -172,6 +168,7 @@ public class ProgramTherapyFragment extends Fragment {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
+                            WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                             stimulationButton.setPressed(true);
                             mMainActivity.wandComm.setStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
@@ -205,9 +202,10 @@ public class ProgramTherapyFragment extends Fragment {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
                             Drawable drawablePlus = (Drawable) dialogue.getPlusButtonRef().getBackground().mutate();
-                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
                             Drawable drawableMinus = (Drawable) dialogue.getMinusButtonRef().getBackground().mutate();
-                            drawableMinus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                            drawableMinus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+
                             dialogue.getConfirmButtonRef().setClickable(true);
                             dialogue.getConfirmButtonRef().setEnabled(true);
                         }
@@ -219,6 +217,13 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
+
+                if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                    mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
+                } else {
+                    mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
+                }
+
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 Drawable drawable = (Drawable) amplitudeButton.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));

@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
@@ -159,6 +161,11 @@ public class ItnsFragment extends Fragment {
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
+
+                            Drawable drawable =  plus.getBackground().mutate();
+                            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+                            Drawable drawablePlus = minus.getBackground().mutate();
+                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
                         }
                         break;
                 }
@@ -207,13 +214,16 @@ public class ItnsFragment extends Fragment {
                 amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-
                     mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 } else {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                 }
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 plus.setPressed(false);
+                Drawable drawable =  plus.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                Drawable drawablePlus = minus.getBackground().mutate();
+                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
             return true;
         });
@@ -237,6 +247,10 @@ public class ItnsFragment extends Fragment {
 
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 minus.setPressed(false);
+                Drawable drawable =  plus.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                Drawable drawablePlus = minus.getBackground().mutate();
+                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
             return true;
         });
