@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class AmplitudeDialogue extends Dialog {
-    private String amplitude;
+    private float amplitude;
     private View.OnTouchListener itnsPlusListener = null;
     private View.OnTouchListener itnsMinusListener = null;
     private View.OnTouchListener stimulationButtonListener = null;
@@ -48,7 +48,7 @@ public class AmplitudeDialogue extends Dialog {
         setContentView(R.layout.dialog_set_amp);
 
         TextView tvItnsAmplitude = findViewById(R.id.tv_itns_amplitude);
-        tvItnsAmplitude.setText(String.format( "%.2f V", amplitude));
+        tvItnsAmplitude.setText(String.format( "%.2f V", getAmplitude()));
 
         ImageButton ibItnsPlus = findViewById(R.id.ib_itns_plus);
         ibItnsPlus.setOnTouchListener(itnsPlusListener);
@@ -70,11 +70,11 @@ public class AmplitudeDialogue extends Dialog {
         Objects.requireNonNull(getWindow()).setLayout(dimensions.first, dimensions.second);
     }
 
-    public String getAmplitude() {
+    public float getAmplitude() {
         return amplitude;
     }
 
-    public void setAmplitude(String amplitude) {
+    public void setAmplitude(float amplitude) {
         this.amplitude = amplitude;
     }
 
