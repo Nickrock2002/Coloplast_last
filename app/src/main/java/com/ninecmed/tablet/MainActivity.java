@@ -111,6 +111,22 @@ public class MainActivity extends AppCompatActivity {
 
         requestBluetoothPermission();
         setUpToolbarClickEvents();
+
+        manageFragmentToolbar();
+    }
+
+    private void manageFragmentToolbar() {
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    FragmentManager.BackStackEntry topEntry = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
+                    String fragmentName = topEntry.getName();
+                    boolean isInside = fragmentName.equals("inside");
+                    updateToolbar(isInside);
+                }
+            }
+        });
     }
 
     public boolean isDeviceConnected() {
@@ -149,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpToolbarClickEvents() {
         ivHamburger.setOnClickListener(view -> {
             launchHamburgerFragment();
-            updateToolbarColor(true);
+            //updateToolbar(true);
             ivHamburger.setVisibility(View.GONE);
             ivBack.setVisibility(View.VISIBLE);
         });
@@ -159,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void updateToolbarColor(boolean isInside) {
+    public void updateToolbar(boolean isInside) {
         ConstraintLayout toolbar = findViewById(R.id.ll_toolbar);
         ImageView intibiaIv = findViewById(R.id.iv_intbia_logo);
         if (isInside) {
@@ -186,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             if (isClinicVisit) {
                 showSetDateTimeDialog(false);
             } else {
-                launchDashboardFragment(false);
+                launchBaseTabFragment(false);
             }
             wandConnDialog.dismiss();
         });
@@ -214,18 +230,20 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
-        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
+        fragmentTransaction.add(R.id.fl_fragment, featureSelectionFragment);
+        fragmentTransaction.addToBackStack("outside");
 
         fragmentTransaction.commit();
     }
 
-    private void launchDashboardFragment(boolean isClinicVisit) {
+    private void launchBaseTabFragment(boolean isClinicVisit) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        SurgeryFragment surgeryFragment = new SurgeryFragment();
-        surgeryFragment.setClinicVisit(isClinicVisit);
-        fragmentTransaction.replace(R.id.fl_fragment, surgeryFragment);
+        BaseTabFragment baseTabFragment = new BaseTabFragment();
+        baseTabFragment.setClinicVisit(isClinicVisit);
+        fragmentTransaction.add(R.id.fl_fragment, baseTabFragment);
+        fragmentTransaction.addToBackStack("inside");
 
         fragmentTransaction.commit();
     }
@@ -235,8 +253,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         HamburgerFragment hamburgerFragment = new HamburgerFragment();
-        fragmentTransaction.replace(R.id.fl_fragment, hamburgerFragment);
-
+        fragmentTransaction.add(R.id.fl_fragment, hamburgerFragment);
+        fragmentTransaction.addToBackStack("inside");
         fragmentTransaction.commit();
     }
 
@@ -529,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (!isFromHamburger) {
-                launchDashboardFragment(true);
+                launchBaseTabFragment(true);
             } else {
                 updateAppTime();
             }
@@ -667,8 +685,12 @@ public class MainActivity extends AppCompatActivity {
         Button btnGoBack = (Button) dialog.findViewById(R.id.btn_yes_go_back);
         btnGoBack.setOnClickListener(v -> {
             dialog.dismiss();
-            launchFeatureSelectionFragment();
-            updateToolbarColor(false);
+            /*if (ivHamburger.getVisibility() == View.VISIBLE) {
+                updateToolbar(false);
+            } else {
+                updateToolbar(true);
+            }*/
+            getSupportFragmentManager().popBackStack();
             ivHamburger.setVisibility(View.VISIBLE);
         });
 
