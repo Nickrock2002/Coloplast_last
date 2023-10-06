@@ -5,20 +5,16 @@ import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.RadioButton;
-
-import androidx.core.app.ActivityCompat;
+import android.widget.TextView;
 
 import com.ninecmed.tablet.R;
-import com.ninecmed.tablet.RadioGroupPlus;
 import com.ninecmed.tablet.Utility;
+import com.ninecmed.tablet.WandData;
 
 import java.util.Objects;
 
@@ -29,14 +25,6 @@ public class BatteryReplaceRRTDialogue extends Dialog {
         super(context);
     }
 
-    public BatteryReplaceRRTDialogue(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
-    protected BatteryReplaceRRTDialogue(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +32,9 @@ public class BatteryReplaceRRTDialogue extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCancelable(false);
         setContentView(R.layout.dialog_itns_rrt);
+
+        TextView tvImplantBatteryVoltage = (TextView) findViewById(R.id.tv_implant_battery_volts);
+        tvImplantBatteryVoltage.setText("Battery Voltage: " + WandData.getCellV());
 
         Button btConfirm = (Button) findViewById(R.id.bt_confirm);
         btConfirm.setOnClickListener(confirmButtonListener);

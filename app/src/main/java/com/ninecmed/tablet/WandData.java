@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-class WandData {
+public class WandData {
     static private final String TAG = "WandData";
 
     // All implant parameters are stored in a 3 element array.  The first element is for TEMPORARY
@@ -24,7 +24,7 @@ class WandData {
     // if it means that the entire "program" set might be unsuccessful.
 
     // Programmable implant parameters
-    static int[] therapy = new int[3];                                                            // 0 for Off, 1 for Daily, 2 for Weekly, 3 for Fortnightly, 4 for Monthly, 5 for Auto
+    static byte[] therapy = new byte[3];                                                            // 0 for Off, 1 for Daily, 2 for Weekly, 3 for Fortnightly, 4 for Monthly, 5 for Auto
     static long[] dateandtime = new long[3];                                                        // Date and time of next therapy in milliseconds
     static byte[] amplitude = new byte[3];                                                          // 0 for 0.1 V, 42 for 10.0.
 
@@ -360,7 +360,7 @@ class WandData {
     }
 
     @SuppressLint("DefaultLocale")
-    static String getCellV() {
+    public static String getCellV() {
 
         // For model 1, hide Cell V if -1
         if (mModelNumber[CURRENT] == 1) {
