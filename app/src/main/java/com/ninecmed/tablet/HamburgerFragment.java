@@ -52,7 +52,7 @@ public class HamburgerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hamburger, container, false);
 
         initializeCloseAppButton(view);
-        initializeAddress(view);
+        //initializeAddress(view);
 
         TextView tvSoftwareVersion = view.findViewById(R.id.tv_software_version_val);
         tvSoftwareVersion.setText(BuildConfig.VERSION_NAME);
@@ -88,7 +88,7 @@ public class HamburgerFragment extends Fragment {
         int endIndex = startIndex + getString(R.string.intibia_com_ifu_part_2).length();
 
         // Define the color you want for the link
-        int linkColor = ActivityCompat.getColor(requireContext(), R.color.colorPrimary);
+        int linkColor = ActivityCompat.getColor(requireContext(), R.color.co);
 
         // Apply the color to the link
         spannableString.setSpan(new ForegroundColorSpan(linkColor), startIndex, endIndex, 0);
