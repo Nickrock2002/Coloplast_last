@@ -561,16 +561,16 @@ class WandComm {
         // Do this for Model 1
         if(WandData.getModelNumber() == 1) {
             switch (WandData.therapy[WandData.FUTURE]) {
-                case R.id.radio_off:                         // Therapy off
+                case 0:                         // Therapy off
                     config &= ~0x01;            // Clear the first bit
                     break;
 
-                case R.id.radio_daily:                         // Daily therapy
+                case 1:                         // Daily therapy
                     config |= 0x01;             // Enable therapy
                     config |= 0x02;             // Set daily therapy
                     break;
 
-                case R.id.radio_weekly:                         // Weekly therapy
+                case 2:                         // Weekly therapy
                     config |= 0x01;             // Enable therapy
                     config &= ~0x02;            // Clear daily therapy
                     break;
@@ -579,34 +579,34 @@ class WandComm {
         // Do this for Model 2
         else {
             switch (WandData.therapy[WandData.FUTURE]) {
-                case R.id.radio_off:                         // Therapy off
+                case 0:                         // Therapy off
                     config &= ~0x01;            // Clear the first bit
                     break;
 
-                case R.id.radio_daily:                         // Daily therapy
+                case 1:                         // Daily therapy
                     config |= 0x01;             // Enable therapy
                     config &= ~0x0e;            // Clear therapy bits
                     break;
 
-                case R.id.radio_weekly:                         // Weekly therapy
+                case 2:                         // Weekly therapy
                     config |= 0x01;             // Enable therapy
                     config &= ~0x0e;            // Clear therapy bits
                     config |= 0x02;             // Set weekly therapy
                     break;
 
-                case R.id.radio_fort_nightly:                         // Fortnightly therapy
+                case 3:                         // Fortnightly therapy
                     config |= 0x01;             // Enable therapy
                     config &= ~0x0e;            // Clear therapy bits
                     config |= 0x04;             // Set fortnightly therapy
                     break;
 
-                case R.id.radio_monthly:                         // Monthly therapy
+                case 4:                         // Monthly therapy
                     config |= 0x01;             // Enable therapy
                     config &= ~0x0e;            // Clear therapy bits
                     config |= 0x06;             // Set monthly therapy
                     break;
 
-                case R.id.radio_auto:                         // Auto jump-start therapy
+                case 5:                         // Auto jump-start therapy
                     config |= 0x01;             // Enable therapy
                     config &= ~0x0e;            // Clear therapy bits
                     config |= 0x08;             // Set auto therapy

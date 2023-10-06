@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -18,9 +19,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -231,7 +235,6 @@ public class ProgramTherapyFragment extends Fragment {
 
     private final Runnable HoldStimulation = () -> {
         mMainActivity.wandComm.setStimulation(false);
-        //MakeTone(ToneGenerator.TONE_PROP_NACK);
         mStimEnabled = false;
     };
 
@@ -244,7 +247,30 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
-                WandData.therapy[WandData.FUTURE] = checkedRadioButtonId;
+                byte position = 0;
+                switch (checkedRadioButtonId) {
+                    case R.id.radio_off:
+                        position = 0;
+                        break;
+                    case R.id.radio_daily:
+                        position = 1;
+                        break;
+                    case R.id.radio_weekly:
+                        position = 2;
+                        break;
+                    case R.id.radio_fort_nightly:
+                        position = 3;
+                        break;
+                    case R.id.radio_monthly:
+                        position = 4;
+                        break;
+                    case R.id.radio_auto:
+                        position = 5;
+                        break;
+                }
+
+                WandData.therapy[WandData.FUTURE] = position;
+
                 if (!lastCheckedText.isEmpty()) btnFrequencyVal.setText(lastCheckedText);
 
                 if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
@@ -326,11 +352,11 @@ public class ProgramTherapyFragment extends Fragment {
                         btnTimeOfDayVal.setClickable(false);
                     }*/
                 }
-                if (WandData.therapy[WandData.CURRENT] == R.id.radio_off) {
+                if (WandData.therapy[WandData.CURRENT] == 0) { //Off Case
                     enableDisableDayDateButton(false);
                     enableDisableTimeOfDayButton(false);
                     enableDisableProgramButton(true);
-                } else {
+                } else { // Other than Off
                     enableDisableDayDateButton(true);
                     enableDisableTimeOfDayButton(true);
                     enableDisableProgramButton(false);
