@@ -133,7 +133,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     minusButton.setPressed(false);
-                    Drawable drawable =  dialogue.getMinusButtonRef().getBackground().mutate();
+                    Drawable drawable = dialogue.getMinusButtonRef().getBackground().mutate();
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
@@ -157,7 +157,7 @@ public class ProgramTherapyFragment extends Fragment {
                     }*/
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
-                    Drawable drawable =  dialogue.getMinusButtonRef().getBackground().mutate();
+                    Drawable drawable = dialogue.getMinusButtonRef().getBackground().mutate();
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
@@ -201,9 +201,9 @@ public class ProgramTherapyFragment extends Fragment {
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
-                            Drawable drawablePlus = (Drawable) dialogue.getPlusButtonRef().getBackground().mutate();
+                            Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                             drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                            Drawable drawableMinus = (Drawable) dialogue.getMinusButtonRef().getBackground().mutate();
+                            Drawable drawableMinus = dialogue.getMinusButtonRef().getBackground().mutate();
                             drawableMinus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
 
                             dialogue.getConfirmButtonRef().setClickable(true);
@@ -225,7 +225,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
 
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
-                Drawable drawable = (Drawable) amplitudeButton.getBackground().mutate();
+                Drawable drawable = amplitudeButton.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
             });
@@ -248,7 +248,7 @@ public class ProgramTherapyFragment extends Fragment {
             });
             dialogue.setConfirmButtonListener(confirmView -> {
                 checkedRadioButtonId = dialogue.getCheckedButtonId();
-                RadioButton checkedRadioButton = (RadioButton) dialogue.findViewById(checkedRadioButtonId);
+                RadioButton checkedRadioButton = dialogue.findViewById(checkedRadioButtonId);
                 btnFrequencyVal.setText(checkedRadioButton.getText().toString());
 
                 byte position = 0;
@@ -345,7 +345,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
                 btnDayDateVal.setText(R.string._3_dash);
                 btnTimeOfDayVal.setText(R.string._3_dash);
-                Drawable drawable = (Drawable) btnFrequencyVal.getBackground().mutate();
+                Drawable drawable = btnFrequencyVal.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
 
                 dialogue.dismiss();
@@ -353,9 +353,9 @@ public class ProgramTherapyFragment extends Fragment {
             dialogue.show();
             RadioButton rb;
             if (checkedRadioButtonId != -1) {
-                rb = (RadioButton) dialogue.findViewById(checkedRadioButtonId);
+                rb = dialogue.findViewById(checkedRadioButtonId);
             } else {
-                rb = (RadioButton) dialogue.findViewById(R.id.radio_off);
+                rb = dialogue.findViewById(R.id.radio_off);
             }
             rb.setChecked(true);
         });
@@ -395,7 +395,7 @@ public class ProgramTherapyFragment extends Fragment {
                     enableDisableProgramButton(true);
                 }
 
-                Drawable drawable = (Drawable) btnDayDateVal.getBackground().mutate();
+                Drawable drawable = btnDayDateVal.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
             });
@@ -447,7 +447,7 @@ public class ProgramTherapyFragment extends Fragment {
                     enableDisableProgramButton(true);
                 }
 
-                Drawable drawable = (Drawable) btnTimeOfDayVal.getBackground().mutate();
+                Drawable drawable = btnTimeOfDayVal.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 dialogue.dismiss();
             });
@@ -516,10 +516,10 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_program_itns);
 
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
-        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
+        Button btnConfirm = dialog.findViewById(R.id.btn_confirm);
         btnConfirm.setOnClickListener(v -> {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
@@ -556,21 +556,21 @@ public class ProgramTherapyFragment extends Fragment {
             dialog.dismiss();
         });
 
-        TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
+        TextView tvAmpVal = dialog.findViewById(R.id.tv_amp_val);
         tvAmpVal.setText(WandData.getAmplitude());
 
-        TextView tvFreqVal = (TextView) dialog.findViewById(R.id.tv_freq_val);
+        TextView tvFreqVal = dialog.findViewById(R.id.tv_freq_val);
         tvFreqVal.setText(WandData.getTherapy(requireContext()));
 
-        TextView tvDayVal = (TextView) dialog.findViewById(R.id.tv_start_day_date_val);
+        TextView tvDayVal = dialog.findViewById(R.id.tv_start_day_date_val);
         if (rootView != null) {
-            Button dateBtn = (Button) rootView.findViewById(R.id.btn_start_day);
+            Button dateBtn = rootView.findViewById(R.id.btn_start_day);
             tvDayVal.setText(dateBtn.getText().toString());
         }
 
         TextView tvTimeVal = dialog.findViewById(R.id.tv_time_val);
         if (rootView != null) {
-            Button timeBtn = (Button) rootView.findViewById(R.id.btn_time_of_day);
+            Button timeBtn = rootView.findViewById(R.id.btn_time_of_day);
             tvTimeVal.setText(timeBtn.getText().toString());
         }
 
@@ -588,27 +588,40 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_program_itns_success);
 
-        Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
+        Button btnOk = dialog.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(v -> {
             enableDisableProgramButton(false);
+
+            Drawable drawableAmplBtn = btnAmplitudeVal.getBackground().mutate();
+            drawableAmplBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+
+            Drawable drawableFrqBtn = btnFrequencyVal.getBackground().mutate();
+            drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+
+            Drawable drawableDateBtn = btnDayDateVal.getBackground().mutate();
+            drawableDateBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+
+            Drawable drawableTimeBtn = btnTimeOfDayVal.getBackground().mutate();
+            drawableTimeBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+
             dialog.dismiss();
         });
 
-        TextView tvAmpVal = (TextView) dialog.findViewById(R.id.tv_amp_val);
+        TextView tvAmpVal = dialog.findViewById(R.id.tv_amp_val);
         tvAmpVal.setText(WandData.getAmplitude());
 
-        TextView tvFreqVal = (TextView) dialog.findViewById(R.id.tv_freq_val);
+        TextView tvFreqVal = dialog.findViewById(R.id.tv_freq_val);
         tvFreqVal.setText(WandData.getTherapy(requireContext()));
 
-        TextView tvDayVal = (TextView) dialog.findViewById(R.id.tv_start_day_date_val);
+        TextView tvDayVal = dialog.findViewById(R.id.tv_start_day_date_val);
         if (rootView != null) {
-            Button dateBtn = (Button) rootView.findViewById(R.id.btn_start_day);
+            Button dateBtn = rootView.findViewById(R.id.btn_start_day);
             tvDayVal.setText(dateBtn.getText().toString());
         }
 
         TextView tvTimeVal = dialog.findViewById(R.id.tv_time_val);
         if (rootView != null) {
-            Button timeBtn = (Button) rootView.findViewById(R.id.btn_time_of_day);
+            Button timeBtn = rootView.findViewById(R.id.btn_time_of_day);
             tvTimeVal.setText(timeBtn.getText().toString());
         }
         setTheSystemButtonsHidden(dialog);
@@ -791,10 +804,10 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_reset_counter);
 
-        Button btnResetCounter = (Button) dialog.findViewById(R.id.btn_reset_counter_confirm);
+        Button btnResetCounter = dialog.findViewById(R.id.btn_reset_counter_confirm);
         btnResetCounter.setOnClickListener(v -> mMainActivity.wandComm.clearResetCounter());
 
-        TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
+        TextView tvCount = dialog.findViewById(R.id.tv_reset_counter);
         tvCount.setText(getString(R.string.implant_reset_counter).concat(String.valueOf(count)));
 
         setTheSystemButtonsHidden(dialog);
