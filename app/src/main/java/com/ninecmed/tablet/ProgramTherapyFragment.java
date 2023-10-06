@@ -252,27 +252,7 @@ public class ProgramTherapyFragment extends Fragment {
                 btnFrequencyVal.setText(checkedRadioButton.getText().toString());
 
                 byte position = 0;
-                switch (checkedRadioButtonId) {
-                    case R.id.radio_off:
-                        position = 0;
-                        break;
-                    case R.id.radio_daily:
-                        position = 1;
-                        break;
-                    case R.id.radio_weekly:
-                        position = 2;
-                        break;
-                    case R.id.radio_fort_nightly:
-                        position = 3;
-                        break;
-                    case R.id.radio_monthly:
-                        position = 4;
-                        break;
-                    case R.id.radio_auto:
-                        position = 5;
-                        break;
-                }
-
+                position = Byte.parseByte(checkedRadioButton.getTag().toString());
                 WandData.therapy[WandData.FUTURE] = position;
 
                 if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
@@ -554,10 +534,10 @@ public class ProgramTherapyFragment extends Fragment {
                     // the model 2.
                     showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
                     return;
-                } else if (future > (now + 1000L * 3600L * 24L * 31L)) {
+                } /*else if (future > (now + 1000L * 3600L * 24L * 31L)) {
                     showDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
                     return;
-                }
+                }*/
             }
             // Only check date range of one week for Model 1
             else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.getModelNumber() == 1) {

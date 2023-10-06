@@ -64,9 +64,9 @@ public class ProgramTherapyDayDateDialogue extends Dialog {
         datePicker.setMaxDate(maxDate.getTimeInMillis());
 
         // Set min date to today (disable past dates), accounting for time difference
-        /*Calendar minDate = Calendar.getInstance();
+        Calendar minDate = Calendar.getInstance();
         minDate.setTimeInMillis(minDate.getTimeInMillis() + timeDiff);
-        datePicker.setMinDate(minDate.getTimeInMillis());*/
+        datePicker.setMinDate(minDate.getTimeInMillis());
     }
 
     public void setCancelButtonListener(View.OnClickListener onClickListener) {
