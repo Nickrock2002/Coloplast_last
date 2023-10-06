@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -23,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
@@ -45,6 +47,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
     private Button btnLeadRWarn;
 
     private TextView tvLeadR;
+    ImageButton plus;
+    ImageButton minus;
 
     @Override
     public void onAttach(Context context) {
@@ -131,6 +135,11 @@ public class ImplantToolTunnellingFragment extends Fragment {
                             } else {
                                 mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
                             }
+
+                            Drawable drawable =  plus.getBackground().mutate();
+                            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+                            Drawable drawablePlus = minus.getBackground().mutate();
+                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
                         }
                         break;
                 }
@@ -149,46 +158,48 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeAmplitudeButton(View view) {
-        final ImageButton plus = view.findViewById(R.id.ibExternalPlus);
-        final ImageButton minus = view.findViewById(R.id.ibExternalMinus);
+        plus = view.findViewById(R.id.ibExternalPlus);
+        minus = view.findViewById(R.id.ibExternalMinus);
 
-        plus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    plus.setPressed(true);
-                    if (mAmplitudePos < 42) {
-                        mAmplitudePos += 1;
-                    }
-                    WandData.setStimAmplitude(mAmplitudePos);
-                    WandData.invalidateStimExtLeadI();
-
-                    updateImplantTunnellingUI(true);
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    plus.setPressed(false);
+        plus.setOnTouchListener((view1, motionEvent) -> {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                plus.setPressed(true);
+                if (mAmplitudePos < 42) {
+                    mAmplitudePos += 1;
                 }
-                return true;
+                WandData.setStimAmplitude(mAmplitudePos);
+                WandData.invalidateStimExtLeadI();
+
+                updateImplantTunnellingUI(true);
+            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                plus.setPressed(false);
+                Drawable drawable =  plus.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                Drawable drawablePlus = minus.getBackground().mutate();
+                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
+            return true;
         });
 
-        minus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    minus.setPressed(true);
-                    if (mAmplitudePos > 0) {
-                        mAmplitudePos -= 1;
-                    }
-                    WandData.setStimAmplitude(mAmplitudePos);
-                    WandData.invalidateStimExtLeadI();
-
-                    updateImplantTunnellingUI(true);
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    minus.setPressed(false);
+        minus.setOnTouchListener((view12, motionEvent) -> {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                minus.setPressed(true);
+                if (mAmplitudePos > 0) {
+                    mAmplitudePos -= 1;
                 }
+                WandData.setStimAmplitude(mAmplitudePos);
+                WandData.invalidateStimExtLeadI();
 
-                return true;
+                updateImplantTunnellingUI(true);
+            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                minus.setPressed(false);
+                Drawable drawable =  plus.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                Drawable drawablePlus = minus.getBackground().mutate();
+                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
+
+            return true;
         });
     }
 
