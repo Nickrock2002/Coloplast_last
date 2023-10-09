@@ -53,15 +53,15 @@ public class ProgramTherapyFragment extends Fragment {
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 0;
     private int checkedRadioButtonId = -1;
-    Button btnImplantBatteryStatus;
-    Button btnLeadRWarn;
-    TextView tvLeadRVal;
-    Button btnAmplitudeVal;
-    Button btnInterrogate;
-    Button btnFrequencyVal;
-    Button btnDayDateVal;
-    Button btnTimeOfDayVal;
-    Button btnProgram;
+    private Button btnImplantBatteryStatus;
+    private Button btnLeadRWarn;
+    private TextView tvLeadRVal;
+    private Button btnAmplitudeVal;
+    private Button btnInterrogate;
+    private Button btnFrequencyVal;
+    private Button btnDayDateVal;
+    private Button btnTimeOfDayVal;
+    private Button btnProgram;
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
@@ -104,7 +104,7 @@ public class ProgramTherapyFragment extends Fragment {
         });
     }
 
-    void displayLeadRDialogue() {
+    private void displayLeadRDialogue() {
         float leadRValue = WandData.getLeadR();
         float leadIValue = WandData.getLeadI();
         final LeadRDialogue dialogue = new LeadRDialogue(getActivity());
@@ -359,8 +359,6 @@ public class ProgramTherapyFragment extends Fragment {
                 }
 
                 // Update the button text with the formatted time
-
-
                 Calendar futureTime = Calendar.getInstance();
                 futureTime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
                 futureTime.set(Calendar.MINUTE, lastSetMinute);
