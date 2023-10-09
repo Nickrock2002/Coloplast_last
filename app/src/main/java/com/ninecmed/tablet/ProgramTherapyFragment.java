@@ -263,7 +263,7 @@ public class ProgramTherapyFragment extends Fragment {
                 } else {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.THERAPY);
                 }
-                if (WandData.therapy[WandData.CURRENT] == 0) { //Off Case
+                if (WandData.therapy[WandData.FUTURE] == 0) { //Off Case
                     enableDisableDayDateButton(false);
                     enableDisableTimeOfDayButton(false);
                     enableDisableProgramButton(true);
