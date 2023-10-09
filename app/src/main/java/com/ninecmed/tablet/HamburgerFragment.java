@@ -127,7 +127,7 @@ public class HamburgerFragment extends Fragment {
 
     private void setupCurrentData(View view) {
         //Date - time
-        Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTime(mMainActivity.getTimeDifferenceMillis());
+        Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mMainActivity.getTimeDifferenceMillis());
         tvDateVal.setText(dateTimePair.first);
         tvTimeVal.setText(dateTimePair.second);
 
