@@ -145,6 +145,7 @@ public class ProgramTherapyFragment extends Fragment {
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                    dialogue.getConfirmButtonRef().setEnabled(false);
                 }
                 return true;
             });
@@ -170,6 +171,7 @@ public class ProgramTherapyFragment extends Fragment {
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                    dialogue.getConfirmButtonRef().setEnabled(false);
                 }
                 return true;
             });
@@ -215,6 +217,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                             dialogue.getConfirmButtonRef().setClickable(true);
                             dialogue.getConfirmButtonRef().setEnabled(true);
+                            dialogue.getCancelButtonRef().setEnabled(false);
                         }
                         break;
                 }
@@ -524,17 +527,7 @@ public class ProgramTherapyFragment extends Fragment {
         btnOk.setOnClickListener(v -> {
             enableDisableProgramButton(false);
 
-            Drawable drawableAmplBtn = btnAmplitudeVal.getBackground().mutate();
-            drawableAmplBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-
-            Drawable drawableFrqBtn = btnFrequencyVal.getBackground().mutate();
-            drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-
-            Drawable drawableDateBtn = btnDayDateVal.getBackground().mutate();
-            drawableDateBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-
-            Drawable drawableTimeBtn = btnTimeOfDayVal.getBackground().mutate();
-            drawableTimeBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+            changeAllButtonsColorTo(R.color.colorPrimary);
 
             dialog.dismiss();
         });
@@ -593,6 +586,20 @@ public class ProgramTherapyFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
+    private void changeAllButtonsColorTo(int color) {
+        Drawable drawableAmplBtn = btnAmplitudeVal.getBackground().mutate();
+        drawableAmplBtn.setTint(ActivityCompat.getColor(requireContext(), color));
+
+        Drawable drawableFrqBtn = btnFrequencyVal.getBackground().mutate();
+        drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), color));
+
+        Drawable drawableDateBtn = btnDayDateVal.getBackground().mutate();
+        drawableDateBtn.setTint(ActivityCompat.getColor(requireContext(), color));
+
+        Drawable drawableTimeBtn = btnTimeOfDayVal.getBackground().mutate();
+        drawableTimeBtn.setTint(ActivityCompat.getColor(requireContext(), color));
+    }
+
     public void updateUI(boolean success) {
         View view = getView();
         if (success & view != null) {
@@ -606,6 +613,7 @@ public class ProgramTherapyFragment extends Fragment {
                 resetChangedParameters();
             } else { /* This is interrogate callback */
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
+                changeAllButtonsColorTo(R.color.colorPrimary);
                 btnInterrogate.setClickable(true);
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
                 mn.setText((WandData.getModelNumber(view.getContext())));
