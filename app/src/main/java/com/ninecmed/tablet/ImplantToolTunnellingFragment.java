@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -43,9 +41,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
-
     private Button btnLeadRWarn;
-
     private TextView tvLeadR;
     ImageButton plus;
     ImageButton minus;
@@ -72,7 +68,6 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "OnCreate: starting.");
         View view = inflater.inflate(R.layout.implant_tunneling_fragment, container, false);
 
         initializeStimulationButton(view);
@@ -92,13 +87,13 @@ public class ImplantToolTunnellingFragment extends Fragment {
         SpannableString spannableString = new SpannableString(text);
 
         // Apply bold style to "Implant Tool Tunnelling"
-        int startIndex1 = text.indexOf("Implant Tool Tunnelling");
-        int endIndex1 = startIndex1 + "Implant Tool Tunnelling".length();
+        int startIndex1 = text.indexOf(getString(R.string.external_title));
+        int endIndex1 = startIndex1 + getString(R.string.external_title).length();
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex1, endIndex1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Apply bold style to "ITNS Interrogation Tab"
-        int startIndex2 = text.indexOf("ITNS Interrogation Tab");
-        int endIndex2 = startIndex2 + "ITNS Interrogation Tab".length();
+        int startIndex2 = text.indexOf(getString(R.string.itns_interrogation_tab));
+        int endIndex2 = startIndex2 + getString(R.string.itns_interrogation_tab).length();
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex2, endIndex2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Set the modified text in the TextView
@@ -108,52 +103,46 @@ public class ImplantToolTunnellingFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeStimulationButton(View view) {
         final Button stimulate = view.findViewById(R.id.btExternalStartStim);
-        stimulate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (mNow + 500 < System.currentTimeMillis()) {
-                            stimulate.setPressed(true);
-                            mMainActivity.wandComm.setStimulationExt(true);
-                            stimulate.setText("Stimulation Active");
-                            WandData.invalidateStimLeadI();
+        stimulate.setOnTouchListener((view1, motionEvent) -> {
+            switch (motionEvent.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (mNow + 500 < System.currentTimeMillis()) {
+                        stimulate.setPressed(true);
+                        mMainActivity.wandComm.setStimulationExt(true);
+                        stimulate.setText(getString(R.string.stimulation_active));
+                        WandData.invalidateStimLeadI();
 
-                            mNow = System.currentTimeMillis();
-                            mStimEnabled = true;
+                        mNow = System.currentTimeMillis();
+                        mStimEnabled = true;
+                    }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (mStimEnabled) {
+                        stimulate.setPressed(false);
+                        stimulate.setText(R.string.hold_to_deliver_neurostimulation);
+                        if (mNow + 1500 < System.currentTimeMillis()) {
+                            mMainActivity.wandComm.setStimulationExt(false);
+                            mStimEnabled = false;
+                        } else {
+                            mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
                         }
-                        break;
 
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        if (mStimEnabled) {
-                            stimulate.setPressed(false);
-                            stimulate.setText(R.string.hold_to_deliver_neurostimulation);
-                            if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.setStimulationExt(false);
-                                mStimEnabled = false;
-                            } else {
-                                mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
-                            }
-
-                            Drawable drawable =  plus.getBackground().mutate();
-                            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                            Drawable drawablePlus = minus.getBackground().mutate();
-                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                        }
-                        break;
-                }
-                return true;
+                        Drawable drawable = plus.getBackground().mutate();
+                        drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+                        Drawable drawablePlus = minus.getBackground().mutate();
+                        drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+                    }
+                    break;
             }
+            return true;
         });
     }
 
-    private final Runnable holdStimulationRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mMainActivity.wandComm.setStimulationExt(false);
-            mStimEnabled = false;
-        }
+    private final Runnable holdStimulationRunnable = () -> {
+        mMainActivity.wandComm.setStimulationExt(false);
+        mStimEnabled = false;
     };
 
     @SuppressLint("ClickableViewAccessibility")
@@ -173,7 +162,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                 updateImplantTunnellingUI(true);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 plus.setPressed(false);
-                Drawable drawable =  plus.getBackground().mutate();
+                Drawable drawable = plus.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 Drawable drawablePlus = minus.getBackground().mutate();
                 drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
@@ -193,7 +182,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                 updateImplantTunnellingUI(true);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 minus.setPressed(false);
-                Drawable drawable =  plus.getBackground().mutate();
+                Drawable drawable = plus.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                 Drawable drawablePlus = minus.getBackground().mutate();
                 drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
@@ -217,40 +206,6 @@ public class ImplantToolTunnellingFragment extends Fragment {
             //TODO : check if really required
             //OnDisconnected();
         }
-    }
-
-    public void onConnected() {
-        TextView tv = requireView().findViewById(R.id.tvExternalBtStatus);
-        tv.setText(getString(R.string.link_msg));
-
-        ImageView iv = getView().findViewById(R.id.ivExternalLink);
-        iv.setImageResource(R.drawable.ic_link);
-
-        // Enable and disable controls here
-        Button stim = getView().findViewById(R.id.btExternalStartStim);
-        stim.setEnabled(true);
-        stim.setAlpha(1f);
-
-        //SetAmplitudeParameterEnabled(true, true);
-    }
-
-    public void onDisconnected() {
-        /*if(mAlertDialog != null)
-            mAlertDialog.dismiss();
-
-        TextView tv = Objects.requireNonNull(getView()).findViewById(R.id.tvExternalBtStatus);
-        tv.setText(getString(R.string.no_link_msg));
-
-        ImageView iv = getView().findViewById(R.id.ivExternalLink);
-        iv.setImageResource(R.drawable.ic_link_off);
-
-        Button stim = getView().findViewById(R.id.btExternalStartStim);
-        stim.setEnabled(false);
-        stim.setAlpha(0.5f);
-
-        //SetAmplitudeParameterEnabled(false, true);
-        //StopProgressBar();
-        mMainActivity.EnableTabs(true);*/
     }
 
     @SuppressLint("DefaultLocale")
