@@ -52,7 +52,6 @@ public class HamburgerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hamburger, container, false);
 
         initializeCloseAppButton(view);
-        //initializeAddress(view);
 
         TextView tvSoftwareVersion = view.findViewById(R.id.tv_software_version_val);
         tvSoftwareVersion.setText(BuildConfig.VERSION_NAME);
@@ -72,30 +71,6 @@ public class HamburgerFragment extends Fragment {
         });
 
         return view;
-    }
-
-    private void initializeAddress(View view) {
-        TextView textView = view.findViewById(R.id.tv_company_title);
-
-        // Define the text with the link
-        String text = getString(R.string.coloplast_corporation_addr_part_1);
-
-        // Create a SpannableString to apply styles to specific parts of the text
-        SpannableString spannableString = new SpannableString(text);
-
-        // Define the start and end indices of the link within the text
-        int startIndex = text.indexOf(getString(R.string.intibia_com_ifu_part_2));
-        int endIndex = startIndex + getString(R.string.intibia_com_ifu_part_2).length();
-
-        // Define the color you want for the link
-        int linkColor = ActivityCompat.getColor(requireContext(), R.color.colorPrimary);
-
-        // Apply the color to the link
-        spannableString.setSpan(new ForegroundColorSpan(linkColor), startIndex, endIndex, 0);
-
-        // Make the link clickable
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView.setText(spannableString, TextView.BufferType.SPANNABLE);
     }
 
     public void showResetDateTimeConfirmationDialog() {
