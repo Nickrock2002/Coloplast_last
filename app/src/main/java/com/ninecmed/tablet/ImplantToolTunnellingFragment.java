@@ -87,13 +87,13 @@ public class ImplantToolTunnellingFragment extends Fragment {
         SpannableString spannableString = new SpannableString(text);
 
         // Apply bold style to "Implant Tool Tunnelling"
-        int startIndex1 = text.indexOf(getString(R.string.external_title));
-        int endIndex1 = startIndex1 + getString(R.string.external_title).length();
+        int startIndex1 = text.indexOf("Implant Tool Tunnelling");
+        int endIndex1 = startIndex1 + "Implant Tool Tunnelling".length();
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex1, endIndex1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Apply bold style to "ITNS Interrogation Tab"
-        int startIndex2 = text.indexOf(getString(R.string.itns_interrogation_tab));
-        int endIndex2 = startIndex2 + getString(R.string.itns_interrogation_tab).length();
+        int startIndex2 = text.indexOf("ITNS Interrogation Tab");
+        int endIndex2 = startIndex2 + "ITNS Interrogation Tab".length();
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex2, endIndex2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Set the modified text in the TextView
