@@ -21,8 +21,8 @@
 
         <ImageView
             android:id="@+id/iv_header_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
             android:src="@drawable/connection_full_element" />
 
 
@@ -44,8 +44,8 @@
 
         <ImageView
             android:id="@+id/iv_header_image_active"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
             android:src="@drawable/connection_full_element_white" />
 
 
