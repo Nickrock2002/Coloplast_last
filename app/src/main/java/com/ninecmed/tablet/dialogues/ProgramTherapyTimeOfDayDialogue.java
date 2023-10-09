@@ -23,10 +23,14 @@ public class ProgramTherapyTimeOfDayDialogue extends Dialog {
     private View.OnClickListener confirmButtonListener = null;
 
     private long timeDiff = 0L;
+    private int hour = 0;
+    private int min = 0;
 
-    public ProgramTherapyTimeOfDayDialogue(Context context, long timeDifferenceMillis) {
+    public ProgramTherapyTimeOfDayDialogue(Context context, long timeDifferenceMillis, int lastSetHour, int lastSetMinute) {
         super(context);
         this.timeDiff = timeDifferenceMillis;
+        this.hour = lastSetHour;
+        this.min = lastSetMinute;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -50,8 +54,18 @@ public class ProgramTherapyTimeOfDayDialogue extends Dialog {
         TimePicker timePicker = findViewById(R.id.timePicker);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(cal.getTimeInMillis() + timeDiff);
-        timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
-        timePicker.setMinute(cal.get(Calendar.MINUTE));
+        if (hour == 0) {
+            timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
+        } else {
+            timePicker.setHour(hour);
+        }
+
+        if (min == 0) {
+            timePicker.setMinute(cal.get(Calendar.MINUTE));
+        } else {
+            timePicker.setMinute(min);
+        }
+
     }
 
     public void setCancelButtonListener(View.OnClickListener onClickListener) {

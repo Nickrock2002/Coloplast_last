@@ -23,7 +23,6 @@ import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -66,6 +65,8 @@ public class ProgramTherapyFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
+    private int lastSetHour;
+    private int lastSetMinute;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -414,25 +415,25 @@ public class ProgramTherapyFragment extends Fragment {
         btnTimeOfDayVal = rootView.findViewById(R.id.btn_time_of_day);
 
         btnTimeOfDayVal.setOnClickListener(timeOfDayButton -> {
-            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity(), mMainActivity.getTimeDifferenceMillis());
+            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity(), mMainActivity.getTimeDifferenceMillis(), lastSetHour, lastSetMinute);
             dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
                 TimePicker timePicker = dialogue.findViewById(R.id.timePicker);
 
-                // Get the selected hour and minute from the TimePicker
-                int hour = timePicker.getHour();
-                int minute = timePicker.getMinute();
+                // Get the selected lastSetHour and lasSetMinute from the TimePicker
+                lastSetHour = timePicker.getHour();
+                lastSetMinute = timePicker.getMinute();
 
                 // Determine if it's AM or PM
                 String amPm;
-                if (hour < 12) {
+                if (lastSetHour < 12) {
                     amPm = "AM";
-                    String formattedTime = String.format("%02d:%02d %s", hour, minute, amPm);
+                    String formattedTime = String.format("%02d:%02d %s", lastSetHour, lastSetMinute, amPm);
                     btnTimeOfDayVal.setText(formattedTime);
                 } else {
                     amPm = "PM";
-                    int hrToShow = hour - 12;
-                    String formattedTime = String.format("%02d:%02d %s", hrToShow, minute, amPm);
+                    int hrToShow = lastSetHour - 12;
+                    String formattedTime = String.format("%02d:%02d %s", hrToShow, lastSetMinute, amPm);
                     btnTimeOfDayVal.setText(formattedTime);
                 }
 
@@ -441,8 +442,8 @@ public class ProgramTherapyFragment extends Fragment {
 
                 Calendar futureTime = Calendar.getInstance();
                 futureTime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
-                futureTime.set(Calendar.MINUTE, minute);
-                futureTime.set(Calendar.HOUR_OF_DAY, hour);
+                futureTime.set(Calendar.MINUTE, lastSetMinute);
+                futureTime.set(Calendar.HOUR_OF_DAY, lastSetHour);
                 WandData.dateandtime[WandData.FUTURE] = futureTime.getTimeInMillis();
 
                 if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
@@ -734,6 +735,9 @@ public class ProgramTherapyFragment extends Fragment {
 
                 String date = WandData.getDate();
                 String time = WandData.getTime();
+
+                lastSetMinute = WandData.getProgramMinute();
+                lastSetHour = WandData.getProgramHour();
 
                 if (!date.isEmpty())
                     btnDayDateVal.setText(date);
