@@ -23,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -127,6 +128,12 @@ public class ProgramTherapyFragment extends Fragment {
                         mAmplitudePos += 1;
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                        mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
+                    } else {
+                        mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
+                    }
 
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
@@ -147,14 +154,15 @@ public class ProgramTherapyFragment extends Fragment {
                         mAmplitudePos -= 1;
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
-                   /* if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                         mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                     } else {
                         mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
-                    }*/
+                    }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
                     Drawable drawable = dialogue.getMinusButtonRef().getBackground().mutate();
@@ -168,7 +176,6 @@ public class ProgramTherapyFragment extends Fragment {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
-                            WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                             stimulationButton.setPressed(true);
                             mMainActivity.wandComm.setStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
@@ -218,11 +225,11 @@ public class ProgramTherapyFragment extends Fragment {
             });
             dialogue.setConfirmButtonListener(confirmView -> {
 
-                if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                /*if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                     mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 } else {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
-                }
+                }*/
 
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 Drawable drawable = amplitudeButton.getBackground().mutate();
