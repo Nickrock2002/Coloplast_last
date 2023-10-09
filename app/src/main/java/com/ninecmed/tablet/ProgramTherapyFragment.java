@@ -644,21 +644,6 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.show();
     }
 
-    private void showDateTimeMsgDialog(String string) {
-        View view = getView();
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-        alertDialog.setTitle(string);
-        alertDialog.setMessage(R.string.itns_time_correct_msg);
-
-        alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-        });
-        AlertDialog dialog = alertDialog.create();
-        dialog.setCancelable(false);
-        dialog.show();
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getTabEnum() == TabEnum.ITNS) {
