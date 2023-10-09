@@ -263,9 +263,8 @@ public class MainActivity extends AppCompatActivity {
      */
     void showWandConnectionInActiveMode() {
         if (wandConnDialog != null) {
-            wandConnDialog.findViewById(R.id.ll_header).setBackgroundColor(
-                    ActivityCompat.getColor(this, R.color.colorBaseDeepBlue));
-            wandConnDialog.findViewById(R.id.iv_header_image).setBackgroundResource(R.drawable.connection_full_element_white);
+            wandConnDialog.findViewById(R.id.ll_header).setVisibility(View.INVISIBLE);
+            wandConnDialog.findViewById(R.id.ll_header_active).setVisibility(View.VISIBLE);
             ((TextView) wandConnDialog.findViewById(R.id.tv_connection_status)).setText(R.string.wand_is_comm);
             AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
             btConfirm.setClickable(true);
@@ -685,11 +684,6 @@ public class MainActivity extends AppCompatActivity {
         Button btnGoBack = (Button) dialog.findViewById(R.id.btn_yes_go_back);
         btnGoBack.setOnClickListener(v -> {
             dialog.dismiss();
-            /*if (ivHamburger.getVisibility() == View.VISIBLE) {
-                updateToolbar(false);
-            } else {
-                updateToolbar(true);
-            }*/
             getSupportFragmentManager().popBackStack();
             ivHamburger.setVisibility(View.VISIBLE);
         });
@@ -748,24 +742,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_serial_mismatch);
 
         Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_mismatch);
-        btnCancel.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
-    }
-
-    public void showProgramUnsuccessfulWarnDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_programming_unsuccessful);
-
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
         });

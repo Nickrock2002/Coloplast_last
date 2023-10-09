@@ -65,6 +65,8 @@ public class ProgramTherapyFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
+    private int lastSetHour;
+    private int lastSetMinute;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,6 +129,12 @@ public class ProgramTherapyFragment extends Fragment {
                         mAmplitudePos += 1;
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                        mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
+                    } else {
+                        mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
+                    }
 
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
@@ -147,8 +155,15 @@ public class ProgramTherapyFragment extends Fragment {
                         mAmplitudePos -= 1;
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                     }
+                    WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
+
+                    if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
+                        mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
+                    } else {
+                        mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
+                    }
                 } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                     plusButton.setPressed(false);
                     Drawable drawable = dialogue.getMinusButtonRef().getBackground().mutate();
@@ -162,7 +177,6 @@ public class ProgramTherapyFragment extends Fragment {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
-                            WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                             stimulationButton.setPressed(true);
                             mMainActivity.wandComm.setStimulation(true);
                             //MakeTone(ToneGenerator.TONE_PROP_BEEP);
@@ -210,13 +224,6 @@ public class ProgramTherapyFragment extends Fragment {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
-
-                if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
-                    mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
-                } else {
-                    mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
-                }
-
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 Drawable drawable = amplitudeButton.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
@@ -329,34 +336,35 @@ public class ProgramTherapyFragment extends Fragment {
         btnTimeOfDayVal = rootView.findViewById(R.id.btn_time_of_day);
 
         btnTimeOfDayVal.setOnClickListener(timeOfDayButton -> {
-            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity());
+            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity(), mMainActivity.getTimeDifferenceMillis(), lastSetHour, lastSetMinute);
             dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
                 TimePicker timePicker = dialogue.findViewById(R.id.timePicker);
 
-                // Get the selected hour and minute from the TimePicker
-                int hour = timePicker.getHour();
-                int minute = timePicker.getMinute();
+                // Get the selected lastSetHour and lasSetMinute from the TimePicker
+                lastSetHour = timePicker.getHour();
+                lastSetMinute = timePicker.getMinute();
 
                 // Determine if it's AM or PM
                 String amPm;
-                if (hour < 12) {
+                if (lastSetHour < 12) {
                     amPm = "AM";
+                    String formattedTime = String.format("%02d:%02d %s", lastSetHour, lastSetMinute, amPm);
+                    btnTimeOfDayVal.setText(formattedTime);
                 } else {
                     amPm = "PM";
-                    if (hour > 12) {
-                        hour -= 12;
-                    }
+                    int hrToShow = lastSetHour - 12;
+                    String formattedTime = String.format("%02d:%02d %s", hrToShow, lastSetMinute, amPm);
+                    btnTimeOfDayVal.setText(formattedTime);
                 }
 
                 // Update the button text with the formatted time
-                String formattedTime = String.format("%02d:%02d %s", hour, minute, amPm);
-                btnTimeOfDayVal.setText(formattedTime);
+
 
                 Calendar futureTime = Calendar.getInstance();
                 futureTime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
-                futureTime.set(Calendar.MINUTE, minute);
-                futureTime.set(Calendar.HOUR_OF_DAY, hour);
+                futureTime.set(Calendar.MINUTE, lastSetMinute);
+                futureTime.set(Calendar.HOUR_OF_DAY, lastSetHour);
                 WandData.dateandtime[WandData.FUTURE] = futureTime.getTimeInMillis();
 
                 if (WandData.dateandtime[WandData.CURRENT] == WandData.dateandtime[WandData.FUTURE]) {
@@ -445,24 +453,14 @@ public class ProgramTherapyFragment extends Fragment {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-
-            // Check date range for weekly, fortnightly and monthly therapy for Model 2
-            if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.getModelNumber() == 2) {
+            if (WandData.therapy[WandData.FUTURE] >= 1) {
                 if (future < (now + 1000L * 3600L)) {
                     // Don't allow therapy to be set within 1 hour of now because only a
                     // magnet could stop therapy, telemetry can't interrupt therapy for
                     // the model 2.
-                    showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                    return;
-                }
-            }
-            // Only check date range of one week for Model 1
-            else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.getModelNumber() == 1) {
-                if (future < now) {
-                    showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                    return;
-                } else if (future > (now + 1000 * 3600 * 24 * 7)) {
-                    showDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
+                    //showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                    showIncorrectTimeDialog();
+                    dialog.dismiss();
                     return;
                 }
             }
@@ -491,6 +489,24 @@ public class ProgramTherapyFragment extends Fragment {
             Button timeBtn = rootView.findViewById(R.id.btn_time_of_day);
             tvTimeVal.setText(timeBtn.getText().toString());
         }
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    private void showIncorrectTimeDialog() {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_incorrect_date_time);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_incorrect_time);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
 
         setTheSystemButtonsHidden(dialog);
 
@@ -546,21 +562,6 @@ public class ProgramTherapyFragment extends Fragment {
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        dialog.show();
-    }
-
-    private void showDateTimeMsgDialog(String string) {
-        View view = getView();
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-        alertDialog.setTitle(string);
-        alertDialog.setMessage(R.string.itns_time_correct_msg);
-
-        alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-        });
-        AlertDialog dialog = alertDialog.create();
-        dialog.setCancelable(false);
         dialog.show();
     }
 
@@ -640,6 +641,9 @@ public class ProgramTherapyFragment extends Fragment {
                 String date = WandData.getDate();
                 String time = WandData.getTime();
 
+                lastSetMinute = WandData.getProgramMinute();
+                lastSetHour = WandData.getProgramHour();
+
                 if (!date.isEmpty())
                     btnDayDateVal.setText(date);
                 if (!time.isEmpty())
@@ -668,11 +672,29 @@ public class ProgramTherapyFragment extends Fragment {
                 });
                 alertDialog.show();
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
-                mMainActivity.showProgramUnsuccessfulWarnDialog();
+                showProgramUnsuccessfulWarnDialog();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }
         }
+    }
+
+    private void showProgramUnsuccessfulWarnDialog() {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_programming_unsuccessful);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
     }
 
     private void showBatteryWarningIfLow(View view) {

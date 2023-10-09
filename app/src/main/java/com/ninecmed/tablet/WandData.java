@@ -506,6 +506,26 @@ public class WandData {
         dateandtime[TEMPORARY] = now.getTimeInMillis();
     }
 
+    static int getProgramHour() {
+        Calendar c = Calendar.getInstance();
+        if (therapy[CURRENT] != 0) {
+            c.setTimeInMillis(dateandtime[CURRENT]);
+            return c.get(Calendar.HOUR_OF_DAY);
+        } else {
+            return c.get(Calendar.HOUR_OF_DAY);
+        }
+    }
+
+    static int getProgramMinute(){
+        Calendar c = Calendar.getInstance();
+        if (therapy[CURRENT] != 0) {
+            c.setTimeInMillis(dateandtime[CURRENT]);
+            return c.get(Calendar.MINUTE);
+        } else{
+            return c.get(Calendar.MINUTE);
+        }
+    }
+
     @SuppressLint("DefaultLocale")
     static String getTime() {
         if (therapy[CURRENT] != 0) {
