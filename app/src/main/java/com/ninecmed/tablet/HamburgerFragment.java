@@ -291,10 +291,10 @@ public class HamburgerFragment extends Fragment {
             }
 
             TextView leadi = view.findViewById(R.id.tv_lead_i_val);
-            leadi.setText(String.valueOf(WandData.getLeadI()).concat("mA"));
+            leadi.setText(String.valueOf(WandData.getLeadI()).concat(" mA"));
 
             TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-            leadr.setText(String.valueOf(WandData.getLeadR()).concat("Ohms"));
+            leadr.setText(String.valueOf(WandData.getLeadR()).concat(" Ohms"));
         }
         // Here's what happens on fail
         else {

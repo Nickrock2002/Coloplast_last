@@ -146,6 +146,7 @@ public class ProgramTherapyFragment extends Fragment {
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     dialogue.getConfirmButtonRef().setEnabled(false);
+                    dialogue.getCancelButtonRef().setEnabled(true);
                 }
                 return true;
             });
@@ -172,6 +173,7 @@ public class ProgramTherapyFragment extends Fragment {
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     dialogue.getConfirmButtonRef().setEnabled(false);
+                    dialogue.getCancelButtonRef().setEnabled(true);
                 }
                 return true;
             });
