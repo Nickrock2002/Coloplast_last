@@ -530,43 +530,15 @@ public class ProgramTherapyFragment extends Fragment {
         btnConfirm.setOnClickListener(v -> {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
-            Log.d("TAGGU", "showProgramConfirmationDialog: future" + future);
-
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-            Log.d("TAGGU", "showProgramConfirmationDialog: now" + now);
-
-            Pair<String, String> dateTimePair;
-
-            // Format the time in "2:00 PM" format
-            SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-
-            // Format the date in "01/10/2023" format
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-
-            dateTimePair = new Pair<>(dateFormat.format(future), timeFormat.format(future));
-
-            Toast.makeText(requireContext(), "Date: " + dateTimePair.first + "Time: "+ dateTimePair.second, Toast.LENGTH_LONG).show();
-
-            // Check date range for weekly, fortnightly and monthly therapy for Model 2
-            if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.getModelNumber() == 2) {
+            if (WandData.therapy[WandData.FUTURE] >= 1) {
                 if (future < (now + 1000L * 3600L)) {
                     // Don't allow therapy to be set within 1 hour of now because only a
                     // magnet could stop therapy, telemetry can't interrupt therapy for
                     // the model 2.
-                    showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                    return;
-                } /*else if (future > (now + 1000L * 3600L * 24L * 31L)) {
-                    showDateTimeMsgDialog(getString(R.string.itns_time_after_31days_msg));
-                    return;
-                }*/
-            }
-            // Only check date range of one week for Model 1
-            else if (WandData.therapy[WandData.FUTURE] == 2 && WandData.getModelNumber() == 1) {
-                if (future < now) {
-                    showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                    return;
-                } else if (future > (now + 1000 * 3600 * 24 * 7)) {
-                    showDateTimeMsgDialog(getString(R.string.itns_time_after_7days_msg));
+                    //showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
+                    showIncorrectTimeDialog();
+                    dialog.dismiss();
                     return;
                 }
             }
@@ -595,6 +567,24 @@ public class ProgramTherapyFragment extends Fragment {
             Button timeBtn = rootView.findViewById(R.id.btn_time_of_day);
             tvTimeVal.setText(timeBtn.getText().toString());
         }
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
+    }
+
+    private void showIncorrectTimeDialog() {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_incorrect_date_time);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_incorrect_time);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
 
         setTheSystemButtonsHidden(dialog);
 
@@ -773,11 +763,29 @@ public class ProgramTherapyFragment extends Fragment {
                 });
                 alertDialog.show();
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
-                mMainActivity.showProgramUnsuccessfulWarnDialog();
+                showProgramUnsuccessfulWarnDialog();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }
         }
+    }
+
+    private void showProgramUnsuccessfulWarnDialog() {
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_programming_unsuccessful);
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        setTheSystemButtonsHidden(dialog);
+
+        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
+        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.show();
     }
 
     private void showBatteryWarningIfLow(View view) {
