@@ -51,7 +51,6 @@ public class ItnsFragment extends Fragment {
     private ImageButton minus;
     private Button stimulate;
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -67,7 +66,7 @@ public class ItnsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
-        View view = inflater.inflate(R.layout.itns_fragment_new, container, false);
+        View view = inflater.inflate(R.layout.itns_fragment, container, false);
 
         initializeStimulationButton(view);
         initializeInterrogateButton(view);
@@ -116,12 +115,6 @@ public class ItnsFragment extends Fragment {
                             stimulate.setText(R.string.stimulation_active);
                             WandData.invalidateStimLeadI();
 
-                            /*TextView leadi = Objects.requireNonNull(getView()).findViewById(R.id.tvItnsLeadI);
-                            leadi.setText(WandData.GetLeadI());
-
-                            TextView leadr = getView().findViewById(R.id.tvItnsLeadR);
-                            leadr.setText(WandData.GetLeadR());*/
-
                             // Disable changed parameters during test stim. Only re-enable once
                             // job is completed. Even though controls are disabled, don't change
                             // alpha, meaning don't gray out the controls, otherwise it appears
@@ -134,9 +127,7 @@ public class ItnsFragment extends Fragment {
                             // program button is pressed - we decided to disable other telemetry
                             // controls when a telemetry command is in progress, but without changing
                             // the appearance.
-                            //EnableInterrogateButton(false, false);
-                            //EnableProgramButton(false, false);
-                            //StartStimProgressBar();
+
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
                         }
@@ -152,8 +143,7 @@ public class ItnsFragment extends Fragment {
                         if (mStimEnabled) {
                             stimulate.setPressed(false);
                             stimulate.setText(R.string.hold_to_deliver_neurostimulation);
-                            //stimulate.setEnabled(false);
-                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
                             // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
                                 mMainActivity.wandComm.setStimulation(false);
@@ -347,7 +337,7 @@ public class ItnsFragment extends Fragment {
             dialog.setCancelable(false);
             dialog.setContentView(R.layout.dialog_lead_surgery);
 
-            Button dialogButton = (Button) dialog.findViewById(R.id.btn_confirm_lead_r);
+            Button dialogButton = dialog.findViewById(R.id.btn_confirm_lead_r);
             dialogButton.setOnClickListener(v -> dialog.dismiss());
 
             TextView title = (TextView) dialog.findViewById(R.id.tv_warn_title);
@@ -364,11 +354,11 @@ public class ItnsFragment extends Fragment {
                 subTitle.setText(R.string.lead_r_below);
             }
 
-            TextView tvLeadRV = (TextView) dialog.findViewById(R.id.tv_lead_r_val);
-            tvLeadRV.setText(leadRValue + " ohms");
+            TextView tvLeadRV = dialog.findViewById(R.id.tv_lead_r_val);
+            tvLeadRV.setText(String.valueOf(leadRValue).concat(" ohms"));
 
-            TextView tvLeadIV = (TextView) dialog.findViewById(R.id.tv_lead_i_val);
-            tvLeadIV.setText(leadIValue + " mA");
+            TextView tvLeadIV = dialog.findViewById(R.id.tv_lead_i_val);
+            tvLeadIV.setText(String.valueOf(leadIValue).concat(" mA"));
 
             setTheSystemButtonsHidden(dialog);
             Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
@@ -393,13 +383,13 @@ public class ItnsFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_reset_counter);
 
-        Button btnResetCounter = (Button) dialog.findViewById(R.id.btn_reset_counter_confirm);
+        Button btnResetCounter = dialog.findViewById(R.id.btn_reset_counter_confirm);
         btnResetCounter.setOnClickListener(v -> {
             mMainActivity.wandComm.clearResetCounter();
         });
 
-        TextView tvCount = (TextView) dialog.findViewById(R.id.tv_reset_counter);
-        tvCount.setText(getString(R.string.implant_reset_counter) + count);
+        TextView tvCount = dialog.findViewById(R.id.tv_reset_counter);
+        tvCount.setText(getString(R.string.implant_reset_counter).concat(String.valueOf(count)));
 
         setTheSystemButtonsHidden(dialog);
 
