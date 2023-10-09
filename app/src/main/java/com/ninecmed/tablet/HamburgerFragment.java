@@ -7,9 +7,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -26,7 +23,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
@@ -38,6 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class HamburgerFragment extends Fragment {
@@ -88,7 +85,7 @@ public class HamburgerFragment extends Fragment {
         setTheSystemButtonsHidden(dialog);
 
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
@@ -141,7 +138,7 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadI() == 0.0f) {
             leadi.setText("_");
         } else {
-            String formattedLeadI =  String.format("%.1f mA", WandData.getLeadI());
+            String formattedLeadI =  String.format(Locale.ENGLISH,"%.1f mA", WandData.getLeadI());
             leadi.setText(formattedLeadI);
         }
 
@@ -150,7 +147,7 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadR() == 0f) {
             leadr.setText("_");
         } else {
-            String formattedLeadR = String.format("%.0f Ohms", WandData.getLeadR());
+            String formattedLeadR = String.format(Locale.ENGLISH,"%.0f Ohms", WandData.getLeadR());
             leadr.setText(formattedLeadR);
         }
     }
@@ -288,16 +285,16 @@ public class HamburgerFragment extends Fragment {
                 if (rrt_result.equals(getString(R.string.all_yes)))
                     rrt.setText("NOT OK");
                 else
-                    rrt.setText("OK");
+                    rrt.setText(getString(R.string.ok));
             } else {
                 rrt.setText("_");
             }
 
             TextView leadi = view.findViewById(R.id.tv_lead_i_val);
-            leadi.setText("" + WandData.getLeadI() + "mA");
+            leadi.setText(String.valueOf(WandData.getLeadI()).concat("mA"));
 
             TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-            leadr.setText("" + WandData.getLeadR() + "Ohms");
+            leadr.setText(String.valueOf(WandData.getLeadR()).concat("Ohms"));
         }
         // Here's what happens on fail
         else {
