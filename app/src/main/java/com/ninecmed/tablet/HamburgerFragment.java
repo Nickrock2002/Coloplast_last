@@ -159,17 +159,7 @@ public class HamburgerFragment extends Fragment {
         }
 
         //RRT
-        TextView rrt = view.findViewById(R.id.tv_battery_replace_val);
-        String rrt_result = WandData.getRRT(view.getContext());
-
-        if (rrt_result != null) {
-            if (rrt_result.equals(getString(R.string.all_yes)))
-                rrt.setText("NOT OK");
-            else
-                rrt.setText("OK");
-        } else {
-            rrt.setText("_");
-        }
+        showBatteryWarningIfLow(view);
 
         // LEAD I
         TextView leadi = view.findViewById(R.id.tv_lead_i_val);
@@ -187,6 +177,20 @@ public class HamburgerFragment extends Fragment {
         } else {
             String formattedLeadR = String.format("%.0f Ohms", WandData.getLeadR());
             leadr.setText(formattedLeadR);
+        }
+    }
+
+    private void showBatteryWarningIfLow(View view) {
+        TextView cellv = view.findViewById(R.id.tv_battery_replace_val);
+        Button btnImplantBatteryStatus = view.findViewById(R.id.btn_implant_battery_status);
+        String rrt_result = WandData.getRRT(view.getContext());
+        if (rrt_result != null && rrt_result.equals(getString(R.string.all_yes))) {
+            btnImplantBatteryStatus.setVisibility(View.VISIBLE);
+            cellv.setVisibility(View.INVISIBLE);
+        } else {
+            btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
+            cellv.setVisibility(View.VISIBLE);
+            cellv.setText(R.string.ok);
         }
     }
 
