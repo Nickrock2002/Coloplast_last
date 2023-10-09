@@ -263,9 +263,8 @@ public class MainActivity extends AppCompatActivity {
      */
     void showWandConnectionInActiveMode() {
         if (wandConnDialog != null) {
-            wandConnDialog.findViewById(R.id.ll_header).setBackgroundColor(
-                    ActivityCompat.getColor(this, R.color.colorBaseDeepBlue));
-            wandConnDialog.findViewById(R.id.iv_header_image).setBackgroundResource(R.drawable.connection_full_element_white);
+            wandConnDialog.findViewById(R.id.ll_header).setVisibility(View.INVISIBLE);
+            wandConnDialog.findViewById(R.id.ll_header_active).setVisibility(View.VISIBLE);
             ((TextView) wandConnDialog.findViewById(R.id.tv_connection_status)).setText(R.string.wand_is_comm);
             AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
             btConfirm.setClickable(true);
