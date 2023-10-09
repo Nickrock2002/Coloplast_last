@@ -10,26 +10,23 @@ import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TimePicker;
 
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 public class ProgramTherapyTimeOfDayDialogue extends Dialog {
     private View.OnClickListener cancelButtonListener = null;
     private View.OnClickListener confirmButtonListener = null;
 
-    public ProgramTherapyTimeOfDayDialogue(Context context) {
+    private long timeDiff = 0L;
+
+    public ProgramTherapyTimeOfDayDialogue(Context context, long timeDifferenceMillis) {
         super(context);
-    }
-
-    public ProgramTherapyTimeOfDayDialogue(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
-    protected ProgramTherapyTimeOfDayDialogue(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
+        this.timeDiff = timeDifferenceMillis;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -49,6 +46,12 @@ public class ProgramTherapyTimeOfDayDialogue extends Dialog {
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
         Objects.requireNonNull(getWindow()).setLayout(dimensions.first, dimensions.second);
+
+        TimePicker timePicker = findViewById(R.id.timePicker);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(cal.getTimeInMillis() + timeDiff);
+        timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
+        timePicker.setMinute(cal.get(Calendar.MINUTE));
     }
 
     public void setCancelButtonListener(View.OnClickListener onClickListener) {

@@ -41,11 +41,6 @@ public class FeatureSelectionFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(UIUpdateEvent event) {
-        Toast.makeText(requireContext(), "event sent", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

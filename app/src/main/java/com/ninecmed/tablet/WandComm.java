@@ -543,7 +543,7 @@ class WandComm {
     }
 
     private void setSchedule() {
-        long now_in_ms = Calendar.getInstance().getTimeInMillis();
+        long now_in_ms = Calendar.getInstance().getTimeInMillis() + mainActivity.getTimeDifferenceMillis();
         long next_therapy_date_in_ms = WandData.dateandtime[WandData.FUTURE];
         long deltat = (next_therapy_date_in_ms - now_in_ms) / 1000;                                 // Calculate delta t in seconds
 

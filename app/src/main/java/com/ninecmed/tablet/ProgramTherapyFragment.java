@@ -414,7 +414,7 @@ public class ProgramTherapyFragment extends Fragment {
         btnTimeOfDayVal = rootView.findViewById(R.id.btn_time_of_day);
 
         btnTimeOfDayVal.setOnClickListener(timeOfDayButton -> {
-            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity());
+            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity(), mMainActivity.getTimeDifferenceMillis());
             dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
                 TimePicker timePicker = dialogue.findViewById(R.id.timePicker);
@@ -427,16 +427,17 @@ public class ProgramTherapyFragment extends Fragment {
                 String amPm;
                 if (hour < 12) {
                     amPm = "AM";
+                    String formattedTime = String.format("%02d:%02d %s", hour, minute, amPm);
+                    btnTimeOfDayVal.setText(formattedTime);
                 } else {
                     amPm = "PM";
-                    if (hour > 12) {
-                        hour -= 12;
-                    }
+                    int hrToShow = hour - 12;
+                    String formattedTime = String.format("%02d:%02d %s", hrToShow, minute, amPm);
+                    btnTimeOfDayVal.setText(formattedTime);
                 }
 
                 // Update the button text with the formatted time
-                String formattedTime = String.format("%02d:%02d %s", hour, minute, amPm);
-                btnTimeOfDayVal.setText(formattedTime);
+
 
                 Calendar futureTime = Calendar.getInstance();
                 futureTime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
@@ -462,7 +463,6 @@ public class ProgramTherapyFragment extends Fragment {
         });
     }
 
-    // TODO right proper logic for this function
     private void enableDisableProgramButton(boolean enable) {
         btnProgram.setClickable(enable);
         btnProgram.setEnabled(enable);
@@ -530,7 +530,22 @@ public class ProgramTherapyFragment extends Fragment {
         btnConfirm.setOnClickListener(v -> {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
+            Log.d("TAGGU", "showProgramConfirmationDialog: future" + future);
+
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
+            Log.d("TAGGU", "showProgramConfirmationDialog: now" + now);
+
+            Pair<String, String> dateTimePair;
+
+            // Format the time in "2:00 PM" format
+            SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+
+            // Format the date in "01/10/2023" format
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+
+            dateTimePair = new Pair<>(dateFormat.format(future), timeFormat.format(future));
+
+            Toast.makeText(requireContext(), "Date: " + dateTimePair.first + "Time: "+ dateTimePair.second, Toast.LENGTH_LONG).show();
 
             // Check date range for weekly, fortnightly and monthly therapy for Model 2
             if (WandData.therapy[WandData.FUTURE] >= 1 && WandData.getModelNumber() == 2) {
