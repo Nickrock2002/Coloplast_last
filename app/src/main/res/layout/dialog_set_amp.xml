@@ -128,7 +128,7 @@
             android:paddingHorizontal="40dp"
             android:text="@string/cancel"
             android:textAllCaps="false"
-            android:textColor="@color/cardview_dark_background"
+            android:textColor="@color/txt_white_button"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/bt_confirm"
