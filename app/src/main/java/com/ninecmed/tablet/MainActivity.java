@@ -147,18 +147,10 @@ public class MainActivity extends AppCompatActivity {
                         },
                         REQUEST_BLUETOOTH_PERMISSION);
             } else {
-                // Both permissions are granted, proceed with Bluetooth functionality
                 isBluetoothPermissionGranted = true;
-                //TODO Remote this in final release
-//                initBluetooth();
             }
         } else {
             isBluetoothPermissionGranted = true;
-            // For devices below Android 12, the permission is granted at install time
-            // You can proceed with your Bluetooth functionality
-
-            //TODO Remote this in final release
-//            initBluetooth();
         }
     }
 
@@ -323,10 +315,6 @@ public class MainActivity extends AppCompatActivity {
 
         List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
         for (BluetoothDevice bt : btDevices) {
-//            just for testing
-//            if(bt.getAddress().equals("08:E4:DF:6E:20:61")) {
-//                mBTDevice = bt;
-//            }
             mBTDevice = bt;
         }
 
@@ -356,14 +344,10 @@ public class MainActivity extends AppCompatActivity {
             updateBatteryStatus();
             updateAppTime();
             mHandler.postDelayed(MinuteTimer, 60000);
-            //TODO only for testing remove in production
-//            showWandConnectionInActiveMode();
         }
     };
 
     private void updateAppTime() {
-        //TextView tvAppTime = findViewById(R.id.tv_app_time);
-
         // Get the current date and time from the device
         Calendar currentCalendar = Calendar.getInstance();
         long currentTimeMillis = currentCalendar.getTimeInMillis() + timeDifferenceMillis;
@@ -463,9 +447,13 @@ public class MainActivity extends AppCompatActivity {
     private final DeviceCallback deviceCallback = new DeviceCallback() {
         @Override
         public void onDeviceConnected(BluetoothDevice device) {
-            isDeviceConnected = true;
-            wandComm.initWand();
-            runOnUiThread(() -> showWandConnectionInActiveMode());
+            runOnUiThread(() -> {
+                isDeviceConnected = true;
+                new Handler().postDelayed(() -> {
+                    wandComm.initWand();
+                    showWandConnectionInActiveMode();
+                }, 3000);
+            });
         }
 
         @Override
@@ -494,8 +482,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-    //TODO- call this method once the bluetooth dialog setup flow is done
     public void showSetDateTimeDialog(boolean isFromHamburger) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

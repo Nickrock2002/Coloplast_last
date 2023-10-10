@@ -147,7 +147,7 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadR() == 0f) {
             leadr.setText("_");
         } else {
-            String formattedLeadR = String.format(Locale.ENGLISH,"%.0f Ohms", WandData.getLeadR());
+            String formattedLeadR = String.format(Locale.ENGLISH,"%.0f ohms", WandData.getLeadR());
             leadr.setText(formattedLeadR);
         }
     }
@@ -291,7 +291,7 @@ public class HamburgerFragment extends Fragment {
             if (WandData.getLeadR() == 0f) {
                 leadr.setText("_");
             } else {
-                String formattedLeadR = String.format(Locale.ENGLISH,"%.0f Ohms", WandData.getLeadR());
+                String formattedLeadR = String.format(Locale.ENGLISH,"%.0f ohms", WandData.getLeadR());
                 leadr.setText(formattedLeadR);
             }
         }
