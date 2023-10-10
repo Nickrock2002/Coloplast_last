@@ -728,7 +728,7 @@ public class ProgramTherapyFragment extends Fragment {
             displayLeadRDialogue();
         } else {
             tvLeadRVal.setText(R.string.ok);
-            tvLeadRVal.setVisibility(View.INVISIBLE);
+            tvLeadRVal.setVisibility(View.VISIBLE);
             btnLeadRWarn.setVisibility(View.INVISIBLE);
         }
     }
