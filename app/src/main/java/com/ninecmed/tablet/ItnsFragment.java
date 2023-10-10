@@ -340,14 +340,18 @@ public class ItnsFragment extends Fragment {
             Button dialogButton = dialog.findViewById(R.id.btn_confirm_lead_r);
             dialogButton.setOnClickListener(v -> dialog.dismiss());
 
-            TextView title = dialog.findViewById(R.id.tv_warn_title);
-            TextView tvElectrodeTip = dialog.findViewById(R.id.tv_electrode_tip);
+            TextView title = (TextView) dialog.findViewById(R.id.tv_warn_title);
+            TextView tvElectrodeTip = (TextView) dialog.findViewById(R.id.tv_electrode_tip);
+            TextView subTitle = (TextView) dialog.findViewById(R.id.tv_lead_r_subtitle);
+
             if (leadRValue > 2000) {
                 title.setText(R.string.lead_r_is_2000_ohms);
                 tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
+                subTitle.setText(R.string.lead_r_above);
             } else {
                 title.setText(R.string.lead_r_is_250_ohms);
                 tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
+                subTitle.setText(R.string.lead_r_below);
             }
 
             TextView tvLeadRV = dialog.findViewById(R.id.tv_lead_r_val);

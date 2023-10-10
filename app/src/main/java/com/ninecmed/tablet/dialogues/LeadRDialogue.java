@@ -41,14 +41,17 @@ public class LeadRDialogue extends Dialog {
         setContentView(R.layout.dialog_lead_surgery);
 
         TextView title = (TextView) findViewById(R.id.tv_warn_title);
+        TextView subTitle = (TextView) findViewById(R.id.tv_lead_r_subtitle);
         TextView tvElectrodeTip = (TextView)
                 findViewById(R.id.tv_electrode_tip);
         if (leadRValue > 2000) {
             title.setText(R.string.lead_r_is_2000_ohms);
             tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
+            subTitle.setText(R.string.lead_r_above);
         } else {
             title.setText(R.string.lead_r_is_250_ohms);
             tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
+            subTitle.setText(R.string.lead_r_below);
         }
 
         TextView tvLeadRV = (TextView) findViewById(R.id.tv_lead_r_val);

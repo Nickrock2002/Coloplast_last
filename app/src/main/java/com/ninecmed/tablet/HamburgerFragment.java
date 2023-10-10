@@ -147,7 +147,7 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadR() == 0f) {
             leadr.setText("_");
         } else {
-            String formattedLeadR = String.format(Locale.ENGLISH,"%.0f Ohms", WandData.getLeadR());
+            String formattedLeadR = String.format(Locale.ENGLISH,"%.0f ohms", WandData.getLeadR());
             leadr.setText(formattedLeadR);
         }
     }
@@ -275,26 +275,25 @@ public class HamburgerFragment extends Fragment {
             TextView sn = view.findViewById(R.id.tv_itns_serial_val);
             sn.setText(WandData.getSerialNumber());
 
-            TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-            cellv.setText(WandData.getCellV());
+            showBatteryWarningIfLow(view);
 
-            TextView rrt = view.findViewById(R.id.tv_battery_replace_val);
-            String rrt_result = WandData.getRRT(view.getContext());
-
-            if (rrt_result != null) {
-                if (rrt_result.equals(getString(R.string.all_yes)))
-                    rrt.setText("NOT OK");
-                else
-                    rrt.setText(getString(R.string.ok));
+            // LEAD I
+            TextView leadi = view.findViewById(R.id.tv_lead_i_val);
+            if (WandData.getLeadI() == 0.0f) {
+                leadi.setText("_");
             } else {
-                rrt.setText("_");
+                String formattedLeadI =  String.format(Locale.ENGLISH,"%.1f mA", WandData.getLeadI());
+                leadi.setText(formattedLeadI);
             }
 
-            TextView leadi = view.findViewById(R.id.tv_lead_i_val);
-            leadi.setText(String.valueOf(WandData.getLeadI()).concat(" mA"));
-
+            // LEAD R
             TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-            leadr.setText(String.valueOf(WandData.getLeadR()).concat(" Ohms"));
+            if (WandData.getLeadR() == 0f) {
+                leadr.setText("_");
+            } else {
+                String formattedLeadR = String.format(Locale.ENGLISH,"%.0f ohms", WandData.getLeadR());
+                leadr.setText(formattedLeadR);
+            }
         }
         // Here's what happens on fail
         else {

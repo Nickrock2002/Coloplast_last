@@ -74,7 +74,7 @@ public class BaseTabFragment extends Fragment {
             tvCurrentDate = view.findViewById(R.id.tv_date_program_therepy);
             tvCurrentDate.setVisibility(View.VISIBLE);
             tvCurrentTime.setVisibility(View.VISIBLE);
-            Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTime(mainActivity.getTimeDifferenceMillis());
+            Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mainActivity.getTimeDifferenceMillis());
             tvCurrentDate.setText(dateTimePair.first);
             tvCurrentTime.setText(dateTimePair.second);
         }
