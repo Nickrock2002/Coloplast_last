@@ -291,7 +291,9 @@ public class ProgramTherapyFragment extends Fragment {
             } else {
                 rb = dialogue.findViewById(R.id.radio_off);
             }
-            rb.setChecked(true);
+            if (rb != null) {
+                rb.setChecked(true);
+            }
         });
     }
 
