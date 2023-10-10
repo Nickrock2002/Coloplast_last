@@ -110,8 +110,6 @@ public class ImplantToolTunnellingFragment extends Fragment {
                         stimulate.setPressed(true);
                         mMainActivity.wandComm.setStimulationExt(true);
                         stimulate.setText(getString(R.string.stimulation_active));
-                        WandData.invalidateStimLeadI();
-
                         mNow = System.currentTimeMillis();
                         mStimEnabled = true;
                     }
