@@ -291,7 +291,7 @@ public class ProgramTherapyFragment extends Fragment {
             } else {
                 rb = dialogue.findViewById(R.id.radio_off);
             }
-            rb.setChecked(true);
+            if (rb != null) rb.setChecked(true);
         });
     }
 
@@ -728,6 +728,7 @@ public class ProgramTherapyFragment extends Fragment {
             displayLeadRDialogue();
         } else {
             tvLeadRVal.setText(R.string.ok);
+            tvLeadRVal.setVisibility(View.INVISIBLE);
             btnLeadRWarn.setVisibility(View.INVISIBLE);
         }
     }
