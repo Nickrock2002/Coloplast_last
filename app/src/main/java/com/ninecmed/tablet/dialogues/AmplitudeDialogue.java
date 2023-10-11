@@ -21,8 +21,8 @@ import java.util.Objects;
 
 public class AmplitudeDialogue extends Dialog {
     private float amplitude;
-    private View.OnTouchListener itnsPlusListener = null;
-    private View.OnTouchListener itnsMinusListener = null;
+    private View.OnClickListener itnsPlusListener = null;
+    private View.OnClickListener itnsMinusListener = null;
     private View.OnTouchListener stimulationButtonListener = null;
     private View.OnClickListener cancelButtonListener = null;
     private View.OnClickListener confirmButtonListener = null;
@@ -51,10 +51,10 @@ public class AmplitudeDialogue extends Dialog {
         tvItnsAmplitude.setText(String.format( "%.2f V", getAmplitude()));
 
         ImageButton ibItnsPlus = findViewById(R.id.ib_itns_plus);
-        ibItnsPlus.setOnTouchListener(itnsPlusListener);
+        ibItnsPlus.setOnClickListener(itnsPlusListener);
 
         ImageButton ibItnsMinus = findViewById(R.id.ib_itns_minus);
-        ibItnsMinus.setOnTouchListener(itnsMinusListener);
+        ibItnsMinus.setOnClickListener(itnsMinusListener);
 
         Button btItnsStartStim = findViewById(R.id.bt_itns_start_stim);
         btItnsStartStim.setOnTouchListener(stimulationButtonListener);
@@ -78,12 +78,12 @@ public class AmplitudeDialogue extends Dialog {
         this.amplitude = amplitude;
     }
 
-    public void setItnsPlusListener(View.OnTouchListener onTouchListener) {
-        this.itnsPlusListener = onTouchListener;
+    public void setItnsPlusListener(View.OnClickListener onClickListener) {
+        this.itnsPlusListener = onClickListener;
     }
 
-    public void setItnsMinusListener(View.OnTouchListener onTouchListener) {
-        this.itnsMinusListener = onTouchListener;
+    public void setItnsMinusListener(View.OnClickListener onClickListener) {
+        this.itnsMinusListener = onClickListener;
     }
 
     public void setStimulationButtonListener(View.OnTouchListener onTouchListener) {

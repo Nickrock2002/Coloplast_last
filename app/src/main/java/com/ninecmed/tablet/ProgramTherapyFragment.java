@@ -124,9 +124,7 @@ public class ProgramTherapyFragment extends Fragment {
             float amplitudeVal = WandData.getAmpFromPos(mAmplitudePos);
             final AmplitudeDialogue dialogue = new AmplitudeDialogue(getActivity());
             dialogue.setAmplitude(amplitudeVal);
-            dialogue.setItnsMinusListener((minusButton, motionEvent) -> {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    minusButton.setPressed(true);
+            dialogue.setItnsMinusListener(minusButton -> {
                     if (mAmplitudePos < 42) {
                         mAmplitudePos += 1;
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
@@ -141,20 +139,14 @@ public class ProgramTherapyFragment extends Fragment {
                     TextView amp = dialogue.findViewById(R.id.tv_itns_amplitude);
                     amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    minusButton.setPressed(false);
                     Drawable drawable = dialogue.getMinusButtonRef().getBackground().mutate();
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     dialogue.getConfirmButtonRef().setEnabled(false);
                     dialogue.getCancelButtonRef().setEnabled(true);
-                }
-                return true;
             });
-            dialogue.setItnsPlusListener((plusButton, motionEvent) -> {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    plusButton.setPressed(true);
+            dialogue.setItnsPlusListener(plusButton -> {
                     if (mAmplitudePos > 0) {
                         mAmplitudePos -= 1;
                         //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
@@ -168,16 +160,13 @@ public class ProgramTherapyFragment extends Fragment {
                     } else {
                         mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                     }
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                    plusButton.setPressed(false);
+
                     Drawable drawable = dialogue.getMinusButtonRef().getBackground().mutate();
                     drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     Drawable drawablePlus = dialogue.getPlusButtonRef().getBackground().mutate();
                     drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
                     dialogue.getConfirmButtonRef().setEnabled(false);
                     dialogue.getCancelButtonRef().setEnabled(true);
-                }
-                return true;
             });
             dialogue.setStimulationButtonListener((stimulationButton, motionEvent) -> {
                 switch (motionEvent.getActionMasked()) {
@@ -441,26 +430,20 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton(View view) {
         btnInterrogate = view.findViewById(R.id.btn_interrogate);
-        btnInterrogate.setOnTouchListener((view1, motionEvent) -> {
-            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                btnInterrogate.setPressed(true);
-                mMainActivity.wandComm.interrogate();
-                btnInterrogate.setClickable(false);
+        btnInterrogate.setOnClickListener(interrogateButton -> {
+            mMainActivity.wandComm.interrogate();
+            btnInterrogate.setClickable(false);
 
-                resetAllButtonsWithDefaultBackground();
-                disableAllTheButtons();
+            resetAllButtonsWithDefaultBackground();
+            disableAllTheButtons();
 //                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
-            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                btnInterrogate.setPressed(false);
-            }
-            return true;
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeProgramButton(View view) {
         btnProgram = view.findViewById(R.id.btn_program);
-        btnProgram.setOnTouchListener((view1, motionEvent) -> {
+        btnProgram.setOnClickListener(programButton -> {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
@@ -470,18 +453,12 @@ public class ProgramTherapyFragment extends Fragment {
                     // magnet could stop therapy, telemetry can't interrupt therapy for
                     // the model 2.
                     showIncorrectTimeDialog();
-                    return true;
                 }
             } else {
-                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    showProgramConfirmationDialog();
-                } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                    Drawable drawableFrqBtn = btnProgram.getBackground().mutate();
-                    drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                }
-
+                showProgramConfirmationDialog();
+                Drawable drawableFrqBtn = btnProgram.getBackground().mutate();
+                drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
-            return true;
         });
     }
 
