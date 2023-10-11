@@ -293,6 +293,9 @@ public class ProgramTherapyFragment extends Fragment {
             }
             if (rb != null) {
                 rb.setChecked(true);
+            }else {
+                rb = dialogue.findViewById(R.id.radio_off);
+                rb.setChecked(true);
             }
         });
     }
@@ -311,7 +314,7 @@ public class ProgramTherapyFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd-MMM-yyyy", Locale.US);
                 String formattedDate = dateFormat.format(calendar.getTime());
 
                 calendar.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);       // Set Calendar object to future time
@@ -475,10 +478,17 @@ public class ProgramTherapyFragment extends Fragment {
         });
 
         TextView tvAmpVal = dialog.findViewById(R.id.tv_amp_val);
-        tvAmpVal.setText(WandData.getAmplitude());
+        if (rootView != null) {
+            Button ampBtn = rootView.findViewById(R.id.btn_amplitude_val);
+            tvAmpVal.setText(ampBtn.getText().toString());
+        }
+
 
         TextView tvFreqVal = dialog.findViewById(R.id.tv_freq_val);
-        tvFreqVal.setText(WandData.getTherapy(requireContext()));
+        if (rootView != null) {
+            Button freqBtn = rootView.findViewById(R.id.btn_frequency_val);
+            tvFreqVal.setText(freqBtn.getText().toString());
+        }
 
         TextView tvDayVal = dialog.findViewById(R.id.tv_start_day_date_val);
         if (rootView != null) {
@@ -622,7 +632,6 @@ public class ProgramTherapyFragment extends Fragment {
                 TextView sn = view.findViewById(R.id.tv_itns_serial_val);
                 sn.setText(WandData.getSerialNumber());
 
-                showBatteryWarningIfLow(view);
                 showLeadRWarningIfFound();
 
                 enableDisableAmplitudeButton(true);
@@ -637,7 +646,10 @@ public class ProgramTherapyFragment extends Fragment {
                     if (implToolFrequency.equals(getString(R.string.off))) {
                         enableDisableDayDateButton(false);
                         enableDisableTimeOfDayButton(false);
+                        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+                        cellv.setText("_");
                     } else {
+                        showBatteryWarningIfLow(view);
                         enableDisableDayDateButton(true);
                         enableDisableTimeOfDayButton(true);
                     }
@@ -707,12 +719,17 @@ public class ProgramTherapyFragment extends Fragment {
     private void showBatteryWarningIfLow(View view) {
         TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
         String rrt_result = WandData.getRRT(view.getContext());
-        if (rrt_result != null && rrt_result.equals(getString(R.string.all_yes))) {
-            btnImplantBatteryStatus.setVisibility(View.VISIBLE);
-            cellv.setVisibility(View.INVISIBLE);
+
+        if (rrt_result != null) {
+            if (rrt_result.equals(getString(R.string.all_yes))) {
+                btnImplantBatteryStatus.setVisibility(View.VISIBLE);
+                cellv.setVisibility(View.INVISIBLE);
+            } else {
+                btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
+                cellv.setVisibility(View.VISIBLE);
+                cellv.setText(R.string.ok);
+            }
         } else {
-            btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
-            cellv.setVisibility(View.VISIBLE);
             cellv.setText(R.string.ok);
         }
     }
@@ -720,12 +737,13 @@ public class ProgramTherapyFragment extends Fragment {
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || leadRValue < 250;
+        isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
         if (isWarningFound) {
             btnLeadRWarn.setVisibility(View.VISIBLE);
             tvLeadRVal.setVisibility(View.INVISIBLE);
             displayLeadRDialogue();
         } else {
+            tvLeadRVal.setVisibility(View.VISIBLE);
             tvLeadRVal.setText(R.string.ok);
             btnLeadRWarn.setVisibility(View.INVISIBLE);
         }

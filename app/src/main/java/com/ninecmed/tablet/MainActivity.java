@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
         String timeToShow = timeFormat.format(currentTimeMillis);
 
         // Format the date in "01/10/2023" format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM/dd/yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
         String dateToShow = dateFormat.format(currentTimeMillis);
 
         UpdateCurrentTimeEvent updateCurrentTimeEvent = new UpdateCurrentTimeEvent();

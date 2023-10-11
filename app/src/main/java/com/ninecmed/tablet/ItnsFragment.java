@@ -329,7 +329,7 @@ public class ItnsFragment extends Fragment {
         float leadRValue = WandData.getLeadR();
         float leadIValue = WandData.getLeadI();
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || leadRValue < 250;
+        isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
         if (isWarningFound) {
             btnLeadRWarn.setVisibility(View.VISIBLE);
             final Dialog dialog = new Dialog(requireContext());
