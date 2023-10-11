@@ -436,6 +436,18 @@ public class ProgramTherapyFragment extends Fragment {
         btnProgram = view.findViewById(R.id.btn_program);
         btnProgram.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                Calendar c = Calendar.getInstance();
+                long future = WandData.dateandtime[WandData.FUTURE];
+                long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
+                if (WandData.therapy[WandData.FUTURE] >= 1) {
+                    if (future < (now + 1000L * 3600L)) {
+                        // Don't allow therapy to be set within 1 hour of now because only a
+                        // magnet could stop therapy, telemetry can't interrupt therapy for
+                        // the model 2.
+                        showIncorrectTimeDialog();
+                        return true;
+                    }
+                }
                 showProgramConfirmationDialog();
             }
             return true;
@@ -455,21 +467,6 @@ public class ProgramTherapyFragment extends Fragment {
 
         Button btnConfirm = dialog.findViewById(R.id.btn_confirm);
         btnConfirm.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-            long future = WandData.dateandtime[WandData.FUTURE];
-            long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-            if (WandData.therapy[WandData.FUTURE] >= 1) {
-                if (future < (now + 1000L * 3600L)) {
-                    // Don't allow therapy to be set within 1 hour of now because only a
-                    // magnet could stop therapy, telemetry can't interrupt therapy for
-                    // the model 2.
-                    //showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                    showIncorrectTimeDialog();
-                    dialog.dismiss();
-                    return;
-                }
-            }
-
             if (mMainActivity.wandComm.anyAmplitudeChanges()) {
                 WandData.invalidateStimLeadI();
             }
