@@ -35,6 +35,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
 import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
+import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
@@ -124,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     String fragmentName = topEntry.getName();
                     boolean isInside = fragmentName.equals("inside");
                     updateToolbar(isInside);
+                    InsideOutsideEntryEvent insideOutsideEntryEvent = new InsideOutsideEntryEvent();
+                    insideOutsideEntryEvent.setInside(isInside);
+                    EventBus.getDefault().post(insideOutsideEntryEvent);
                 }
             }
         });
@@ -198,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             }
             wandConnDialog.dismiss();
         });
-        btConfirm.setClickable(false);
+        //btConfirm.setClickable(false);
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
         setTheSystemButtonsHidden(wandConnDialog);
