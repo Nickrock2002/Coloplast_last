@@ -67,6 +67,8 @@ public class ProgramTherapyFragment extends Fragment {
     private boolean mStimEnabled = false;
     private int lastSetHour;
     private int lastSetMinute;
+    //For amplitude, frequency, date & time respectively
+    private boolean[] valuesChanged = new boolean[4];
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -232,7 +234,17 @@ public class ProgramTherapyFragment extends Fragment {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 Drawable drawable = amplitudeButton.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                valuesChanged[0] = true;
                 dialogue.dismiss();
+                if(valuesChanged[1]) {
+                    if(btnFrequencyVal.getText().equals(getString(R.string.off))) {
+                        enableDisableProgramButton(true);
+                    } else {
+                        enableDisableProgramButton(valuesChanged[2] && valuesChanged[3]);
+                    }
+                } else {
+                    enableDisableProgramButton(false);
+                }
             });
             dialogue.show();
         });
@@ -255,15 +267,12 @@ public class ProgramTherapyFragment extends Fragment {
                 checkedRadioButtonId = dialogue.getCheckedButtonId();
                 RadioButton checkedRadioButton = dialogue.findViewById(checkedRadioButtonId);
                 btnFrequencyVal.setText(checkedRadioButton.getText().toString());
-
-                byte position = 0;
-                position = Byte.parseByte(checkedRadioButton.getTag().toString());
+                byte position = Byte.parseByte(checkedRadioButton.getTag().toString());
+                boolean freqChanged = position != WandData.therapy[WandData.FUTURE];
                 WandData.therapy[WandData.FUTURE] = position;
 
                 if (WandData.therapy[WandData.CURRENT] == WandData.therapy[WandData.FUTURE]) {
                     mMainActivity.wandComm.removeProgramChanges(WandComm.changes.THERAPY);
-
-                    // Clear date and time...
                     WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
                 } else {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.THERAPY);
@@ -271,17 +280,25 @@ public class ProgramTherapyFragment extends Fragment {
                 if (WandData.therapy[WandData.FUTURE] == 0) { //Off Case
                     enableDisableDayDateButton(false);
                     enableDisableTimeOfDayButton(false);
-                    enableDisableProgramButton(true);
+                    if(valuesChanged[0]) enableDisableProgramButton(true);
+                    btnDayDateVal.setText(R.string._3_dash);
+                    btnTimeOfDayVal.setText(R.string._3_dash);
                 } else { // Other than Off
                     enableDisableDayDateButton(true);
                     enableDisableTimeOfDayButton(true);
                     enableDisableProgramButton(false);
-                }
-                btnDayDateVal.setText(R.string._3_dash);
-                btnTimeOfDayVal.setText(R.string._3_dash);
-                Drawable drawable = btnFrequencyVal.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
 
+                    if(freqChanged) {
+                        btnDayDateVal.setText(R.string._3_dash);
+                        btnTimeOfDayVal.setText(R.string._3_dash);
+                    }
+                }
+
+                if(freqChanged || WandData.therapy[WandData.FUTURE] == 0) {
+                    Drawable drawable = btnFrequencyVal.getBackground().mutate();
+                    drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                    valuesChanged[1] = true;
+                }
                 dialogue.dismiss();
             });
             dialogue.show();
@@ -325,12 +342,12 @@ public class ProgramTherapyFragment extends Fragment {
                 }
                 btnDayDateVal.setText(formattedDate);
 
-                if (!btnDayDateVal.getText().toString().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().toString().equals(getString(R.string._3_dash))) {
-                    enableDisableProgramButton(true);
-                }
-
                 Drawable drawable = btnDayDateVal.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                valuesChanged[2] = true;
+
+                enableDisableProgramButton(valuesChanged[0] && valuesChanged[2] && valuesChanged[3]);
+
                 dialogue.dismiss();
             });
             dialogue.show();
@@ -376,12 +393,12 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.TIME);
                 }
 
-                if (!btnDayDateVal.getText().toString().equals(getString(R.string._3_dash)) && !btnTimeOfDayVal.getText().toString().equals(getString(R.string._3_dash))) {
-                    enableDisableProgramButton(true);
-                }
-
                 Drawable drawable = btnTimeOfDayVal.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                valuesChanged[3] = true;
+
+                enableDisableProgramButton(valuesChanged[0] && valuesChanged[2] && valuesChanged[3]);
+
                 dialogue.dismiss();
             });
             dialogue.show();
@@ -435,6 +452,9 @@ public class ProgramTherapyFragment extends Fragment {
         btnProgram.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 showProgramConfirmationDialog();
+            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+                Drawable drawableFrqBtn = btnProgram.getBackground().mutate();
+                drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
             return true;
         });
@@ -527,9 +547,9 @@ public class ProgramTherapyFragment extends Fragment {
 
         Button btnOk = dialog.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(v -> {
-            enableDisableProgramButton(false);
 
-            changeAllButtonsColorTo(R.color.colorPrimary);
+            resetAllButtonsWithDefaultBackground();
+            enableDisableProgramButton(false);
 
             dialog.dismiss();
         });
@@ -588,18 +608,17 @@ public class ProgramTherapyFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    private void changeAllButtonsColorTo(int color) {
-        Drawable drawableAmplBtn = btnAmplitudeVal.getBackground().mutate();
-        drawableAmplBtn.setTint(ActivityCompat.getColor(requireContext(), color));
+    private void resetAllButtonsWithDefaultBackground() {
+        valuesChanged[0] = true;
+        valuesChanged[1] = true;
+        valuesChanged[2] = true;
+        valuesChanged[3] = true;
 
-        Drawable drawableFrqBtn = btnFrequencyVal.getBackground().mutate();
-        drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), color));
-
-        Drawable drawableDateBtn = btnDayDateVal.getBackground().mutate();
-        drawableDateBtn.setTint(ActivityCompat.getColor(requireContext(), color));
-
-        Drawable drawableTimeBtn = btnTimeOfDayVal.getBackground().mutate();
-        drawableTimeBtn.setTint(ActivityCompat.getColor(requireContext(), color));
+        btnAmplitudeVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+        btnFrequencyVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                btnDayDateVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+        btnTimeOfDayVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+        btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
     }
 
     public void updateUI(boolean success) {
@@ -615,7 +634,6 @@ public class ProgramTherapyFragment extends Fragment {
                 resetChangedParameters();
             } else { /* This is interrogate callback */
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
-                changeAllButtonsColorTo(R.color.colorPrimary);
                 btnInterrogate.setClickable(true);
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
                 mn.setText((WandData.getModelNumber(view.getContext())));
