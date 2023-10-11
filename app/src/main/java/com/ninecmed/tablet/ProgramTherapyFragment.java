@@ -289,6 +289,8 @@ public class ProgramTherapyFragment extends Fragment {
                     enableDisableProgramButton(false);
                     btnDayDateVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                     btnTimeOfDayVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                    valuesChanged[2] = false;
+                    valuesChanged[3] = false;
 
                     if (freqChanged) {
                         btnDayDateVal.setText(R.string._3_dash);
