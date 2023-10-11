@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             }
             wandConnDialog.dismiss();
         });
-        //btConfirm.setClickable(false);
+        btConfirm.setClickable(false);
         wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
 
         setTheSystemButtonsHidden(wandConnDialog);

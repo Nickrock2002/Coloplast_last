@@ -622,6 +622,16 @@ public class ProgramTherapyFragment extends Fragment {
                 enableDisableFrequencyButton(true);
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
                 resetChangedParameters();
+                String implToolFrequency = WandData.getTherapy(requireContext());
+                if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
+                    enableDisableFrequencyButton(true);
+                    if (implToolFrequency.equals(getString(R.string.off))) {
+                        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+                        cellv.setText("_");
+                    } else {
+                        showBatteryWarningIfLow(view);
+                    }
+                }
             } else { /* This is interrogate callback */
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
                 changeAllButtonsColorTo(R.color.colorPrimary);
