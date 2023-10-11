@@ -447,13 +447,11 @@ public class ProgramTherapyFragment extends Fragment {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-            if (WandData.therapy[WandData.FUTURE] >= 1) {
-                if (future < (now + 1000L * 3600L)) {
-                    // Don't allow therapy to be set within 1 hour of now because only a
-                    // magnet could stop therapy, telemetry can't interrupt therapy for
-                    // the model 2.
-                    showIncorrectTimeDialog();
-                }
+            if (future < (now + 1000L * 3600L)) {
+                // Don't allow therapy to be set within 1 hour of now because only a
+                // magnet could stop therapy, telemetry can't interrupt therapy for
+                // the model 2.
+                showIncorrectTimeDialog();
             } else {
                 showProgramConfirmationDialog();
                 Drawable drawableFrqBtn = btnProgram.getBackground().mutate();
