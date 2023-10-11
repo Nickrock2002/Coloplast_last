@@ -287,6 +287,8 @@ public class ProgramTherapyFragment extends Fragment {
                     enableDisableDayDateButton(true);
                     enableDisableTimeOfDayButton(true);
                     enableDisableProgramButton(false);
+                    btnDayDateVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                    btnTimeOfDayVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
 
                     if (freqChanged) {
                         btnDayDateVal.setText(R.string._3_dash);
@@ -294,11 +296,10 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 }
 
-                if (freqChanged || WandData.therapy[WandData.FUTURE] == 0) {
-                    Drawable drawable = btnFrequencyVal.getBackground().mutate();
-                    drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                    valuesChanged[1] = true;
-                }
+                Drawable drawable = btnFrequencyVal.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                valuesChanged[1] = true;
+
                 dialogue.dismiss();
             });
             dialogue.show();
@@ -622,8 +623,8 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     /*
-    * Set default background to all the buttons
-    * */
+     * Set default background to all the buttons
+     * */
     private void resetAllButtonsWithDefaultBackground() {
         valuesChanged[0] = true;
         valuesChanged[1] = true;
