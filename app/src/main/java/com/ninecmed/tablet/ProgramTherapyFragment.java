@@ -308,7 +308,12 @@ public class ProgramTherapyFragment extends Fragment {
             } else {
                 rb = dialogue.findViewById(R.id.radio_off);
             }
-            if (rb != null) rb.setChecked(true);
+            if (rb != null) {
+                rb.setChecked(true);
+            }else {
+                rb = dialogue.findViewById(R.id.radio_off);
+                rb.setChecked(true);
+            }
         });
     }
 
@@ -326,7 +331,7 @@ public class ProgramTherapyFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd-MMM-yyyy", Locale.US);
                 String formattedDate = dateFormat.format(calendar.getTime());
 
                 calendar.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);       // Set Calendar object to future time
@@ -451,6 +456,18 @@ public class ProgramTherapyFragment extends Fragment {
         btnProgram = view.findViewById(R.id.btn_program);
         btnProgram.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                Calendar c = Calendar.getInstance();
+                long future = WandData.dateandtime[WandData.FUTURE];
+                long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
+                if (WandData.therapy[WandData.FUTURE] >= 1) {
+                    if (future < (now + 1000L * 3600L)) {
+                        // Don't allow therapy to be set within 1 hour of now because only a
+                        // magnet could stop therapy, telemetry can't interrupt therapy for
+                        // the model 2.
+                        showIncorrectTimeDialog();
+                        return true;
+                    }
+                }
                 showProgramConfirmationDialog();
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 Drawable drawableFrqBtn = btnProgram.getBackground().mutate();
@@ -473,21 +490,6 @@ public class ProgramTherapyFragment extends Fragment {
 
         Button btnConfirm = dialog.findViewById(R.id.btn_confirm);
         btnConfirm.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-            long future = WandData.dateandtime[WandData.FUTURE];
-            long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-            if (WandData.therapy[WandData.FUTURE] >= 1) {
-                if (future < (now + 1000L * 3600L)) {
-                    // Don't allow therapy to be set within 1 hour of now because only a
-                    // magnet could stop therapy, telemetry can't interrupt therapy for
-                    // the model 2.
-                    //showDateTimeMsgDialog(getString(R.string.itns_time_before_now_msg));
-                    showIncorrectTimeDialog();
-                    dialog.dismiss();
-                    return;
-                }
-            }
-
             if (mMainActivity.wandComm.anyAmplitudeChanges()) {
                 WandData.invalidateStimLeadI();
             }
@@ -496,10 +498,17 @@ public class ProgramTherapyFragment extends Fragment {
         });
 
         TextView tvAmpVal = dialog.findViewById(R.id.tv_amp_val);
-        tvAmpVal.setText(WandData.getAmplitude());
+        if (rootView != null) {
+            Button ampBtn = rootView.findViewById(R.id.btn_amplitude_val);
+            tvAmpVal.setText(ampBtn.getText().toString());
+        }
+
 
         TextView tvFreqVal = dialog.findViewById(R.id.tv_freq_val);
-        tvFreqVal.setText(WandData.getTherapy(requireContext()));
+        if (rootView != null) {
+            Button freqBtn = rootView.findViewById(R.id.btn_frequency_val);
+            tvFreqVal.setText(freqBtn.getText().toString());
+        }
 
         TextView tvDayVal = dialog.findViewById(R.id.tv_start_day_date_val);
         if (rootView != null) {
@@ -632,6 +641,16 @@ public class ProgramTherapyFragment extends Fragment {
                 enableDisableFrequencyButton(true);
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
                 resetChangedParameters();
+                String implToolFrequency = WandData.getTherapy(requireContext());
+                if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
+                    enableDisableFrequencyButton(true);
+                    if (implToolFrequency.equals(getString(R.string.off))) {
+                        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+                        cellv.setText("_");
+                    } else {
+                        showBatteryWarningIfLow(view);
+                    }
+                }
             } else { /* This is interrogate callback */
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
                 btnInterrogate.setClickable(true);
@@ -641,7 +660,6 @@ public class ProgramTherapyFragment extends Fragment {
                 TextView sn = view.findViewById(R.id.tv_itns_serial_val);
                 sn.setText(WandData.getSerialNumber());
 
-                showBatteryWarningIfLow(view);
                 showLeadRWarningIfFound();
 
                 enableDisableAmplitudeButton(true);
@@ -656,7 +674,10 @@ public class ProgramTherapyFragment extends Fragment {
                     if (implToolFrequency.equals(getString(R.string.off))) {
                         enableDisableDayDateButton(false);
                         enableDisableTimeOfDayButton(false);
+                        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
+                        cellv.setText("_");
                     } else {
+                        showBatteryWarningIfLow(view);
                         enableDisableDayDateButton(true);
                         enableDisableTimeOfDayButton(true);
                     }
@@ -726,12 +747,17 @@ public class ProgramTherapyFragment extends Fragment {
     private void showBatteryWarningIfLow(View view) {
         TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
         String rrt_result = WandData.getRRT(view.getContext());
-        if (rrt_result != null && rrt_result.equals(getString(R.string.all_yes))) {
-            btnImplantBatteryStatus.setVisibility(View.VISIBLE);
-            cellv.setVisibility(View.INVISIBLE);
+
+        if (rrt_result != null) {
+            if (rrt_result.equals(getString(R.string.all_yes))) {
+                btnImplantBatteryStatus.setVisibility(View.VISIBLE);
+                cellv.setVisibility(View.INVISIBLE);
+            } else {
+                btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
+                cellv.setVisibility(View.VISIBLE);
+                cellv.setText(R.string.ok);
+            }
         } else {
-            btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
-            cellv.setVisibility(View.VISIBLE);
             cellv.setText(R.string.ok);
         }
     }
@@ -739,14 +765,14 @@ public class ProgramTherapyFragment extends Fragment {
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || leadRValue < 250;
+        isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
         if (isWarningFound) {
             btnLeadRWarn.setVisibility(View.VISIBLE);
             tvLeadRVal.setVisibility(View.INVISIBLE);
             displayLeadRDialogue();
         } else {
-            tvLeadRVal.setText(R.string.ok);
             tvLeadRVal.setVisibility(View.VISIBLE);
+            tvLeadRVal.setText(R.string.ok);
             btnLeadRWarn.setVisibility(View.INVISIBLE);
         }
     }

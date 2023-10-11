@@ -35,6 +35,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
 import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
+import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
@@ -124,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     String fragmentName = topEntry.getName();
                     boolean isInside = fragmentName.equals("inside");
                     updateToolbar(isInside);
+                    InsideOutsideEntryEvent insideOutsideEntryEvent = new InsideOutsideEntryEvent();
+                    insideOutsideEntryEvent.setInside(isInside);
+                    EventBus.getDefault().post(insideOutsideEntryEvent);
                 }
             }
         });
@@ -357,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
         String timeToShow = timeFormat.format(currentTimeMillis);
 
         // Format the date in "01/10/2023" format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM/dd/yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
         String dateToShow = dateFormat.format(currentTimeMillis);
 
         UpdateCurrentTimeEvent updateCurrentTimeEvent = new UpdateCurrentTimeEvent();
