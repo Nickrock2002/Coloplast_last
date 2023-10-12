@@ -221,8 +221,9 @@ public class ProgramTherapyFragment extends Fragment {
             });
             dialogue.setConfirmButtonListener(confirmView -> {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
-                Drawable drawable = amplitudeButton.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                /*Drawable drawable = amplitudeButton.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
+                amplitudeButton.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[0] = true;
                 dialogue.dismiss();
                 if (valuesChanged[1]) {
@@ -287,8 +288,9 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 }
 
-                Drawable drawable = btnFrequencyVal.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+               /* Drawable drawable = btnFrequencyVal.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
+                btnFrequencyVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[1] = true;
 
                 dialogue.dismiss();
@@ -339,8 +341,9 @@ public class ProgramTherapyFragment extends Fragment {
                 }
                 btnDayDateVal.setText(formattedDate);
 
-                Drawable drawable = btnDayDateVal.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                /*Drawable drawable = btnDayDateVal.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
+                btnDayDateVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[2] = true;
 
                 enableDisableProgramButton(valuesChanged[0] && valuesChanged[2] && valuesChanged[3]);
@@ -390,8 +393,9 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.TIME);
                 }
 
-                Drawable drawable = btnTimeOfDayVal.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                /*Drawable drawable = btnTimeOfDayVal.getBackground().mutate();
+                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
+                btnTimeOfDayVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[3] = true;
 
                 enableDisableProgramButton(valuesChanged[0] && valuesChanged[2] && valuesChanged[3]);
@@ -447,17 +451,16 @@ public class ProgramTherapyFragment extends Fragment {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-            if (WandData.therapy[WandData.FUTURE] >= 1) {
-                if (future < (now + 1000L * 3600L)) {
-                    // Don't allow therapy to be set within 1 hour of now because only a
-                    // magnet could stop therapy, telemetry can't interrupt therapy for
-                    // the model 2.
-                    showIncorrectTimeDialog();
-                }
+            if (future < (now + 1000L * 3600L)) {
+                // Don't allow therapy to be set within 1 hour of now because only a
+                // magnet could stop therapy, telemetry can't interrupt therapy for
+                // the model 2.
+                showIncorrectTimeDialog();
             } else {
                 showProgramConfirmationDialog();
-                Drawable drawableFrqBtn = btnProgram.getBackground().mutate();
-                drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                /*Drawable drawableFrqBtn = btnProgram.getBackground().mutate();
+                drawableFrqBtn.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
+                btnProgram.setBackgroundResource(R.drawable.rounded_button_dark_always);
             }
         });
     }
