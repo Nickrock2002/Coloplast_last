@@ -381,7 +381,7 @@
         <Button
             android:id="@+id/btn_time_of_day"
             android:layout_width="260dp"
-            android:layout_height="64dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:background="@drawable/rounded_corner_button_dynamic"
             android:clickable="false"

@@ -11,6 +11,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -32,10 +33,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
 import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
-import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
@@ -189,36 +190,41 @@ public class MainActivity extends AppCompatActivity {
 
     protected void showWandConnectionDialogue(final boolean isClinicVisit) {
         clinicVisitFragmentOpen = isClinicVisit;
-        wandConnDialog = new Dialog(this);
-        wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                wandConnDialog = new Dialog(MainActivity.this);
+                wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
 
-        AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
-        btConfirm.setOnClickListener(view -> {
-            if (isClinicVisit) {
-                showSetDateTimeDialog(false);
-            } else {
-                launchBaseTabFragment(false);
+                AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
+                btConfirm.setOnClickListener(view -> {
+                    if (isClinicVisit) {
+                        showSetDateTimeDialog(false);
+                    } else {
+                        launchBaseTabFragment(false);
+                    }
+                    wandConnDialog.dismiss();
+                });
+                btConfirm.setClickable(false);
+                wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
+
+                setTheSystemButtonsHidden(wandConnDialog);
+                Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(MainActivity.this);
+                wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
+                wandConnDialog.setCancelable(false);
+                wandConnDialog.show();
+                if (isBluetoothPermissionGranted) {
+                    if (!isDeviceConnected) {
+                        initBluetooth();
+                    } else {
+                        showWandConnectionInActiveMode();
+                    }
+                } else {
+                    requestBluetoothPermission();
+                }
             }
-            wandConnDialog.dismiss();
         });
-        btConfirm.setClickable(false);
-        wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
-
-        setTheSystemButtonsHidden(wandConnDialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
-        wandConnDialog.setCancelable(false);
-        wandConnDialog.show();
-        if (isBluetoothPermissionGranted) {
-            if (!isDeviceConnected) {
-                initBluetooth();
-            } else {
-                runOnUiThread(this::showWandConnectionInActiveMode);
-            }
-        } else {
-            requestBluetoothPermission();
-        }
     }
 
     private void launchFeatureSelectionFragment() {
@@ -492,11 +498,11 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_set_date_time);
 
-        Button btnDate = (Button) dialog.findViewById(R.id.btn_date);
-        Button btnTime = (Button) dialog.findViewById(R.id.btn_time);
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm);
-        Button btnConfirmDisabled = (Button) dialog.findViewById(R.id.btn_confirm_disabled);
+        Button btnDate = dialog.findViewById(R.id.btn_date);
+        Button btnTime = dialog.findViewById(R.id.btn_time);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+        Button btnConfirm = dialog.findViewById(R.id.btn_confirm);
+        Button btnConfirmDisabled = dialog.findViewById(R.id.btn_confirm_disabled);
 
         if (!formattedTime.isEmpty()) {
             btnTime.setText(formattedTime.toUpperCase());
@@ -554,9 +560,9 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_time_picker);
 
-        Button btnConfirmTime = (Button) dialog.findViewById(R.id.btn_confirm_time);
+        Button btnConfirmTime = dialog.findViewById(R.id.btn_confirm_time);
 
-        TimePicker timePicker = (TimePicker) dialog.findViewById(R.id.timePicker);
+        TimePicker timePicker = dialog.findViewById(R.id.timePicker);
         timePicker.setIs24HourView(false); // Set to true if you want 24-hour format
 
         // Set a default time (optional)
@@ -614,7 +620,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_date_picker);
 
         final DatePicker datePicker = dialog.findViewById(R.id.datePicker);
-        Button btnConfirmDate = (Button) dialog.findViewById(R.id.btn_confirm_date);
+        Button btnConfirmDate = dialog.findViewById(R.id.btn_confirm_date);
         btnConfirmDate.setOnClickListener(v -> {
             if (formattedDate.isEmpty()) {
                 int year = datePicker.getYear();
@@ -666,12 +672,12 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_back_to_start);
 
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
         });
 
-        Button btnGoBack = (Button) dialog.findViewById(R.id.btn_yes_go_back);
+        Button btnGoBack = dialog.findViewById(R.id.btn_yes_go_back);
         btnGoBack.setOnClickListener(v -> {
             dialog.dismiss();
             getSupportFragmentManager().popBackStack();
@@ -690,12 +696,12 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_close_app);
 
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
         });
 
-        Button btnYesClose = (Button) dialog.findViewById(R.id.btn_yes_close);
+        Button btnYesClose = dialog.findViewById(R.id.btn_yes_close);
         btnYesClose.setOnClickListener(v -> {
             finish();
         });
@@ -713,7 +719,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_tablet_battery_low);
 
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_batt);
+        Button btnCancel = dialog.findViewById(R.id.btn_confirm_batt);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
         });
@@ -731,7 +737,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_serial_mismatch);
 
-        Button btnCancel = (Button) dialog.findViewById(R.id.btn_confirm_mismatch);
+        Button btnCancel = dialog.findViewById(R.id.btn_confirm_mismatch);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
         });
@@ -749,7 +755,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_wand_tablet_comm_issue);
 
-        Button btnConfirmWandComm = (Button) dialog.findViewById(R.id.btn_confirm_wand_comm);
+        Button btnConfirmWandComm = dialog.findViewById(R.id.btn_confirm_wand_comm);
         btnConfirmWandComm.setOnClickListener(v -> {
             dialog.dismiss();
         });

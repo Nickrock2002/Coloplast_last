@@ -358,7 +358,8 @@ public class ProgramTherapyFragment extends Fragment {
         btnTimeOfDayVal = rootView.findViewById(R.id.btn_time_of_day);
 
         btnTimeOfDayVal.setOnClickListener(timeOfDayButton -> {
-            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(getActivity(), mMainActivity.getTimeDifferenceMillis(), lastSetHour, lastSetMinute);
+            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(
+                    getActivity(), mMainActivity.getTimeDifferenceMillis(), lastSetHour, lastSetMinute);
             dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
                 TimePicker timePicker = dialogue.findViewById(R.id.timePicker);
@@ -378,21 +379,21 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.TIME);
                 }
 
-
+                int hourToDisplay = lastSetHour;
                 String amPm;
                 if (lastSetHour < 12) {
                     amPm = "AM";
                     if (lastSetHour == 0) {
-                        lastSetHour = 12;
+                        hourToDisplay = 12;
                     }
                 } else {
                     amPm = "PM";
                     if (lastSetHour > 12) {
-                        lastSetHour -= 12;
+                        hourToDisplay -= 12;
                     }
                 }
 
-                String formattedTime = String.format("%02d:%02d %s", lastSetHour, lastSetMinute, amPm);
+                String formattedTime = String.format("%02d:%02d %s", hourToDisplay, lastSetMinute, amPm);
                 btnTimeOfDayVal.setText(formattedTime);
                 btnTimeOfDayVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[3] = true;
@@ -436,6 +437,7 @@ public class ProgramTherapyFragment extends Fragment {
         btnInterrogate.setOnClickListener(interrogateButton -> {
             mMainActivity.wandComm.interrogate();
             btnInterrogate.setClickable(false);
+            btnInterrogate.setBackgroundResource(R.drawable.rounded_button_dark_always);
 
             resetAllButtonsWithDefaultBackground();
             disableAllTheButtons();
@@ -657,6 +659,7 @@ public class ProgramTherapyFragment extends Fragment {
             } else { /* This is interrogate callback */
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
                 btnInterrogate.setClickable(true);
+                btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                 TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
                 mn.setText((WandData.getModelNumber(view.getContext())));
 
