@@ -363,24 +363,9 @@ public class ProgramTherapyFragment extends Fragment {
             dialogue.setConfirmButtonListener(confirmView -> {
                 TimePicker timePicker = dialogue.findViewById(R.id.timePicker);
 
-                // Get the selected lastSetHour and lasSetMinute from the TimePicker
                 lastSetHour = timePicker.getHour();
                 lastSetMinute = timePicker.getMinute();
 
-                // Determine if it's AM or PM
-                String amPm;
-                if (lastSetHour < 12) {
-                    amPm = "AM";
-                    String formattedTime = String.format("%02d:%02d %s", lastSetHour, lastSetMinute, amPm);
-                    btnTimeOfDayVal.setText(formattedTime);
-                } else {
-                    amPm = "PM";
-                    int hrToShow = lastSetHour - 12;
-                    String formattedTime = String.format("%02d:%02d %s", hrToShow, lastSetMinute, amPm);
-                    btnTimeOfDayVal.setText(formattedTime);
-                }
-
-                // Update the button text with the formatted time
                 Calendar futureTime = Calendar.getInstance();
                 futureTime.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);
                 futureTime.set(Calendar.MINUTE, lastSetMinute);
@@ -393,8 +378,22 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.TIME);
                 }
 
-                /*Drawable drawable = btnTimeOfDayVal.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
+
+                String amPm;
+                if (lastSetHour < 12) {
+                    amPm = "AM";
+                    if (lastSetHour == 0) {
+                        lastSetHour = 12;
+                    }
+                } else {
+                    amPm = "PM";
+                    if (lastSetHour > 12) {
+                        lastSetHour -= 12;
+                    }
+                }
+
+                String formattedTime = String.format("%02d:%02d %s", lastSetHour, lastSetMinute, amPm);
+                btnTimeOfDayVal.setText(formattedTime);
                 btnTimeOfDayVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[3] = true;
 
