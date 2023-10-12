@@ -532,22 +532,21 @@ public class WandData {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
 
-            // Get the selected hour and minute from the TimePicker
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 
-            // Determine if it's AM or PM
             String amPm;
             if (hour < 12) {
                 amPm = "AM";
+                if (hour == 0) {
+                    hour = 12;
+                }
             } else {
                 amPm = "PM";
                 if (hour > 12) {
                     hour -= 12;
                 }
             }
-
-            // Update the button text with the formatted time
 
             return String.format("%02d:%02d %s", hour, minute, amPm);
         } else
