@@ -107,6 +107,7 @@ public class HamburgerFragment extends Fragment {
             Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mMainActivity.getTimeDifferenceMillis());
             tvDateVal.setText(dateTimePair.first);
             tvTimeVal.setText(dateTimePair.second);
+            tvLanguage.setText(getString(R.string.english));
         }
 
         // Model Num
