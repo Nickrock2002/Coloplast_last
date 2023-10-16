@@ -346,6 +346,17 @@
             app:layout_constraintGuide_percent="0.28" />
 
         <TextView
+            android:id="@+id/tv_software_versions_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/software_versions"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_date"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -354,7 +365,7 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/tv_language"
             app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_software_versions_title" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -379,6 +390,19 @@
             app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
         <TextView
+            android:id="@+id/tv_versions_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dash"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_date_val"
+            app:layout_constraintStart_toEndOf="@+id/guideline_quarter_3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tv_date_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -388,7 +412,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_language_val"
             app:layout_constraintStart_toEndOf="@+id/guideline_quarter_3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_versions_val" />
 
         <TextView
             android:id="@+id/tv_time_val"
@@ -415,6 +439,22 @@
             app:layout_constraintTop_toBottomOf="@id/tv_date_val" />
 
         <Button
+            android:id="@+id/btn_about"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingVertical="10dp"
+            android:background="@drawable/rounded_corners_button"
+            android:text="@string/about_title"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_set_date_time"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
             android:id="@+id/btn_set_date_time"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
@@ -428,7 +468,7 @@
             app:layout_constraintBottom_toTopOf="@id/btn_set_language"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_about" />
 
         <Button
             android:id="@+id/btn_set_language"

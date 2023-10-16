@@ -69,6 +69,7 @@
     <string name="off">Off</string>
     <string name="implant_battery">Implant Battery</string>
     <string name="software_version">Software Version</string>
+    <string name="software_versions">Software Versions:</string>
     <string name="battery_replacement_time_rrt">Battery Replacement Time (RRT)</string>
     <string name="company_info"><b>Coloplast Corporation</b>\n<br />+1-800-258-3476 \n<br />IFU link: <href url="intibia.com/IFU">intibia.com/IFU</href></string>
     <string name="company_address">1601 West River Road \nMinneapolis, MN 55411 \nUnited States of America</string>
