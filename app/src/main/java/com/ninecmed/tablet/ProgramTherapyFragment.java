@@ -221,8 +221,7 @@ public class ProgramTherapyFragment extends Fragment {
             });
             dialogue.setConfirmButtonListener(confirmView -> {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
-                /*Drawable drawable = amplitudeButton.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
+                ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 amplitudeButton.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[0] = true;
                 dialogue.dismiss();
@@ -340,9 +339,6 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.DATE);
                 }
                 btnDayDateVal.setText(formattedDate);
-
-                /*Drawable drawable = btnDayDateVal.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));*/
                 btnDayDateVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[2] = true;
 

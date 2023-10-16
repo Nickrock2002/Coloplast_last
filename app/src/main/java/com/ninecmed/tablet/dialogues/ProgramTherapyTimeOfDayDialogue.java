@@ -22,9 +22,9 @@ public class ProgramTherapyTimeOfDayDialogue extends Dialog {
     private View.OnClickListener cancelButtonListener = null;
     private View.OnClickListener confirmButtonListener = null;
 
-    private long timeDiff;
-    private int hour;
-    private int min;
+    private final long timeDiff;
+    private final int hour;
+    private final int min;
 
     public ProgramTherapyTimeOfDayDialogue(Context context, long timeDifferenceMillis, int lastSetHour, int lastSetMinute) {
         super(context);
@@ -55,17 +55,19 @@ public class ProgramTherapyTimeOfDayDialogue extends Dialog {
         timePicker.setIs24HourView(false);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(cal.getTimeInMillis() + timeDiff);
-        if (hour == 0) {
-            timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
-        } else {
-            timePicker.setHour(hour);
-        }
-
-        if (min == 0) {
-            timePicker.setMinute(cal.get(Calendar.MINUTE));
-        } else {
-            timePicker.setMinute(min);
-        }
+//        if (hour == 0) {
+//            timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
+//        } else {
+//            timePicker.setHour(hour);
+//        }
+        timePicker.setHour(hour);
+//
+//        if (min == 0) {
+//            timePicker.setMinute(cal.get(Calendar.MINUTE));
+//        } else {
+//            timePicker.setMinute(min);
+//        }
+        timePicker.setMinute(min);
     }
 
     public void setCancelButtonListener(View.OnClickListener onClickListener) {

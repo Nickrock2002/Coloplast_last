@@ -142,6 +142,9 @@
     <string name="itns_interrogation_tab">ITNS Interrogation Tab</string>
     <string name="lead_r_above">Lead R is above normal range</string>
     <string name="lead_r_below">Lead R is below normal range</string>
+    <string name="str_default">Default</string>
+    <string name="dash">-</string>
+    <string name="english">English</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>

@@ -26,6 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.ninecmed.tablet.dialogues.LeadRDialogue;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
@@ -42,6 +43,9 @@ public class HamburgerFragment extends Fragment {
     private MainActivity mMainActivity = null;
     private TextView tvDateVal;
     private TextView tvTimeVal;
+    private TextView tvLanguage;
+    private TextView tvLeadRVal;
+    private Button btnLeadRWarn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,17 +59,16 @@ public class HamburgerFragment extends Fragment {
 
         tvDateVal = view.findViewById(R.id.tv_date_val);
         tvTimeVal = view.findViewById(R.id.tv_time_val);
+        tvLanguage = view.findViewById(R.id.tv_language_val);
+        tvLeadRVal = view.findViewById(R.id.tv_lead_r_val);
+        btnLeadRWarn = view.findViewById(R.id.btn_lead_r_warn);
         TabLayout mTabLayout = view.findViewById(R.id.tabs);
         mTabLayout.addTab(mTabLayout.newTab().setText("Intibia ITNS Information and Settings"));
         Button setLanguage = view.findViewById(R.id.btn_set_language);
-        setLanguage.setOnClickListener(v -> {
-            showChangeLanguageDialogue();
-        });
+        setLanguage.setOnClickListener(v -> showChangeLanguageDialogue());
 
         Button resetDateTime = view.findViewById(R.id.btn_set_date_time);
-        resetDateTime.setOnClickListener(v -> {
-           showResetDateTimeConfirmationDialog();
-        });
+        resetDateTime.setOnClickListener(v -> showResetDateTimeConfirmationDialog());
 
         return view;
     }
@@ -76,7 +79,7 @@ public class HamburgerFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_reset_date_time);
 
-        Button btnConfirm = (Button) dialog.findViewById(R.id.btn_confirm_to_reset);
+        Button btnConfirm = dialog.findViewById(R.id.btn_confirm_to_reset);
         btnConfirm.setOnClickListener(v -> {
             mMainActivity.showSetDateTimeDialog(true);
             dialog.dismiss();
@@ -99,9 +102,11 @@ public class HamburgerFragment extends Fragment {
 
     private void setupCurrentData(View view) {
         //Date - time
-        Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mMainActivity.getTimeDifferenceMillis());
-        tvDateVal.setText(dateTimePair.first);
-        tvTimeVal.setText(dateTimePair.second);
+        if (mMainActivity.isDeviceConnected()) {
+            Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mMainActivity.getTimeDifferenceMillis());
+            tvDateVal.setText(dateTimePair.first);
+            tvTimeVal.setText(dateTimePair.second);
+        }
 
         // Model Num
         TextView mn = view.findViewById(R.id.tv_itns_model_val);
@@ -138,18 +143,12 @@ public class HamburgerFragment extends Fragment {
         if (WandData.getLeadI() == 0.0f) {
             leadi.setText("_");
         } else {
-            String formattedLeadI =  String.format(Locale.ENGLISH,"%.1f mA", WandData.getLeadI());
+            String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", WandData.getLeadI());
             leadi.setText(formattedLeadI);
         }
 
         // LEAD R
-        TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-        if (WandData.getLeadR() == 0f) {
-            leadr.setText("_");
-        } else {
-            String formattedLeadR = String.format(Locale.ENGLISH,"%.0f ohms", WandData.getLeadR());
-            leadr.setText(formattedLeadR);
-        }
+        showLeadRWarningIfFound();
     }
 
     private void showBatteryWarningIfLow(View view) {
@@ -168,6 +167,37 @@ public class HamburgerFragment extends Fragment {
         } else {
             cellv.setText("_");
         }
+    }
+
+    private void showLeadRWarningIfFound() {
+        float leadRValue = WandData.getLeadR();
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", WandData.getLeadR());
+        boolean isWarningFound;
+        isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
+        if (isWarningFound) {
+            btnLeadRWarn.setText(formattedLeadR);
+            btnLeadRWarn.setVisibility(View.VISIBLE);
+            tvLeadRVal.setVisibility(View.INVISIBLE);
+            displayLeadRDialogue();
+        } else {
+            if (leadRValue == 0f) {
+                tvLeadRVal.setText("_");
+            } else {
+                tvLeadRVal.setText(formattedLeadR);
+            }
+            tvLeadRVal.setVisibility(View.VISIBLE);
+            btnLeadRWarn.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void displayLeadRDialogue() {
+        float leadRValue = WandData.getLeadR();
+        float leadIValue = WandData.getLeadI();
+        final LeadRDialogue dialogue = new LeadRDialogue(getActivity());
+        dialogue.setLeadRValue(leadRValue);
+        dialogue.setLeadIValue(leadIValue);
+        dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
+        dialogue.show();
     }
 
     @Override
@@ -225,11 +255,10 @@ public class HamburgerFragment extends Fragment {
         final Button buttonConfirm = dialog.findViewById(R.id.btn_confirm);
         final Button buttonCancel = dialog.findViewById(R.id.btn_cancel);
         buttonConfirm.setOnClickListener(view -> {
+            tvLanguage.setText(getString(R.string.english));
             dialog.dismiss();
         });
-        buttonCancel.setOnClickListener(view -> {
-            dialog.dismiss();
-        });
+        buttonCancel.setOnClickListener(view -> dialog.dismiss());
         setTheSystemButtonsHidden(dialog);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireActivity());
         dialog.getWindow().setLayout(dimensions.first, dimensions.second);
@@ -282,18 +311,12 @@ public class HamburgerFragment extends Fragment {
             if (WandData.getLeadI() == 0.0f) {
                 leadi.setText("_");
             } else {
-                String formattedLeadI =  String.format(Locale.ENGLISH,"%.1f mA", WandData.getLeadI());
+                String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", WandData.getLeadI());
                 leadi.setText(formattedLeadI);
             }
 
             // LEAD R
-            TextView leadr = view.findViewById(R.id.tv_lead_r_val);
-            if (WandData.getLeadR() == 0f) {
-                leadr.setText("_");
-            } else {
-                String formattedLeadR = String.format(Locale.ENGLISH,"%.0f ohms", WandData.getLeadR());
-                leadr.setText(formattedLeadR);
-            }
+            showLeadRWarningIfFound();
         }
         // Here's what happens on fail
         else {
