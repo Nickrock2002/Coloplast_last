@@ -12,16 +12,17 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.ninecmed.tablet.BuildConfig;
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.WandData;
 
 import java.util.Objects;
 
-public class BatteryReplaceRRTDialogue extends Dialog {
+public class AboutDialogue extends Dialog {
     private View.OnClickListener confirmButtonListener = null;
 
-    public BatteryReplaceRRTDialogue(Context context) {
+    public AboutDialogue(Context context) {
         super(context);
     }
 
@@ -31,14 +32,21 @@ public class BatteryReplaceRRTDialogue extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCancelable(false);
-        setContentView(R.layout.dialog_itns_rrt);
+        setContentView(R.layout.dialog_about);
 
-        TextView tvImplantBatteryVoltage = findViewById(R.id.tv_implant_battery_volts);
-        tvImplantBatteryVoltage.setText(String.format("%s%s",
-                getContext().getString(R.string.battery_voltage), WandData.getCellV()));
+        TextView tvImplantFirmware = findViewById(R.id.tv_implant_firmware_val);
+        String implantFirmware = WandData.getCellV();
+        tvImplantFirmware.setText(implantFirmware == null ? "-" : implantFirmware);
 
-        Button btConfirm = findViewById(R.id.bt_confirm);
-        btConfirm.setOnClickListener(confirmButtonListener);
+        TextView tvWandFirmware = findViewById(R.id.tv_wand_firmware_val);
+        String wandFirmware = WandData.getCellV();
+        tvWandFirmware.setText(wandFirmware == null ? "-" : wandFirmware);
+
+        TextView tvTabApplicationVersion = findViewById(R.id.tv_tab_application_val);
+        tvTabApplicationVersion.setText(BuildConfig.VERSION_NAME);
+
+        Button btOk = findViewById(R.id.btn_ok);
+        btOk.setOnClickListener(confirmButtonListener);
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());

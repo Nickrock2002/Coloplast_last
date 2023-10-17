@@ -705,6 +705,8 @@ public class ProgramTherapyFragment extends Fragment {
         else {
             if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
+                btnInterrogate.setClickable(true);
+                btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -737,6 +739,8 @@ public class ProgramTherapyFragment extends Fragment {
         Button btnCancel = dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
+            btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+            enableDisableProgramButton(true);
         });
 
         setTheSystemButtonsHidden(dialog);
@@ -812,9 +816,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void resetChangedParameters() {
-
         WandData.therapy[WandData.FUTURE] = WandData.therapy[WandData.CURRENT];
-
         WandData.dateandtime[WandData.FUTURE] = WandData.dateandtime[WandData.CURRENT];
 
         mAmplitudePos = WandData.getAmplitudePos();

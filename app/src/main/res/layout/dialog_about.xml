@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,37 +8,26 @@
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="20dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorBaseGrayFifty"
+        android:paddingVertical="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/tv_warn_title"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/baseline_check_24"
+        <TextView
+            android:id="@+id/tv_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:text="@string/about_title"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="28sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <TextView
-        android:id="@+id/tv_reset_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Intibia ITNS successfully programmed"
-        android:textColor="@color/cardview_dark_background"
-        android:paddingHorizontal="16dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
     <Button
         android:id="@+id/btn_ok"
@@ -71,88 +59,66 @@
         app:layout_constraintGuide_begin="340dp" />
 
     <TextView
-        android:id="@+id/tv_amp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/amplitude_with_colon"
-        android:layout_marginTop="32dp"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline14"
-        app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
-
-    <TextView
-        android:id="@+id/tv_freq"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/frequency_with_colon"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline14"
-        app:layout_constraintTop_toBottomOf="@+id/tv_amp" />
-
-    <TextView
-        android:id="@+id/tv_start_day_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_day_date_with_colon"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline14"
-        app:layout_constraintTop_toBottomOf="@+id/tv_freq" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_with_colon"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline14"
-        app:layout_constraintTop_toBottomOf="@+id/tv_start_day_date" />
-
-    <TextView
-        android:id="@+id/tv_amp_val"
+        android:id="@+id/tv_implant_firmware"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:text="@string/implant_firmware"
         android:textSize="16sp"
-        android:text="_"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
+        app:layout_constraintStart_toStartOf="@+id/guideline14"
+        app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
     <TextView
-        android:id="@+id/tv_freq_val"
+        android:id="@+id/tv_wand_firmware"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:text="@string/wand_firmware"
         android:textSize="16sp"
-        android:text="_"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toBottomOf="@+id/tv_amp_val" />
-
+        app:layout_constraintStart_toStartOf="@+id/guideline14"
+        app:layout_constraintTop_toBottomOf="@+id/tv_implant_firmware" />
 
     <TextView
-        android:id="@+id/tv_start_day_date_val"
+        android:id="@+id/tv_tab_application"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:text="@string/tablet_application"
         android:textSize="16sp"
-        android:text="_"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toBottomOf="@+id/tv_freq_val" />
-
+        app:layout_constraintStart_toStartOf="@+id/guideline14"
+        app:layout_constraintTop_toBottomOf="@+id/tv_wand_firmware" />
 
     <TextView
-        android:id="@+id/tv_time_val"
+        android:id="@+id/tv_implant_firmware_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="_"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
+
+    <TextView
+        android:id="@+id/tv_wand_firmware_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
         android:text="_"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toBottomOf="@+id/tv_start_day_date_val" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_implant_firmware_val" />
+
+    <TextView
+        android:id="@+id/tv_tab_application_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="_"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintTop_toBottomOf="@+id/tv_wand_firmware_val" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

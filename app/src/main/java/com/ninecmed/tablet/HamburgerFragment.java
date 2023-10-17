@@ -26,6 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.ninecmed.tablet.dialogues.AboutDialogue;
 import com.ninecmed.tablet.dialogues.LeadRDialogue;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
@@ -46,6 +47,7 @@ public class HamburgerFragment extends Fragment {
     private TextView tvLanguage;
     private TextView tvLeadRVal;
     private Button btnLeadRWarn;
+    private Button btnAbout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class HamburgerFragment extends Fragment {
         tvLanguage = view.findViewById(R.id.tv_language_val);
         tvLeadRVal = view.findViewById(R.id.tv_lead_r_val);
         btnLeadRWarn = view.findViewById(R.id.btn_lead_r_warn);
+        btnAbout = view.findViewById(R.id.btn_about);
         TabLayout mTabLayout = view.findViewById(R.id.tabs);
         mTabLayout.addTab(mTabLayout.newTab().setText("Intibia ITNS Information and Settings"));
         Button setLanguage = view.findViewById(R.id.btn_set_language);
@@ -70,6 +73,7 @@ public class HamburgerFragment extends Fragment {
         Button resetDateTime = view.findViewById(R.id.btn_set_date_time);
         resetDateTime.setOnClickListener(v -> showResetDateTimeConfirmationDialog());
         btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());
+        btnAbout.setOnClickListener(v -> displayAboutDialogue());
 
         return view;
     }
@@ -197,6 +201,12 @@ public class HamburgerFragment extends Fragment {
         final LeadRDialogue dialogue = new LeadRDialogue(getActivity());
         dialogue.setLeadRValue(leadRValue);
         dialogue.setLeadIValue(leadIValue);
+        dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
+        dialogue.show();
+    }
+
+    private void displayAboutDialogue() {
+        final AboutDialogue dialogue = new AboutDialogue(getActivity());
         dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
         dialogue.show();
     }

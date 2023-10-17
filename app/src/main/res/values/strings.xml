@@ -146,6 +146,10 @@
     <string name="str_default">Default</string>
     <string name="dash">-</string>
     <string name="english">English</string>
+    <string name="battery_voltage">"Battery Voltage: "</string>
+    <string name="implant_firmware">Implant Firmware</string>
+    <string name="wand_firmware">Wand Firmware</string>
+    <string name="tablet_application">Tablet Application</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>
