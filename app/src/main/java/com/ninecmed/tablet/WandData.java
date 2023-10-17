@@ -34,6 +34,7 @@ public class WandData {
 
     // Interrogatable implant parameters
     static private final int[] mSerialNumber = new int[3];
+    static private final int[] mWandFirmwareVersion = new int[3];
     static private final int[] mModelNumber = new int[3];
     static private final int[] mResets = new int[3];
     static private final int[] mConfig = new int[3];
@@ -160,6 +161,18 @@ public class WandData {
         if (isITNSNew()) {
             mInterrogateSuccessful = false;
         }
+    }
+
+    static void setWandFirmwareInfo(byte[] msg) {
+        mWandFirmwareVersion[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
+//        mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
+//        mResets[TEMPORARY] = (msg[6] & 0xff);
+//
+//        mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
+//
+//        if (isITNSNew()) {
+//            mInterrogateSuccessful = false;
+//        }
     }
 
     static int getResets() {

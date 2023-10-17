@@ -34,7 +34,8 @@ class WandComm {
         int CLRRESETS = 17;
         int SENDTESTBURST = 18;
         int SENDTESTBURSTEXT = 19;
-        int LASTTASK = 20;
+        int GETWANDFIRMWARE = 20;
+        int LASTTASK = 21;
     }
 
     public interface jobs {
@@ -165,6 +166,7 @@ class WandComm {
         task_list[tasks.GETCELLV] = true;
         task_list[tasks.GETCLOCK] = true;
         task_list[tasks.GETSCHEDULE] = true;
+        task_list[tasks.GETWANDFIRMWARE] = true;
 
         mCurrentJob = jobs.INTERROGATE;
         mState = 0;
@@ -434,6 +436,24 @@ class WandComm {
                 }
                 break;
 
+//            case tasks.GETIMPLANTFIRMWARE:
+//                if(task_list[mState]) {
+//                    mCurrentTask = mState;
+//                    getImplantFirmware();
+//                } else {
+//                    mContinue = true;
+//                }
+//                break;
+
+            case tasks.GETWANDFIRMWARE:
+                if(task_list[mState]) {
+                    mCurrentTask = mState;
+                    getWandFirmware();
+                } else {
+                    mContinue = true;
+                }
+                break;
+
             case tasks.LASTTASK:
                 if(mCurrentJob == jobs.INTERROGATE) {
                     WandData.interrogateSuccessful();
@@ -507,6 +527,7 @@ class WandComm {
         sendMessage(msg);
     }
 
+    //implant firmware
     private void getID() {
         byte[] msg = {'I', '0', 0, 0};
         sendMessage(msg);
@@ -529,6 +550,11 @@ class WandComm {
 
     private void getCellV() {
         byte[] msg = {'I', '4', 0, 0};
+        sendMessage(msg);
+    }
+
+    private void getWandFirmware() {
+        byte[] msg = {'W', 'f', 0, 0};
         sendMessage(msg);
     }
 
@@ -766,6 +792,27 @@ class WandComm {
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETID.");
                     WandData.setIDInformation(rxBuffer);
+                    mRetries = 3;
+                    if(mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
+                        if(WandData.isITNSNew()) {
+                            updateUIFragments(false);
+                            return;
+                        }
+                    }
+                } else if(mRetries > 0) {
+                    mRetries--;
+                    mState -= 1;            // Backup state machine and try again
+                }
+                else {
+                    updateUIFragments(false);
+                    return;
+                }
+                break;
+
+            case tasks.GETWANDFIRMWARE:
+                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                    Log.d(TAG, "CRC correct for GETID.");
+                    WandData.setWandFirmwareInfo(rxBuffer);
                     mRetries = 3;
                     if(mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
                         if(WandData.isITNSNew()) {

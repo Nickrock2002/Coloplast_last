@@ -73,7 +73,7 @@ public class HamburgerFragment extends Fragment {
         Button resetDateTime = view.findViewById(R.id.btn_set_date_time);
         resetDateTime.setOnClickListener(v -> showResetDateTimeConfirmationDialog());
         btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());
-        btnAbout.setOnClickListener(v -> displayAboutDialogue());
+//        btnAbout.setOnClickListener(v -> displayAboutDialogue());
 
         return view;
     }
