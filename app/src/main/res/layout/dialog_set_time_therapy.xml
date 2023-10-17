@@ -28,7 +28,6 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <TextView
         android:id="@+id/tv_reset_counter"
         android:layout_width="wrap_content"
@@ -46,9 +45,10 @@
         android:id="@+id/timePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:calendarViewShown="false"
-        android:timePickerMode="spinner"
         android:layout_marginTop="56dp"
+        android:calendarViewShown="false"
+        android:theme="@style/TimePickerStyle"
+        android:timePickerMode="spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
@@ -59,11 +59,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corner_white_button"
+        android:paddingHorizontal="40dp"
         android:text="@string/cancel"
         android:textAllCaps="false"
         android:textColor="@color/cardview_dark_background"
         android:textSize="18sp"
-        android:paddingHorizontal="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/bt_confirm"
         app:layout_constraintHorizontal_bias="0.5"
@@ -76,11 +76,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corners_button"
+        android:paddingHorizontal="40dp"
         android:text="@string/confirm"
         android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
         android:textSize="18sp"
-        android:paddingHorizontal="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

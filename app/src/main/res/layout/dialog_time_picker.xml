@@ -34,11 +34,11 @@
         android:layout_height="wrap_content"
         android:calendarViewShown="false"
         android:timePickerMode="spinner"
+        android:theme="@style/TimePickerStyle"
         app:layout_constraintBottom_toTopOf="@+id/btn_confirm_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
-
 
     <Button
         android:id="@+id/btn_confirm_time"

@@ -726,6 +726,10 @@ public class ProgramTherapyFragment extends Fragment {
                 showProgramUnsuccessfulWarnDialog();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
+                if (mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+                    btnInterrogate.setClickable(true);
+                    btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                }
             }
         }
     }

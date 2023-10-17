@@ -25,4 +25,7 @@
     <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorBaseDeepBlue</item>
     </style>
+    <style name="TimePickerStyle">
+        <item name="android:textSize">30sp</item>
+    </style>
 </resources>
