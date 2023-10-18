@@ -56,9 +56,11 @@ public class ProgramTherapyDayDateDialogue extends Dialog {
             if (date != null) {
                 Calendar selectedDate = Calendar.getInstance();
                 selectedDate.setTimeInMillis(date.getTime());
-                binding.datePicker.updateDate(selectedDate.get(Calendar.YEAR),
-                        selectedDate.get(Calendar.MONTH),
-                        selectedDate.get(Calendar.DAY_OF_MONTH));
+                if (selectedDate.getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
+                    binding.datePicker.updateDate(selectedDate.get(Calendar.YEAR),
+                            selectedDate.get(Calendar.MONTH),
+                            selectedDate.get(Calendar.DAY_OF_MONTH));
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();
