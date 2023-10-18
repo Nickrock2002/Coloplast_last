@@ -45,10 +45,10 @@ public class ProgramTherapyDayDateDialogue extends Dialog {
         setCancelable(false);
         setContentView(R.layout.dialog_set_start_day_therapy);
 
-        Button btCancel = (Button) findViewById(R.id.bt_cancel);
+        Button btCancel = findViewById(R.id.bt_cancel);
         btCancel.setOnClickListener(cancelButtonListener);
 
-        Button btConfirm = (Button) findViewById(R.id.bt_confirm);
+        Button btConfirm = findViewById(R.id.bt_confirm);
         btConfirm.setOnClickListener(confirmButtonListener);
 
         setTheSystemButtonsHidden(this);
