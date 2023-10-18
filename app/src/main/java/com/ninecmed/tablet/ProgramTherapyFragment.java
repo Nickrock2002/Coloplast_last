@@ -251,22 +251,37 @@ public class ProgramTherapyFragment extends Fragment {
                 } else {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.THERAPY);
                 }
-                if (WandData.therapy[WandData.FUTURE] == 0) { //Off Case
+                if (WandData.therapy[WandData.FUTURE] == 0) {
+                    /*
+                        Frequency selected as Off
+                        When the user changes Frequency to "Off" have the application
+                        automatically turn the Amplitude button dark blue .
+                    */
+                    valuesChanged[0] = true;
+                    enableDisableProgramButton(true);
+                    binding.btnAmplitudeVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
+
                     binding.btnStartDay.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                     binding.btnTimeOfDay.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                     enableDisableDayDateButton(false);
                     enableDisableTimeOfDayButton(false);
-                    if (valuesChanged[0]) enableDisableProgramButton(true);
                     binding.btnStartDay.setText(R.string._3_dash);
                     binding.btnTimeOfDay.setText(R.string._3_dash);
-                } else { // Other than Off
+                } else {
+                    /*
+                        Frequency selected as other than Off
+                        When the user changes to other than Off, reset all the values to Coloplast blue
+                    */
+                    valuesChanged[0] = false;
+                    binding.btnAmplitudeVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+
+                    valuesChanged[2] = false;
+                    valuesChanged[3] = false;
                     binding.btnStartDay.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                     binding.btnTimeOfDay.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                     enableDisableDayDateButton(true);
                     enableDisableTimeOfDayButton(true);
                     enableDisableProgramButton(false);
-                    valuesChanged[2] = false;
-                    valuesChanged[3] = false;
 
                     if (freqChanged) {
                         binding.btnStartDay.setText(R.string._3_dash);
@@ -371,7 +386,8 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 }
 
-                String formattedTime = String.format("%02d:%02d %s", hourToDisplay, lastSetMinute, amPm);
+                String formattedTime = String.format(Locale.ENGLISH, "%02d:%02d %s",
+                        hourToDisplay, lastSetMinute, amPm);
                 binding.btnTimeOfDay.setText(formattedTime);
                 binding.btnTimeOfDay.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[3] = true;
@@ -603,11 +619,11 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void disableAllTheButtons() {
-        binding.btnAmplitudeVal.setEnabled(false);
-        binding.btnFrequencyVal.setEnabled(false);
-        binding.btnStartDay.setEnabled(false);
-        binding.btnTimeOfDay.setEnabled(false);
-        binding.btnProgram.setEnabled(false);
+        enableDisableAmplitudeButton(false);
+        enableDisableFrequencyButton(false);
+        enableDisableDayDateButton(false);
+        enableDisableTimeOfDayButton(false);
+        enableDisableProgramButton(false);
     }
 
     public void updateUI(boolean success) {
