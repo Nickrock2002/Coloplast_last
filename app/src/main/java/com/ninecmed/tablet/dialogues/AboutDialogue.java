@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.ninecmed.tablet.BuildConfig;
-import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.WandData;
+import com.ninecmed.tablet.databinding.DialogAboutBinding;
 
 import java.util.Objects;
 
@@ -31,22 +29,19 @@ public class AboutDialogue extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        DialogAboutBinding binding = DialogAboutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         setCancelable(false);
-        setContentView(R.layout.dialog_about);
-
-        TextView tvImplantFirmware = findViewById(R.id.tv_implant_firmware_val);
         String implantFirmware = WandData.getCellV();
-        tvImplantFirmware.setText(implantFirmware == null ? "-" : implantFirmware);
+        binding.tvImplantFirmwareVal.setText(implantFirmware == null ? "-" : implantFirmware);
 
-        TextView tvWandFirmware = findViewById(R.id.tv_wand_firmware_val);
         String wandFirmware = WandData.getCellV();
-        tvWandFirmware.setText(wandFirmware == null ? "-" : wandFirmware);
+        binding.tvWandFirmwareVal.setText(wandFirmware == null ? "-" : wandFirmware);
 
-        TextView tvTabApplicationVersion = findViewById(R.id.tv_tab_application_val);
-        tvTabApplicationVersion.setText(BuildConfig.VERSION_NAME);
+        binding.tvTabApplicationVal.setText(BuildConfig.VERSION_NAME);
 
-        Button btOk = findViewById(R.id.btn_ok);
-        btOk.setOnClickListener(confirmButtonListener);
+        binding.btnOk.setOnClickListener(confirmButtonListener);
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());

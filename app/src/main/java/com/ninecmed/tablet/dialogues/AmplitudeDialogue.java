@@ -11,15 +11,16 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
+import com.ninecmed.tablet.databinding.DialogSetAmpBinding;
 
 import java.util.Locale;
 import java.util.Objects;
 
 public class AmplitudeDialogue extends Dialog {
+    DialogSetAmpBinding binding;
     private float amplitude;
     private View.OnClickListener itnsPlusListener = null;
     private View.OnClickListener itnsMinusListener = null;
@@ -31,39 +32,21 @@ public class AmplitudeDialogue extends Dialog {
         super(context);
     }
 
-    public AmplitudeDialogue(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
-    protected AmplitudeDialogue(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        binding = DialogSetAmpBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setCancelable(false);
-        setContentView(R.layout.dialog_set_amp);
 
-        TextView tvItnsAmplitude = findViewById(R.id.tv_itns_amplitude);
-        tvItnsAmplitude.setText(String.format( "%.2f V", getAmplitude()));
-
-        ImageButton ibItnsPlus = findViewById(R.id.ib_itns_plus);
-        ibItnsPlus.setOnClickListener(itnsPlusListener);
-
-        ImageButton ibItnsMinus = findViewById(R.id.ib_itns_minus);
-        ibItnsMinus.setOnClickListener(itnsMinusListener);
-
-        Button btItnsStartStim = findViewById(R.id.bt_itns_start_stim);
-        btItnsStartStim.setOnTouchListener(stimulationButtonListener);
-
-        Button btCancel = findViewById(R.id.bt_cancel);
-        btCancel.setOnClickListener(cancelButtonListener);
-
-        Button btConfirm = findViewById(R.id.bt_confirm);
-        btConfirm.setOnClickListener(confirmButtonListener);
+        binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V", getAmplitude()));
+        binding.ibItnsPlus.setOnClickListener(itnsPlusListener);
+        binding.ibItnsMinus.setOnClickListener(itnsMinusListener);
+        binding.btItnsStartStim.setOnTouchListener(stimulationButtonListener);
+        binding.btCancel.setOnClickListener(cancelButtonListener);
+        binding.btConfirm.setOnClickListener(confirmButtonListener);
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
@@ -103,18 +86,14 @@ public class AmplitudeDialogue extends Dialog {
     }
 
     public Button getCancelButtonRef() {
-        return findViewById(R.id.bt_cancel);
+        return binding.btCancel;
     }
 
     public ImageButton getPlusButtonRef() {
-        return findViewById(R.id.ib_itns_plus);
+        return binding.ibItnsPlus;
     }
 
     public ImageButton getMinusButtonRef() {
-        return findViewById(R.id.ib_itns_minus);
-    }
-
-    public void get(View.OnClickListener onClickListener) {
-        this.confirmButtonListener = onClickListener;
+        return binding.ibItnsMinus;
     }
 }

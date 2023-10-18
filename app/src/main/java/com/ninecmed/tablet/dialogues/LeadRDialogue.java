@@ -8,11 +8,10 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
+import com.ninecmed.tablet.databinding.DialogLeadSurgeryBinding;
 
 import java.util.Objects;
 
@@ -25,61 +24,36 @@ public class LeadRDialogue extends Dialog {
         super(context);
     }
 
-    public LeadRDialogue(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
-    protected LeadRDialogue(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        DialogLeadSurgeryBinding binding = DialogLeadSurgeryBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setCancelable(false);
-        setContentView(R.layout.dialog_lead_surgery);
 
-        TextView title = (TextView) findViewById(R.id.tv_warn_title);
-        TextView subTitle = (TextView) findViewById(R.id.tv_lead_r_subtitle);
-        TextView tvElectrodeTip = (TextView)
-                findViewById(R.id.tv_electrode_tip);
         if (leadRValue > 2000) {
-            title.setText(R.string.lead_r_is_2000_ohms);
-            tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
-            subTitle.setText(R.string.lead_r_above);
+            binding.tvWarnTitle.setText(R.string.lead_r_is_2000_ohms);
+            binding.tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
+            binding.tvLeadRSubtitle.setText(R.string.lead_r_above);
         } else {
-            title.setText(R.string.lead_r_is_250_ohms);
-            tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
-            subTitle.setText(R.string.lead_r_below);
+            binding.tvWarnTitle.setText(R.string.lead_r_is_250_ohms);
+            binding.tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
+            binding.tvLeadRSubtitle.setText(R.string.lead_r_below);
         }
 
-        TextView tvLeadRV = (TextView) findViewById(R.id.tv_lead_r_val);
-        tvLeadRV.setText(leadRValue + " ohms");
-
-        TextView tvLeadIV = (TextView) findViewById(R.id.tv_lead_i_val);
-        tvLeadIV.setText(leadIValue + " mA");
+        binding.tvLeadRVal.setText(String.valueOf(leadRValue).concat(" ohms"));
+        binding.tvLeadIVal.setText(String.valueOf(leadIValue).concat(" mA"));
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
         Objects.requireNonNull(getWindow()).setLayout(dimensions.first, dimensions.second);
 
-
-        Button confirmButton = (Button) findViewById(R.id.btn_confirm_lead_r);
-        confirmButton.setOnClickListener(confirmButtonListener);
-
-    }
-
-    public Float getLeadR() {
-        return leadRValue;
+        binding.btnConfirmLeadR.setOnClickListener(confirmButtonListener);
     }
 
     public void setLeadRValue(Float leadRValue) {
         this.leadRValue = leadRValue;
-    }
-
-    public Float getLeadI() {
-        return leadIValue;
     }
 
     public void setLeadIValue(Float leadIValue) {

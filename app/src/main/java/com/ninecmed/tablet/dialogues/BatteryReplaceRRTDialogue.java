@@ -9,12 +9,11 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.WandData;
+import com.ninecmed.tablet.databinding.DialogItnsRrtBinding;
 
 import java.util.Objects;
 
@@ -30,15 +29,13 @@ public class BatteryReplaceRRTDialogue extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        DialogItnsRrtBinding binding = DialogItnsRrtBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setCancelable(false);
-        setContentView(R.layout.dialog_itns_rrt);
 
-        TextView tvImplantBatteryVoltage = findViewById(R.id.tv_implant_battery_volts);
-        tvImplantBatteryVoltage.setText(String.format("%s%s",
+        binding.tvImplantBatteryVolts.setText(String.format("%s%s",
                 getContext().getString(R.string.battery_voltage), WandData.getCellV()));
-
-        Button btConfirm = findViewById(R.id.bt_confirm);
-        btConfirm.setOnClickListener(confirmButtonListener);
+        binding.btConfirm.setOnClickListener(confirmButtonListener);
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());

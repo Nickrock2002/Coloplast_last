@@ -9,11 +9,9 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TimePicker;
 
-import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.Utility;
+import com.ninecmed.tablet.databinding.DialogSetTimeTherapyBinding;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -38,36 +36,33 @@ public class ProgramTherapyTimeOfDayDialogue extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        DialogSetTimeTherapyBinding binding = DialogSetTimeTherapyBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setCancelable(false);
-        setContentView(R.layout.dialog_set_time_therapy);
 
-        Button btCancel = findViewById(R.id.bt_cancel);
-        btCancel.setOnClickListener(cancelButtonListener);
-
-        Button btConfirm = findViewById(R.id.bt_confirm);
-        btConfirm.setOnClickListener(confirmButtonListener);
+        binding.btCancel.setOnClickListener(cancelButtonListener);
+        binding.btConfirm.setOnClickListener(confirmButtonListener);
 
         setTheSystemButtonsHidden(this);
         Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
         Objects.requireNonNull(getWindow()).setLayout(dimensions.first, dimensions.second);
 
-        TimePicker timePicker = findViewById(R.id.timePicker);
-        timePicker.setIs24HourView(false);
+        binding.timePicker.setIs24HourView(false);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(cal.getTimeInMillis() + timeDiff);
 //        if (hour == 0) {
-//            timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
+//            binding.timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
 //        } else {
-//            timePicker.setHour(hour);
+//            binding.timePicker.setHour(hour);
 //        }
-        timePicker.setHour(hour);
+        binding.timePicker.setHour(hour);
 //
 //        if (min == 0) {
-//            timePicker.setMinute(cal.get(Calendar.MINUTE));
+//            binding.timePicker.setMinute(cal.get(Calendar.MINUTE));
 //        } else {
-//            timePicker.setMinute(min);
+//            binding.timePicker.setMinute(min);
 //        }
-        timePicker.setMinute(min);
+        binding.timePicker.setMinute(min);
     }
 
     public void setCancelButtonListener(View.OnClickListener onClickListener) {
