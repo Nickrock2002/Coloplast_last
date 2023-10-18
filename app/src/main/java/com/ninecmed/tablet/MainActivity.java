@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ninecmed.tablet.databinding.ActivityMainBinding;
 import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
@@ -63,33 +64,24 @@ public class MainActivity extends AppCompatActivity {
     protected boolean mRunBT = false;
     public WandComm wandComm = null;
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
-
     private String formattedTime = "";
-
     private String formattedDate = "";
-
     private Dialog wandConnDialog;
-
     private long timeDifferenceMillis = 0;
-
     private int selectedHour = 0;
     private int selectedMinutes = 0;
     private int selectedYear = 0;
     private int selectedMonth = 0;
     private int selectedDay = 0;
-
-    private ImageView ivHamburger;
-    private ImageView ivBack;
     private boolean clinicVisitFragmentOpen = false;
+    private ActivityMainBinding binding;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        ivHamburger = findViewById(R.id.iv_hamburger);
-        ivBack = findViewById(R.id.iv_back);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // This hides the status bar at the top
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -118,18 +110,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void manageFragmentToolbar() {
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                    FragmentManager.BackStackEntry topEntry = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
-                    String fragmentName = topEntry.getName();
-                    boolean isInside = fragmentName.equals("inside");
-                    updateToolbar(isInside);
-                    InsideOutsideEntryEvent insideOutsideEntryEvent = new InsideOutsideEntryEvent();
-                    insideOutsideEntryEvent.setInside(isInside);
-                    EventBus.getDefault().post(insideOutsideEntryEvent);
-                }
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                FragmentManager.BackStackEntry topEntry = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
+                String fragmentName = topEntry.getName();
+                boolean isInside = fragmentName.equals("inside");
+                updateToolbar(isInside);
+                InsideOutsideEntryEvent insideOutsideEntryEvent = new InsideOutsideEntryEvent();
+                insideOutsideEntryEvent.setInside(isInside);
+                EventBus.getDefault().post(insideOutsideEntryEvent);
             }
         });
     }
@@ -160,69 +149,63 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpToolbarClickEvents() {
-        ivHamburger.setOnClickListener(view -> {
+        binding.ivHamburger.setOnClickListener(view -> {
             launchHamburgerFragment();
-            //updateToolbar(true);
-            ivHamburger.setVisibility(View.GONE);
-            ivBack.setVisibility(View.VISIBLE);
+            binding.ivHamburger.setVisibility(View.GONE);
+            binding.ivBack.setVisibility(View.VISIBLE);
         });
 
-        ivBack.setOnClickListener(view -> {
+        binding.ivBack.setOnClickListener(view -> {
             showBackToStartDialog();
         });
     }
 
     public void updateToolbar(boolean isInside) {
-        ConstraintLayout toolbar = findViewById(R.id.ll_toolbar);
-        ImageView intibiaIv = findViewById(R.id.iv_intbia_logo);
         if (isInside) {
-            toolbar.setBackgroundColor(ActivityCompat.getColor(this,
+            binding.llToolbar.setBackgroundColor(ActivityCompat.getColor(this,
                     R.color.colorGreyThreeHundred));
-            intibiaIv.setVisibility(View.VISIBLE);
-            ivBack.setVisibility(View.VISIBLE);
+            binding.ivIntbiaLogo.setVisibility(View.VISIBLE);
+            binding.ivBack.setVisibility(View.VISIBLE);
         } else {
-            toolbar.setBackgroundColor(ActivityCompat.getColor(this,
+            binding.llToolbar.setBackgroundColor(ActivityCompat.getColor(this,
                     R.color.colorBaseGrayFifty));
-            intibiaIv.setVisibility(View.INVISIBLE);
-            ivBack.setVisibility(View.INVISIBLE);
+            binding.ivIntbiaLogo.setVisibility(View.INVISIBLE);
+            binding.ivBack.setVisibility(View.INVISIBLE);
         }
     }
 
     protected void showWandConnectionDialogue(final boolean isClinicVisit) {
         clinicVisitFragmentOpen = isClinicVisit;
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                wandConnDialog = new Dialog(MainActivity.this);
-                wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            wandConnDialog = new Dialog(MainActivity.this);
+            wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
 
-                AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
-                btConfirm.setOnClickListener(view -> {
-                    if (isClinicVisit) {
-                        showSetDateTimeDialog(false);
-                    } else {
-                        launchBaseTabFragment(false);
-                    }
-                    wandConnDialog.dismiss();
-                });
-                btConfirm.setClickable(false);
-                wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
-
-                setTheSystemButtonsHidden(wandConnDialog);
-                Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(MainActivity.this);
-                wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
-                wandConnDialog.setCancelable(false);
-                wandConnDialog.show();
-                if (isBluetoothPermissionGranted) {
-                    if (!isDeviceConnected) {
-                        initBluetooth();
-                    } else {
-                        showWandConnectionInActiveMode();
-                    }
+            AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
+            btConfirm.setOnClickListener(view -> {
+                if (isClinicVisit) {
+                    showSetDateTimeDialog(false);
                 } else {
-                    requestBluetoothPermission();
+                    launchBaseTabFragment(false);
                 }
+                wandConnDialog.dismiss();
+            });
+            btConfirm.setClickable(false);
+            wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
+
+            setTheSystemButtonsHidden(wandConnDialog);
+            Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(MainActivity.this);
+            wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
+            wandConnDialog.setCancelable(false);
+            wandConnDialog.show();
+            if (isBluetoothPermissionGranted) {
+                if (!isDeviceConnected) {
+                    initBluetooth();
+                } else {
+                    showWandConnectionInActiveMode();
+                }
+            } else {
+                requestBluetoothPermission();
             }
         });
     }
@@ -386,19 +369,16 @@ public class MainActivity extends AppCompatActivity {
             showBatteryWarnDialog();
         }
 
-        ImageView ivBatteryPer = findViewById(R.id.iv_battery_per);
-        TextView tvBatteryPer = findViewById(R.id.tv_battery_per);
-
-        tvBatteryPer.setText(String.valueOf(batteryPct).concat("%"));
+        binding.tvBatteryPer.setText(String.valueOf(batteryPct).concat("%"));
 
         if (batteryPct > 70)
-            ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_full);
+            binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_full);
         else if (batteryPct > 40)
-            ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_level_1);
+            binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_level_1);
         else if (batteryPct > 10)
-            ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_level_2);
+            binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_level_2);
         else
-            ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_empty);
+            binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_empty);
     }
 
     public void UpdateUIFragments(final int frag, final boolean success) {
@@ -681,7 +661,7 @@ public class MainActivity extends AppCompatActivity {
         btnGoBack.setOnClickListener(v -> {
             dialog.dismiss();
             getSupportFragmentManager().popBackStack();
-            ivHamburger.setVisibility(View.VISIBLE);
+            binding.ivHamburger.setVisibility(View.VISIBLE);
         });
 
         setTheSystemButtonsHidden(dialog);

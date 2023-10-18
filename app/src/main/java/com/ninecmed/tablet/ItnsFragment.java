@@ -5,7 +5,6 @@ import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,13 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.ninecmed.tablet.databinding.ItnsFragmentBinding;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
 import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
@@ -44,12 +43,7 @@ public class ItnsFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
-    private Button btnLeadRWarn;
-
-    private TextView tvLeadR;
-    private ImageButton plus;
-    private ImageButton minus;
-    private Button stimulate;
+    ItnsFragmentBinding binding;
 
     @Override
     public void onAttach(Context context) {
@@ -66,34 +60,31 @@ public class ItnsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
-        View view = inflater.inflate(R.layout.itns_fragment, container, false);
 
-        initializeStimulationButton(view);
-        initializeInterrogateButton(view);
-        initializeAmpControls(view);
-        initializeLeadRWarnButton(view);
+        binding = ItnsFragmentBinding.inflate(inflater, container, false);
+        initializeStimulationButton();
+        initializeInterrogateButton();
+        initializeAmpControls();
+        initializeLeadRWarnButton();
 
         mMainActivity = (MainActivity) getActivity();
-        return view;
+        return binding.getRoot();
     }
 
-    private void initializeLeadRWarnButton(View view) {
-        btnLeadRWarn = view.findViewById(R.id.btn_lead_r_warn);
-        tvLeadR = view.findViewById(R.id.tv_lead_r_val);
-        btnLeadRWarn.setOnClickListener(v -> {
+    private void initializeLeadRWarnButton() {
+        binding.btnLeadRWarn.setOnClickListener(v -> {
             showLeadRWarningIfFound();
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initializeInterrogateButton(View view) {
-        final Button interrogate = view.findViewById(R.id.btItnsInterrogate);
-        interrogate.setOnTouchListener((view1, motionEvent) -> {
+    private void initializeInterrogateButton() {
+        binding.btItnsInterrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                interrogate.setPressed(true);
+                binding.btItnsInterrogate.setPressed(true);
                 mMainActivity.wandComm.interrogate();
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                interrogate.setPressed(false);
+                binding.btItnsInterrogate.setPressed(false);
             }
             return true;
         });
@@ -101,66 +92,62 @@ public class ItnsFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initializeStimulationButton(View view) {
-        stimulate = view.findViewById(R.id.btItnsStartStim);
-        stimulate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (mNow + 500 < System.currentTimeMillis()) {
-                            stimulate.setPressed(true);
-                            mMainActivity.wandComm.setStimulation(true);
-                            //MakeTone(ToneGenerator.TONE_PROP_BEEP);
-                            stimulate.setText(R.string.stimulation_active);
-                            WandData.invalidateStimLeadI();
+    private void initializeStimulationButton() {
+        binding.btItnsStartStim.setOnTouchListener((view, motionEvent) -> {
+            switch (motionEvent.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (mNow + 500 < System.currentTimeMillis()) {
+                        binding.btItnsStartStim.setPressed(true);
+                        mMainActivity.wandComm.setStimulation(true);
+                        //MakeTone(ToneGenerator.TONE_PROP_BEEP);
+                        binding.btItnsStartStim.setText(R.string.stimulation_active);
+                        WandData.invalidateStimLeadI();
 
-                            // Disable changed parameters during test stim. Only re-enable once
-                            // job is completed. Even though controls are disabled, don't change
-                            // alpha, meaning don't gray out the controls, otherwise it appears
-                            // strange.
-                            //SetChangedParametersEnable(false, false);
-                            // Also, don't update alpha for the program and interrogate
-                            // buttons either, otherwise pressing the test stim button
-                            // would cause the program and interrogate button to go grey. Since
-                            // this isn't consistent with what we do when the interrogate or
-                            // program button is pressed - we decided to disable other telemetry
-                            // controls when a telemetry command is in progress, but without changing
-                            // the appearance.
+                        // Disable changed parameters during test stim. Only re-enable once
+                        // job is completed. Even though controls are disabled, don't change
+                        // alpha, meaning don't gray out the controls, otherwise it appears
+                        // strange.
+                        //SetChangedParametersEnable(false, false);
+                        // Also, don't update alpha for the program and interrogate
+                        // buttons either, otherwise pressing the test stim button
+                        // would cause the program and interrogate button to go grey. Since
+                        // this isn't consistent with what we do when the interrogate or
+                        // program button is pressed - we decided to disable other telemetry
+                        // controls when a telemetry command is in progress, but without changing
+                        // the appearance.
 
-                            mNow = System.currentTimeMillis();
-                            mStimEnabled = true;
+                        mNow = System.currentTimeMillis();
+                        mStimEnabled = true;
+                    }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    // Only execute code on up/cancel when mStimEnabled is true,
+                    // otherwise this means that the user pressed the down key too
+                    // quickly and when he let's go, the motion event causes SetTestStimulation
+                    // to be executed again even though it wasn't started. This causes an
+                    // unnecessary beep as well.
+                    if (mStimEnabled) {
+                        binding.btItnsStartStim.setPressed(false);
+                        binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
+
+                        // Set delay to 1500 to be the same delay as ExternalFragment
+                        if (mNow + 1500 < System.currentTimeMillis()) {
+                            mMainActivity.wandComm.setStimulation(false);
+                            mStimEnabled = false;
+                        } else {
+                            mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                         }
-                        break;
 
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        // Only execute code on up/cancel when mStimEnabled is true,
-                        // otherwise this means that the user pressed the down key too
-                        // quickly and when he let's go, the motion event causes SetTestStimulation
-                        // to be executed again even though it wasn't started. This causes an
-                        // unnecessary beep as well.
-                        if (mStimEnabled) {
-                            stimulate.setPressed(false);
-                            stimulate.setText(R.string.hold_to_deliver_neurostimulation);
-
-                            // Set delay to 1500 to be the same delay as ExternalFragment
-                            if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.setStimulation(false);
-                                mStimEnabled = false;
-                            } else {
-                                mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
-                            }
-
-                            Drawable drawable =  plus.getBackground().mutate();
-                            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                            Drawable drawablePlus = minus.getBackground().mutate();
-                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                        }
-                        break;
-                }
-                return true;
+                        Drawable drawable = binding.ibItnsPlus.getBackground().mutate();
+                        drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+                        Drawable drawablePlus = binding.ibItnsMinus.getBackground().mutate();
+                        drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+                    }
+                    break;
             }
+            return true;
         });
     }
 
@@ -183,25 +170,21 @@ public class ItnsFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initializeAmpControls(View view) {
-        plus = view.findViewById(R.id.ibItnsPlus);
-        minus = view.findViewById(R.id.ibItnsMinus);
-
-        plus.setEnabled(false);
-        minus.setEnabled(false);
+    private void initializeAmpControls() {
+        binding.ibItnsPlus.setEnabled(false);
+        binding.ibItnsMinus.setEnabled(false);
 
         // Use OnTouchListener rather than onClickListener so that we register the change
         // on the action down, rather that on the action up!
-        plus.setOnTouchListener((view12, motionEvent) -> {
+        binding.ibItnsPlus.setOnTouchListener((view12, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                plus.setPressed(true);
+                binding.ibItnsPlus.setPressed(true);
                 if (mAmplitudePos < 42) {
                     mAmplitudePos += 1;
                 }
 
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
-                amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
+                binding.tvItnsAmplitude.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                     mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
@@ -209,25 +192,24 @@ public class ItnsFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                 }
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                plus.setPressed(false);
-                Drawable drawable =  plus.getBackground().mutate();
+                binding.ibItnsPlus.setPressed(false);
+                Drawable drawable = binding.ibItnsPlus.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = minus.getBackground().mutate();
+                Drawable drawablePlus = binding.ibItnsMinus.getBackground().mutate();
                 drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
             return true;
         });
 
-        minus.setOnTouchListener((view1, motionEvent) -> {
+        binding.ibItnsMinus.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                minus.setPressed(true);
+                binding.ibItnsMinus.setPressed(true);
                 if (mAmplitudePos > 0) {
                     mAmplitudePos -= 1;
                 }
 
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
-                amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
+                binding.tvItnsAmplitude.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                     mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
@@ -236,10 +218,10 @@ public class ItnsFragment extends Fragment {
                 }
 
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                minus.setPressed(false);
-                Drawable drawable =  plus.getBackground().mutate();
+                binding.ibItnsMinus.setPressed(false);
+                Drawable drawable = binding.ibItnsPlus.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = minus.getBackground().mutate();
+                Drawable drawablePlus = binding.ibItnsMinus.getBackground().mutate();
                 drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
             return true;
@@ -267,25 +249,21 @@ public class ItnsFragment extends Fragment {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 showLeadRWarningIfFound();
             } else {
-                TextView mn = Objects.requireNonNull(view).findViewById(R.id.tvItnsModelNumber);
-                mn.setText((WandData.getModelNumber(view.getContext())));
+                binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
+                binding.tvItnsSN.setText(WandData.getSerialNumber());
 
-                TextView sn = view.findViewById(R.id.tvItnsSN);
-                sn.setText(WandData.getSerialNumber());
+                binding.ibItnsPlus.setEnabled(true);
+                binding.ibItnsPlus.setImageResource(R.drawable.ic_plus_white);
+                binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular);
 
-                plus.setEnabled(true);
-                plus.setImageResource(R.drawable.ic_plus_white);
-                plus.setBackgroundResource(R.drawable.button_circular);
+                binding.ibItnsMinus.setEnabled(true);
+                binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular);
+                binding.ibItnsMinus.setImageResource(R.drawable.ic_minus_white);
 
-                minus.setEnabled(true);
-                minus.setBackgroundResource(R.drawable.button_circular);
-                minus.setImageResource(R.drawable.ic_minus_white);
+                binding.btItnsStartStim.setEnabled(true);
+                binding.btItnsStartStim.setTextColor(getResources().getColor(R.color.colorWhite));
 
-                stimulate.setEnabled(true);
-                stimulate.setTextColor(getResources().getColor(R.color.colorWhite));
-
-                TextView amp = view.findViewById(R.id.tvItnsAmplitude);
-                amp.setTextColor(getResources().getColor(R.color.cardview_dark_background));
+                binding.tvItnsAmplitude.setTextColor(getResources().getColor(R.color.cardview_dark_background));
 
                 showLeadRWarningIfFound();
                 checkForReset();
@@ -305,12 +283,7 @@ public class ItnsFragment extends Fragment {
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
                 alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
+                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
                 alertDialog.show();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
@@ -319,8 +292,7 @@ public class ItnsFragment extends Fragment {
     }
 
     private void setInitialAmplitude() {
-        TextView amp = requireView().findViewById(R.id.tvItnsAmplitude);
-        amp.setText(WandData.getAmplitude());
+        binding.tvItnsAmplitude.setText(WandData.getAmplitude());
         mAmplitudePos = WandData.getAmplitudePos();
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
@@ -331,7 +303,7 @@ public class ItnsFragment extends Fragment {
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
         if (isWarningFound) {
-            btnLeadRWarn.setVisibility(View.VISIBLE);
+            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             final Dialog dialog = new Dialog(requireContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(false);
@@ -340,9 +312,9 @@ public class ItnsFragment extends Fragment {
             Button dialogButton = dialog.findViewById(R.id.btn_confirm_lead_r);
             dialogButton.setOnClickListener(v -> dialog.dismiss());
 
-            TextView title = (TextView) dialog.findViewById(R.id.tv_warn_title);
-            TextView tvElectrodeTip = (TextView) dialog.findViewById(R.id.tv_electrode_tip);
-            TextView subTitle = (TextView) dialog.findViewById(R.id.tv_lead_r_subtitle);
+            TextView title = dialog.findViewById(R.id.tv_warn_title);
+            TextView tvElectrodeTip = dialog.findViewById(R.id.tv_electrode_tip);
+            TextView subTitle = dialog.findViewById(R.id.tv_lead_r_subtitle);
 
             if (leadRValue > 2000) {
                 title.setText(R.string.lead_r_is_2000_ohms);
@@ -365,8 +337,8 @@ public class ItnsFragment extends Fragment {
             dialog.getWindow().setLayout(dimensions.first, dimensions.second);
             dialog.show();
         } else {
-            tvLeadR.setText(R.string.ok);
-            btnLeadRWarn.setVisibility(View.GONE);
+            binding.tvLeadRVal.setText(R.string.ok);
+            binding.btnLeadRWarn.setVisibility(View.GONE);
         }
     }
 
@@ -399,11 +371,8 @@ public class ItnsFragment extends Fragment {
     }
 
     public void updateAmplitude() {
-        View view = getView();
-
-        TextView amp = view.findViewById(R.id.tvItnsAmplitude);
-        amp.setText(WandData.getAmplitude());
-        amp.setTextColor(Color.BLACK);
+        binding.tvItnsAmplitude.setText(WandData.getAmplitude());
+        binding.tvItnsAmplitude.setTextColor(Color.BLACK);
         mAmplitudePos = WandData.getAmplitudePos();
     }
 }

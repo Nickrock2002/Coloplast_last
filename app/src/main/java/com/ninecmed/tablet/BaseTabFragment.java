@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.tabs.TabLayout;
+import com.ninecmed.tablet.databinding.FragmentSurgeryBinding;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,39 +23,26 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class BaseTabFragment extends Fragment {
     private SectionsPageAdapter mSectionsPageAdapter;
-    private TabLayout mTabLayout;
     private MainActivity mainActivity;
-
     private boolean isClinicVisit = false;
-
     private TextView tvCurrentTime;
-
     private TextView tvCurrentDate;
+    FragmentSurgeryBinding binding;
 
     public void setClinicVisit(boolean clinicVisit) {
         isClinicVisit = clinicVisit;
     }
 
-    public interface tabs {
-        int EXT = 1;
-        int ITNS = 0;           // Tab 0 must also be the default fragment
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_surgery, container, false);
-
+        binding = FragmentSurgeryBinding.inflate(inflater, container, false);
         mSectionsPageAdapter = new SectionsPageAdapter(getChildFragmentManager());
 
         // Setup ViewPager with the sections adapter
-        CustomViewPager mViewPager = view.findViewById(R.id.container);
-        SetupViewPager(mViewPager);
+        SetupViewPager(binding.container);
+        binding.tabs.setupWithViewPager(binding.container);
 
-        mTabLayout = view.findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(mViewPager);
-
-        return view;
+        return binding.getRoot();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -74,17 +61,10 @@ public class BaseTabFragment extends Fragment {
             tvCurrentDate = view.findViewById(R.id.tv_date_program_therepy);
             tvCurrentDate.setVisibility(View.VISIBLE);
             tvCurrentTime.setVisibility(View.VISIBLE);
-            Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mainActivity.getTimeDifferenceMillis());
+            Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(
+                    mainActivity.getTimeDifferenceMillis());
             tvCurrentDate.setText(dateTimePair.first);
             tvCurrentTime.setText(dateTimePair.second);
-        }
-    }
-
-    public void EnableTabs(boolean enable) {
-        LinearLayout tabStrip = ((LinearLayout) mTabLayout.getChildAt(0));
-        tabStrip.setEnabled(false);
-        for (int i = 0; i < tabStrip.getChildCount(); i++) {
-            tabStrip.getChildAt(i).setClickable(enable);
         }
     }
 

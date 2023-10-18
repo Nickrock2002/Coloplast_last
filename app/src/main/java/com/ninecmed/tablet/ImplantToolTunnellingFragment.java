@@ -19,14 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.ninecmed.tablet.events.OnConnectedUIEvent;
-import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
+import com.ninecmed.tablet.databinding.ImplantTunnelingFragmentBinding;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -35,16 +33,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class ImplantToolTunnellingFragment extends Fragment {
-    private static final String TAG = "ImplantToolTunnellingFragment";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 8;                                                                   // Set default position ot 1.5V
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
-    private Button btnLeadRWarn;
-    private TextView tvLeadR;
-    ImageButton plus;
-    ImageButton minus;
+    private ImplantTunnelingFragmentBinding binding;
 
     @Override
     public void onAttach(Context context) {
@@ -68,20 +62,19 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.implant_tunneling_fragment, container, false);
+        binding = ImplantTunnelingFragmentBinding.inflate(inflater, container, false);
 
-        initializeStimulationButton(view);
-        initializeAmplitudeButton(view);
-        initializeTitle(view);
-        initializeLeadRWarnButton(view);
+        initializeStimulationButton();
+        initializeAmplitudeButton();
+        initializeTitle();
+        initializeLeadRWarnButton();
 
         mMainActivity = (MainActivity) getActivity();
-        return view;
+        return binding.getRoot();
     }
 
-    private void initializeTitle(View view) {
-        TextView textView = view.findViewById(R.id.tv_implant_title);
-        String text = textView.getText().toString();
+    private void initializeTitle() {
+        String text = binding.tvImplantTitle.getText().toString();
 
         // Create a SpannableString to apply styles
         SpannableString spannableString = new SpannableString(text);
@@ -97,19 +90,18 @@ public class ImplantToolTunnellingFragment extends Fragment {
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex2, endIndex2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Set the modified text in the TextView
-        textView.setText(spannableString);
+        binding.tvImplantTitle.setText(spannableString);
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initializeStimulationButton(View view) {
-        final Button stimulate = view.findViewById(R.id.btExternalStartStim);
-        stimulate.setOnTouchListener((view1, motionEvent) -> {
+    private void initializeStimulationButton() {
+        binding.btExternalStartStim.setOnTouchListener((view1, motionEvent) -> {
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     if (mNow + 500 < System.currentTimeMillis()) {
-                        stimulate.setPressed(true);
+                        binding.btExternalStartStim.setPressed(true);
                         mMainActivity.wandComm.setStimulationExt(true);
-                        stimulate.setText(getString(R.string.stimulation_active));
+                        binding.btExternalStartStim.setText(getString(R.string.stimulation_active));
                         mNow = System.currentTimeMillis();
                         mStimEnabled = true;
                     }
@@ -118,8 +110,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     if (mStimEnabled) {
-                        stimulate.setPressed(false);
-                        stimulate.setText(R.string.hold_to_deliver_neurostimulation);
+                        binding.btExternalStartStim.setPressed(false);
+                        binding.btExternalStartStim.setText(R.string.hold_to_deliver_neurostimulation);
                         if (mNow + 1500 < System.currentTimeMillis()) {
                             mMainActivity.wandComm.setStimulationExt(false);
                             mStimEnabled = false;
@@ -127,9 +119,9 @@ public class ImplantToolTunnellingFragment extends Fragment {
                             mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
                         }
 
-                        Drawable drawable = plus.getBackground().mutate();
+                        Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
                         drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                        Drawable drawablePlus = minus.getBackground().mutate();
+                        Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
                         drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
                     }
                     break;
@@ -144,13 +136,11 @@ public class ImplantToolTunnellingFragment extends Fragment {
     };
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initializeAmplitudeButton(View view) {
-        plus = view.findViewById(R.id.ibExternalPlus);
-        minus = view.findViewById(R.id.ibExternalMinus);
+    private void initializeAmplitudeButton() {
 
-        plus.setOnTouchListener((view1, motionEvent) -> {
+        binding.ibExternalPlus.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                plus.setPressed(true);
+                binding.ibExternalPlus.setPressed(true);
                 if (mAmplitudePos < 42) {
                     mAmplitudePos += 1;
                 }
@@ -159,18 +149,18 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
                 updateImplantTunnellingUI(true);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                plus.setPressed(false);
-                Drawable drawable = plus.getBackground().mutate();
+                binding.ibExternalPlus.setPressed(false);
+                Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = minus.getBackground().mutate();
+                Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
                 drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
             return true;
         });
 
-        minus.setOnTouchListener((view12, motionEvent) -> {
+        binding.ibExternalMinus.setOnTouchListener((view12, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                minus.setPressed(true);
+                binding.ibExternalMinus.setPressed(true);
                 if (mAmplitudePos > 0) {
                     mAmplitudePos -= 1;
                 }
@@ -179,31 +169,15 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
                 updateImplantTunnellingUI(true);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                minus.setPressed(false);
-                Drawable drawable = plus.getBackground().mutate();
+                binding.ibExternalMinus.setPressed(false);
+                Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
                 drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = minus.getBackground().mutate();
+                Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
                 drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
             }
 
             return true;
         });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(OnConnectedUIEvent event) {
-        if (event.getTabEnum() == TabEnum.EXTERNAL) {
-            //TODO : check if really required
-            //OnConnected();
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(OnDisconnectedUIEvent event) {
-        if (event.getTabEnum() == TabEnum.EXTERNAL) {
-            //TODO : check if really required
-            //OnDisconnected();
-        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -222,10 +196,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
         }
     }
 
-    private void initializeLeadRWarnButton(View view) {
-        btnLeadRWarn = view.findViewById(R.id.btn_lead_r_warn);
-        tvLeadR = view.findViewById(R.id.tv_lead_r_val);
-        btnLeadRWarn.setOnClickListener(v -> {
+    private void initializeLeadRWarnButton() {
+        binding.btnLeadRWarn.setOnClickListener(v -> {
             showLeadRWarningIfFound();
         });
     }
@@ -235,7 +207,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000;
         if (isWarningFound) {
-            btnLeadRWarn.setVisibility(View.VISIBLE);
+            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             final Dialog dialog = new Dialog(requireContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(false);
@@ -249,8 +221,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
             dialog.getWindow().setLayout(dimensions.first, dimensions.second);
             dialog.show();
         } else {
-            tvLeadR.setText(R.string.ok);
-            btnLeadRWarn.setVisibility(View.GONE);
+            binding.tvLeadRVal.setText(R.string.ok);
+            binding.btnLeadRWarn.setVisibility(View.GONE);
         }
     }
 }
