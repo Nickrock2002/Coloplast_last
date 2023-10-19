@@ -189,7 +189,7 @@ public class HamburgerFragment extends Fragment {
             }
         });
         changeLanguageBinding.btnConfirm.setOnClickListener(view -> {
-            binding.tvLanguage.setText(getString(R.string.english));
+            binding.tvLanguageVal.setText(getString(R.string.english));
             dialog.dismiss();
         });
         changeLanguageBinding.btnCancel.setOnClickListener(view -> dialog.dismiss());
@@ -234,7 +234,7 @@ public class HamburgerFragment extends Fragment {
             Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mMainActivity.getTimeDifferenceMillis());
             binding.tvDateVal.setText(dateTimePair.first);
             binding.tvTimeVal.setText(dateTimePair.second);
-            binding.tvLanguage.setText(getString(R.string.english));
+            binding.tvLanguageVal.setText(getString(R.string.english));
         }
 
         setupWandData();

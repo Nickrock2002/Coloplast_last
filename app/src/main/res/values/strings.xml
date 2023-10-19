@@ -55,7 +55,7 @@
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="amplitude">Amplitude</string>
-    <string name="start_day_date">Start day/date</string>
+    <string name="start_day_date">Start Day/Date</string>
     <string name="frequency">Frequency</string>
     <string name="time_of_day">Time of Day</string>
     <string name="warning">Warning</string>
