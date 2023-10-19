@@ -1,25 +1,18 @@
 package com.ninecmed.tablet.dialogues;
 
-import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
-
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.ninecmed.tablet.R;
-import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.databinding.DialogSetAmpBinding;
 
 import java.util.Locale;
-import java.util.Objects;
 
-public class AmplitudeDialogue extends Dialog {
+public class AmplitudeDialog extends BaseDialog {
     DialogSetAmpBinding binding;
     private float amplitude;
     private View.OnClickListener itnsPlusListener = null;
@@ -28,7 +21,7 @@ public class AmplitudeDialogue extends Dialog {
     private View.OnClickListener cancelButtonListener = null;
     private View.OnClickListener confirmButtonListener = null;
 
-    public AmplitudeDialogue(Context context) {
+    public AmplitudeDialog(Context context) {
         super(context);
     }
 
@@ -36,10 +29,9 @@ public class AmplitudeDialogue extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         binding = DialogSetAmpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setCancelable(false);
 
         binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V", getAmplitude()));
         binding.ibItnsPlus.setOnClickListener(itnsPlusListener);
@@ -47,10 +39,6 @@ public class AmplitudeDialogue extends Dialog {
         binding.btItnsStartStim.setOnTouchListener(stimulationButtonListener);
         binding.btCancel.setOnClickListener(cancelButtonListener);
         binding.btConfirm.setOnClickListener(confirmButtonListener);
-
-        setTheSystemButtonsHidden(this);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
-        Objects.requireNonNull(getWindow()).setLayout(dimensions.first, dimensions.second);
     }
 
     public float getAmplitude() {

@@ -5,7 +5,6 @@ import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -29,12 +28,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentProgramTherapyBinding;
-import com.ninecmed.tablet.dialogues.AmplitudeDialogue;
-import com.ninecmed.tablet.dialogues.BatteryReplaceRRTDialogue;
-import com.ninecmed.tablet.dialogues.FrequencyDialogue;
-import com.ninecmed.tablet.dialogues.LeadRDialogue;
-import com.ninecmed.tablet.dialogues.ProgramTherapyDayDateDialogue;
-import com.ninecmed.tablet.dialogues.ProgramTherapyTimeOfDayDialogue;
+import com.ninecmed.tablet.dialogues.AmplitudeDialog;
+import com.ninecmed.tablet.dialogues.BatteryReplaceRRTDialog;
+import com.ninecmed.tablet.dialogues.FrequencyDialog;
+import com.ninecmed.tablet.dialogues.GetProgramConfirmationDialog;
+import com.ninecmed.tablet.dialogues.IncorrectTimeDialog;
+import com.ninecmed.tablet.dialogues.LeadRDialog;
+import com.ninecmed.tablet.dialogues.ProgramItnsSuccessDialog;
+import com.ninecmed.tablet.dialogues.ProgramTherapyDayDateDialog;
+import com.ninecmed.tablet.dialogues.ProgramTherapyTimeOfDayDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.ProgramSuccessEvent;
 import com.ninecmed.tablet.events.TabEnum;
@@ -82,7 +84,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void setUpRRTButtonClick() {
         binding.btnImplantBatteryStatus.setOnClickListener(view -> {
-            final BatteryReplaceRRTDialogue dialogue = new BatteryReplaceRRTDialogue(getActivity());
+            final BatteryReplaceRRTDialog dialogue = new BatteryReplaceRRTDialog(getActivity());
             dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
             dialogue.show();
         });
@@ -97,7 +99,7 @@ public class ProgramTherapyFragment extends Fragment {
     private void displayLeadRDialogue() {
         float leadRValue = WandData.getLeadR();
         float leadIValue = WandData.getLeadI();
-        final LeadRDialogue dialogue = new LeadRDialogue(getActivity());
+        final LeadRDialog dialogue = new LeadRDialog(getActivity());
         dialogue.setLeadRValue(leadRValue);
         dialogue.setLeadIValue(leadIValue);
         dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
@@ -109,7 +111,7 @@ public class ProgramTherapyFragment extends Fragment {
         binding.btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
             mAmplitudePos = WandData.getAmplitudePos();
             float amplitudeVal = WandData.getAmpFromPos(mAmplitudePos);
-            final AmplitudeDialogue dialogue = new AmplitudeDialogue(getActivity());
+            final AmplitudeDialog dialogue = new AmplitudeDialog(getActivity());
             dialogue.setAmplitude(amplitudeVal);
             dialogue.setItnsMinusListener(minusButton -> {
                 if (mAmplitudePos < 42) {
@@ -233,11 +235,12 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void setUpFrequencyButtonClick() {
         binding.btnFrequencyVal.setOnClickListener(frequencyButton -> {
-            final FrequencyDialogue dialogue = new FrequencyDialogue(getActivity());
+            final FrequencyDialog dialogue = new FrequencyDialog(getActivity());
             dialogue.setCancelButtonListener(cancelView -> {
                 dialogue.dismiss();
             });
             dialogue.setConfirmButtonListener(confirmView -> {
+                int prevFreq = WandData.therapy[WandData.FUTURE];
                 checkedRadioButtonId = dialogue.getCheckedButtonId();
                 RadioButton checkedRadioButton = dialogue.findViewById(checkedRadioButtonId);
                 binding.btnFrequencyVal.setText(checkedRadioButton.getText().toString());
@@ -270,10 +273,12 @@ public class ProgramTherapyFragment extends Fragment {
                 } else {
                     /*
                         Frequency selected as other than Off
-                        When the user changes to other than Off, reset all the values to Coloplast blue
+                        When the user changes frequency from off to other than Off, reset all the values to Coloplast blue
                     */
-                    valuesChanged[0] = false;
-                    binding.btnAmplitudeVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                    if (prevFreq == 0) {
+                        valuesChanged[0] = false;
+                        binding.btnAmplitudeVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                    }
 
                     valuesChanged[2] = false;
                     valuesChanged[3] = false;
@@ -312,7 +317,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void setUpDateButtonClick() {
         binding.btnStartDay.setOnClickListener(dayDateButton -> {
-            final ProgramTherapyDayDateDialogue dialogue = new ProgramTherapyDayDateDialogue(
+            final ProgramTherapyDayDateDialog dialogue = new ProgramTherapyDayDateDialog(
                     getActivity(), mMainActivity.getTimeDifferenceMillis(),
                     binding.btnStartDay.getText().toString(),
                     WandData.therapy[WandData.FUTURE] == 5);
@@ -353,7 +358,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void setUpTimeButtonClick() {
         binding.btnTimeOfDay.setOnClickListener(timeOfDayButton -> {
-            final ProgramTherapyTimeOfDayDialogue dialogue = new ProgramTherapyTimeOfDayDialogue(
+            final ProgramTherapyTimeOfDayDialog dialogue = new ProgramTherapyTimeOfDayDialog(
                     getActivity(), mMainActivity.getTimeDifferenceMillis(), lastSetHour, lastSetMinute);
             dialogue.setCancelButtonListener(cancelView -> dialogue.dismiss());
             dialogue.setConfirmButtonListener(confirmView -> {
@@ -459,21 +464,18 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void showProgramConfirmationDialog() {
-        View rootView = getView();
+        final GetProgramConfirmationDialog dialog = new GetProgramConfirmationDialog(requireContext());
+        dialog.setAmpVal(binding.btnAmplitudeVal.getText().toString());
+        dialog.setFreqVal(binding.btnFrequencyVal.getText().toString());
+        dialog.setDayDateVal(binding.btnStartDay.getText().toString());
+        dialog.setTimeOfDayVal(binding.btnTimeOfDay.getText().toString());
 
-        final Dialog dialog = new Dialog(requireContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_program_itns);
-
-        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(v -> {
+        dialog.setCancelButtonListener(v -> {
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             dialog.dismiss();
         });
 
-        Button btnConfirm = dialog.findViewById(R.id.btn_confirm);
-        btnConfirm.setOnClickListener(v -> {
+        dialog.setConfirmButtonListener(v -> {
             if (mMainActivity.wandComm.anyAmplitudeChanges()) {
                 WandData.invalidateStimLeadI();
             }
@@ -481,45 +483,12 @@ public class ProgramTherapyFragment extends Fragment {
             dialog.dismiss();
         });
 
-        TextView tvAmpVal = dialog.findViewById(R.id.tv_amp_val);
-        if (rootView != null) {
-            Button ampBtn = rootView.findViewById(R.id.btn_amplitude_val);
-            tvAmpVal.setText(ampBtn.getText().toString());
-        }
-
-        TextView tvFreqVal = dialog.findViewById(R.id.tv_freq_val);
-        if (rootView != null) {
-            Button freqBtn = rootView.findViewById(R.id.btn_frequency_val);
-            tvFreqVal.setText(freqBtn.getText().toString());
-        }
-
-        TextView tvDayVal = dialog.findViewById(R.id.tv_start_day_date_val);
-        if (rootView != null) {
-            Button dateBtn = rootView.findViewById(R.id.btn_start_day);
-            tvDayVal.setText(dateBtn.getText().toString());
-        }
-
-        TextView tvTimeVal = dialog.findViewById(R.id.tv_time_val);
-        if (rootView != null) {
-            Button timeBtn = rootView.findViewById(R.id.btn_time_of_day);
-            tvTimeVal.setText(timeBtn.getText().toString());
-        }
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
     private void showIncorrectTimeDialog() {
-        final Dialog dialog = new Dialog(requireContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_incorrect_date_time);
-
-        Button btnCancel = dialog.findViewById(R.id.btn_confirm_incorrect_time);
-        btnCancel.setOnClickListener(v -> {
+        final IncorrectTimeDialog dialog = new IncorrectTimeDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> {
             binding.btnTimeOfDay.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             binding.btnTimeOfDay.setText(getString(R.string._3_dash));
             valuesChanged[3] = false;
@@ -527,50 +496,24 @@ public class ProgramTherapyFragment extends Fragment {
             enableDisableProgramButton(false);
             dialog.dismiss();
         });
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
     private void showProgramSuccessDialog() {
-        View rootView = getView();
-        final Dialog dialog = new Dialog(requireContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_program_itns_success);
+        final ProgramItnsSuccessDialog dialog = new ProgramItnsSuccessDialog(requireContext());
 
-        Button btnOk = dialog.findViewById(R.id.btn_ok);
-        btnOk.setOnClickListener(v -> {
+        dialog.setConfirmButtonListener(v -> {
             resetAllButtonsWithDefaultBackground();
             enableDisableProgramButton(false);
 
             dialog.dismiss();
         });
 
-        TextView tvAmpVal = dialog.findViewById(R.id.tv_amp_val);
-        tvAmpVal.setText(WandData.getAmplitude());
+        dialog.setAmpVal(WandData.getAmplitude());
+        dialog.setFreqVal(WandData.getTherapy(requireContext()));
+        dialog.setDayDateVal(binding.btnStartDay.getText().toString());
+        dialog.setTimeOfDayVal(binding.btnTimeOfDay.getText().toString());
 
-        TextView tvFreqVal = dialog.findViewById(R.id.tv_freq_val);
-        tvFreqVal.setText(WandData.getTherapy(requireContext()));
-
-        TextView tvDayVal = dialog.findViewById(R.id.tv_start_day_date_val);
-        if (rootView != null) {
-            Button dateBtn = rootView.findViewById(R.id.btn_start_day);
-            tvDayVal.setText(dateBtn.getText().toString());
-        }
-
-        TextView tvTimeVal = dialog.findViewById(R.id.tv_time_val);
-        if (rootView != null) {
-            Button timeBtn = rootView.findViewById(R.id.btn_time_of_day);
-            tvTimeVal.setText(timeBtn.getText().toString());
-        }
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
@@ -712,12 +655,7 @@ public class ProgramTherapyFragment extends Fragment {
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
                 alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
 
-                alertDialog.setPositiveButton(getString(R.string.all_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
+                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
                 alertDialog.show();
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
                 showProgramUnsuccessfulWarnDialog();

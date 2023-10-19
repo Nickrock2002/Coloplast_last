@@ -25,8 +25,8 @@ import androidx.fragment.app.Fragment;
 import com.ninecmed.tablet.databinding.DialogChangeLanguageBinding;
 import com.ninecmed.tablet.databinding.DialogResetDateTimeBinding;
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
-import com.ninecmed.tablet.dialogues.AboutDialogue;
-import com.ninecmed.tablet.dialogues.LeadRDialogue;
+import com.ninecmed.tablet.dialogues.AboutDialog;
+import com.ninecmed.tablet.dialogues.LeadRDialog;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
@@ -56,7 +56,7 @@ public class HamburgerFragment extends Fragment {
 
         binding.btnSetDateTime.setOnClickListener(v -> showResetDateTimeConfirmationDialog());
         binding.btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());
-//        binding.btnAbout.setOnClickListener(v -> displayAboutDialogue());
+        binding.btnAbout.setOnClickListener(v -> displayAboutDialogue());
 
         return binding.getRoot();
     }
@@ -126,7 +126,7 @@ public class HamburgerFragment extends Fragment {
     private void displayLeadRDialogue() {
         float leadRValue = WandData.getLeadR();
         float leadIValue = WandData.getLeadI();
-        final LeadRDialogue dialogue = new LeadRDialogue(getActivity());
+        final LeadRDialog dialogue = new LeadRDialog(getActivity());
         dialogue.setLeadRValue(leadRValue);
         dialogue.setLeadIValue(leadIValue);
         dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
@@ -134,7 +134,7 @@ public class HamburgerFragment extends Fragment {
     }
 
     private void displayAboutDialogue() {
-        final AboutDialogue dialogue = new AboutDialogue(getActivity());
+        final AboutDialog dialogue = new AboutDialog(getActivity());
         dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
         dialogue.show();
     }

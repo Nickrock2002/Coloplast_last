@@ -17,10 +17,10 @@ import com.ninecmed.tablet.databinding.DialogItnsRrtBinding;
 
 import java.util.Objects;
 
-public class BatteryReplaceRRTDialogue extends Dialog {
+public class BatteryReplaceRRTDialog extends BaseDialog {
     private View.OnClickListener confirmButtonListener = null;
 
-    public BatteryReplaceRRTDialogue(Context context) {
+    public BatteryReplaceRRTDialog(Context context) {
         super(context);
     }
 
@@ -28,18 +28,13 @@ public class BatteryReplaceRRTDialogue extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         DialogItnsRrtBinding binding = DialogItnsRrtBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setCancelable(false);
 
         binding.tvImplantBatteryVolts.setText(String.format("%s%s",
                 getContext().getString(R.string.battery_voltage), WandData.getCellV()));
         binding.btConfirm.setOnClickListener(confirmButtonListener);
-
-        setTheSystemButtonsHidden(this);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(getContext());
-        Objects.requireNonNull(getWindow()).setLayout(dimensions.first, dimensions.second);
     }
 
     public void setConfirmButtonListener(View.OnClickListener onClickListener) {
