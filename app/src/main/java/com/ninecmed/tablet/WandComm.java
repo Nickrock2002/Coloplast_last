@@ -967,7 +967,7 @@ class WandComm {
                     // and if the "program" command succeeds, the TEMPORARY value will copies to
                     // the CURRENT value.
                     WandData.amplitude[WandData.TEMPORARY] = WandData.amplitude[WandData.CURRENT] = WandData.amplitude[WandData.FUTURE];
-                    mainActivity.UpdateItnsAmplitude();
+                    mainActivity.updateItnsAmplitude();
                     mRetries = 3;
                 } else if(mRetries > 0) {
                     mRetries--;
@@ -1078,13 +1078,13 @@ class WandComm {
                 || jobs.PROGRAM == mCurrentJob
                 || jobs.SETRESETCOUNTER == mCurrentJob
                 || jobs.SETSTIM == mCurrentJob) {
-            mainActivity.UpdateUIFragments(frags.ITNS, success);
+            mainActivity.updateUIFragments(frags.ITNS, success);
         }
         else if(jobs.SETSTIMEXT == mCurrentJob) {
-            mainActivity.UpdateUIFragments(frags.EXTERNAL, success);
+            mainActivity.updateUIFragments(frags.EXTERNAL, success);
         }
         else if(jobs.INITWAND == mCurrentJob) {
-            mainActivity.UpdateUI(success);
+            mainActivity.updateUI(success);
         }
 
        if(success) {

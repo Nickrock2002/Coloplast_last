@@ -182,7 +182,6 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @SuppressLint("DefaultLocale")
     public void updateImplantTunnellingUI(boolean success) {
-
         if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             Button stimulate = requireView().findViewById(R.id.btExternalStartStim);
             stimulate.setEnabled(true);

@@ -19,7 +19,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -27,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -381,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
             binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_empty);
     }
 
-    public void UpdateUIFragments(final int frag, final boolean success) {
+    public void updateUIFragments(final int frag, final boolean success) {
         MainActivity.this.runOnUiThread(() -> {
             if (frag == WandComm.frags.EXTERNAL) {
                 UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
@@ -399,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void UpdateUI(final boolean success) {
+    public void updateUI(final boolean success) {
         if (success) {
             if (wandComm.getCurrentJob() == WandComm.jobs.INITWAND) {
                 OnConnectedUIEvent externalOnConnectedUIEvent = new OnConnectedUIEvent();
@@ -429,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void UpdateItnsAmplitude() {
+    public void updateItnsAmplitude() {
         ItnsUpdateAmpEvent itnsUpdateAmpEvent = new ItnsUpdateAmpEvent();
         EventBus.getDefault().post(itnsUpdateAmpEvent);
     }
