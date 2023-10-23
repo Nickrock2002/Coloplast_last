@@ -35,6 +35,7 @@ public class WandData {
     // Interrogatable implant parameters
     static private final int[] mSerialNumber = new int[3];
     static private final int[] mWandFirmwareVersion = new int[3];
+    static private final int[] mImplantFirmwareVersion = new int[3];
     static private final int[] mModelNumber = new int[3];
     static private final int[] mResets = new int[3];
     static private final int[] mConfig = new int[3];
@@ -155,7 +156,7 @@ public class WandData {
         mSerialNumber[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
         mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
         mResets[TEMPORARY] = (msg[6] & 0xff);
-
+        mImplantFirmwareVersion[TEMPORARY] = msg[4] & 0x0f;
         mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
 
         if (isITNSNew()) {
@@ -164,15 +165,7 @@ public class WandData {
     }
 
     static void setWandFirmwareInfo(byte[] msg) {
-        mWandFirmwareVersion[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
-//        mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
-//        mResets[TEMPORARY] = (msg[6] & 0xff);
-//
-//        mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
-//
-//        if (isITNSNew()) {
-//            mInterrogateSuccessful = false;
-//        }
+        mWandFirmwareVersion[TEMPORARY] = (msg[2] & 0xff);
     }
 
     static int getResets() {
@@ -181,11 +174,19 @@ public class WandData {
 
     @SuppressLint("DefaultLocale")
     static String getSerialNumber() {
-        if (mSerialNumber[CURRENT] != 0){
+        if (mSerialNumber[CURRENT] != 0) {
             return String.format("%05d", mSerialNumber[CURRENT]);
-        }else {
+        } else {
             return null;
         }
+    }
+
+    public static String getWandFirmware() {
+        return String.valueOf(mWandFirmwareVersion[TEMPORARY]);
+    }
+
+    public static String getImplantFirmware() {
+        return String.valueOf(mImplantFirmwareVersion[TEMPORARY]);
     }
 
     static String getModelNumber(Context context) {
@@ -529,12 +530,12 @@ public class WandData {
         }
     }
 
-    static int getProgramMinute(){
+    static int getProgramMinute() {
         Calendar c = Calendar.getInstance();
         if (therapy[CURRENT] != 0) {
             c.setTimeInMillis(dateandtime[CURRENT]);
             return c.get(Calendar.MINUTE);
-        } else{
+        } else {
             return c.get(Calendar.MINUTE);
         }
     }

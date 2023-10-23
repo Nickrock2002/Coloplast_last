@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity {
         FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
         if (clearHistory)
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        fragmentTransaction.add(R.id.fl_fragment, featureSelectionFragment);
-        fragmentTransaction.addToBackStack("inside");
+        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
+        fragmentTransaction.addToBackStack("outside");
 
         fragmentTransaction.commit();
     }

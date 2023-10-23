@@ -24,11 +24,11 @@ public class AboutDialog extends BaseDialog {
         DialogAboutBinding binding = DialogAboutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String implantFirmware = WandData.getCellV();
-        binding.tvImplantFirmwareVal.setText(implantFirmware == null ? "-" : implantFirmware);
+        String implantFirmware = WandData.getImplantFirmware();
+        binding.tvImplantFirmwareVal.setText(implantFirmware);
 
-        String wandFirmware = WandData.getCellV();
-        binding.tvWandFirmwareVal.setText(wandFirmware == null ? "-" : wandFirmware);
+        String wandFirmware = WandData.getWandFirmware();
+        binding.tvWandFirmwareVal.setText(wandFirmware);
 
         binding.tvTabApplicationVal.setText(BuildConfig.VERSION_NAME);
 
