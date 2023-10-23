@@ -1,4 +1,4 @@
-package com.ninecmed.tablet.dialogues;
+package com.ninecmed.tablet.dialogs;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

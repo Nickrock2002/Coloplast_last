@@ -1,4 +1,4 @@
-package com.ninecmed.tablet.dialogues;
+package com.ninecmed.tablet.dialogs;
 
 import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 
@@ -7,13 +7,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Pair;
-import android.view.View;
 import android.view.Window;
 
-import com.ninecmed.tablet.BuildConfig;
 import com.ninecmed.tablet.Utility;
-import com.ninecmed.tablet.WandData;
-import com.ninecmed.tablet.databinding.DialogAboutBinding;
 
 import java.util.Objects;
 

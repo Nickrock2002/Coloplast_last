@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        launchFeatureSelectionFragment();
+        launchFeatureSelectionFragment(false);
 
         mHandler.postDelayed(MinuteTimer, 60000);
 
@@ -208,13 +208,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void launchFeatureSelectionFragment() {
+    private void launchFeatureSelectionFragment(boolean clearHistory) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
+        if (clearHistory)
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentTransaction.add(R.id.fl_fragment, featureSelectionFragment);
-        fragmentTransaction.addToBackStack("outside");
+        fragmentTransaction.addToBackStack("inside");
 
         fragmentTransaction.commit();
     }
@@ -268,15 +270,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (allPermissionsGranted) {
-                // Both permissions are granted, proceed with Bluetooth functionality
-                isBluetoothPermissionGranted = true;
-                //TODO Remote this in final release
-//                initBluetooth();
-            } else {
-                // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
-                isBluetoothPermissionGranted = false;
-            }
+            // Both permissions are granted, proceed with Bluetooth functionality
+            //TODO Remote this in final release
+            //                initBluetooth();
+            // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
+            isBluetoothPermissionGranted = allPermissionsGranted;
         }
     }
 
@@ -448,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
         public void onDeviceDisconnected(BluetoothDevice device, String message) {
             isDeviceConnected = false;
             wandComm.resetWandComm();
-            launchFeatureSelectionFragment();
+            launchFeatureSelectionFragment(true);
             showWandConnectionDialogue(clinicVisitFragmentOpen);
             // Reconnect
             // mBluetooth.connectToDevice(MainActivity.this.mBTDevice);
@@ -660,6 +658,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
             getSupportFragmentManager().popBackStack();
             binding.ivHamburger.setVisibility(View.VISIBLE);
+            binding.ivBack.setVisibility(View.GONE);
         });
 
         setTheSystemButtonsHidden(dialog);

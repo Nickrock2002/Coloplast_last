@@ -1084,7 +1084,7 @@ class WandComm {
             mainActivity.updateUIFragments(frags.EXTERNAL, success);
         }
         else if(jobs.INITWAND == mCurrentJob) {
-            mainActivity.updateUI(success);
+//            mainActivity.updateUI(success);
         }
 
        if(success) {

@@ -1,18 +1,17 @@
-package com.ninecmed.tablet.dialogues;
+package com.ninecmed.tablet.dialogs;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
-import com.ninecmed.tablet.databinding.DialogProgramItnsBinding;
+import com.ninecmed.tablet.databinding.DialogProgramItnsSuccessBinding;
 
-public class GetProgramConfirmationDialog extends BaseDialog {
+public class ProgramItnsSuccessDialog extends BaseDialog {
     private View.OnClickListener confirmButtonListener = null;
-    private View.OnClickListener cancelButtonListener = null;
     String ampVal, freqVal, dayDateVal, timeOfDayVal;
 
-    public GetProgramConfirmationDialog(Context context) {
+    public ProgramItnsSuccessDialog(Context context) {
         super(context);
     }
 
@@ -21,11 +20,10 @@ public class GetProgramConfirmationDialog extends BaseDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DialogProgramItnsBinding binding = DialogProgramItnsBinding.inflate(getLayoutInflater());
+        DialogProgramItnsSuccessBinding binding = DialogProgramItnsSuccessBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btnConfirm.setOnClickListener(confirmButtonListener);
-        binding.btnCancel.setOnClickListener(cancelButtonListener);
+        binding.btnOk.setOnClickListener(confirmButtonListener);
 
         binding.tvAmpVal.setText(ampVal);
         binding.tvFreqVal.setText(freqVal);
@@ -51,9 +49,5 @@ public class GetProgramConfirmationDialog extends BaseDialog {
 
     public void setConfirmButtonListener(View.OnClickListener onClickListener) {
         this.confirmButtonListener = onClickListener;
-    }
-
-    public void setCancelButtonListener(View.OnClickListener onClickListener) {
-        this.cancelButtonListener = onClickListener;
     }
 }

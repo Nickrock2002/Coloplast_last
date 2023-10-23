@@ -25,8 +25,6 @@ import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.ItnsFragmentBinding;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
-import com.ninecmed.tablet.events.OnConnectedUIEvent;
-import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
 import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -226,20 +224,6 @@ public class ItnsFragment extends Fragment {
             }
             return true;
         });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(OnConnectedUIEvent event) {
-        if (event.getTabEnum() == TabEnum.ITNS) {
-            //OnConnected();
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(OnDisconnectedUIEvent event) {
-        if (event.getTabEnum() == TabEnum.ITNS) {
-            //OnDisconnected();
-        }
     }
 
     public void updateItnsUI(boolean success) {

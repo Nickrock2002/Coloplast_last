@@ -1,21 +1,13 @@
-package com.ninecmed.tablet.dialogues;
-
-import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
+package com.ninecmed.tablet.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
-import android.view.Window;
 
 import com.ninecmed.tablet.R;
-import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.WandData;
 import com.ninecmed.tablet.databinding.DialogItnsRrtBinding;
-
-import java.util.Objects;
 
 public class BatteryReplaceRRTDialog extends BaseDialog {
     private View.OnClickListener confirmButtonListener = null;
