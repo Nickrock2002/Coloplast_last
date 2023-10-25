@@ -672,6 +672,7 @@ public class ProgramTherapyFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
+                // TODO Right another dialog - wand not connected with implant
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 
                 alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));

@@ -261,14 +261,14 @@ public class ItnsFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                //StopStimProgressBar();
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
-                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
-                alertDialog.show();
+                // TODO Right another dialog - wand not connected with implant
+//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
+//
+//                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
+//                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
+//
+//                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
+//                alertDialog.show();
             } else {
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }

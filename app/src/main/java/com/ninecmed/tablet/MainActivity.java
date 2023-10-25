@@ -447,9 +447,10 @@ public class MainActivity extends AppCompatActivity {
             isDeviceConnected = false;
             wandComm.resetWandComm();
             launchFeatureSelectionFragment(true);
-            showWandConnectionDialogue(clinicVisitFragmentOpen);
-            // Reconnect
-            // mBluetooth.connectToDevice(MainActivity.this.mBTDevice);
+            MainActivity.this.runOnUiThread(() -> {
+                binding.ivHamburger.setVisibility(View.VISIBLE);
+                showWandTabCommunicationIssueDialog();
+            });
         }
 
         @Override
