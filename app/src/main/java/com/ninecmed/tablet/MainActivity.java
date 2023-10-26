@@ -269,11 +269,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
             }
-
-            // Both permissions are granted, proceed with Bluetooth functionality
-            //TODO Remote this in final release
-            //                initBluetooth();
-            // Permission denied, handle this scenario (e.g., show a message, disable Bluetooth functionality)
             isBluetoothPermissionGranted = allPermissionsGranted;
         }
     }

@@ -5,7 +5,6 @@ import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -19,7 +18,6 @@ import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.DialogChangeLanguageBinding;
@@ -283,22 +281,12 @@ public class HamburgerFragment extends Fragment {
     public void updateHamburgerUI(boolean success) {
         if (success) {
             setupWandData();
-        }
-        // Here's what happens on fail
-        else {
-            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+        } else {
+            // Here's what happens on fail
+            if (WandData.isITNSNew()) {
                 mMainActivity.showSerialNumberMismatchWarnDialog();
-                return;
-            }
-            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireContext());
-
-                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
-                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
-                alertDialog.show();
             } else {
+                // TODO Right another dialog - wand not connected with implant
                 mMainActivity.showWandTabCommunicationIssueDialog();
             }
         }
