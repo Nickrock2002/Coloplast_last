@@ -18,9 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -32,6 +30,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ninecmed.tablet.databinding.ActivityMainBinding;
+import com.ninecmed.tablet.dialogs.ClinicVisitDatePickerDialog;
+import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
+import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
 import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.OnConnectedUIEvent;
@@ -44,10 +45,10 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import me.aflak.bluetooth.Bluetooth;
 import me.aflak.bluetooth.interfaces.DeviceCallback;
@@ -71,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
     private int selectedYear = 0;
     private int selectedMonth = 0;
     private int selectedDay = 0;
-    private boolean clinicVisitFragmentOpen = false;
     private ActivityMainBinding binding;
+    ArrayList<Dialog> dialogs;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        dialogs = new ArrayList<>();
         // This hides the status bar at the top
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -173,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void showWandConnectionDialogue(final boolean isClinicVisit) {
-        clinicVisitFragmentOpen = isClinicVisit;
         new Handler(Looper.getMainLooper()).post(() -> {
             wandConnDialog = new Dialog(MainActivity.this);
             wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -442,6 +443,7 @@ public class MainActivity extends AppCompatActivity {
             isDeviceConnected = false;
             wandComm.resetWandComm();
             launchFeatureSelectionFragment(true);
+            dismissAllDialogs();
             MainActivity.this.runOnUiThread(() -> {
                 binding.ivHamburger.setVisibility(View.VISIBLE);
                 showWandTabCommunicationIssueDialog();
@@ -464,50 +466,39 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void dismissAllDialogs() {
+        if (wandConnDialog != null && wandConnDialog.isShowing()) {
+            wandConnDialog.dismiss();
+        }
+        for (Dialog dialog : dialogs) {
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+                dialogs.remove(dialog);
+            }
+        }
+    }
+
     public void showSetDateTimeDialog(boolean isFromHamburger) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_set_date_time);
+        ClinicVisitSetDateTimeDialog dialog = new ClinicVisitSetDateTimeDialog(
+                this, formattedDate, formattedTime);
 
-        Button btnDate = dialog.findViewById(R.id.btn_date);
-        Button btnTime = dialog.findViewById(R.id.btn_time);
-        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        Button btnConfirm = dialog.findViewById(R.id.btn_confirm);
-        Button btnConfirmDisabled = dialog.findViewById(R.id.btn_confirm_disabled);
-
-        if (!formattedTime.isEmpty()) {
-            btnTime.setText(formattedTime.toUpperCase());
-            btnTime.setPressed(true);
-        }
-        if (!formattedDate.isEmpty()) {
-            btnDate.setText(formattedDate);
-            btnDate.setPressed(true);
-        }
-
-        if (!formattedDate.isEmpty() && !formattedTime.isEmpty()) {
-            btnConfirmDisabled.setVisibility(View.GONE);
-            btnConfirm.setVisibility(View.VISIBLE);
-            btnConfirm.setClickable(true);
-        }
-
-        btnDate.setOnClickListener(v -> {
+        dialog.setDateButtonListener(v -> {
             showDatePickerDialog(isFromHamburger);
             dialog.dismiss();
         });
 
-        btnTime.setOnClickListener(v -> {
+        dialog.setTimeButtonListener(v -> {
             showTimePickerDialog(isFromHamburger);
             dialog.dismiss();
         });
 
-        btnCancel.setOnClickListener(v -> {
+        dialog.setCancelButtonListener(v -> {
             formattedTime = "";
             formattedDate = "";
             dialog.dismiss();
         });
 
-        btnConfirm.setOnClickListener(v -> {
+        dialog.setConfirmButtonListener(v -> {
             formattedTime = "";
             formattedDate = "";
             calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
@@ -520,32 +511,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setTheSystemButtonsHidden(dialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        Objects.requireNonNull(dialog.getWindow()).setLayout(dimensions.first, dimensions.second);
         dialog.show();
+        dialogs.add(dialog);
     }
 
     public void showTimePickerDialog(boolean isFromHamburger) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_time_picker);
-
-        Button btnConfirmTime = dialog.findViewById(R.id.btn_confirm_time);
-
-        TimePicker timePicker = dialog.findViewById(R.id.timePicker);
-        timePicker.setIs24HourView(false); // Set to true if you want 24-hour format
-
-        // Set a default time (optional)
-        Calendar currentTime = Calendar.getInstance();
-        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-        int minute = currentTime.get(Calendar.MINUTE);
-        timePicker.setHour(hour);
-        timePicker.setMinute(minute);
+        final ClinicVisitTimePickerDialog dialog = new ClinicVisitTimePickerDialog(this);
 
         // Set a listener to the time picker
-        timePicker.setOnTimeChangedListener((view, hourOfDay, minute12) -> {
+        dialog.setTimeChangeListener((view, hourOfDay, minute12) -> {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             calendar.set(Calendar.MINUTE, minute12);
@@ -558,7 +532,7 @@ public class MainActivity extends AppCompatActivity {
             selectedMinutes = minute12;
         });
 
-        btnConfirmTime.setOnClickListener(v -> {
+        dialog.setConfirmButtonListener(v -> {
             if (formattedTime.isEmpty()) {
                 Calendar currentTime1 = Calendar.getInstance();
                 int hour1 = currentTime1.get(Calendar.HOUR_OF_DAY);
@@ -579,25 +553,18 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
         });
 
-        setTheSystemButtonsHidden(dialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
+        dialogs.add(dialog);
     }
 
     public void showDatePickerDialog(boolean isFromHamburger) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_date_picker);
+        final ClinicVisitDatePickerDialog dialog = new ClinicVisitDatePickerDialog(this);
 
-        final DatePicker datePicker = dialog.findViewById(R.id.datePicker);
-        Button btnConfirmDate = dialog.findViewById(R.id.btn_confirm_date);
-        btnConfirmDate.setOnClickListener(v -> {
+        dialog.setConfirmButtonListener(v -> {
             if (formattedDate.isEmpty()) {
-                int year = datePicker.getYear();
-                int month = datePicker.getMonth();
-                int day = datePicker.getDayOfMonth();
+                int year = dialog.getYear();
+                int month = dialog.getMonth();
+                int day = dialog.getDay();
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
 
@@ -611,31 +578,22 @@ public class MainActivity extends AppCompatActivity {
             showSetDateTimeDialog(isFromHamburger);
             dialog.dismiss();
         });
+        dialog.setDateChangeListener(
+                (view, year, month, day) -> {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(year, month, day);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Set a listener to the date picker
-            datePicker.init(
-                    datePicker.getYear(),
-                    datePicker.getMonth(),
-                    datePicker.getDayOfMonth(),
-                    (view, year, month, day) -> {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, month, day);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
+                    formattedDate = dateFormat.format(calendar.getTime());
 
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
-                        formattedDate = dateFormat.format(calendar.getTime());
+                    selectedYear = year;
+                    selectedMonth = month;
+                    selectedDay = day;
+                }
+        );
 
-                        selectedYear = year;
-                        selectedMonth = month;
-                        selectedDay = day;
-                    }
-            );
-        }
-
-        setTheSystemButtonsHidden(dialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
+        dialogs.add(dialog);
     }
 
     public void showBackToStartDialog() {
