@@ -151,6 +151,15 @@
     <string name="implant_firmware">Implant Firmware</string>
     <string name="wand_firmware">Wand Firmware</string>
     <string name="tablet_application">Tablet Application</string>
+    <string name="_2000_ohms">2000 ohms</string>
+    <string name="_2_4_ma">2.4 mA</string>
+    <string name="_0_ohms">0 ohms</string>
+    <string name="_0_ma">0 mA</string>
+    <string name="verify_sheath_position">Verify sheath position.</string>
+    <string name="intibia_itns_successfully_programmed">Intibia ITNS successfully programmed</string>
+    <string name="implant_reset_counter_3">Implant Reset Counter: 3</string>
+    <string name="ic_plus">ic_plus</string>
+    <string name="_0_0v">0.0V</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>

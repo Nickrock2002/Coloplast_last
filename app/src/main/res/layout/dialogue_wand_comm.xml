@@ -25,7 +25,6 @@
             android:layout_height="50dp"
             android:src="@drawable/connection_full_element" />
 
-
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -47,8 +46,6 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:src="@drawable/connection_full_element_white" />
-
-
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -70,7 +67,7 @@
             android:gravity="center"
             android:text="@string/wand_not_comm"
             android:textColor="@color/colorBaseDeepBlue"
-            android:textSize="22sp" />
+            android:textSize="@dimen/dialog_large_text" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,17 +84,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="18dp"
                 android:background="@drawable/rounded_corner_white_button"
-                android:text="@string/cancel"
                 android:paddingHorizontal="40dp"
+                android:text="@string/cancel"
                 android:textAllCaps="false"
                 android:textColor="@color/cardview_dark_background"
-                android:textSize="24sp"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="@dimen/dialog_action_buttons"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/bt_confirm"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/bt_confirm"
@@ -105,56 +102,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="18dp"
                 android:background="@drawable/rounded_corner_white_button"
-                android:text="@string/confirm"
                 android:paddingHorizontal="40dp"
+                android:text="@string/confirm"
                 android:textAllCaps="false"
                 android:textColor="@color/colorGreyThreeHundred"
-                android:textSize="24sp"
+                android:textSize="@dimen/dialog_action_buttons"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/bt_cancel" />
-
+                app:layout_constraintStart_toEndOf="@+id/bt_cancel"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!--<androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/llButtons"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_margin="24dp">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/bt_cancel"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:background="@drawable/bt_dialogue_wand_comm_ghosted"
-                android:text="@string/cancel"
-                android:textAllCaps="false"
-                android:textColor="@color/txt_dialogue_wand_comm_ghosted"
-                android:textSize="24sp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/bt_confirm"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:background="@drawable/bt_dialogue_wand_comm_ghosted"
-                android:text="@string/confirm"
-                android:clickable="false"
-                android:alpha="0.3"
-                android:textAllCaps="false"
-                android:textColor="@color/txt_dialogue_wand_comm_ghosted"
-                android:textSize="24sp" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>-->
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

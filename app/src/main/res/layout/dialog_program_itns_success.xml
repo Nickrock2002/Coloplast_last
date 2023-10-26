@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,8 +8,8 @@
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="20dp"
         android:background="@color/colorPrimary"
+        android:paddingVertical="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -31,12 +30,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Intibia ITNS successfully programmed"
-        android:textColor="@color/cardview_dark_background"
-        android:paddingHorizontal="16dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:text="@string/intibia_itns_successfully_programmed"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="@dimen/dialog_large_text"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
@@ -51,7 +50,7 @@
         android:text="@string/all_ok"
         android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
-        android:textSize="18sp"
+        android:textSize="@dimen/dialog_action_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -61,22 +60,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="76dp" />
+        app:layout_constraintGuide_percent="0.1" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="340dp" />
+        app:layout_constraintGuide_percent="0.9" />
 
     <TextView
         android:id="@+id/tv_amp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/amplitude_with_colon"
         android:layout_marginTop="32dp"
-        android:textSize="16sp"
+        android:text="@string/amplitude_with_colon"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
 
@@ -84,9 +83,9 @@
         android:id="@+id/tv_freq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/frequency_with_colon"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
+        android:text="@string/frequency_with_colon"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_amp" />
 
@@ -94,9 +93,9 @@
         android:id="@+id/tv_start_day_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_day_date_with_colon"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
+        android:text="@string/start_day_date_with_colon"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_freq" />
 
@@ -104,9 +103,9 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/time_with_colon"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
+        android:text="@string/time_with_colon"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_start_day_date" />
 
@@ -115,8 +114,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:textSize="16sp"
-        android:text="_"
+        android:text="@string/_1_dash"
+        android:textSize="@dimen/dialog_medium_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
@@ -126,32 +125,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:text="_"
+        android:text="@string/_1_dash"
+        android:textSize="@dimen/dialog_medium_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_amp_val" />
-
 
     <TextView
         android:id="@+id/tv_start_day_date_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:text="_"
+        android:text="@string/_1_dash"
+        android:textSize="@dimen/dialog_medium_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_freq_val" />
-
 
     <TextView
         android:id="@+id/tv_time_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:text="_"
+        android:text="@string/_1_dash"
+        android:textSize="@dimen/dialog_medium_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_start_day_date_val" />

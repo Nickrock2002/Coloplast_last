@@ -22,7 +22,7 @@
             android:paddingHorizontal="16dp"
             android:text="@string/about_title"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="28sp"
+            android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
         android:text="@string/all_ok"
         android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
-        android:textSize="18sp"
+        android:textSize="@dimen/dialog_action_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -49,14 +49,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="76dp" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="340dp" />
+        app:layout_constraintGuide_percent="0.8" />
 
     <TextView
         android:id="@+id/tv_implant_firmware"
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/implant_firmware"
-        android:textSize="16sp"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/wand_firmware"
-        android:textSize="16sp"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_implant_firmware" />
 
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/tablet_application"
-        android:textSize="16sp"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_wand_firmware" />
 
@@ -93,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="_"
+        android:text="@string/_1_dash"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
@@ -104,7 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="_"
+        android:text="@string/_1_dash"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
@@ -115,10 +115,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="_"
+        android:text="@string/_1_dash"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_wand_firmware_val" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

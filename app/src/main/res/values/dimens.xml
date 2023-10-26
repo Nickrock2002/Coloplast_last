@@ -5,4 +5,10 @@
     <dimen name="appbar_padding">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="dialog_title">28sp</dimen>
+    <dimen name="dialog_action_buttons">20sp</dimen>
+    <dimen name="dialog_center_buttons">24sp</dimen>
+    <dimen name="dialog_small_text">18sp</dimen>
+    <dimen name="dialog_medium_text">20sp</dimen>
+    <dimen name="dialog_large_text">22sp</dimen>
 </resources>
