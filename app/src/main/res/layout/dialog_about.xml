@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/_1_dash"
-        android:textSize="16sp"
+        android:textSize="@dimen/dialog_medium_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/_1_dash"
-        android:textSize="16sp"
+        android:textSize="@dimen/dialog_medium_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_implant_firmware_val" />
@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/_1_dash"
-        android:textSize="16sp"
+        android:textSize="@dimen/dialog_medium_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_wand_firmware_val" />
