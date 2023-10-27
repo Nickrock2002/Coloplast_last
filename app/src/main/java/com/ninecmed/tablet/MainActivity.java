@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpToolbarClickEvents() {
         binding.ivHamburger.setOnClickListener(view -> {
             launchHamburgerFragment();
-            binding.ivHamburger.setVisibility(View.GONE);
+            binding.ivHamburger.setVisibility(View.INVISIBLE);
             binding.ivBack.setVisibility(View.VISIBLE);
         });
 
@@ -210,6 +210,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launchFeatureSelectionFragment(boolean clearHistory) {
+        MainActivity.this.runOnUiThread(() -> {
+            binding.ivHamburger.setVisibility(View.VISIBLE);
+        });
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -445,7 +449,6 @@ public class MainActivity extends AppCompatActivity {
             launchFeatureSelectionFragment(true);
             dismissAllDialogs();
             MainActivity.this.runOnUiThread(() -> {
-                binding.ivHamburger.setVisibility(View.VISIBLE);
                 showWandTabCommunicationIssueDialog();
             });
         }
@@ -507,7 +510,9 @@ public class MainActivity extends AppCompatActivity {
             if (!isFromHamburger) {
                 launchBaseTabFragment(true);
             } else {
-                updateAppTime();
+//                updateAppTime();
+                //go back to home screen
+                launchFeatureSelectionFragment(true);
             }
         });
 
