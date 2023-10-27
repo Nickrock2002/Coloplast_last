@@ -39,7 +39,6 @@
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
