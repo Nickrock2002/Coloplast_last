@@ -6,8 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,7 +21,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -37,9 +34,9 @@ import com.ninecmed.tablet.dialogs.LeadRDialog;
 import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyDayDateDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyTimeOfDayDialog;
+import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.ProgramSuccessEvent;
-import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -445,13 +442,12 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton() {
         binding.btnInterrogate.setOnClickListener(interrogateButton -> {
-            mMainActivity.wandComm.interrogate();
+            mMainActivity.wandComm.interrogate(WandComm.frags.PROGRAM);
             binding.btnInterrogate.setClickable(false);
             binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_button_dark_always);
 
             resetAllButtonsWithDefaultBackground();
             disableAllTheButtons();
-//                MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
         });
     }
 
@@ -531,7 +527,7 @@ public class ProgramTherapyFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
-        if (event.getTabEnum() == TabEnum.ITNS) {
+        if (event.getFrag() == WandComm.frags.PROGRAM) {
             updateUI(event.isUiUpdateSuccess());
         }
     }
@@ -672,21 +668,24 @@ public class ProgramTherapyFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                // TODO Right another dialog - wand not connected with implant
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-
-                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
-                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
-
-                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
-                alertDialog.show();
+                // TODO check this with client
+//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
+//
+//                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
+//                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
+//
+//                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
+//                alertDialog.show();
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
-                showProgramUnsuccessfulWarnDialog();
+//                showProgramUnsuccessfulWarnDialog();
+                showWandITNSCommunicationIssueDialog();
             } else {
-                mMainActivity.showWandTabCommunicationIssueDialog();
-                if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.INTERROGATE) {
-                    binding.btnInterrogate.setClickable(true);
-                    binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                if (this.isResumed()) {
+                    mMainActivity.showWandITNSCommunicationIssueDialog();
+                    if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.INTERROGATE) {
+                        binding.btnInterrogate.setClickable(true);
+                        binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                    }
                 }
             }
         }
@@ -713,6 +712,16 @@ public class ProgramTherapyFragment extends Fragment {
         dialogs.add(dialog);
     }
 
+    public void showWandITNSCommunicationIssueDialog() {
+        WandAndITNSCommIssueDialog dialog = new WandAndITNSCommIssueDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> {
+            binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+            enableDisableProgramButton(true);
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+
     private void showBatteryWarningIfLow(View view) {
         TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
         String rrt_result = WandData.getRRT(view.getContext());
@@ -735,7 +744,8 @@ public class ProgramTherapyFragment extends Fragment {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
-        if (isWarningFound) {
+        // TODO remove this ! sign
+        if (!isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             binding.tvLeadRVal.setVisibility(View.INVISIBLE);
             displayLeadRDialogue();
@@ -802,14 +812,6 @@ public class ProgramTherapyFragment extends Fragment {
             checkedRadioButtonId = R.id.radio_auto;
         }
         mMainActivity.wandComm.removeAllProgramChanges();
-    }
-
-    private void makeTone(int sound) {
-        ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-        tone.startTone(sound, 150);
-        long now = System.currentTimeMillis();
-        while ((System.currentTimeMillis() - now) < 150) ;
-        tone.release();
     }
 
     public void updateAmplitude() {

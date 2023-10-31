@@ -19,20 +19,16 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.ninecmed.tablet.databinding.ItnsFragmentBinding;
+import com.ninecmed.tablet.databinding.FragmentItnsBinding;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
-import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.Objects;
 
 public class ItnsFragment extends Fragment {
     private static final String TAG = "ItnsFragment";
@@ -41,7 +37,7 @@ public class ItnsFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
-    ItnsFragmentBinding binding;
+    FragmentItnsBinding binding;
 
     @Override
     public void onAttach(Context context) {
@@ -59,7 +55,7 @@ public class ItnsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "OnCreate: starting.");
 
-        binding = ItnsFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentItnsBinding.inflate(inflater, container, false);
         initializeStimulationButton();
         initializeInterrogateButton();
         initializeAmpControls();
@@ -80,7 +76,7 @@ public class ItnsFragment extends Fragment {
         binding.btItnsInterrogate.setOnTouchListener((view1, motionEvent) -> {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 binding.btItnsInterrogate.setPressed(true);
-                mMainActivity.wandComm.interrogate();
+                mMainActivity.wandComm.interrogate(WandComm.frags.ITNS);
             } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                 binding.btItnsInterrogate.setPressed(false);
             }
@@ -157,7 +153,7 @@ public class ItnsFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
-        if (event.getTabEnum() == TabEnum.ITNS) {
+        if (event.getFrag() == WandComm.frags.ITNS) {
             updateItnsUI(event.isUiUpdateSuccess());
         }
     }
@@ -261,7 +257,7 @@ public class ItnsFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                // TODO Right another dialog - wand not connected with implant
+                // TODO check this with client
 //                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
 //
 //                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
@@ -270,7 +266,8 @@ public class ItnsFragment extends Fragment {
 //                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
 //                alertDialog.show();
             } else {
-                mMainActivity.showWandTabCommunicationIssueDialog();
+                if (this.isResumed())
+                    mMainActivity.showWandITNSCommunicationIssueDialog();
             }
         }
     }
@@ -291,7 +288,7 @@ public class ItnsFragment extends Fragment {
             final Dialog dialog = new Dialog(requireContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(false);
-            dialog.setContentView(R.layout.dialog_lead_surgery);
+            dialog.setContentView(R.layout.dialog_leadr_surgery);
 
             Button dialogButton = dialog.findViewById(R.id.btn_confirm_lead_r);
             dialogButton.setOnClickListener(v -> dialog.dismiss());

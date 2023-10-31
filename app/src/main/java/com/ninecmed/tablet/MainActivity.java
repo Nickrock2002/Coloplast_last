@@ -1,7 +1,5 @@
 package com.ninecmed.tablet;
 
-import static com.ninecmed.tablet.R.string.all_ok;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -21,7 +19,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
@@ -33,11 +30,10 @@ import com.ninecmed.tablet.databinding.ActivityMainBinding;
 import com.ninecmed.tablet.dialogs.ClinicVisitDatePickerDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
+import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
+import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
-import com.ninecmed.tablet.events.OnConnectedUIEvent;
-import com.ninecmed.tablet.events.OnDisconnectedUIEvent;
-import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
@@ -155,9 +151,7 @@ public class MainActivity extends AppCompatActivity {
             binding.ivBack.setVisibility(View.VISIBLE);
         });
 
-        binding.ivBack.setOnClickListener(view -> {
-            showBackToStartDialog();
-        });
+        binding.ivBack.setOnClickListener(view -> showBackToStartDialog());
     }
 
     public void updateToolbar(boolean isInside) {
@@ -210,9 +204,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launchFeatureSelectionFragment(boolean clearHistory) {
-        MainActivity.this.runOnUiThread(() -> {
-            binding.ivHamburger.setVisibility(View.VISIBLE);
-        });
+        MainActivity.this.runOnUiThread(() -> binding.ivHamburger.setVisibility(View.VISIBLE));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -379,50 +371,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateUIFragments(final int frag, final boolean success) {
         MainActivity.this.runOnUiThread(() -> {
-            if (frag == WandComm.frags.EXTERNAL) {
-                UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
-                uiUpdateEvent.setTabEnum(TabEnum.EXTERNAL);
-                uiUpdateEvent.setUiUpdateSuccess(success);
-                EventBus.getDefault().post(uiUpdateEvent);
-            }
-
-            if (frag == WandComm.frags.ITNS) {
-                UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
-                uiUpdateEvent.setTabEnum(TabEnum.ITNS);
-                uiUpdateEvent.setUiUpdateSuccess(success);
-                EventBus.getDefault().post(uiUpdateEvent);
-            }
+            UIUpdateEvent uiUpdateEvent = new UIUpdateEvent();
+            uiUpdateEvent.setFrag(frag);
+            uiUpdateEvent.setUiUpdateSuccess(success);
+            EventBus.getDefault().post(uiUpdateEvent);
         });
-    }
-
-    public void updateUI(final boolean success) {
-        if (success) {
-            if (wandComm.getCurrentJob() == WandComm.jobs.INITWAND) {
-                OnConnectedUIEvent externalOnConnectedUIEvent = new OnConnectedUIEvent();
-                externalOnConnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
-                EventBus.getDefault().post(externalOnConnectedUIEvent);
-
-                OnConnectedUIEvent itnsOnConnectedUIEvent = new OnConnectedUIEvent();
-                itnsOnConnectedUIEvent.setTabEnum(TabEnum.ITNS);
-                EventBus.getDefault().post(itnsOnConnectedUIEvent);
-            }
-        } else {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-
-            alertDialog.setTitle(R.string.main_wand_error_title);
-            alertDialog.setMessage(R.string.main_wand_error_msg);
-
-            alertDialog.setPositiveButton(getString(all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
-            alertDialog.show();
-
-            OnDisconnectedUIEvent externalOnDisconnectedUIEvent = new OnDisconnectedUIEvent();
-            externalOnDisconnectedUIEvent.setTabEnum(TabEnum.EXTERNAL);
-            EventBus.getDefault().post(externalOnDisconnectedUIEvent);
-
-            OnDisconnectedUIEvent itnsOnDisconnectedUIEvent = new OnDisconnectedUIEvent();
-            itnsOnDisconnectedUIEvent.setTabEnum(TabEnum.ITNS);
-            EventBus.getDefault().post(itnsOnDisconnectedUIEvent);
-        }
     }
 
     public void updateItnsAmplitude() {
@@ -448,9 +401,7 @@ public class MainActivity extends AppCompatActivity {
             wandComm.resetWandComm();
             launchFeatureSelectionFragment(true);
             dismissAllDialogs();
-            MainActivity.this.runOnUiThread(() -> {
-                showWandTabCommunicationIssueDialog();
-            });
+            MainActivity.this.runOnUiThread(() -> showWandTabCommunicationIssueDialog());
         }
 
         @Override
@@ -608,9 +559,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_back_to_start);
 
         Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         Button btnGoBack = dialog.findViewById(R.id.btn_yes_go_back);
         btnGoBack.setOnClickListener(v -> {
@@ -633,14 +582,10 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_close_app);
 
         Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         Button btnYesClose = dialog.findViewById(R.id.btn_yes_close);
-        btnYesClose.setOnClickListener(v -> {
-            finish();
-        });
+        btnYesClose.setOnClickListener(v -> finish());
 
         setTheSystemButtonsHidden(dialog);
 
@@ -656,9 +601,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_tablet_battery_low);
 
         Button btnCancel = dialog.findViewById(R.id.btn_confirm_batt);
-        btnCancel.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         setTheSystemButtonsHidden(dialog);
 
@@ -674,9 +617,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.dialog_serial_mismatch);
 
         Button btnCancel = dialog.findViewById(R.id.btn_confirm_mismatch);
-        btnCancel.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         setTheSystemButtonsHidden(dialog);
 
@@ -686,20 +627,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showWandTabCommunicationIssueDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_wand_tablet_comm_issue);
+        WandAndTabletCommIssueDialog dialog = new WandAndTabletCommIssueDialog(this);
+        dialog.setConfirmButtonListener(v -> dialog.dismiss());
+        dialog.show();
+    }
 
-        Button btnConfirmWandComm = dialog.findViewById(R.id.btn_confirm_wand_comm);
-        btnConfirmWandComm.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+    public void showWandITNSCommunicationIssueDialog() {
+        WandAndITNSCommIssueDialog dialog = new WandAndITNSCommIssueDialog(this);
+        dialog.setConfirmButtonListener(v -> dialog.dismiss());
         dialog.show();
     }
 

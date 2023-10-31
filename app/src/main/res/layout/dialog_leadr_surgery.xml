@@ -8,25 +8,35 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_title_height"
         android:background="@color/colorOrange"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/iv_error"
+            android:layout_width="@dimen/error_icon_size"
+            android:layout_height="@dimen/error_icon_size"
+            android:src="@drawable/ic_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_warn_title"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tv_warn_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_error"
-            android:drawablePadding="10dp"
-            android:padding="32dp"
             android:text="@string/lead_r_2000"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="24dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/iv_error"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,9 +117,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:textSize="@dimen/dialog_medium_text"
-        android:textColor="@color/cardview_dark_background"
         android:text="@string/electrode_tip_must_make_contact_with_the_tissue"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_lead_i" />
@@ -118,9 +128,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:textSize="@dimen/dialog_medium_text"
-        android:textColor="@color/cardview_dark_background"
         android:text="@string/verify_sheath_position"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_electrode_tip" />

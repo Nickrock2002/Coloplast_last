@@ -11,4 +11,6 @@
     <dimen name="dialog_small_text">18sp</dimen>
     <dimen name="dialog_medium_text">20sp</dimen>
     <dimen name="dialog_large_text">22sp</dimen>
+    <dimen name="error_icon_size">40dp</dimen>
+    <dimen name="dialog_title_height">120dp</dimen>
 </resources>

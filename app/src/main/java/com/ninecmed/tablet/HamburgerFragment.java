@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,7 +24,6 @@ import com.ninecmed.tablet.databinding.DialogResetDateTimeBinding;
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
 import com.ninecmed.tablet.dialogs.LeadRDialog;
-import com.ninecmed.tablet.events.TabEnum;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
@@ -200,14 +198,10 @@ public class HamburgerFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton() {
-        binding.btnInterrogate.setOnTouchListener((view1, motionEvent) -> {
-            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                binding.btnInterrogate.setPressed(true);
-                mMainActivity.wandComm.interrogate();
-            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL || motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                binding.btnInterrogate.setPressed(false);
-            }
-            return true;
+        binding.btnInterrogate.setOnClickListener(view -> {
+            binding.btnInterrogate.setPressed(true);
+            mMainActivity.wandComm.interrogate(WandComm.frags.HAMBURGER);
+            binding.btnInterrogate.setPressed(false);
         });
 
         if (mMainActivity.isDeviceConnected()) {
@@ -221,7 +215,7 @@ public class HamburgerFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
-        if (event.getTabEnum() == TabEnum.ITNS) {
+        if (event.getFrag() == WandComm.frags.HAMBURGER) {
             updateHamburgerUI(event.isUiUpdateSuccess());
         }
     }
@@ -283,11 +277,12 @@ public class HamburgerFragment extends Fragment {
             setupWandData();
         } else {
             // Here's what happens on fail
-            if (WandData.isITNSNew()) {
-                mMainActivity.showSerialNumberMismatchWarnDialog();
-            } else {
-                // TODO Right another dialog - wand not connected with implant
-                mMainActivity.showWandTabCommunicationIssueDialog();
+            if (this.isResumed()) {
+                if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+                    mMainActivity.showSerialNumberMismatchWarnDialog();
+                } else {
+                    mMainActivity.showWandITNSCommunicationIssueDialog();
+                }
             }
         }
     }

@@ -12,11 +12,11 @@ import java.util.Locale;
 
 public class Utility {
     public static Pair<Integer, Integer> getDimensionsForDialogue(Context context) {
-        Pair<Integer, Integer> dimensions = null;
+        Pair<Integer, Integer> dimensions;
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
-        dimensions = new Pair<>((int) (width * 0.8), (int) (height * 0.7));
+        dimensions = new Pair<>((int) (width * 0.95), (int) (height * 0.7));
 
         return dimensions;
     }

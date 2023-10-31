@@ -8,6 +8,7 @@
     <color name="colorControlChange">#faeeee</color>
 
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorPrimaryTurquoise">#00a2ba</color>
     <color name="colorBaseDeepBlue">#213D46</color>
     <color name="colorBaseGrayFifty">#f4f5f5</color>

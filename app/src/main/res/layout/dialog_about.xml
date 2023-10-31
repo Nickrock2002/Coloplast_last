@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_title_height"
         android:background="@color/colorBaseGrayFifty"
         android:paddingVertical="30dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +24,7 @@
             android:textColor="@color/cardview_dark_background"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

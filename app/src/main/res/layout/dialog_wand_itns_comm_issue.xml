@@ -28,7 +28,7 @@
             android:id="@+id/tv_warn_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/intibia_itns_reset"
+            android:text="@string/wand_and_itns_communication_issue"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
@@ -41,31 +41,48 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/tv_reset_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/implant_reset_counter_3"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="@dimen/dialog_small_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
-
-    <TextView
-        android:id="@+id/tv_lead_r"
+        android:id="@+id/tv_top"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/the_intibia_itns_reset_recently"
+        android:text="@string/the_communication_between_the_wand_and_itns_has_been_lost"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="@dimen/dialog_medium_text"
-        android:textStyle="bold"
+        android:textSize="@dimen/dialog_large_text"
+        app:layout_constraintBottom_toTopOf="@+id/tv_middle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
+        app:layout_constraintTop_toBottomOf="@+id/cv_top_container"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_middle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginVertical="32dp"
+        android:text="@string/wand_must_be_within_5_cm_2_inches_of_the_itns_pulse_generator"
+        android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="@dimen/dialog_large_text"
+        app:layout_constraintBottom_toTopOf="@+id/tv_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_top" />
+
+    <TextView
+        android:id="@+id/tv_bottom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:text="@string/the_communication_ready_when_light_on_the_wand"
+        android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="@dimen/dialog_large_text"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_middle" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,13 +94,13 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btn_reset_counter_confirm"
+            android:id="@+id/btn_confirm_wand_comm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="18dp"
             android:background="@drawable/rounded_corners_button"
             android:paddingHorizontal="40dp"
-            android:text="@string/reset_counter"
+            android:text="@string/confirm"
             android:textAllCaps="false"
             android:textColor="@color/cardview_light_background"
             android:textSize="@dimen/dialog_action_buttons"
@@ -95,20 +112,5 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="32dp"
-        android:text="The Intibia ITNS is in 'OFF'"
-        android:textAlignment="center"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_lead_r" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import com.ninecmed.tablet.events.ProgramSuccessEvent;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
+
 import me.aflak.bluetooth.Bluetooth;
 
 class WandComm {
@@ -59,6 +60,8 @@ class WandComm {
     public interface frags {
         int EXTERNAL = 0;
         int ITNS = 1;
+        int PROGRAM = 2;
+        int HAMBURGER = 3;
     }
 
     private static final boolean[] task_list = new boolean[tasks.LASTTASK];
@@ -68,6 +71,7 @@ class WandComm {
     private final Bluetooth mBluetooth;
     private int mCurrentTask;
     private int mCurrentJob;
+    private int mCallingFragment;
     private boolean mContinue = false;
     private final Handler mHandler = new Handler();
 
@@ -112,7 +116,7 @@ class WandComm {
             processStateMachine();
             Log.d(TAG, "Stim Start.");
         } else {
-            if(mJobCancelled) {
+            if (mJobCancelled) {
                 Log.d(TAG, "Stim Cancelled.");
                 return;
             }
@@ -127,14 +131,15 @@ class WandComm {
         }
     }
 
-    void setStimulationExt(boolean enable) {
+    void setStimulationExt(boolean enable, int frag) {
+        mCallingFragment = frag;
         mCurrentJob = jobs.SETSTIMEXT;
         mEnableStim = enable;
         mHandler.removeCallbacks(restartTestBurstExt);
         mHandler.removeCallbacks(timeOut);
         mHandler.removeCallbacks(checkForAcknowledgement);
         // When enabled, set the amplitude. When disabled, read lead I
-        if(enable) {
+        if (enable) {
             task_list[tasks.WRTSTIMEXTAMP] = true;
             task_list[tasks.SENDTESTBURSTEXT] = true;
             mState = 0;
@@ -157,7 +162,7 @@ class WandComm {
         }
     }
 
-    void interrogate() {
+    void interrogate(int fragment) {
         task_list[tasks.GETSTATE] = true;
         task_list[tasks.GETID] = true;
         task_list[tasks.GETCONFIG] = true;
@@ -169,6 +174,7 @@ class WandComm {
         task_list[tasks.GETWANDFIRMWARE] = true;
 
         mCurrentJob = jobs.INTERROGATE;
+        mCallingFragment = fragment;
         mState = 0;
         mRetries = 3;
         processStateMachine();
@@ -179,17 +185,17 @@ class WandComm {
         mState = 0;
         mRetries = 3;
         task_list[tasks.GETID] = true;
-        if(change_list[changes.THERAPY]) {
+        if (change_list[changes.THERAPY]) {
             task_list[tasks.SETTHERAPY] = true;
             task_list[tasks.SETSCHEDULE] = true;
         }
-        if(change_list[changes.DATE]) {
+        if (change_list[changes.DATE]) {
             task_list[tasks.SETSCHEDULE] = true;
         }
-        if(change_list[changes.TIME]) {
+        if (change_list[changes.TIME]) {
             task_list[tasks.SETSCHEDULE] = true;
         }
-        if(change_list[changes.AMPLITUDE]) {
+        if (change_list[changes.AMPLITUDE]) {
             task_list[tasks.SETAMPLITUDE] = true;
         }
         processStateMachine();
@@ -213,7 +219,7 @@ class WandComm {
 
     boolean AnyProgramChanges() {
         //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < change_list.length; i++) {
+        for (int i = 0; i < change_list.length; i++) {
             if (change_list[i])
                 return true;
         }
@@ -221,7 +227,7 @@ class WandComm {
     }
 
     void removeAllProgramChanges() {
-        for(int i = 0; i < change_list.length; i++) {
+        for (int i = 0; i < change_list.length; i++) {
             change_list[i] = false;
         }
     }
@@ -231,11 +237,11 @@ class WandComm {
     }
 
     boolean anyProgramChangesOtherThanAmplitude() {
-        if(change_list[changes.TIME])
+        if (change_list[changes.TIME])
             return true;
-        else if(change_list[changes.THERAPY])
+        else if (change_list[changes.THERAPY])
             return true;
-        else if(change_list[changes.DATE])
+        else if (change_list[changes.DATE])
             return true;
         else
             return false;
@@ -252,9 +258,9 @@ class WandComm {
     // The order of the states in this machine are important, so don't rearrange them
     // unless you understand what you're doing!
     private void processStateMachine() {
-        switch(mState) {
+        switch (mState) {
             case tasks.SETUSERNAME:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     setUsername();
                 } else {
@@ -263,7 +269,7 @@ class WandComm {
                 break;
 
             case tasks.SETPASSWORD:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     setPassword();
                 } else {
@@ -272,7 +278,7 @@ class WandComm {
                 break;
 
             case tasks.GETCABLE:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getCable();
                 } else {
@@ -281,7 +287,7 @@ class WandComm {
                 break;
 
             case tasks.WRTSTIMEXTAMP:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     write_I2C_Stim(1, WandData.getStimAmplitude());
                 } else {
@@ -290,7 +296,7 @@ class WandComm {
                 break;
 
             case tasks.RDSTIMILOW:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     read_I2C_Stim(2);
                 } else {
@@ -299,7 +305,7 @@ class WandComm {
                 break;
 
             case tasks.RDSTIMIHIGH:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     read_I2C_Stim(3);
                 } else {
@@ -308,7 +314,7 @@ class WandComm {
                 break;
 
             case tasks.GETSTATE:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getState();
                 } else {
@@ -317,7 +323,7 @@ class WandComm {
                 break;
 
             case tasks.GETID:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getID();
                 } else {
@@ -326,7 +332,7 @@ class WandComm {
                 break;
 
             case tasks.GETAMPLITUDE:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getAmplitude();
                 } else {
@@ -335,7 +341,7 @@ class WandComm {
                 break;
 
             case tasks.GETCONFIG:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getConfig();
                 } else {
@@ -344,7 +350,7 @@ class WandComm {
                 break;
 
             case tasks.GETLEADI:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getLeadI();
                 } else {
@@ -353,7 +359,7 @@ class WandComm {
                 break;
 
             case tasks.GETCELLV:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getCellV();
                 } else {
@@ -362,7 +368,7 @@ class WandComm {
                 break;
 
             case tasks.GETCLOCK:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getClock();
                 } else {
@@ -370,7 +376,7 @@ class WandComm {
                 }
                 break;
             case tasks.GETSCHEDULE:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getSchedule();
                 } else {
@@ -379,7 +385,7 @@ class WandComm {
                 break;
 
             case tasks.SETSCHEDULE:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     setSchedule();
                 } else {
@@ -390,7 +396,7 @@ class WandComm {
             // SetTherapy must be after SetSchedule since executing SetSchedule
             // enables therapy.
             case tasks.SETTHERAPY:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     setTherapy();
                 } else {
@@ -399,7 +405,7 @@ class WandComm {
                 break;
 
             case tasks.SETAMPLITUDE:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     setAmplitude();
                 } else {
@@ -408,7 +414,7 @@ class WandComm {
                 break;
 
             case tasks.CLRRESETS:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     clearResets();
                 } else {
@@ -417,7 +423,7 @@ class WandComm {
                 break;
 
             case tasks.SENDTESTBURST:
-                if(task_list[mState] && mEnableStim) {
+                if (task_list[mState] && mEnableStim) {
                     mCurrentTask = mState;
                     Log.d(TAG, "Send Test Burst.");
                     sendTestBurst();
@@ -427,7 +433,7 @@ class WandComm {
                 break;
 
             case tasks.SENDTESTBURSTEXT:
-                if(task_list[mState] && mEnableStim) {
+                if (task_list[mState] && mEnableStim) {
                     mCurrentTask = mState;
                     Log.d(TAG, "Send Test Burst Ext.");
                     sendTestBurstExt();
@@ -436,17 +442,8 @@ class WandComm {
                 }
                 break;
 
-//            case tasks.GETIMPLANTFIRMWARE:
-//                if(task_list[mState]) {
-//                    mCurrentTask = mState;
-//                    getImplantFirmware();
-//                } else {
-//                    mContinue = true;
-//                }
-//                break;
-
             case tasks.GETWANDFIRMWARE:
-                if(task_list[mState]) {
+                if (task_list[mState]) {
                     mCurrentTask = mState;
                     getWandFirmware();
                 } else {
@@ -455,18 +452,15 @@ class WandComm {
                 break;
 
             case tasks.LASTTASK:
-                if(mCurrentJob == jobs.INTERROGATE) {
+                if (mCurrentJob == jobs.INTERROGATE) {
                     WandData.interrogateSuccessful();
-                }
-                else if(mCurrentJob == jobs.PROGRAM) {
+                } else if (mCurrentJob == jobs.PROGRAM) {
                     WandData.programSuccessful();
                     ProgramSuccessEvent programSuccessEvent = new ProgramSuccessEvent();
                     EventBus.getDefault().post(programSuccessEvent);
-                }
-                else if(mCurrentJob == jobs.SETRESETCOUNTER) {
+                } else if (mCurrentJob == jobs.SETRESETCOUNTER) {
                     WandData.resetSuccessful();
-                }
-                else if(mCurrentJob == jobs.SETSTIM) {
+                } else if (mCurrentJob == jobs.SETSTIM) {
                     WandData.stimSuccessfull();
                 }
                 updateUIFragments(true);
@@ -474,7 +468,7 @@ class WandComm {
         }
 
         mState += 1;
-        if(mContinue) {
+        if (mContinue) {
             mContinue = false;
             mHandler.postDelayed(timeOut, 0);
         }
@@ -486,12 +480,11 @@ class WandComm {
     private final Runnable checkForAcknowledgement = new Runnable() {
         @Override
         public void run() {
-            if(mRetries > 0) {
+            if (mRetries > 0) {
                 mRetries--;
                 mState -= 1;
                 processStateMachine();
-            }
-            else {
+            } else {
                 updateUIFragments(false);
             }
         }
@@ -585,7 +578,7 @@ class WandComm {
         byte config = (byte) WandData.getConfig();
 
         // Do this for Model 1
-        if(WandData.getModelNumber() == 1) {
+        if (WandData.getModelNumber() == 1) {
             switch (WandData.therapy[WandData.FUTURE]) {
                 case 0:                         // Therapy off
                     config &= ~0x01;            // Clear the first bit
@@ -660,9 +653,9 @@ class WandComm {
         byte config = (byte) WandData.getConfig();
 
         // Do this for Model 1
-        if(WandData.getModelNumber() == 1)
+        if (WandData.getModelNumber() == 1)
             config |= 0x88;                     // Set upper bit to change config and bit 3 to clear bReset
-        // Do this for Model 2
+            // Do this for Model 2
         else
             config |= 0xa0;                     // Set upper bit to change config and bit 5 to clear bReset
 
@@ -702,14 +695,14 @@ class WandComm {
 
         rxBuffer = CobsUtils.Decode(message);
 
-        switch(mCurrentTask) {
+        switch (mCurrentTask) {
             case tasks.SETUSERNAME:
             case tasks.SETPASSWORD:
             case tasks.WRTSTIMEXTAMP:
                 if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct.");
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
@@ -725,7 +718,7 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETSTATE.");
                     WandData.setCable(rxBuffer);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
@@ -741,7 +734,7 @@ class WandComm {
                     Log.d(TAG, "RDSTIMLOW correct.");
                     WandData.setStimI(rxBuffer, WandData.LOW);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
@@ -757,7 +750,7 @@ class WandComm {
                     Log.d(TAG, "RDSTIMHIGH correct.");
                     WandData.setStimI(rxBuffer, WandData.HIGH);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
@@ -777,7 +770,7 @@ class WandComm {
                         return;
                     }
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     Log.d(TAG, "CRC incorrect.");
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
@@ -793,17 +786,16 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETID.");
                     WandData.setIDInformation(rxBuffer);
                     mRetries = 3;
-                    if(mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
-                        if(WandData.isITNSNew()) {
+                    if (mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
+                        if (WandData.isITNSNew()) {
                             updateUIFragments(false);
                             return;
                         }
                     }
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
@@ -814,17 +806,16 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETID.");
                     WandData.setWandFirmwareInfo(rxBuffer);
                     mRetries = 3;
-                    if(mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
-                        if(WandData.isITNSNew()) {
+                    if (mCurrentJob == jobs.PROGRAM || mCurrentJob == jobs.SETSTIM) {
+                        if (WandData.isITNSNew()) {
                             updateUIFragments(false);
                             return;
                         }
                     }
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
@@ -835,7 +826,7 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETAMPLITUDE.");
                     WandData.setAmplitude(rxBuffer);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
                 } else {
@@ -849,7 +840,7 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETCONFIG.");
                     WandData.setConfig(rxBuffer);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
                 } else {
@@ -863,7 +854,7 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETLEADI.");
                     WandData.setLeadI(rxBuffer);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
                 } else {
@@ -877,11 +868,10 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETCELLV.");
                     WandData.setCellV(rxBuffer);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                    }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
@@ -892,11 +882,10 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETCLOCK.");
                     WandData.setClock(rxBuffer);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
@@ -907,18 +896,17 @@ class WandComm {
                     Log.d(TAG, "CRC correct for GETSCHEDULE.");
                     WandData.setSchedule(rxBuffer);
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
                 break;
 
             case tasks.SETTHERAPY:
-                if(CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for SETTHERAPY.");
 
                     // Update CURRENT and TEMPORARY values in case the "program" command fails
@@ -927,18 +915,17 @@ class WandComm {
                     // the CURRENT value.
                     WandData.therapy[WandData.TEMPORARY] = WandData.therapy[WandData.CURRENT] = WandData.therapy[WandData.FUTURE];
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
                 break;
 
             case tasks.SETSCHEDULE:
-                if(CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for SETSCHEDULE.");
 
                     // Update CURRENT and TEMPORARY values in case the "program" command fails
@@ -949,18 +936,17 @@ class WandComm {
                             WandData.dateandtime[WandData.CURRENT] =
                                     WandData.dateandtime[WandData.FUTURE];
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
                 break;
 
             case tasks.SETAMPLITUDE:
-                if(CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for SETAMPLITUDE.");
                     // Update CURRENT and TEMPORARY values in case the "program" command fails
                     // the CURRENT value will still reflect that the SetAmplitude was successful
@@ -969,52 +955,49 @@ class WandComm {
                     WandData.amplitude[WandData.TEMPORARY] = WandData.amplitude[WandData.CURRENT] = WandData.amplitude[WandData.FUTURE];
                     mainActivity.updateItnsAmplitude();
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
                 break;
 
             case tasks.CLRRESETS:
-                if(CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for CLRRESETS.");
                     mRetries = 3;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     mRetries--;
                     mState -= 1;            // Backup state machine and try again
-                }
-                else {
+                } else {
                     updateUIFragments(false);
                     return;
                 }
                 break;
 
             case tasks.SENDTESTBURST:
-                if(CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for TESTBURST.");
                     mRetries = 1;
                     // A delay of 2450 from the receipt of the burst to the start of the
                     // next command results in a cycle of 3 seconds!
                     mHandler.postDelayed(restartTestBurst, 2450);
                     return;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     Log.d(TAG, "CRC incorrect, retry.");
                     mRetries--;
                     mState -= 1;            // Keep repeating SENDTESTBURST
                     break;
-                }
-                else {
+                } else {
                     Log.d(TAG, "CRC incorrect, don't retry.");
                     updateUIFragments(false);
                     return;
                 }
 
             case tasks.SENDTESTBURSTEXT:
-                if(CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for TESTBURSTEXT.");
                     mRetries = 3;
                     // A delay of 2920 from the receipt of the burst to the start of the
@@ -1023,13 +1006,12 @@ class WandComm {
                     // the burst will actually occur only when the wand processes the command.
                     mHandler.postDelayed(restartTestBurstExt, 2920);
                     return;
-                } else if(mRetries > 0) {
+                } else if (mRetries > 0) {
                     Log.d(TAG, "CRC incorrect, retry.");
                     mRetries--;
                     mState -= 1;            // Keep repeating SENDTESTBURST
                     break;
-                }
-                else {
+                } else {
                     Log.d(TAG, "CRC incorrect, don't retry.");
                     updateUIFragments(false);
                     return;
@@ -1042,7 +1024,7 @@ class WandComm {
     private final Runnable restartTestBurst = new Runnable() {
         @Override
         public void run() {
-            if(mEnableStim) {
+            if (mEnableStim) {
                 mState = tasks.SENDTESTBURST;
                 processStateMachine();
             }
@@ -1052,7 +1034,7 @@ class WandComm {
     private final Runnable restartTestBurstExt = new Runnable() {
         @Override
         public void run() {
-            if(mEnableStim) {
+            if (mEnableStim) {
                 mState = tasks.SENDTESTBURSTEXT;
                 processStateMachine();
             }
@@ -1060,41 +1042,29 @@ class WandComm {
     };
 
     private void resetTaskList() {
-        for(int i = 0; i < task_list.length; i++) {
+        for (int i = 0; i < task_list.length; i++) {
             task_list[i] = false;
         }
     }
 
     private void resetChangeList() {
-        for(int i = 0; i < change_list.length; i++) {
+        for (int i = 0; i < change_list.length; i++) {
             change_list[i] = false;
         }
     }
 
     private void updateUIFragments(boolean success) {
         resetTaskList();
+        mainActivity.updateUIFragments(mCallingFragment, success);
 
-        if(jobs.INTERROGATE == mCurrentJob
-                || jobs.PROGRAM == mCurrentJob
-                || jobs.SETRESETCOUNTER == mCurrentJob
-                || jobs.SETSTIM == mCurrentJob) {
-            mainActivity.updateUIFragments(frags.ITNS, success);
-        }
-        else if(jobs.SETSTIMEXT == mCurrentJob) {
-            mainActivity.updateUIFragments(frags.EXTERNAL, success);
-        }
-        else if(jobs.INITWAND == mCurrentJob) {
-//            mainActivity.updateUI(success);
-        }
-
-       if(success) {
-           // Only clear the amplitude control if the job is test stimulation.
-           // We wouldn't want to cancel any other pending changes.
-           if(mCurrentJob == jobs.SETSTIM) {
+        if (success) {
+            // Only clear the amplitude control if the job is test stimulation.
+            // We wouldn't want to cancel any other pending changes.
+            if (mCurrentJob == jobs.SETSTIM) {
                 change_list[changes.AMPLITUDE] = false;
-           }
-       }
-       resetWandComm();
+            }
+        }
+        resetWandComm();
     }
 
     public void resetWandComm() {

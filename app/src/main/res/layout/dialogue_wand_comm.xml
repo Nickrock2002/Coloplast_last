@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_title_height"
         android:background="@color/colorBaseGrayFifty"
         android:gravity="center"
         android:orientation="vertical"
@@ -30,7 +30,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_header_active"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_title_height"
         android:background="@color/colorBaseDeepBlue"
         android:gravity="center"
         android:orientation="vertical"

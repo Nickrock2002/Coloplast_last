@@ -1,7 +1,7 @@
 package com.ninecmed.tablet.events;
 
 public class UIUpdateEvent {
-    private TabEnum tabEnum;
+    private int frag;
 
     private boolean uiUpdateSuccess;
 
@@ -13,11 +13,11 @@ public class UIUpdateEvent {
         this.uiUpdateSuccess = uiUpdateSuccess;
     }
 
-    public TabEnum getTabEnum() {
-        return tabEnum;
+    public int getFrag() {
+        return frag;
     }
 
-    public void setTabEnum(TabEnum tabEnum) {
-        this.tabEnum = tabEnum;
+    public void setFrag(int fragment) {
+        this.frag = fragment;
     }
 }

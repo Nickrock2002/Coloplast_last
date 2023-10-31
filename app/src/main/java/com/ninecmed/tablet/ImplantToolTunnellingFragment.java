@@ -24,8 +24,7 @@ import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.ninecmed.tablet.databinding.ImplantTunnelingFragmentBinding;
-import com.ninecmed.tablet.events.TabEnum;
+import com.ninecmed.tablet.databinding.FragmentImplantTunnelingBinding;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +37,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     private long mNow;
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
-    private ImplantTunnelingFragmentBinding binding;
+    private FragmentImplantTunnelingBinding binding;
 
     @Override
     public void onAttach(Context context) {
@@ -48,7 +47,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
-        if (event.getTabEnum() == TabEnum.EXTERNAL) {
+        if (event.getFrag() == WandComm.frags.EXTERNAL) {
             updateImplantTunnellingUI(event.isUiUpdateSuccess());
             showLeadRWarningIfFound();
         }
@@ -62,7 +61,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = ImplantTunnelingFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentImplantTunnelingBinding.inflate(inflater, container, false);
 
         initializeStimulationButton();
         initializeAmplitudeButton();
@@ -100,7 +99,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                 case MotionEvent.ACTION_DOWN:
                     if (mNow + 500 < System.currentTimeMillis()) {
                         binding.btExternalStartStim.setPressed(true);
-                        mMainActivity.wandComm.setStimulationExt(true);
+                        mMainActivity.wandComm.setStimulationExt(true, WandComm.frags.EXTERNAL);
                         binding.btExternalStartStim.setText(getString(R.string.stimulation_active));
                         mNow = System.currentTimeMillis();
                         mStimEnabled = true;
@@ -113,7 +112,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                         binding.btExternalStartStim.setPressed(false);
                         binding.btExternalStartStim.setText(R.string.hold_to_deliver_neurostimulation);
                         if (mNow + 1500 < System.currentTimeMillis()) {
-                            mMainActivity.wandComm.setStimulationExt(false);
+                            mMainActivity.wandComm.setStimulationExt(false, WandComm.frags.EXTERNAL);
                             mStimEnabled = false;
                         } else {
                             mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
@@ -131,7 +130,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     }
 
     private final Runnable holdStimulationRunnable = () -> {
-        mMainActivity.wandComm.setStimulationExt(false);
+        mMainActivity.wandComm.setStimulationExt(false, WandComm.frags.EXTERNAL);
         mStimEnabled = false;
     };
 

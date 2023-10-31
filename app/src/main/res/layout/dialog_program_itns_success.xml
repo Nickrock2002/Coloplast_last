@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_title_height"
         android:background="@color/colorPrimary"
         android:paddingVertical="20dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,9 +16,10 @@
 
         <ImageView
             android:id="@+id/tv_warn_title"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/error_icon_size"
+            android:layout_height="@dimen/error_icon_size"
             android:src="@drawable/baseline_check_24"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.ninecmed.tablet.R;
-import com.ninecmed.tablet.databinding.DialogLeadSurgeryBinding;
+import com.ninecmed.tablet.databinding.DialogLeadrSurgeryBinding;
 
 public class LeadRDialog extends BaseDialog {
     private float leadRValue;
@@ -20,7 +20,7 @@ public class LeadRDialog extends BaseDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DialogLeadSurgeryBinding binding = DialogLeadSurgeryBinding.inflate(getLayoutInflater());
+        DialogLeadrSurgeryBinding binding = DialogLeadrSurgeryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         if (leadRValue > 2000) {

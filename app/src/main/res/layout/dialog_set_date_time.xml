@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_top_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_title_height"
         android:background="@color/colorBaseGrayFifty"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,12 +17,11 @@
             android:id="@+id/tv_warn_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="10dp"
-            android:padding="32dp"
             android:text="@string/set_date_and_time"
             android:textColor="@color/cardview_dark_background"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,29 +29,24 @@
 
     <Button
         android:id="@+id/btn_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="60dp"
-        android:layout_marginBottom="18dp"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
         android:background="@drawable/rounded_corners_button"
-        android:paddingHorizontal="40dp"
         android:text="@string/date_no_colon"
         android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
         android:textSize="@dimen/dialog_center_buttons"
         app:layout_constraintBottom_toTopOf="@+id/btn_time"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/btn_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="60dp"
-        android:layout_marginBottom="18dp"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/rounded_corners_button"
         android:text="@string/time_no_colon"
         android:textAllCaps="false"
@@ -60,7 +54,6 @@
         android:textSize="@dimen/dialog_center_buttons"
         app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_date" />
 
