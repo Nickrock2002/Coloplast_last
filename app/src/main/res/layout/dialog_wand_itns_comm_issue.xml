@@ -45,11 +45,12 @@
         android:id="@+id/tv_top"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="48dp"
         android:text="@string/the_communication_between_the_wand_and_itns_has_been_lost"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="@dimen/dialog_large_text"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintBottom_toTopOf="@+id/tv_middle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,12 +61,12 @@
         android:id="@+id/tv_middle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginVertical="32dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="32dp"
         android:text="@string/wand_must_be_within_5_cm_2_inches_of_the_itns_pulse_generator"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="@dimen/dialog_large_text"
+        android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintBottom_toTopOf="@+id/tv_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,43 +76,30 @@
         android:id="@+id/tv_bottom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
+        android:layout_margin="32dp"
+        android:layout_marginHorizontal="32dp"
         android:text="@string/the_communication_ready_when_light_on_the_wand"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_middle" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/btn_confirm_wand_comm"
+        android:layout_width="@dimen/confirm_ok_single_button_width"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="18dp"
+        android:background="@drawable/rounded_corners_button"
+        android:text="@string/confirm"
+        android:textAllCaps="false"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="@dimen/dialog_action_buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/btn_confirm_wand_comm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="18dp"
-            android:background="@drawable/rounded_corners_button"
-            android:paddingHorizontal="40dp"
-            android:text="@string/confirm"
-            android:textAllCaps="false"
-            android:textColor="@color/cardview_light_background"
-            android:textSize="@dimen/dialog_action_buttons"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

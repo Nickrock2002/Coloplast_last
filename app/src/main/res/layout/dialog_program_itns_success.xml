@@ -30,7 +30,7 @@
         android:id="@+id/tv_reset_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="48dp"
         android:gravity="center"
         android:paddingHorizontal="16dp"
         android:text="@string/intibia_itns_successfully_programmed"
@@ -43,7 +43,7 @@
 
     <Button
         android:id="@+id/btn_ok"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/confirm_ok_single_button_width"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corners_button"
