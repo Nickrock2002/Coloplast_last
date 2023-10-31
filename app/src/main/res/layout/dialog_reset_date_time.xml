@@ -32,6 +32,7 @@
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
+            android:layout_marginStart="24dp"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

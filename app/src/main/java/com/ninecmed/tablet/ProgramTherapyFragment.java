@@ -30,7 +30,7 @@ import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.FrequencyDialog;
 import com.ninecmed.tablet.dialogs.GetProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
-import com.ninecmed.tablet.dialogs.LeadRDialog;
+import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyDayDateDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyTimeOfDayDialog;
@@ -100,7 +100,7 @@ public class ProgramTherapyFragment extends Fragment {
     private void displayLeadRDialogue() {
         float leadRValue = WandData.getLeadR();
         float leadIValue = WandData.getLeadI();
-        final LeadRDialog dialog = new LeadRDialog(requireContext());
+        final LeadRClinicalDialog dialog = new LeadRClinicalDialog(requireContext());
         dialog.setLeadRValue(leadRValue);
         dialog.setLeadIValue(leadIValue);
         dialog.setConfirmButtonListener(view1 -> dialog.dismiss());
@@ -744,8 +744,7 @@ public class ProgramTherapyFragment extends Fragment {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
-        // TODO remove this ! sign
-        if (!isWarningFound) {
+        if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             binding.tvLeadRVal.setVisibility(View.INVISIBLE);
             displayLeadRDialogue();

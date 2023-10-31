@@ -21,6 +21,7 @@
             android:textColor="@color/cardview_dark_background"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
+            android:layout_marginStart="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

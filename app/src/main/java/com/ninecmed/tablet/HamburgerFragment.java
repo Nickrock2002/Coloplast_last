@@ -23,7 +23,7 @@ import com.ninecmed.tablet.databinding.DialogChangeLanguageBinding;
 import com.ninecmed.tablet.databinding.DialogResetDateTimeBinding;
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
-import com.ninecmed.tablet.dialogs.LeadRDialog;
+import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
@@ -122,7 +122,7 @@ public class HamburgerFragment extends Fragment {
     private void displayLeadRDialogue() {
         float leadRValue = WandData.getLeadR();
         float leadIValue = WandData.getLeadI();
-        final LeadRDialog dialogue = new LeadRDialog(getActivity());
+        final LeadRClinicalDialog dialogue = new LeadRClinicalDialog(getActivity());
         dialogue.setLeadRValue(leadRValue);
         dialogue.setLeadIValue(leadIValue);
         dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());

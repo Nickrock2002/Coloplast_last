@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/set_day_date"
             android:textColor="@color/colorWhite"
+            android:layout_marginStart="24dp"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

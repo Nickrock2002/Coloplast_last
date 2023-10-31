@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.ninecmed.tablet.R;
-import com.ninecmed.tablet.databinding.DialogLeadrSurgeryBinding;
+import com.ninecmed.tablet.databinding.DialogLeadrClinicalBinding;
 
-public class LeadRDialog extends BaseDialog {
+public class LeadRClinicalDialog extends BaseDialog {
     private float leadRValue;
     private float leadIValue;
     private View.OnClickListener confirmButtonListener = null;
 
-    public LeadRDialog(Context context) {
+    public LeadRClinicalDialog(Context context) {
         super(context);
     }
 
@@ -20,17 +20,13 @@ public class LeadRDialog extends BaseDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DialogLeadrSurgeryBinding binding = DialogLeadrSurgeryBinding.inflate(getLayoutInflater());
+        DialogLeadrClinicalBinding binding = DialogLeadrClinicalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         if (leadRValue > 2000) {
             binding.tvWarnTitle.setText(R.string.lead_r_is_2000_ohms);
-            binding.tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
-            binding.tvLeadRSubtitle.setText(R.string.lead_r_above);
         } else {
             binding.tvWarnTitle.setText(R.string.lead_r_is_250_ohms);
-            binding.tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
-            binding.tvLeadRSubtitle.setText(R.string.lead_r_below);
         }
 
         binding.tvLeadRVal.setText(String.valueOf(leadRValue).concat(" ohms"));

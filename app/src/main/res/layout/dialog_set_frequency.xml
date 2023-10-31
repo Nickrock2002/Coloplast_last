@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/frequency"
+            android:layout_marginStart="24dp"
             android:textColor="@color/design_default_color_surface"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"

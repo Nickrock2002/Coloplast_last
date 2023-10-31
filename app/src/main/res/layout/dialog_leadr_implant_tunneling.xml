@@ -32,6 +32,7 @@
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
+            android:layout_marginStart="24dp"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +75,7 @@
 
         <Button
             android:id="@+id/btn_confirm_lead_r"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="18dp"
             android:background="@drawable/rounded_corners_button"
