@@ -691,6 +691,7 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
+    // Client Suggested to hide this & show another dialog
     private void showProgramUnsuccessfulWarnDialog() {
         final Dialog dialog = new Dialog(requireContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

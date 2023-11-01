@@ -64,8 +64,12 @@ public class HamburgerFragment extends Fragment {
         DialogResetDateTimeBinding resetDateTimeBinding = DialogResetDateTimeBinding.inflate(LayoutInflater.from(requireContext()));
         dialog.setContentView(resetDateTimeBinding.getRoot());
 
-        resetDateTimeBinding.btnConfirmToReset.setOnClickListener(v -> {
-            mMainActivity.showSetDateTimeDialog(true);
+        resetDateTimeBinding.btConfirm.setOnClickListener(v -> {
+            mMainActivity.launchFeatureSelectionFragment(true);
+            dialog.dismiss();
+        });
+
+        resetDateTimeBinding.btCancel.setOnClickListener(v -> {
             dialog.dismiss();
         });
 

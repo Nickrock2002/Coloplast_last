@@ -39,12 +39,9 @@ import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import me.aflak.bluetooth.Bluetooth;
 import me.aflak.bluetooth.interfaces.DeviceCallback;
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         requestBluetoothPermission();
         setUpToolbarClickEvents();
-
+        timeDifferenceMillis = Utility.getTimeDifferenceInSharedPref(MainActivity.this);
         manageFragmentToolbar();
     }
 
@@ -203,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void launchFeatureSelectionFragment(boolean clearHistory) {
+    protected void launchFeatureSelectionFragment(boolean clearHistory) {
         MainActivity.this.runOnUiThread(() -> binding.ivHamburger.setVisibility(View.VISIBLE));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -332,14 +329,13 @@ public class MainActivity extends AppCompatActivity {
         // Get the current date and time from the device
         Calendar currentCalendar = Calendar.getInstance();
         long currentTimeMillis = currentCalendar.getTimeInMillis() + timeDifferenceMillis;
+        currentCalendar.setTimeInMillis(currentTimeMillis);
 
         // Format the time in "2:00 PM" format
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-        String timeToShow = timeFormat.format(currentTimeMillis);
+        String timeToShow = Utility.getFormattedTime(currentCalendar.getTime());
 
         // Format the date in "01/10/2023" format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-        String dateToShow = dateFormat.format(currentTimeMillis);
+        String dateToShow = Utility.getFormattedDateForHeader(currentCalendar.getTime());
 
         UpdateCurrentTimeEvent updateCurrentTimeEvent = new UpdateCurrentTimeEvent();
         updateCurrentTimeEvent.setTime(timeToShow);
@@ -416,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onConnectError(final BluetoothDevice device, String message) {
             if (mRunBT)
-                mHandler.postDelayed(Reconnect, 1000);                                    // And if fail, try every second
+                mHandler.postDelayed(Reconnect, 1000); // And if fail, try every second
         }
     };
 
@@ -461,7 +457,6 @@ public class MainActivity extends AppCompatActivity {
             if (!isFromHamburger) {
                 launchBaseTabFragment(true);
             } else {
-//                updateAppTime();
                 //go back to home screen
                 launchFeatureSelectionFragment(true);
             }
@@ -471,66 +466,21 @@ public class MainActivity extends AppCompatActivity {
         dialogs.add(dialog);
     }
 
-    public void showTimePickerDialog(boolean isFromHamburger) {
-        final ClinicVisitTimePickerDialog dialog = new ClinicVisitTimePickerDialog(this);
-
-        // Set a listener to the time picker
-        dialog.setTimeChangeListener((view, hourOfDay, minute12) -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            calendar.set(Calendar.MINUTE, minute12);
-
-            // Format the time in 12-hour format with AM/PM
-            DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
-            formattedTime = timeFormat.format(calendar.getTime());
-
-            selectedHour = hourOfDay;
-            selectedMinutes = minute12;
-        });
-
-        dialog.setConfirmButtonListener(v -> {
-            if (formattedTime.isEmpty()) {
-                Calendar currentTime1 = Calendar.getInstance();
-                int hour1 = currentTime1.get(Calendar.HOUR_OF_DAY);
-                int minute1 = currentTime1.get(Calendar.MINUTE);
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, hour1);
-                calendar.set(Calendar.MINUTE, minute1);
-
-                // Format the time in 12-hour format with AM/PM
-                DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
-                formattedTime = timeFormat.format(calendar.getTime());
-
-                selectedHour = hour1;
-                selectedMinutes = minute1;
-            }
-            showSetDateTimeDialog(isFromHamburger);
-            dialog.dismiss();
-        });
-
-        dialog.show();
-        dialogs.add(dialog);
-    }
-
     public void showDatePickerDialog(boolean isFromHamburger) {
-        final ClinicVisitDatePickerDialog dialog = new ClinicVisitDatePickerDialog(this);
+        if (formattedDate.isEmpty()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(calendar.getTimeInMillis() + timeDifferenceMillis);
+            formattedDate = Utility.getFormattedDate(calendar.getTime());
+
+            selectedYear = calendar.get(Calendar.YEAR);
+            selectedMonth = calendar.get(Calendar.MONTH);
+            selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
+        }
+
+        ClinicVisitDatePickerDialog dialog = new ClinicVisitDatePickerDialog(this,
+                formattedDate);
 
         dialog.setConfirmButtonListener(v -> {
-            if (formattedDate.isEmpty()) {
-                int year = dialog.getYear();
-                int month = dialog.getMonth();
-                int day = dialog.getDay();
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
-                formattedDate = dateFormat.format(calendar.getTime());
-
-                selectedYear = year;
-                selectedMonth = month;
-                selectedDay = day;
-            }
             showSetDateTimeDialog(isFromHamburger);
             dialog.dismiss();
         });
@@ -539,14 +489,45 @@ public class MainActivity extends AppCompatActivity {
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(year, month, day);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM / dd / yyyy", Locale.US);
-                    formattedDate = dateFormat.format(calendar.getTime());
+                    formattedDate = Utility.getFormattedDate(calendar.getTime());
 
                     selectedYear = year;
                     selectedMonth = month;
                     selectedDay = day;
                 }
         );
+
+        dialog.show();
+        dialogs.add(dialog);
+    }
+
+    public void showTimePickerDialog(boolean isFromHamburger) {
+        if (formattedTime.isEmpty()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(calendar.getTimeInMillis() + timeDifferenceMillis);
+            formattedTime = Utility.getFormattedTime(calendar.getTime());
+
+            selectedHour = calendar.get(Calendar.HOUR_OF_DAY);
+            selectedMinutes = calendar.get(Calendar.MINUTE);
+
+        }
+
+        ClinicVisitTimePickerDialog dialog = new ClinicVisitTimePickerDialog(this, formattedTime);
+        dialog.setTimeChangeListener((view, hourOfDay, minute12) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute12);
+
+            formattedTime = Utility.getFormattedTime(calendar.getTime());
+
+            selectedHour = hourOfDay;
+            selectedMinutes = minute12;
+        });
+
+        dialog.setConfirmButtonListener(v -> {
+            showSetDateTimeDialog(isFromHamburger);
+            dialog.dismiss();
+        });
 
         dialog.show();
         dialogs.add(dialog);
@@ -649,6 +630,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Calculate the time difference in milliseconds
         timeDifferenceMillis = userSelectedCalendar.getTimeInMillis() - currentCalendar.getTimeInMillis();
+
+        Utility.setTimeDifferenceInSharedPref(MainActivity.this, timeDifferenceMillis);
     }
 
     private void setTheSystemButtonsHidden(Dialog dialog) {

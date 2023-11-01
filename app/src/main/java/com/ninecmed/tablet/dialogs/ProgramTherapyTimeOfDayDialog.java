@@ -37,18 +37,7 @@ public class ProgramTherapyTimeOfDayDialog extends BaseDialog {
         binding.timePicker.setIs24HourView(false);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(cal.getTimeInMillis() + timeDiff);
-//        if (hour == 0) {
-//            binding.timePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
-//        } else {
-//            binding.timePicker.setHour(hour);
-//        }
         binding.timePicker.setHour(hour);
-//
-//        if (min == 0) {
-//            binding.timePicker.setMinute(cal.get(Calendar.MINUTE));
-//        } else {
-//            binding.timePicker.setMinute(min);
-//        }
         binding.timePicker.setMinute(min);
     }
 

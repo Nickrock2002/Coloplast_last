@@ -6,16 +6,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TimePicker;
 
+import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.databinding.DialogTimePickerBinding;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class ClinicVisitTimePickerDialog extends BaseDialog {
     private TimePicker.OnTimeChangedListener timeChangedListener = null;
     private View.OnClickListener confirmButtonListener = null;
 
-    public ClinicVisitTimePickerDialog(Context context) {
+    private final String formattedTime;
+
+    public ClinicVisitTimePickerDialog(Context context, String formattedTime) {
         super(context);
+        this.formattedTime = formattedTime;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -26,15 +31,13 @@ public class ClinicVisitTimePickerDialog extends BaseDialog {
         DialogTimePickerBinding binding = DialogTimePickerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Set to true if you want 24-hour format
-        binding.timePicker.setIs24HourView(false);
-
-        // Set a default time (optional)
         Calendar currentTime = Calendar.getInstance();
-        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-        int minute = currentTime.get(Calendar.MINUTE);
-        binding.timePicker.setHour(hour);
-        binding.timePicker.setMinute(minute);
+        Date date = Utility.getTimeFromFormat(formattedTime);
+        currentTime.setTimeInMillis(date.getTime());
+
+        binding.timePicker.setHour(currentTime.get(Calendar.HOUR_OF_DAY));
+        binding.timePicker.setMinute(currentTime.get(Calendar.MINUTE));
+        binding.timePicker.setIs24HourView(false);
 
         binding.timePicker.setOnTimeChangedListener(timeChangedListener);
         binding.btnConfirmTime.setOnClickListener(confirmButtonListener);

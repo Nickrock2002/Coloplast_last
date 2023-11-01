@@ -6,18 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.databinding.DialogDatePickerBinding;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class ClinicVisitDatePickerDialog extends BaseDialog {
     private DatePicker.OnDateChangedListener dateChangedListener = null;
     private View.OnClickListener confirmButtonListener = null;
-
     int year;
     int month;
     int day;
+    String formattedDate;
 
-    public ClinicVisitDatePickerDialog(Context context) {
+    public ClinicVisitDatePickerDialog(Context context, String formattedDate) {
         super(context);
+        this.formattedDate = formattedDate;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -28,9 +33,13 @@ public class ClinicVisitDatePickerDialog extends BaseDialog {
         DialogDatePickerBinding binding = DialogDatePickerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        year = binding.datePicker.getYear();
-        month = binding.datePicker.getMonth();
-        day = binding.datePicker.getDayOfMonth();
+        Date date = Utility.getDateFromFormat(formattedDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date.getTime());
+
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
 
         binding.datePicker.init(year, month, day, dateChangedListener);
 
