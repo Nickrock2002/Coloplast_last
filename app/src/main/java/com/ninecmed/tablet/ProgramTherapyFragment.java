@@ -85,7 +85,10 @@ public class ProgramTherapyFragment extends Fragment {
     private void setUpRRTButtonClick() {
         binding.btnImplantBatteryStatus.setOnClickListener(view -> {
             final BatteryReplaceRRTDialog dialog = new BatteryReplaceRRTDialog(requireContext());
-            dialog.setConfirmButtonListener(view1 -> dialog.dismiss());
+            dialog.setConfirmButtonListener(view1 -> {
+                dialog.dismiss();
+                dialogs.clear();
+            });
             dialog.show();
             dialogs.add(dialog);
         });
@@ -103,7 +106,10 @@ public class ProgramTherapyFragment extends Fragment {
         final LeadRClinicalDialog dialog = new LeadRClinicalDialog(requireContext());
         dialog.setLeadRValue(leadRValue);
         dialog.setLeadIValue(leadIValue);
-        dialog.setConfirmButtonListener(view1 -> dialog.dismiss());
+        dialog.setConfirmButtonListener(view1 -> {
+            dialog.dismiss();
+            dialogs.clear();
+        });
         dialog.show();
         dialogs.add(dialog);
     }
@@ -209,6 +215,7 @@ public class ProgramTherapyFragment extends Fragment {
             });
             dialog.setCancelButtonListener(cancelView -> {
                 dialog.dismiss();
+                dialogs.clear();
             });
             dialog.setConfirmButtonListener(confirmView -> {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
@@ -216,6 +223,7 @@ public class ProgramTherapyFragment extends Fragment {
                 amplitudeButton.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[0] = true;
                 dialog.dismiss();
+                dialogs.clear();
                 if (valuesChanged[1]) {
                     if (binding.btnFrequencyVal.getText().equals(getString(R.string.off))) {
                         enableDisableProgramButton(true);
@@ -241,6 +249,7 @@ public class ProgramTherapyFragment extends Fragment {
             final FrequencyDialog dialog = new FrequencyDialog(requireContext());
             dialog.setCancelButtonListener(cancelView -> {
                 dialog.dismiss();
+                dialogs.clear();
             });
             dialog.setConfirmButtonListener(confirmView -> {
                 int prevFreq = WandData.therapy[WandData.FUTURE];
@@ -301,6 +310,7 @@ public class ProgramTherapyFragment extends Fragment {
                 valuesChanged[1] = true;
 
                 dialog.dismiss();
+                dialogs.clear();
             });
             dialog.show();
             dialogs.add(dialog);
@@ -356,6 +366,7 @@ public class ProgramTherapyFragment extends Fragment {
                 enableDisableProgramButton(valuesChanged[0] && valuesChanged[1] && valuesChanged[3]);
 
                 dialog.dismiss();
+                dialogs.clear();
             });
             dialog.show();
             dialogs.add(dialog);
@@ -408,6 +419,7 @@ public class ProgramTherapyFragment extends Fragment {
                 enableDisableProgramButton(valuesChanged[0] && valuesChanged[1] && valuesChanged[2]);
 
                 dialog.dismiss();
+                dialogs.clear();
             });
             dialog.show();
             dialogs.add(dialog);
@@ -479,6 +491,7 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setCancelButtonListener(v -> {
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             dialog.dismiss();
+            dialogs.clear();
         });
 
         dialog.setConfirmButtonListener(v -> {
@@ -487,6 +500,7 @@ public class ProgramTherapyFragment extends Fragment {
             }
             mMainActivity.wandComm.program();
             dialog.dismiss();
+            dialogs.clear();
         });
 
         dialog.show();
@@ -502,6 +516,7 @@ public class ProgramTherapyFragment extends Fragment {
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             enableDisableProgramButton(false);
             dialog.dismiss();
+            dialogs.clear();
         });
         dialog.show();
         dialogs.add(dialog);
@@ -515,6 +530,7 @@ public class ProgramTherapyFragment extends Fragment {
             enableDisableProgramButton(false);
 
             dialog.dismiss();
+            dialogs.clear();
         });
 
         dialog.setAmpVal(WandData.getAmplitude());
@@ -668,24 +684,25 @@ public class ProgramTherapyFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                // TODO check this with client
-//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Objects.requireNonNull(view).getContext());
-//
-//                alertDialog.setTitle(getString(R.string.itns_telem_fail_msg));
-//                alertDialog.setMessage(getString(R.string.itns_telem_checkwand_msg));
-//
-//                alertDialog.setPositiveButton(getString(R.string.all_ok), (dialogInterface, i) -> dialogInterface.dismiss());
-//                alertDialog.show();
+                mMainActivity.showWandITNSCommunicationIssueDialog();
+                try {
+                    if (dialogs != null && !dialogs.isEmpty()) {
+                        AmplitudeDialog dialog = (AmplitudeDialog) dialogs.get(dialogs.size() - 1);
+                        dialog.getCancelButtonRef().setEnabled(true);
+                        dialog.getConfirmButtonRef().setEnabled(false);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ;
+                }
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
 //                showProgramUnsuccessfulWarnDialog();
                 showWandITNSCommunicationIssueDialog();
             } else {
-                if (this.isResumed()) {
-                    mMainActivity.showWandITNSCommunicationIssueDialog();
-                    if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.INTERROGATE) {
-                        binding.btnInterrogate.setClickable(true);
-                        binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-                    }
+                mMainActivity.showWandITNSCommunicationIssueDialog();
+                if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.INTERROGATE) {
+                    binding.btnInterrogate.setClickable(true);
+                    binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                 }
             }
         }
@@ -701,6 +718,7 @@ public class ProgramTherapyFragment extends Fragment {
         Button btnCancel = dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
         btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
+            dialogs.clear();
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             enableDisableProgramButton(true);
         });
@@ -719,8 +737,10 @@ public class ProgramTherapyFragment extends Fragment {
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             enableDisableProgramButton(true);
             dialog.dismiss();
+            dialogs.clear();
         });
         dialog.show();
+        dialogs.add(dialog);
     }
 
     private void showBatteryWarningIfLow(View view) {
@@ -776,7 +796,11 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_reset_counter);
 
         Button btnResetCounter = dialog.findViewById(R.id.btn_reset_counter_confirm);
-        btnResetCounter.setOnClickListener(v -> mMainActivity.wandComm.clearResetCounter());
+        btnResetCounter.setOnClickListener(v -> {
+            dialog.dismiss();
+            dialogs.clear();
+            mMainActivity.wandComm.clearResetCounter();
+        });
 
         TextView tvCount = dialog.findViewById(R.id.tv_reset_counter);
         tvCount.setText(getString(R.string.implant_reset_counter).concat(String.valueOf(count)));
