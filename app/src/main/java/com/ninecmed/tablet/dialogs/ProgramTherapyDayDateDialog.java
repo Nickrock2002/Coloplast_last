@@ -58,18 +58,18 @@ public class ProgramTherapyDayDateDialog extends BaseDialog {
         Calendar maxDate = Calendar.getInstance();
         if (isFrequencyAuto) {
             maxDate.add(Calendar.DAY_OF_MONTH, 32);
+            maxDate.setTimeInMillis(maxDate.getTimeInMillis() + timeDiff);
         } else {
             maxDate.add(Calendar.DAY_OF_MONTH, 31);
         }
-        maxDate.setTimeInMillis(maxDate.getTimeInMillis() + timeDiff);
         binding.datePicker.setMaxDate(maxDate.getTimeInMillis());
 
         // Set min date to today (disable past dates), accounting for time difference
         Calendar minDate = Calendar.getInstance();
+        minDate.setTimeInMillis(minDate.getTimeInMillis() + timeDiff);
         if (isFrequencyAuto) {
             minDate.add(Calendar.DAY_OF_MONTH, 16);
         }
-        minDate.setTimeInMillis(minDate.getTimeInMillis() + timeDiff);
         binding.datePicker.setMinDate(minDate.getTimeInMillis());
     }
 

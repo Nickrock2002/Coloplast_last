@@ -15,7 +15,6 @@ import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,9 +26,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ninecmed.tablet.databinding.ActivityMainBinding;
+import com.ninecmed.tablet.dialogs.BackToStartDialog;
+import com.ninecmed.tablet.dialogs.BatteryWarnDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitDatePickerDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
+import com.ninecmed.tablet.dialogs.CloseAppDialog;
+import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
@@ -534,76 +537,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showBackToStartDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_back_to_start);
-
-        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        Button btnGoBack = dialog.findViewById(R.id.btn_yes_go_back);
-        btnGoBack.setOnClickListener(v -> {
+        BackToStartDialog dialog = new BackToStartDialog(this);
+        dialog.setCancelButtonListener(v -> dialog.dismiss());
+        dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             getSupportFragmentManager().popBackStack();
             binding.ivHamburger.setVisibility(View.VISIBLE);
             binding.ivBack.setVisibility(View.GONE);
         });
-
-        setTheSystemButtonsHidden(dialog);
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
     public void showCloseAppDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_close_app);
-
-        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        Button btnYesClose = dialog.findViewById(R.id.btn_yes_close);
-        btnYesClose.setOnClickListener(v -> finish());
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        CloseAppDialog dialog = new CloseAppDialog(this);
+        dialog.setCancelButtonListener(v -> dialog.dismiss());
+        dialog.setConfirmButtonListener(v -> finish());
         dialog.show();
     }
 
     public void showBatteryWarnDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_tablet_battery_low);
-
-        Button btnCancel = dialog.findViewById(R.id.btn_confirm_batt);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        BatteryWarnDialog dialog = new BatteryWarnDialog(this);
+        dialog.setConfirmButtonListener(v -> dialog.dismiss());
         dialog.show();
     }
 
     public void showSerialNumberMismatchWarnDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_serial_mismatch);
-
-        Button btnCancel = dialog.findViewById(R.id.btn_confirm_mismatch);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(this);
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        SerialNumberMismatchDialog dialog = new SerialNumberMismatchDialog(this);
+        dialog.setConfirmButtonListener(v -> dialog.dismiss());
         dialog.show();
     }
 

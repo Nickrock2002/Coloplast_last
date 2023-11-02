@@ -3,7 +3,6 @@ package com.ninecmed.tablet;
 import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
@@ -19,11 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.ninecmed.tablet.databinding.DialogChangeLanguageBinding;
-import com.ninecmed.tablet.databinding.DialogResetDateTimeBinding;
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
+import com.ninecmed.tablet.dialogs.ChangeLanguageDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
+import com.ninecmed.tablet.dialogs.ResetDateTimeDialog;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
@@ -32,7 +30,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Locale;
-import java.util.Objects;
 
 public class HamburgerFragment extends Fragment {
     private static final String TAG = "HamburgerFragment";
@@ -58,25 +55,14 @@ public class HamburgerFragment extends Fragment {
     }
 
     public void showResetDateTimeConfirmationDialog() {
-        final Dialog dialog = new Dialog(requireContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        DialogResetDateTimeBinding resetDateTimeBinding = DialogResetDateTimeBinding.inflate(LayoutInflater.from(requireContext()));
-        dialog.setContentView(resetDateTimeBinding.getRoot());
-
-        resetDateTimeBinding.btConfirm.setOnClickListener(v -> {
+        ResetDateTimeDialog dialog = new ResetDateTimeDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> {
             mMainActivity.launchFeatureSelectionFragment(true);
             dialog.dismiss();
         });
-
-        resetDateTimeBinding.btCancel.setOnClickListener(v -> {
+        dialog.setCancelButtonListener(v -> {
             dialog.dismiss();
         });
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        Objects.requireNonNull(dialog.getWindow()).setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 
@@ -165,21 +151,16 @@ public class HamburgerFragment extends Fragment {
     }
 
     private void showChangeLanguageDialogue() {
-        final Dialog dialog = new Dialog(requireActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-
-        DialogChangeLanguageBinding changeLanguageBinding = DialogChangeLanguageBinding.inflate(LayoutInflater.from(requireContext()));
-        dialog.setContentView(changeLanguageBinding.getRoot());
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(), R.array.languages, R.layout.change_language_spinner_item);
+        ChangeLanguageDialog dialog = new ChangeLanguageDialog(requireActivity());
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(),
+                R.array.languages, R.layout.change_language_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        changeLanguageBinding.spinnerLanguages.setAdapter(adapter);
-        changeLanguageBinding.spinnerLanguages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        dialog.setSpinnerAdapter(adapter);
+        dialog.setItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
-                    changeLanguageBinding.spinnerLanguages.setSelection(1);
+                    dialog.getSpinnerRef().setSelection(1);
                 }
             }
 
@@ -188,15 +169,11 @@ public class HamburgerFragment extends Fragment {
 
             }
         });
-        changeLanguageBinding.btnConfirm.setOnClickListener(view -> {
+        dialog.setConfirmButtonListener(view -> {
             binding.tvLanguageVal.setText(getString(R.string.english));
             dialog.dismiss();
         });
-        changeLanguageBinding.btnCancel.setOnClickListener(view -> dialog.dismiss());
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireActivity());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+        dialog.setCancelButtonListener(view -> dialog.dismiss());
         dialog.show();
     }
 
