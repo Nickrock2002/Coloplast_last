@@ -256,11 +256,11 @@ public class HamburgerFragment extends Fragment {
             setupWandData();
         } else {
             // Here's what happens on fail
-            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
-                mMainActivity.showSerialNumberMismatchWarnDialog();
-            } else {
-                mMainActivity.showWandITNSCommunicationIssueDialog();
-            }
+//            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+//                mMainActivity.showSerialNumberMismatchWarnDialog();
+//            } else {
+            mMainActivity.showWandITNSCommunicationIssueDialog();
+//            }
         }
     }
 }

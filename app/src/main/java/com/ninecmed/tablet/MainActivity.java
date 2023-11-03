@@ -561,12 +561,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void showSerialNumberMismatchWarnDialog() {
-        SerialNumberMismatchDialog dialog = new SerialNumberMismatchDialog(this);
-        dialog.setConfirmButtonListener(v -> dialog.dismiss());
-        dialog.show();
-    }
-
     public void showWandTabCommunicationIssueDialog() {
         WandAndTabletCommIssueDialog dialog = new WandAndTabletCommIssueDialog(this);
         dialog.setConfirmButtonListener(v -> dialog.dismiss());

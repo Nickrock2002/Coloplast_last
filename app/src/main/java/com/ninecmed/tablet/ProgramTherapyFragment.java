@@ -32,6 +32,7 @@ import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyDayDateDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyTimeOfDayDialog;
 import com.ninecmed.tablet.dialogs.ProgrammingUnsuccessfulDialog;
+import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.ProgramSuccessEvent;
@@ -45,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Objects;
 
 public class ProgramTherapyFragment extends Fragment {
     private static final String TAG = "ProgramTherapyFragment";
@@ -603,6 +603,17 @@ public class ProgramTherapyFragment extends Fragment {
         enableDisableProgramButton(false);
     }
 
+    private void resetAllTheTexts() {
+        binding.tvItnsModelNumber.setText(getString(R.string._1_dash));
+        binding.tvItnsSerialVal.setText(getString(R.string._1_dash));
+        binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
+        binding.tvLeadRVal.setText(getString(R.string._1_dash));
+        binding.btnAmplitudeVal.setText(getString(R.string._3_dash));
+        binding.btnFrequencyVal.setText(getString(R.string.off));
+        binding.btnStartDay.setText(getString(R.string._3_dash));
+        binding.btnTimeOfDay.setText(getString(R.string._3_dash));
+    }
+
     public void updateUI(boolean success) {
         View view = getView();
         if (success & view != null) {
@@ -618,8 +629,7 @@ public class ProgramTherapyFragment extends Fragment {
                 if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
                     enableDisableFrequencyButton(true);
                     if (implToolFrequency.equals(getString(R.string.off))) {
-                        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-                        cellv.setText("_");
+                        binding.tvImplantBatteryVal.setText("_");
                     } else {
                         showBatteryWarningIfLow(view);
                     }
@@ -628,11 +638,9 @@ public class ProgramTherapyFragment extends Fragment {
 //                MakeTone(ToneGenerator.TONE_CDMA_PIP);
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-                TextView mn = Objects.requireNonNull(view).findViewById(R.id.tv_itns_model_number);
-                mn.setText((WandData.getModelNumber(view.getContext())));
+                binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
 
-                TextView sn = view.findViewById(R.id.tv_itns_serial_val);
-                sn.setText(WandData.getSerialNumber());
+                binding.tvItnsSerialVal.setText(WandData.getSerialNumber());
 
                 showLeadRWarningIfFound();
 
@@ -648,8 +656,7 @@ public class ProgramTherapyFragment extends Fragment {
                     if (implToolFrequency.equals(getString(R.string.off))) {
                         enableDisableDayDateButton(false);
                         enableDisableTimeOfDayButton(false);
-                        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
-                        cellv.setText("_");
+                        binding.tvImplantBatteryVal.setText("_");
                     } else {
                         showBatteryWarningIfLow(view);
                         enableDisableDayDateButton(true);
@@ -676,7 +683,7 @@ public class ProgramTherapyFragment extends Fragment {
         } // Here's what happens on fail
         else {
             if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
-                mMainActivity.showSerialNumberMismatchWarnDialog();
+                showSerialNumberMismatchWarnDialog();
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                 return;
@@ -706,6 +713,12 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
+    public void showSerialNumberMismatchWarnDialog() {
+        SerialNumberMismatchDialog dialog = new SerialNumberMismatchDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
     // Client Suggested to hide this & show another dialog
     private void showProgramUnsuccessfulWarnDialog() {
         ProgrammingUnsuccessfulDialog dialog = new ProgrammingUnsuccessfulDialog(requireContext());
@@ -732,20 +745,19 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void showBatteryWarningIfLow(View view) {
-        TextView cellv = view.findViewById(R.id.tv_implant_battery_val);
         String rrt_result = WandData.getRRT(view.getContext());
 
         if (rrt_result != null) {
             if (rrt_result.equals(getString(R.string.all_yes))) {
                 binding.btnImplantBatteryStatus.setVisibility(View.VISIBLE);
-                cellv.setVisibility(View.INVISIBLE);
+                binding.tvImplantBatteryVal.setVisibility(View.INVISIBLE);
             } else {
                 binding.btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
-                cellv.setVisibility(View.VISIBLE);
-                cellv.setText(R.string.ok);
+                binding.tvImplantBatteryVal.setVisibility(View.VISIBLE);
+                binding.tvImplantBatteryVal.setText(R.string.ok);
             }
         } else {
-            cellv.setText(R.string.ok);
+            binding.tvImplantBatteryVal.setText(R.string.ok);
         }
     }
 
@@ -783,6 +795,9 @@ public class ProgramTherapyFragment extends Fragment {
             dialog.dismiss();
             dialogs.clear();
             mMainActivity.wandComm.clearResetCounter();
+            resetAllButtonsWithDefaultBackground();
+            disableAllTheButtons();
+            resetAllTheTexts();
         });
         dialog.show();
         dialogs.add(dialog);

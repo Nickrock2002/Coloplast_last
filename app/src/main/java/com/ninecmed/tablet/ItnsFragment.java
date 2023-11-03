@@ -247,10 +247,10 @@ public class ItnsFragment extends Fragment {
         }
         // Here's what happens on fail
         else {
-            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
-                mMainActivity.showSerialNumberMismatchWarnDialog();
-                return;
-            }
+//            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+//                mMainActivity.showSerialNumberMismatchWarnDialog();
+//                return;
+//            }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 mMainActivity.showWandITNSCommunicationIssueDialog();
             } else {
