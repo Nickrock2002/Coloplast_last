@@ -1,7 +1,5 @@
 package com.ninecmed.tablet;
 
-import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,12 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
@@ -30,10 +26,12 @@ import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.FrequencyDialog;
 import com.ninecmed.tablet.dialogs.GetProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
+import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyDayDateDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyTimeOfDayDialog;
+import com.ninecmed.tablet.dialogs.ProgrammingUnsuccessfulDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.ProgramSuccessEvent;
@@ -710,23 +708,13 @@ public class ProgramTherapyFragment extends Fragment {
 
     // Client Suggested to hide this & show another dialog
     private void showProgramUnsuccessfulWarnDialog() {
-        final Dialog dialog = new Dialog(requireContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_programming_unsuccessful);
-
-        Button btnCancel = dialog.findViewById(R.id.btn_confirm_prog_unsuccess);
-        btnCancel.setOnClickListener(v -> {
+        ProgrammingUnsuccessfulDialog dialog = new ProgrammingUnsuccessfulDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             dialogs.clear();
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             enableDisableProgramButton(true);
         });
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
         dialogs.add(dialog);
     }
@@ -785,30 +773,17 @@ public class ProgramTherapyFragment extends Fragment {
     private void checkForReset() {
         int resets = WandData.getResets();
         if (resets > 0) {
-            showItnsResetDialog(resets);
+            showItnsResetDialog();
         }
     }
 
-    public void showItnsResetDialog(int count) {
-        final Dialog dialog = new Dialog(requireContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_reset_counter);
-
-        Button btnResetCounter = dialog.findViewById(R.id.btn_reset_counter_confirm);
-        btnResetCounter.setOnClickListener(v -> {
+    public void showItnsResetDialog() {
+        ItnsResetDialog dialog = new ItnsResetDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             dialogs.clear();
             mMainActivity.wandComm.clearResetCounter();
         });
-
-        TextView tvCount = dialog.findViewById(R.id.tv_reset_counter);
-        tvCount.setText(getString(R.string.implant_reset_counter).concat(String.valueOf(count)));
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        Objects.requireNonNull(dialog.getWindow()).setLayout(dimensions.first, dimensions.second);
         dialog.show();
         dialogs.add(dialog);
     }

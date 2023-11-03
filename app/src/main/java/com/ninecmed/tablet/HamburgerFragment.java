@@ -1,7 +1,5 @@
 package com.ninecmed.tablet;
 
-import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -258,12 +256,10 @@ public class HamburgerFragment extends Fragment {
             setupWandData();
         } else {
             // Here's what happens on fail
-            if (this.isResumed()) {
-                if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
-                    mMainActivity.showSerialNumberMismatchWarnDialog();
-                } else {
-                    mMainActivity.showWandITNSCommunicationIssueDialog();
-                }
+            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+                mMainActivity.showSerialNumberMismatchWarnDialog();
+            } else {
+                mMainActivity.showWandITNSCommunicationIssueDialog();
             }
         }
     }

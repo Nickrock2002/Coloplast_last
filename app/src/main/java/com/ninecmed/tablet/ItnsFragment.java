@@ -1,28 +1,23 @@
 package com.ninecmed.tablet;
 
-import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
-
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentItnsBinding;
+import com.ninecmed.tablet.dialogs.ItnsResetDialog;
+import com.ninecmed.tablet.dialogs.LeadRSurgeryDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -277,37 +272,9 @@ public class ItnsFragment extends Fragment {
         isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            final Dialog dialog = new Dialog(requireContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(false);
-            dialog.setContentView(R.layout.dialog_leadr_surgery);
+            LeadRSurgeryDialog dialog = new LeadRSurgeryDialog(requireContext());
 
-            Button dialogButton = dialog.findViewById(R.id.btn_confirm_lead_r);
-            dialogButton.setOnClickListener(v -> dialog.dismiss());
-
-            TextView title = dialog.findViewById(R.id.tv_warn_title);
-            TextView tvElectrodeTip = dialog.findViewById(R.id.tv_electrode_tip);
-            TextView subTitle = dialog.findViewById(R.id.tv_lead_r_subtitle);
-
-            if (leadRValue > 2000) {
-                title.setText(R.string.lead_r_is_2000_ohms);
-                tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
-                subTitle.setText(R.string.lead_r_above);
-            } else {
-                title.setText(R.string.lead_r_is_250_ohms);
-                tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
-                subTitle.setText(R.string.lead_r_below);
-            }
-
-            TextView tvLeadRV = dialog.findViewById(R.id.tv_lead_r_val);
-            tvLeadRV.setText(String.valueOf(leadRValue).concat(" ohms"));
-
-            TextView tvLeadIV = dialog.findViewById(R.id.tv_lead_i_val);
-            tvLeadIV.setText(String.valueOf(leadIValue).concat(" mA"));
-
-            setTheSystemButtonsHidden(dialog);
-            Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-            dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+            dialog.setConfirmButtonListener(v -> dialog.dismiss());
             dialog.show();
         } else {
             binding.tvLeadRVal.setText(R.string.ok);
@@ -318,28 +285,16 @@ public class ItnsFragment extends Fragment {
     private void checkForReset() {
         int resets = WandData.getResets();
         if (resets > 0) {
-            showItnsResetDialog(resets);
+            showItnsResetDialog();
         }
     }
 
-    public void showItnsResetDialog(int count) {
-        final Dialog dialog = new Dialog(requireContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_reset_counter);
-
-        Button btnResetCounter = dialog.findViewById(R.id.btn_reset_counter_confirm);
-        btnResetCounter.setOnClickListener(v -> {
+    public void showItnsResetDialog() {
+        ItnsResetDialog dialog = new ItnsResetDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> {
+            dialog.dismiss();
             mMainActivity.wandComm.clearResetCounter();
         });
-
-        TextView tvCount = dialog.findViewById(R.id.tv_reset_counter);
-        tvCount.setText(getString(R.string.implant_reset_counter).concat(String.valueOf(count)));
-
-        setTheSystemButtonsHidden(dialog);
-
-        Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-        dialog.getWindow().setLayout(dimensions.first, dimensions.second);
         dialog.show();
     }
 

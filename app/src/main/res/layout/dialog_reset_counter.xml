@@ -84,20 +84,4 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="32dp"
-        android:text="The Intibia ITNS is in 'OFF'"
-        android:textAlignment="center"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="@dimen/dialog_large_text"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_lead_r" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

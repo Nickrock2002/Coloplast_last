@@ -1,9 +1,6 @@
 package com.ninecmed.tablet;
 
-import static com.ninecmed.tablet.Utility.setTheSystemButtonsHidden;
-
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -12,12 +9,10 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -25,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentImplantTunnelingBinding;
+import com.ninecmed.tablet.dialogs.LeadRImplantTunnelingDialog;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -206,17 +202,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
         isWarningFound = leadRValue > 2000;
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            final Dialog dialog = new Dialog(requireContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(false);
-            dialog.setContentView(R.layout.dialog_leadr_implant_tunneling);
-
-            Button dialogButton = (Button) dialog.findViewById(R.id.btn_confirm_lead_r);
-            dialogButton.setOnClickListener(v -> dialog.dismiss());
-
-            setTheSystemButtonsHidden(dialog);
-            Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(requireContext());
-            dialog.getWindow().setLayout(dimensions.first, dimensions.second);
+            LeadRImplantTunnelingDialog dialog = new LeadRImplantTunnelingDialog(requireContext());
+            dialog.setConfirmButtonListener(v -> dialog.dismiss());
             dialog.show();
         } else {
             binding.tvLeadRVal.setText(R.string.ok);

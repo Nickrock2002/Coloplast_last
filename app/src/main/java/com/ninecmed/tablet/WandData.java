@@ -168,7 +168,7 @@ public class WandData {
         mWandFirmwareVersion[TEMPORARY] = (msg[2] & 0xff);
     }
 
-    static int getResets() {
+    public static int getResets() {
         return mResets[CURRENT];
     }
 
