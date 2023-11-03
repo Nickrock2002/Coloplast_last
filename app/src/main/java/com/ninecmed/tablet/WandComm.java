@@ -80,9 +80,15 @@ class WandComm {
     private boolean mEnableStim = false;
     private boolean mJobCancelled = false;
 
-    WandComm(Bluetooth bt, MainActivity mainActivity) {
+    private WandComm(Bluetooth bt, MainActivity mainActivity) {
         mBluetooth = bt;
         this.mainActivity = mainActivity;
+    }
+
+    static WandComm wandComm;
+    public static WandComm getInstance(Bluetooth bt, MainActivity mainActivity) {
+        wandComm = new WandComm(bt, mainActivity);
+        return wandComm;
     }
 
     int getCurrentJob() {

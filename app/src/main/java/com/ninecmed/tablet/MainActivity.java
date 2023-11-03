@@ -32,7 +32,6 @@ import com.ninecmed.tablet.dialogs.ClinicVisitDatePickerDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
 import com.ninecmed.tablet.dialogs.CloseAppDialog;
-import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
@@ -284,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
         mBluetooth = new Bluetooth(this);
         mBluetooth.setReader(ByteReader.class);
         mBluetooth.setDeviceCallback(deviceCallback);
-        wandComm = new WandComm(mBluetooth, this);
+        wandComm = WandComm.getInstance(mBluetooth, this);
 
         mBluetooth.onStart();
 
