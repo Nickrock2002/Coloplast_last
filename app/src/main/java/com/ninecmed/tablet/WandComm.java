@@ -7,12 +7,13 @@ import com.ninecmed.tablet.events.ProgramSuccessEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import me.aflak.bluetooth.Bluetooth;
 
 class WandComm {
-    private static final String TAG = "WandComm";
+    private final String TAG = "WandComm";
 
     public interface tasks {
         int SETUSERNAME = 0;
@@ -64,8 +65,8 @@ class WandComm {
         int HAMBURGER = 3;
     }
 
-    private static final boolean[] task_list = new boolean[tasks.LASTTASK];
-    private static final boolean[] change_list = new boolean[4];
+    private final boolean[] task_list = new boolean[tasks.LASTTASK];
+    private final boolean[] change_list = new boolean[4];
 
     private int mState;
     private final Bluetooth mBluetooth;
@@ -233,9 +234,7 @@ class WandComm {
     }
 
     void removeAllProgramChanges() {
-        for (int i = 0; i < change_list.length; i++) {
-            change_list[i] = false;
-        }
+        Arrays.fill(change_list, false);
     }
 
     boolean anyAmplitudeChanges() {
@@ -1048,15 +1047,11 @@ class WandComm {
     };
 
     private void resetTaskList() {
-        for (int i = 0; i < task_list.length; i++) {
-            task_list[i] = false;
-        }
+        Arrays.fill(task_list, false);
     }
 
     private void resetChangeList() {
-        for (int i = 0; i < change_list.length; i++) {
-            change_list[i] = false;
-        }
+        Arrays.fill(change_list, false);
     }
 
     private void updateUIFragments(boolean success) {

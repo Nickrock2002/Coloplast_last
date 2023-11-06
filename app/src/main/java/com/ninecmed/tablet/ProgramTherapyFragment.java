@@ -686,6 +686,9 @@ public class ProgramTherapyFragment extends Fragment {
                 showSerialNumberMismatchWarnDialog();
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                disableAllTheButtons();
+                resetAllButtonsWithDefaultBackground();
+                resetAllTheTexts();
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -698,7 +701,6 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ;
                 }
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
 //                showProgramUnsuccessfulWarnDialog();
