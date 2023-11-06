@@ -635,7 +635,8 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 }
             } else { /* This is interrogate callback */
-//                MakeTone(ToneGenerator.TONE_CDMA_PIP);
+
+                checkForReset();
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                 binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
@@ -678,7 +679,6 @@ public class ProgramTherapyFragment extends Fragment {
                     binding.btnTimeOfDay.setText(time);
 
                 resetChangedParameters();
-                checkForReset();
             }
         } // Here's what happens on fail
         else {
