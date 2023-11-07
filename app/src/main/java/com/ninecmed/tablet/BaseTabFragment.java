@@ -6,7 +6,6 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,7 +46,7 @@ public class BaseTabFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UpdateCurrentTimeEvent event) {
-        if (isClinicVisit) {
+        if (isClinicVisit && !event.getDate().isEmpty()) {
             tvCurrentDate.setText(event.getDate());
             tvCurrentTime.setText(event.getTime());
         }
@@ -65,6 +64,8 @@ public class BaseTabFragment extends Fragment {
                     mainActivity.getTimeDifferenceMillis());
             tvCurrentDate.setText(dateTimePair.first);
             tvCurrentTime.setText(dateTimePair.second);
+            tvCurrentDate.setOnClickListener(v -> mainActivity.showSetDateTimeDialog(true));
+            tvCurrentTime.setOnClickListener(v -> mainActivity.showSetDateTimeDialog(true));
         }
     }
 
@@ -80,11 +81,6 @@ public class BaseTabFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     private void SetupViewPager(ViewPager viewPager) {

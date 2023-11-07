@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.ninecmed.tablet.dialogs.ChangeLanguageDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.dialogs.ResetDateTimeDialog;
 import com.ninecmed.tablet.events.UIUpdateEvent;
-import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +43,6 @@ public class HamburgerFragment extends Fragment {
         binding.tabs.addTab(binding.tabs.newTab().setText("Intibia ITNS Information and Settings"));
         binding.btnSetLanguage.setOnClickListener(v -> showChangeLanguageDialogue());
 
-        binding.btnSetDateTime.setOnClickListener(v -> showResetDateTimeConfirmationDialog());
         binding.btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());
         binding.btnAbout.setOnClickListener(v -> displayAboutDialogue());
 
@@ -130,14 +127,6 @@ public class HamburgerFragment extends Fragment {
         EventBus.getDefault().register(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(UpdateCurrentTimeEvent event) {
-        if (mMainActivity.isDeviceConnected()) {
-            binding.tvDateVal.setText(event.getDate());
-            binding.tvTimeVal.setText(event.getTime());
-        }
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -202,9 +191,6 @@ public class HamburgerFragment extends Fragment {
     private void setupInitialData() {
         //Date - time
         if (mMainActivity.isDeviceConnected()) {
-            Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(mMainActivity.getTimeDifferenceMillis());
-            binding.tvDateVal.setText(dateTimePair.first);
-            binding.tvTimeVal.setText(dateTimePair.second);
             binding.tvLanguageVal.setText(getString(R.string.english));
         }
 

@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_interrogate"
-        app:layout_constraintVertical_weight="2">
+        app:layout_constraintVertical_weight="3">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start"
@@ -355,42 +355,20 @@
             android:textColor="@color/colorGreySixHundred"
             android:textSize="20sp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/tv_date"
+            app:layout_constraintBottom_toTopOf="@id/tv_language"
             app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/date"
-            android:textColor="@color/colorGreySixHundred"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_language"
-            app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
-            app:layout_constraintTop_toBottomOf="@+id/tv_software_versions_title" />
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/time"
-            android:textColor="@color/colorGreySixHundred"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
-            app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
         <TextView
             android:id="@+id/tv_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
             android:text="@string/language"
             android:textColor="@color/colorGreySixHundred"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline_start_3"
-            app:layout_constraintTop_toBottomOf="@id/tv_date" />
+            app:layout_constraintTop_toBottomOf="@id/tv_software_versions_title" />
 
         <TextView
             android:id="@+id/tv_versions_val"
@@ -401,45 +379,21 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/tv_date_val"
-            app:layout_constraintStart_toEndOf="@+id/guideline_quarter_3"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_date_val"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dash"
-            android:textColor="@color/colorGreySixHundred"
-            android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_language_val"
             app:layout_constraintStart_toEndOf="@+id/guideline_quarter_3"
-            app:layout_constraintTop_toBottomOf="@+id/tv_versions_val" />
-
-        <TextView
-            android:id="@+id/tv_time_val"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dash"
-            android:textColor="@color/colorGreySixHundred"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/guideline_quarter_3"
-            app:layout_constraintTop_toBottomOf="@id/tv_date_val" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_language_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
             android:text="@string/english"
             android:textColor="@color/colorGreySixHundred"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline_quarter_3"
-            app:layout_constraintTop_toBottomOf="@id/tv_date_val" />
+            app:layout_constraintTop_toBottomOf="@id/tv_versions_val" />
 
         <Button
             android:id="@+id/btn_about"
@@ -453,26 +407,10 @@
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/btn_set_date_time"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
-            app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btn_set_date_time"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@drawable/rounded_corners_button"
-            android:paddingVertical="10dp"
-            android:text="@string/reset_date_and_time"
-            android:textAllCaps="false"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/btn_set_language"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
-            app:layout_constraintTop_toBottomOf="@+id/btn_about" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btn_set_language"
@@ -488,7 +426,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_3"
-            app:layout_constraintTop_toBottomOf="@id/btn_set_date_time" />
+            app:layout_constraintTop_toBottomOf="@id/btn_about" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

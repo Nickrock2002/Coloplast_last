@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_BLUETOOTH_PERMISSION) {
             // Check if all permissions are granted
             boolean allPermissionsGranted = true;
@@ -419,17 +420,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showSetDateTimeDialog(boolean isFromHamburger) {
+    public void showSetDateTimeDialog(boolean isFromClinicVisit) {
         ClinicVisitSetDateTimeDialog dialog = new ClinicVisitSetDateTimeDialog(
                 this, formattedDate, formattedTime);
 
         dialog.setDateButtonListener(v -> {
-            showDatePickerDialog(isFromHamburger);
+            showDatePickerDialog(isFromClinicVisit);
             dialog.dismiss();
         });
 
         dialog.setTimeButtonListener(v -> {
-            showTimePickerDialog(isFromHamburger);
+            showTimePickerDialog(isFromClinicVisit);
             dialog.dismiss();
         });
 
@@ -445,11 +446,10 @@ public class MainActivity extends AppCompatActivity {
             calculateTimeDifference(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
             dialog.dismiss();
 
-            if (!isFromHamburger) {
-                launchBaseTabFragment(true);
+            if (isFromClinicVisit) {
+                updateAppTime();
             } else {
-                //go back to home screen
-                launchFeatureSelectionFragment(true);
+                launchBaseTabFragment(true);
             }
         });
 
@@ -562,7 +562,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculateTimeDifference(int year, int month, int day, int hour, int minute) {
-
         // Create a Calendar object for the user-selected date and time
         Calendar userSelectedCalendar = Calendar.getInstance();
         userSelectedCalendar.set(year, month, day, hour, minute);

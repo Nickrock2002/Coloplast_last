@@ -28,6 +28,7 @@ import com.ninecmed.tablet.dialogs.GetProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
 import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
+import com.ninecmed.tablet.dialogs.ProgramITNSProgressDialog;
 import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyDayDateDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyTimeOfDayDialog;
@@ -61,6 +62,7 @@ public class ProgramTherapyFragment extends Fragment {
     //For amplitude, frequency, date & time respectively
     private final boolean[] valuesChanged = new boolean[4];
     ArrayList<Dialog> dialogs;
+    ProgramITNSProgressDialog dialogProgrammingInProgress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -480,7 +482,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void showProgramConfirmationDialog() {
-        final GetProgramConfirmationDialog dialog = new GetProgramConfirmationDialog(requireContext());
+        GetProgramConfirmationDialog dialog = new GetProgramConfirmationDialog(requireContext());
         dialog.setAmpVal(binding.btnAmplitudeVal.getText().toString());
         dialog.setFreqVal(binding.btnFrequencyVal.getText().toString());
         dialog.setDayDateVal(binding.btnStartDay.getText().toString());
@@ -499,6 +501,7 @@ public class ProgramTherapyFragment extends Fragment {
             mMainActivity.wandComm.program();
             dialog.dismiss();
             dialogs.clear();
+            showProgramITNSInProgressDialog();
         });
 
         dialog.show();
@@ -506,7 +509,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void showIncorrectTimeDialog() {
-        final IncorrectTimeDialog dialog = new IncorrectTimeDialog(requireContext());
+        IncorrectTimeDialog dialog = new IncorrectTimeDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             binding.btnTimeOfDay.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             binding.btnTimeOfDay.setText(getString(R.string._3_dash));
@@ -521,7 +524,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void showProgramSuccessDialog() {
-        final ProgramItnsSuccessDialog dialog = new ProgramItnsSuccessDialog(requireContext());
+        ProgramItnsSuccessDialog dialog = new ProgramItnsSuccessDialog(requireContext());
 
         dialog.setConfirmButtonListener(v -> {
             resetAllButtonsWithDefaultBackground();
@@ -539,6 +542,12 @@ public class ProgramTherapyFragment extends Fragment {
         dialogs.add(dialog);
     }
 
+    private void showProgramITNSInProgressDialog() {
+        dialogProgrammingInProgress = new ProgramITNSProgressDialog(requireContext());
+        dialogProgrammingInProgress.show();
+        dialogs.add(dialogProgrammingInProgress);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getFrag() == WandComm.frags.PROGRAM) {
@@ -553,6 +562,8 @@ public class ProgramTherapyFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ProgramSuccessEvent event) {
+        if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
+            dialogProgrammingInProgress.dismiss();
         showProgramSuccessDialog();
     }
 
@@ -651,7 +662,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
                     enableDisableFrequencyButton(true);
-                    if (!implToolFrequency.equals(getString(R.string.off))) {
+                    if (implToolFrequency.equals(getString(R.string.off))) {
                         enableDisableDayDateButton(false);
                         enableDisableTimeOfDayButton(false);
                         binding.tvImplantBatteryVal.setText("_");
@@ -702,7 +713,8 @@ public class ProgramTherapyFragment extends Fragment {
                     e.printStackTrace();
                 }
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
-//                showProgramUnsuccessfulWarnDialog();
+                if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
+                    dialogProgrammingInProgress.dismiss();
                 showWandITNSCommunicationIssueDialog();
             } else {
                 mMainActivity.showWandITNSCommunicationIssueDialog();
