@@ -636,14 +636,11 @@ public class ProgramTherapyFragment extends Fragment {
                 }
             } else { /* This is interrogate callback */
 
-                checkForReset();
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                 binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
 
                 binding.tvItnsSerialVal.setText(WandData.getSerialNumber());
-
-                showLeadRWarningIfFound();
 
                 enableDisableAmplitudeButton(true);
 
@@ -654,7 +651,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
                     enableDisableFrequencyButton(true);
-                    if (implToolFrequency.equals(getString(R.string.off))) {
+                    if (!implToolFrequency.equals(getString(R.string.off))) {
                         enableDisableDayDateButton(false);
                         enableDisableTimeOfDayButton(false);
                         binding.tvImplantBatteryVal.setText("_");
@@ -666,6 +663,8 @@ public class ProgramTherapyFragment extends Fragment {
                 } else {
                     enableDisableFrequencyButton(false);
                 }
+                showLeadRWarningIfFound();
+                checkForReset();
 
                 String date = WandData.getDate();
                 String time = WandData.getTime();
@@ -797,8 +796,8 @@ public class ProgramTherapyFragment extends Fragment {
             dialog.dismiss();
             dialogs.clear();
             mMainActivity.wandComm.clearResetCounter();
-            resetAllButtonsWithDefaultBackground();
-            disableAllTheButtons();
+//            resetAllButtonsWithDefaultBackground();
+//            disableAllTheButtons();
             resetAllTheTexts();
         });
         dialog.show();

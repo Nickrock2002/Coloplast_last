@@ -11,15 +11,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -34,6 +30,7 @@ import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
 import com.ninecmed.tablet.dialogs.CloseAppDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
+import com.ninecmed.tablet.dialogs.WandTabConnDialog;
 import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
@@ -60,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
     private String formattedTime = "";
     private String formattedDate = "";
-    private Dialog wandConnDialog;
+    private WandTabConnDialog wandConnDialog;
     private long timeDifferenceMillis = 0;
     private int selectedHour = 0;
     private int selectedMinutes = 0;
@@ -169,12 +166,9 @@ public class MainActivity extends AppCompatActivity {
 
     protected void showWandConnectionDialogue(final boolean isClinicVisit) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            wandConnDialog = new Dialog(MainActivity.this);
-            wandConnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            wandConnDialog.setContentView(R.layout.dialogue_wand_comm);
+            wandConnDialog = new WandTabConnDialog(MainActivity.this);
 
-            AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
-            btConfirm.setOnClickListener(view -> {
+            wandConnDialog.setConfirmButtonListener(view -> {
                 if (isClinicVisit) {
                     showSetDateTimeDialog(false);
                 } else {
@@ -182,24 +176,19 @@ public class MainActivity extends AppCompatActivity {
                 }
                 wandConnDialog.dismiss();
             });
-            btConfirm.setClickable(false);
-            wandConnDialog.findViewById(R.id.bt_cancel).setOnClickListener(view -> wandConnDialog.dismiss());
+            wandConnDialog.setCancelButtonListener(view -> wandConnDialog.dismiss());
 
-            setTheSystemButtonsHidden(wandConnDialog);
-            Pair<Integer, Integer> dimensions = Utility.getDimensionsForDialogue(MainActivity.this);
-            wandConnDialog.getWindow().setLayout(dimensions.first, dimensions.second);
-            wandConnDialog.setCancelable(false);
             wandConnDialog.show();
-            if (isBluetoothPermissionGranted) {
-                if (!isDeviceConnected) {
-                    initBluetooth();
-                } else {
-                    showWandConnectionInActiveMode();
-                }
-            } else {
-                requestBluetoothPermission();
-            }
         });
+        if (isBluetoothPermissionGranted) {
+            if (!isDeviceConnected) {
+                initBluetooth();
+            } else {
+                showWandConnectionInActiveMode();
+            }
+        } else {
+            requestBluetoothPermission();
+        }
     }
 
     protected void launchFeatureSelectionFragment(boolean clearHistory) {
@@ -244,13 +233,13 @@ public class MainActivity extends AppCompatActivity {
      */
     void showWandConnectionInActiveMode() {
         if (wandConnDialog != null) {
-            wandConnDialog.findViewById(R.id.ll_header).setVisibility(View.INVISIBLE);
-            wandConnDialog.findViewById(R.id.ll_header_active).setVisibility(View.VISIBLE);
-            ((TextView) wandConnDialog.findViewById(R.id.tv_connection_status)).setText(R.string.wand_is_comm);
-            AppCompatButton btConfirm = wandConnDialog.findViewById(R.id.bt_confirm);
-            btConfirm.setClickable(true);
-            btConfirm.setBackgroundResource(R.drawable.bt_dialogue_wand_comm_active);
-            btConfirm.setTextColor(ActivityCompat.getColor(this, R.color.txt_dialogue_wand_comm_active));
+            wandConnDialog.getHeaderRef().setVisibility(View.INVISIBLE);
+            wandConnDialog.getHeaderActiveRef().setVisibility(View.VISIBLE);
+            wandConnDialog.getConnectionStatusTvRef().setText(R.string.wand_is_comm);
+
+            wandConnDialog.getConfirmButtonRef().setClickable(true);
+            wandConnDialog.getConfirmButtonRef().setBackgroundResource(R.drawable.bt_dialogue_wand_comm_active);
+            wandConnDialog.getConfirmButtonRef().setTextColor(ActivityCompat.getColor(this, R.color.txt_dialogue_wand_comm_active));
         }
     }
 
