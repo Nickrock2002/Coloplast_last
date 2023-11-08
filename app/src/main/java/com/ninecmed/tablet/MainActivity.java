@@ -143,8 +143,9 @@ public class MainActivity extends AppCompatActivity {
     private void setUpToolbarClickEvents() {
         binding.ivHamburger.setOnClickListener(view -> {
             launchHamburgerFragment();
-            binding.ivHamburger.setVisibility(View.INVISIBLE);
+            binding.ivHamburger.setAlpha(0.3f);
             binding.ivBack.setVisibility(View.VISIBLE);
+            binding.ivHamburger.setClickable(false);
         });
 
         binding.ivBack.setOnClickListener(view -> showBackToStartDialog());
@@ -192,7 +193,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void launchFeatureSelectionFragment(boolean clearHistory) {
-        MainActivity.this.runOnUiThread(() -> binding.ivHamburger.setVisibility(View.VISIBLE));
+        MainActivity.this.runOnUiThread(() -> {
+            setUpToolbarClickEvents();
+            binding.ivHamburger.setAlpha(1.0f);
+        });
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -377,8 +381,10 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 isDeviceConnected = true;
                 new Handler().postDelayed(() -> {
-                    wandComm.initWand();
-                    showWandConnectionInActiveMode();
+                    if (wandComm != null) {
+                        wandComm.initWand();
+                        showWandConnectionInActiveMode();
+                    }
                 }, 3000);
             });
         }
@@ -530,7 +536,8 @@ public class MainActivity extends AppCompatActivity {
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             getSupportFragmentManager().popBackStack();
-            binding.ivHamburger.setVisibility(View.VISIBLE);
+            setUpToolbarClickEvents();
+            binding.ivHamburger.setAlpha(1.0f);
             binding.ivBack.setVisibility(View.GONE);
         });
         dialog.show();

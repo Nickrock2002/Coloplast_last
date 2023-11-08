@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBaseGrayFifty">
 
-    <Button
-        android:id="@+id/btItnsInterrogate"
-        android:layout_width="260dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="72dp"
-        android:background="@drawable/rounded_corners_button"
-        android:text="@string/interrogate"
-        android:textAllCaps="false"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="24sp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_top_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorBaseGrayFifty"
+        android:enabled="false"
+        app:layout_constraintBottom_toTopOf="@id/cl_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1">
+
+        <Button
+            android:id="@+id/btItnsInterrogate"
+            style="@style/InterrogateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/interrogate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="38dp"
         android:background="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@id/cl_2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btItnsInterrogate"
-        app:layout_constraintVertical_bias="0.0">
-
+        app:layout_constraintTop_toBottomOf="@+id/cv_top_container"
+        app:layout_constraintVertical_weight="1">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start"
@@ -59,50 +66,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/implant_model"
-            android:textSize="20sp"
             android:textColor="@color/colorGreySixHundred"
-            android:layout_marginTop="32dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/guideline_start"/>
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_implant_sr"
+            app:layout_constraintStart_toEndOf="@+id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_implant_sr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/implant_serial"
-            android:textSize="20sp"
             android:textColor="@color/colorGreySixHundred"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_implant_model"
-            app:layout_constraintStart_toEndOf="@+id/guideline_start"/>
+            app:layout_constraintStart_toEndOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/tv_implant_model" />
 
         <TextView
             android:id="@+id/tvItnsModelNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="_"
-            android:layout_marginTop="32dp"
+            android:text="@string/_1_dash"
+            android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/cardview_dark_background"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tv_implant_model" />
 
         <TextView
             android:id="@+id/tvItnsSN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="_"
-            android:layout_marginTop="32dp"
+            android:text="@string/_1_dash"
+            android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/cardview_dark_background"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid"
-            app:layout_constraintTop_toBottomOf="@+id/tvItnsModelNumber" />
+            app:layout_constraintTop_toTopOf="@+id/tv_implant_sr" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -110,11 +113,12 @@
         android:id="@+id/cl_2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/cl_3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_1"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_weight="1">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start_1"
@@ -142,18 +146,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lead_r"
-            android:textSize="20sp"
             android:textColor="@color/colorGreySixHundred"
-            android:layout_marginVertical="64dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/guideline_start_1"/>
+            app:layout_constraintStart_toEndOf="@+id/guideline_start_1"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_lead_r_val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="_"
+            android:text="@string/_1_dash"
             android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -166,17 +169,17 @@
             android:id="@+id/btn_lead_r_warn"
             android:layout_width="260dp"
             android:layout_height="64dp"
+            android:layout_gravity="start"
             android:background="@drawable/rounded_corners_btn_error"
-            android:text="Warning"
-            android:visibility="gone"
             android:drawableStart="@drawable/ic_error"
+            android:drawablePadding="5dp"
+            android:paddingStart="60dp"
+            android:text="Warning"
+            android:textAlignment="textStart"
             android:textAllCaps="false"
             android:textColor="@color/cardview_dark_background"
             android:textSize="24sp"
-            android:drawablePadding="5dp"
-            android:textAlignment="textStart"
-            android:layout_gravity="start"
-            android:paddingStart="60dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
@@ -190,89 +193,98 @@
         android:background="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@+id/cv_bottom_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_2"
-        app:layout_constraintVertical_bias="0.0"></androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintVertical_weight="2" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_bottom_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:enabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:background="@color/colorBaseGrayFifty"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_3"
+        app:layout_constraintVertical_weight="1.5">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
 
         <Button
             android:id="@+id/btItnsStartStim"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
-            android:layout_marginBottom="40dp"
             android:background="@drawable/rounded_corners_button"
+            android:elevation="16dp"
+            android:enabled="false"
+            android:paddingVertical="20dp"
             android:text="@string/hold_to_deliver_neurostimulation"
             android:textAllCaps="false"
             android:textColor="@color/colorBaseGreyFourHundred"
             android:textSize="24sp"
-            android:enabled="false"
-            android:elevation="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView6" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
             android:text="@string/amplitude_with_colon"
             android:textColor="@color/colorGreySixHundred"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/btItnsStartStim"
             app:layout_constraintStart_toStartOf="@+id/btItnsStartStim"
-            app:layout_constraintTop_toTopOf="@+id/ibItnsMinus" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/ibItnsMinus"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="40dp"
+            style="@style/amplitude_plus_minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/button_circular_white"
             android:contentDescription="ic_minus"
             android:gravity="center_vertical|center_horizontal"
             android:src="@drawable/ic_minus_grey"
-            android:layout_marginTop="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/btItnsStartStim"
+            app:layout_constraintBottom_toBottomOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView6"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/textView6" />
 
         <TextView
             android:id="@+id/tvItnsAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.0V"
+            android:text="@string/_0_0v"
             android:textColor="@color/colorBaseGreyFourHundred"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/ibItnsMinus"
             app:layout_constraintEnd_toStartOf="@+id/ibItnsPlus"
             app:layout_constraintStart_toEndOf="@+id/ibItnsMinus"
-            app:layout_constraintTop_toTopOf="@+id/ibItnsPlus" />
+            app:layout_constraintTop_toTopOf="@+id/ibItnsMinus" />
 
         <ImageButton
             android:id="@+id/ibItnsPlus"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="80dp"
-            android:layout_marginBottom="40dp"
+            style="@style/amplitude_plus_minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/button_circular_white"
             android:contentDescription="ic_plus"
             android:gravity="center_vertical|center_horizontal"
             android:src="@drawable/ic_plus_grey"
-            app:layout_constraintBottom_toTopOf="@+id/btItnsStartStim"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/tvItnsAmplitude"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_2"
+            app:layout_constraintStart_toEndOf="@id/tvItnsAmplitude"
+            app:layout_constraintTop_toTopOf="@+id/tvItnsAmplitude" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

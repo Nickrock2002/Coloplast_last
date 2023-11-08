@@ -25,7 +25,39 @@
     <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorBaseDeepBlue</item>
     </style>
+
     <style name="TimePickerStyle">
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="InterrogateButton">
+        <item name="android:textSize">24sp</item>
+        <item name="android:paddingVertical">20dp</item>
+        <item name="android:width">260dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/txt_programming_buttons</item>
+        <item name="android:background">@drawable/rounded_corner_button_dynamic</item>
+    </style>
+
+    <style name="OtherNormalButtons">
+        <item name="android:textSize">20sp</item>
+        <item name="android:width">220dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/txt_programming_buttons</item>
+        <item name="android:background">@drawable/rounded_corner_button_dynamic</item>
+    </style>
+
+    <style name="OtherErrorButtons">
+        <item name="android:textSize">20sp</item>
+        <item name="android:width">220dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/cardview_dark_background</item>
+        <item name="android:background">@drawable/rounded_corners_btn_error</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
+
+    <style name="amplitude_plus_minus_button">
+        <item name="android:height">50dp</item>
+        <item name="android:width">50dp</item>
     </style>
 </resources>
