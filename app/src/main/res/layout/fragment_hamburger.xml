@@ -15,10 +15,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabGravity="fill"
-        app:tabIndicatorFullWidth="true"
         app:tabIndicatorHeight="6dp"
         app:tabMaxWidth="0dp"
-        app:tabMode="fixed"
         app:tabTextAppearance="@style/TabLayoutTextSize" />
 
     <Button

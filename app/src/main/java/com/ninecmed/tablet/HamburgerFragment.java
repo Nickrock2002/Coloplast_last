@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +41,8 @@ public class HamburgerFragment extends Fragment {
         binding.btCloseApp.setOnClickListener(v -> showCloseAppDialog());
         binding.tvSoftwareVersionVal.setText(BuildConfig.VERSION_NAME);
 
-        binding.tabs.addTab(binding.tabs.newTab().setText("Intibia ITNS Information and Settings"));
+        binding.tabs.addTab(binding.tabs.newTab().setText(R.string.intibia_itns_information_and_settings));
+
         binding.btnSetLanguage.setOnClickListener(v -> showChangeLanguageDialogue());
 
         binding.btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());
