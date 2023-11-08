@@ -132,6 +132,7 @@
     <string name="neurostimulation_was_unsuccessful">Neurostimulation was unsuccessful</string>
     <string name="check_cable">Check cable connections between the wand \n and the patient</string>
     <string name="program_itns">Program ITNS</string>
+    <string name="programming_itns">Programming ITNS</string>
     <string name="the_intibia_itns_is_about_to_be_programmed">The Intibia ITNS is about to be programmed with following parameters</string>
     <string name="frequency_with_colon">Frequency:</string>
     <string name="start_day_date_with_colon">Start Day/Date:</string>
@@ -168,6 +169,7 @@
     <string name="implant_tool_tunneling_msg">When <b>Implant Tool Tunnelling</b> is complete,\n go to the <b>ITNS Interrogation</b> Tab</string>
     <string name="amplitude_colon">Amplitude:</string>
     <string name="intibia_itns_information_and_settings">Intibia ITNS Information and Settings</string>
+    <string name="program_therapy">Program therapy</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>

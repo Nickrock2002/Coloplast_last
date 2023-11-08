@@ -4,12 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,13 +19,13 @@ import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
 import com.ninecmed.tablet.dialogs.ChangeLanguageDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
-import com.ninecmed.tablet.dialogs.ResetDateTimeDialog;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 public class HamburgerFragment extends Fragment {
@@ -41,26 +41,11 @@ public class HamburgerFragment extends Fragment {
         binding.btCloseApp.setOnClickListener(v -> showCloseAppDialog());
         binding.tvSoftwareVersionVal.setText(BuildConfig.VERSION_NAME);
 
-        binding.tabs.addTab(binding.tabs.newTab().setText(R.string.intibia_itns_information_and_settings));
-
         binding.btnSetLanguage.setOnClickListener(v -> showChangeLanguageDialogue());
-
         binding.btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());
         binding.btnAbout.setOnClickListener(v -> displayAboutDialogue());
-
+        setDateTime();
         return binding.getRoot();
-    }
-
-    public void showResetDateTimeConfirmationDialog() {
-        ResetDateTimeDialog dialog = new ResetDateTimeDialog(requireContext());
-        dialog.setConfirmButtonListener(v -> {
-            mMainActivity.launchFeatureSelectionFragment(true);
-            dialog.dismiss();
-        });
-        dialog.setCancelButtonListener(v -> {
-            dialog.dismiss();
-        });
-        dialog.show();
     }
 
     @Override
@@ -250,5 +235,15 @@ public class HamburgerFragment extends Fragment {
             mMainActivity.showWandITNSCommunicationIssueDialog();
 //            }
         }
+    }
+
+    void setDateTime() {
+        Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(
+                mMainActivity.getTimeDifferenceMillis());
+        // Format the time in "2:00 PM" format
+        binding.tvTime.setText(dateTimePair.second);
+
+        // Format the date in "01/10/2023" format
+        binding.tvDate.setText(dateTimePair.first);
     }
 }

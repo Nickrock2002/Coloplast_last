@@ -10,7 +10,6 @@ import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.databinding.DialogProgramItnsProgressBinding;
 
 public class ProgramITNSProgressDialog extends BaseDialog {
-    private View.OnClickListener confirmButtonListener = null;
 
     public ProgramITNSProgressDialog(Context context) {
         super(context);
@@ -27,9 +26,5 @@ public class ProgramITNSProgressDialog extends BaseDialog {
         Glide.with(getContext())
                 .load(R.raw.coloplast_spinner)
                 .into(binding.ivProgress);
-    }
-
-    public void setConfirmButtonListener(View.OnClickListener onClickListener) {
-        this.confirmButtonListener = onClickListener;
     }
 }

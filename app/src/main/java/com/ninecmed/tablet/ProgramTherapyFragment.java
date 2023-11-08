@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,11 +34,13 @@ import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyDayDateDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyTimeOfDayDialog;
 import com.ninecmed.tablet.dialogs.ProgrammingUnsuccessfulDialog;
+import com.ninecmed.tablet.dialogs.ResetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.ProgramSuccessEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
+import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -78,7 +81,7 @@ public class ProgramTherapyFragment extends Fragment {
         setUpFrequencyButtonClick();
         setUpDateButtonClick();
         setUpTimeButtonClick();
-
+        setDateTime();
         return binding.getRoot();
     }
 
@@ -567,6 +570,13 @@ public class ProgramTherapyFragment extends Fragment {
         showProgramSuccessDialog();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UpdateCurrentTimeEvent event) {
+        setDateTime();
+        resetAllTheTexts();
+        disableAllTheButtons();
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -844,5 +854,29 @@ public class ProgramTherapyFragment extends Fragment {
     public void updateAmplitude() {
         binding.btnAmplitudeVal.setText(WandData.getAmplitude());
         mAmplitudePos = WandData.getAmplitudePos();
+    }
+
+    void setDateTime() {
+        Pair<String, String> dateTimePair = Utility.getTimeAndDateForFirstTimeHam(
+                mMainActivity.getTimeDifferenceMillis());
+        // Format the time in "2:00 PM" format
+        binding.tvTime.setText(dateTimePair.second);
+        binding.tvTime.setOnClickListener(v -> showResetDateTimeConfirmationDialog());
+
+        // Format the date in "01/10/2023" format
+        binding.tvDate.setText(dateTimePair.first);
+        binding.tvDate.setOnClickListener(v -> showResetDateTimeConfirmationDialog());
+    }
+
+    public void showResetDateTimeConfirmationDialog() {
+        ResetDateTimeDialog dialog = new ResetDateTimeDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> {
+            mMainActivity.showSetDateTimeDialog(true);
+            dialog.dismiss();
+        });
+        dialog.setCancelButtonListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
     }
 }

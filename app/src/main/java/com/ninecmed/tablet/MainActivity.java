@@ -173,23 +173,23 @@ public class MainActivity extends AppCompatActivity {
                 if (isClinicVisit) {
                     showSetDateTimeDialog(false);
                 } else {
-                    launchBaseTabFragment(false);
+                    launchSurgeryFragment();
                 }
                 wandConnDialog.dismiss();
             });
             wandConnDialog.setCancelButtonListener(view -> wandConnDialog.dismiss());
 
             wandConnDialog.show();
-        });
-        if (isBluetoothPermissionGranted) {
-            if (!isDeviceConnected) {
-                initBluetooth();
+            if (isBluetoothPermissionGranted) {
+                if (!isDeviceConnected) {
+                    initBluetooth();
+                } else {
+                    showWandConnectionInActiveMode();
+                }
             } else {
-                showWandConnectionInActiveMode();
+                requestBluetoothPermission();
             }
-        } else {
-            requestBluetoothPermission();
-        }
+        });
     }
 
     protected void launchFeatureSelectionFragment(boolean clearHistory) {
@@ -210,15 +210,24 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void launchBaseTabFragment(boolean isClinicVisit) {
+    private void launchSurgeryFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         BaseTabFragment baseTabFragment = new BaseTabFragment();
-        baseTabFragment.setClinicVisit(isClinicVisit);
         fragmentTransaction.add(R.id.fl_fragment, baseTabFragment);
         fragmentTransaction.addToBackStack("inside");
 
+        fragmentTransaction.commit();
+    }
+
+    private void launchProgramTherapyFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ProgramTherapyFragment programTherapyFragment = new ProgramTherapyFragment();
+        fragmentTransaction.add(R.id.fl_fragment, programTherapyFragment);
+        fragmentTransaction.addToBackStack("inside");
         fragmentTransaction.commit();
     }
 
@@ -455,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
             if (isFromClinicVisit) {
                 updateAppTime();
             } else {
-                launchBaseTabFragment(true);
+                launchProgramTherapyFragment();
             }
         });
 

@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Utility {
-    static SimpleDateFormat dateFormatForClinicVisit = new SimpleDateFormat("MMM / dd / yyyy", Locale.getDefault());
+    static SimpleDateFormat dateFormatForClinicVisit = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
     static SimpleDateFormat dateFormatForHeaderDisplay = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
     static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
 

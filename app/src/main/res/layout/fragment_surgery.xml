@@ -28,30 +28,8 @@
             app:tabMode="fixed"
             app:tabTextAppearance="@style/TabLayoutTextSize" />
 
-        <TextView
-            android:id="@+id/tv_time_program_therepy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="TextView"
-            android:visibility="gone"
-            android:layout_marginTop="1dp"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/cardview_dark_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_date_program_therepy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            tools:text="TextView"
-            android:textColor="@color/cardview_dark_background"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/tv_time_program_therepy"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.ninecmed.tablet.CustomViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
