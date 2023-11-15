@@ -9,6 +9,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:clickable="true"
         android:background="@color/colorGreyThreeHundred"
         app:layout_constraintBottom_toTopOf="@id/btn_interrogate"
         app:layout_constraintEnd_toEndOf="parent"

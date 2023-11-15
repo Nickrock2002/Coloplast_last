@@ -25,7 +25,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Calendar;
 import java.util.Locale;
 
 public class HamburgerFragment extends Fragment {
@@ -228,12 +227,7 @@ public class HamburgerFragment extends Fragment {
         if (success) {
             setupWandData();
         } else {
-            // Here's what happens on fail
-//            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
-//                mMainActivity.showSerialNumberMismatchWarnDialog();
-//            } else {
             mMainActivity.showWandITNSCommunicationIssueDialog();
-//            }
         }
     }
 
