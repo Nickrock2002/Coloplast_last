@@ -100,8 +100,9 @@ public class ImplantToolTunnellingFragment extends Fragment {
                         mNow = System.currentTimeMillis();
                         mStimEnabled = true;
                     }
+                    binding.ibExternalPlus.setClickable(false);
+                    binding.ibExternalMinus.setClickable(false);
                     break;
-
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     if (mStimEnabled) {
@@ -119,6 +120,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
                         Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
                         drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
                     }
+                    binding.ibExternalPlus.setClickable(true);
+                    binding.ibExternalMinus.setClickable(true);
                     break;
             }
             return true;
@@ -132,46 +135,32 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeAmplitudeButton() {
-
-        binding.ibExternalPlus.setOnTouchListener((view1, motionEvent) -> {
-            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                binding.ibExternalPlus.setPressed(true);
-                if (mAmplitudePos < 42) {
-                    mAmplitudePos += 1;
-                }
-                WandData.setStimAmplitude(mAmplitudePos);
-                WandData.invalidateStimExtLeadI();
-
-                updateImplantTunnellingUI(true);
-            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                binding.ibExternalPlus.setPressed(false);
-                Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
-                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+        binding.ibExternalPlus.setOnClickListener(view -> {
+            if (mAmplitudePos < 42) {
+                mAmplitudePos += 1;
             }
-            return true;
+            WandData.setStimAmplitude(mAmplitudePos);
+            WandData.invalidateStimExtLeadI();
+            updateImplantTunnellingUI(true);
+
+            Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
+            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+            Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
+            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
         });
 
-        binding.ibExternalMinus.setOnTouchListener((view12, motionEvent) -> {
-            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                binding.ibExternalMinus.setPressed(true);
-                if (mAmplitudePos > 0) {
-                    mAmplitudePos -= 1;
-                }
-                WandData.setStimAmplitude(mAmplitudePos);
-                WandData.invalidateStimExtLeadI();
-
-                updateImplantTunnellingUI(true);
-            } else if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP || motionEvent.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                binding.ibExternalMinus.setPressed(false);
-                Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
-                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+        binding.ibExternalMinus.setOnClickListener(view -> {
+            if (mAmplitudePos > 0) {
+                mAmplitudePos -= 1;
             }
+            WandData.setStimAmplitude(mAmplitudePos);
+            WandData.invalidateStimExtLeadI();
+            updateImplantTunnellingUI(true);
 
-            return true;
+            Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
+            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+            Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
+            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
         });
     }
 

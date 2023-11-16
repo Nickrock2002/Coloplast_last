@@ -9,8 +9,8 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:clickable="true"
         android:background="@color/colorGreyThreeHundred"
+        android:clickable="true"
         app:layout_constraintBottom_toTopOf="@id/btn_interrogate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,6 +31,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/cardview_dark_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,16 +47,7 @@
             android:layout_marginTop="1dp"
             android:textColor="@color/cardview_dark_background"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/cardview_dark_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
