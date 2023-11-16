@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class Utility {
     static SimpleDateFormat dateFormatForClinicVisit = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-    static SimpleDateFormat dateFormatForHeaderDisplay = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+    static SimpleDateFormat dateFormatForProgramTherapy = new SimpleDateFormat("EEE dd-MMM-yyyy", Locale.US);
     static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
 
     public static Pair<Integer, Integer> getDimensionsForDialogue(Context context) {
@@ -44,7 +44,9 @@ public class Utility {
         long currentTimeMillis = currentCalendar.getTimeInMillis() + timeInMilis;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
 
-        dateTimePair = new Pair<>(dateFormat.format(currentTimeMillis), timeFormat.format(currentTimeMillis));
+        dateTimePair = new Pair<>(dateFormat.format(currentTimeMillis),
+                timeFormat.format(currentTimeMillis).replace("am", "AM")
+                        .replace("pm", "PM"));
         return dateTimePair;
     }
 
@@ -52,8 +54,16 @@ public class Utility {
         return dateFormatForClinicVisit.format(date);
     }
 
-    public static String getFormattedDateForHeader(Date date) {
-        return dateFormatForHeaderDisplay.format(date);
+    public static String getFormattedDateForProgramTherapy(Date date) {
+        return dateFormatForProgramTherapy.format(date);
+    }
+
+    public static Date parseDateFromFormatForProgramTherapy(String strDate) {
+        try {
+            return dateFormatForProgramTherapy.parse(strDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Date getDateFromFormat(String formattedDate) {
@@ -68,12 +78,13 @@ public class Utility {
 
     public static String getFormattedTime(Date date) {
         // Format the time in 12-hour format with AM/PM
-        return timeFormat.format(date);
+        return timeFormat.format(date).replace("am", "AM").replace("pm", "PM");
     }
 
     public static Date getTimeFromFormat(String formattedTime) {
         Date date;
         try {
+            formattedTime = formattedTime.replace("AM", "am").replace("PM", "pm");
             date = timeFormat.parse(formattedTime);
         } catch (ParseException e) {
             date = new Date();

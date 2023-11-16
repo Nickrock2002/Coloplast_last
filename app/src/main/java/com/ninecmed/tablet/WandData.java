@@ -5,6 +5,8 @@ import static java.lang.Math.max;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import com.bumptech.glide.util.Util;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -480,9 +482,7 @@ public class WandData {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd-MMM-yyyy", Locale.US);
-
-            return dateFormat.format(c.getTime());
+            return Utility.dateFormatForProgramTherapy.format(c.getTime());
         }
     }
 
@@ -545,32 +545,12 @@ public class WandData {
         if (therapy[CURRENT] != 0) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(dateandtime[CURRENT]);
-
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-
-            String amPm;
-            if (hour < 12) {
-                amPm = "AM";
-                if (hour == 0) {
-                    hour = 12;
-                }
-            } else {
-                amPm = "PM";
-                if (hour > 12) {
-                    hour -= 12;
-                }
-            }
-
-            return String.format("%02d:%02d %s", hour, minute, amPm);
+            return Utility.getFormattedTime(c.getTime());
         } else
             return "---";
     }
 
     static boolean isITNSNew() {
-        if (mModelSerial[CURRENT] != mModelSerial[TEMPORARY])
-            return true;
-        else
-            return false;
+        return mModelSerial[CURRENT] != mModelSerial[TEMPORARY];
     }
 }

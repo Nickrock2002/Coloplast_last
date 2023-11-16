@@ -351,8 +351,7 @@ public class ProgramTherapyFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd-MMM-yyyy", Locale.US);
-                String formattedDate = dateFormat.format(calendar.getTime());
+                String formattedDate = Utility.getFormattedDateForProgramTherapy(calendar.getTime());
 
                 calendar.setTimeInMillis(WandData.dateandtime[WandData.FUTURE]);       // Set Calendar object to future time
                 calendar.set(Calendar.YEAR, year);
@@ -402,23 +401,7 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.TIME);
                 }
 
-                int hourToDisplay = lastSetHour;
-                String amPm;
-                if (lastSetHour < 12) {
-                    amPm = "AM";
-                    if (lastSetHour == 0) {
-                        hourToDisplay = 12;
-                    }
-                } else {
-                    amPm = "PM";
-                    if (lastSetHour > 12) {
-                        hourToDisplay -= 12;
-                    }
-                }
-
-                String formattedTime = String.format(Locale.ENGLISH, "%02d:%02d %s",
-                        hourToDisplay, lastSetMinute, amPm);
-                binding.btnTimeOfDay.setText(formattedTime);
+                binding.btnTimeOfDay.setText(Utility.getFormattedTime(futureTime.getTime()));
                 binding.btnTimeOfDay.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[3] = true;
 

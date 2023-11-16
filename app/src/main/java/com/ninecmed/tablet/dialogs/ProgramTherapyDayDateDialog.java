@@ -5,13 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
+import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.databinding.DialogSetStartDayTherapyBinding;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class ProgramTherapyDayDateDialog extends BaseDialog {
     private View.OnClickListener cancelButtonListener = null;
@@ -38,20 +36,15 @@ public class ProgramTherapyDayDateDialog extends BaseDialog {
         binding.btCancel.setOnClickListener(cancelButtonListener);
         binding.btConfirm.setOnClickListener(confirmButtonListener);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd-MMM-yyyy", Locale.US);
-        try {
-            Date date = dateFormat.parse(dateStr);
-            if (date != null) {
-                Calendar selectedDate = Calendar.getInstance();
-                selectedDate.setTimeInMillis(date.getTime());
-                if (selectedDate.getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
-                    binding.datePicker.updateDate(selectedDate.get(Calendar.YEAR),
-                            selectedDate.get(Calendar.MONTH),
-                            selectedDate.get(Calendar.DAY_OF_MONTH));
-                }
+        Date date = Utility.parseDateFromFormatForProgramTherapy(dateStr);
+        if (date != null) {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.setTimeInMillis(date.getTime());
+            if (selectedDate.getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
+                binding.datePicker.updateDate(selectedDate.get(Calendar.YEAR),
+                        selectedDate.get(Calendar.MONTH),
+                        selectedDate.get(Calendar.DAY_OF_MONTH));
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
         // Set max date to 31 days in the future, accounting for time difference

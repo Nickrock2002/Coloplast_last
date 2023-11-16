@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
         String timeToShow = Utility.getFormattedTime(currentCalendar.getTime());
 
         // Format the date in "01/10/2023" format
-        String dateToShow = Utility.getFormattedDateForHeader(currentCalendar.getTime());
+        String dateToShow = Utility.getFormattedDate(currentCalendar.getTime());
 
         UpdateCurrentTimeEvent updateCurrentTimeEvent = new UpdateCurrentTimeEvent();
         updateCurrentTimeEvent.resetTheDefaultTextsOnTherapy(isFromClinicVisit);
