@@ -325,12 +325,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             updateBatteryStatus();
-            updateAppTime();
+            updateAppTime(false);
             mHandler.postDelayed(MinuteTimer, 60000);
         }
     };
 
-    private void updateAppTime() {
+    private void updateAppTime(boolean isFromClinicVisit) {
         // Get the current date and time from the device
         Calendar currentCalendar = Calendar.getInstance();
         long currentTimeMillis = currentCalendar.getTimeInMillis() + timeDifferenceMillis;
@@ -343,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
         String dateToShow = Utility.getFormattedDateForHeader(currentCalendar.getTime());
 
         UpdateCurrentTimeEvent updateCurrentTimeEvent = new UpdateCurrentTimeEvent();
+        updateCurrentTimeEvent.resetTheDefaultTextsOnTherapy(isFromClinicVisit);
         updateCurrentTimeEvent.setTime(timeToShow);
         updateCurrentTimeEvent.setDate(dateToShow);
 
@@ -462,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (isFromClinicVisit) {
-                updateAppTime();
+                updateAppTime(isFromClinicVisit);
             } else {
                 launchProgramTherapyFragment();
             }

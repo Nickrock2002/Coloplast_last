@@ -181,8 +181,10 @@ public class ProgramTherapyFragment extends Fragment {
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
                         }
+                        dialog.getPlusButtonRef().setClickable(false);
+                        dialog.getMinusButtonRef().setClickable(false);
+                        dialog.getCancelButtonRef().setEnabled(false);
                         break;
-
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         // Only execute code on up/cancel when mStimEnabled is true,
@@ -210,8 +212,9 @@ public class ProgramTherapyFragment extends Fragment {
 
                             dialog.getConfirmButtonRef().setClickable(true);
                             dialog.getConfirmButtonRef().setEnabled(true);
-                            dialog.getCancelButtonRef().setEnabled(false);
                         }
+                        dialog.getPlusButtonRef().setClickable(true);
+                        dialog.getMinusButtonRef().setClickable(true);
                         break;
                 }
                 return true;
@@ -573,8 +576,11 @@ public class ProgramTherapyFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UpdateCurrentTimeEvent event) {
         setDateTime();
-        resetAllTheTexts();
-        disableAllTheButtons();
+        if (event.shouldResetTheDefaultTextsOnTherapy()) {
+            resetAllTheTexts();
+            disableAllTheButtons();
+            resetAllButtonsWithDefaultBackground();
+        }
     }
 
     @Override

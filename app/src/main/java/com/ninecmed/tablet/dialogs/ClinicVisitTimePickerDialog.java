@@ -38,6 +38,7 @@ public class ClinicVisitTimePickerDialog extends BaseDialog {
         binding.timePicker.setHour(currentTime.get(Calendar.HOUR_OF_DAY));
         binding.timePicker.setMinute(currentTime.get(Calendar.MINUTE));
         binding.timePicker.setIs24HourView(false);
+        binding.timePicker.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
 
         binding.timePicker.setOnTimeChangedListener(timeChangedListener);
         binding.btnConfirmTime.setOnClickListener(confirmButtonListener);

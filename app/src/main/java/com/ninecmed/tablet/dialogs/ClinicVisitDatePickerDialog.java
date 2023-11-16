@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.databinding.DialogDatePickerBinding;
@@ -41,6 +42,7 @@ public class ClinicVisitDatePickerDialog extends BaseDialog {
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        binding.datePicker.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
         binding.datePicker.init(year, month, day, dateChangedListener);
 
         binding.btnConfirmDate.setOnClickListener(confirmButtonListener);

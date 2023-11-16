@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TimePicker;
 
 import com.ninecmed.tablet.databinding.DialogSetTimeTherapyBinding;
 
@@ -34,7 +35,9 @@ public class ProgramTherapyTimeOfDayDialog extends BaseDialog {
         binding.btCancel.setOnClickListener(cancelButtonListener);
         binding.btConfirm.setOnClickListener(confirmButtonListener);
 
+        binding.timePicker.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
         binding.timePicker.setIs24HourView(false);
+
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(cal.getTimeInMillis() + timeDiff);
         binding.timePicker.setHour(hour);
