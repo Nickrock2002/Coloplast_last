@@ -62,7 +62,8 @@ public class Utility {
         try {
             return dateFormatForProgramTherapy.parse(strDate);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
