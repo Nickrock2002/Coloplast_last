@@ -3,7 +3,6 @@ package com.ninecmed.tablet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -13,10 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentImplantTunnelingBinding;
@@ -26,6 +22,8 @@ import com.ninecmed.tablet.events.UIUpdateEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Locale;
 
 public class ImplantToolTunnellingFragment extends Fragment {
     private MainActivity mMainActivity = null;
@@ -63,6 +61,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
         initializeAmplitudeButton();
         initializeTitle();
         initializeLeadRWarnButton();
+        setPlusMinusButtonColors(true);
 
         mMainActivity = (MainActivity) getActivity();
         return binding.getRoot();
@@ -114,11 +113,6 @@ public class ImplantToolTunnellingFragment extends Fragment {
                         } else {
                             mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
                         }
-
-                        Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
-                        drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                        Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
-                        drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
                     }
                     binding.ibExternalPlus.setClickable(true);
                     binding.ibExternalMinus.setClickable(true);
@@ -141,12 +135,10 @@ public class ImplantToolTunnellingFragment extends Fragment {
             }
             WandData.setStimAmplitude(mAmplitudePos);
             WandData.invalidateStimExtLeadI();
-            updateImplantTunnellingUI(true);
+            binding.tvExternalAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V",
+                    WandData.getAmpFromPos(mAmplitudePos)));
 
-            Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
-            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-            Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
-            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+            setPlusMinusButtonColors(false);
         });
 
         binding.ibExternalMinus.setOnClickListener(view -> {
@@ -155,25 +147,43 @@ public class ImplantToolTunnellingFragment extends Fragment {
             }
             WandData.setStimAmplitude(mAmplitudePos);
             WandData.invalidateStimExtLeadI();
-            updateImplantTunnellingUI(true);
-
-            Drawable drawable = binding.ibExternalPlus.getBackground().mutate();
-            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-            Drawable drawablePlus = binding.ibExternalMinus.getBackground().mutate();
-            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+            binding.tvExternalAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V",
+                    WandData.getAmpFromPos(mAmplitudePos)));
+            setPlusMinusButtonColors(false);
         });
+    }
+
+    void setPlusMinusButtonColors(boolean isDefault) {
+        if (mAmplitudePos == 42) {
+            binding.ibExternalPlus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+        } else {
+            if (isDefault) {
+                binding.ibExternalPlus.setBackgroundResource(R.drawable.button_circular_primary);
+            } else {
+                binding.ibExternalPlus.setBackgroundResource(R.drawable.button_circular_deep_blue);
+            }
+        }
+        if (mAmplitudePos == 0) {
+            binding.ibExternalMinus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+        } else {
+            if (isDefault) {
+                binding.ibExternalMinus.setBackgroundResource(R.drawable.button_circular_primary);
+            } else {
+                binding.ibExternalMinus.setBackgroundResource(R.drawable.button_circular_deep_blue);
+            }
+        }
     }
 
     @SuppressLint("DefaultLocale")
     public void updateImplantTunnellingUI(boolean success) {
         if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIMEXT) {
-            Button stimulate = requireView().findViewById(R.id.btExternalStartStim);
-            stimulate.setEnabled(true);
+            binding.btExternalStartStim.setEnabled(true);
+
+            setPlusMinusButtonColors(true);
         }
 
         if (success) {
-            TextView amp = requireView().findViewById(R.id.tvExternalAmplitude);
-            amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
+            binding.tvExternalAmplitude.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
         } else {
             mMainActivity.showWandTabCommunicationIssueDialog();
         }
@@ -187,8 +197,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.getStimLeadR();
-        boolean isWarningFound;
-        isWarningFound = leadRValue > 2000;
+        boolean isWarningFound = leadRValue > 2000;
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             LeadRImplantTunnelingDialog dialog = new LeadRImplantTunnelingDialog(requireContext());

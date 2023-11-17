@@ -34,8 +34,8 @@ public class AmplitudeDialog extends BaseDialog {
         setContentView(binding.getRoot());
 
         binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V", getAmplitude()));
-        binding.ibItnsPlus.setOnClickListener(itnsPlusListener);
         binding.ibItnsMinus.setOnClickListener(itnsMinusListener);
+        binding.ibItnsPlus.setOnClickListener(itnsPlusListener);
         binding.btItnsStartStim.setOnTouchListener(stimulationButtonListener);
         binding.btCancel.setOnClickListener(cancelButtonListener);
         binding.btConfirm.setOnClickListener(confirmButtonListener);

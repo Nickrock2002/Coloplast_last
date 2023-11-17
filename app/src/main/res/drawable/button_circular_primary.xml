@@ -7,7 +7,7 @@
     </item>
     <item android:state_pressed="true">
         <shape android:shape="oval">
-            <solid android:color="@color/cardview_dark_background"/>
+            <solid android:color="@color/colorBaseDeepBlue"/>
         </shape>
     </item>
 </selector>

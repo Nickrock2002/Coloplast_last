@@ -49,6 +49,7 @@ public class ProgramTherapyDayDateDialog extends BaseDialog {
 
         // Set max date to 31 days in the future, accounting for time difference
         Calendar maxDate = Calendar.getInstance();
+        maxDate.setTimeInMillis(maxDate.getTimeInMillis() + timeDiff);
         if (isFrequencyAuto) {
             maxDate.add(Calendar.DAY_OF_MONTH, 31);
             maxDate.setTimeInMillis(maxDate.getTimeInMillis() + timeDiff);

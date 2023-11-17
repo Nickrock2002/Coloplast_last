@@ -3,7 +3,6 @@ package com.ninecmed.tablet;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentProgramTherapyBinding;
@@ -46,10 +44,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class ProgramTherapyFragment extends Fragment {
     private static final String TAG = "ProgramTherapyFragment";
@@ -117,6 +113,27 @@ public class ProgramTherapyFragment extends Fragment {
         dialogs.add(dialog);
     }
 
+    void setPlusMinusButtonColors(AmplitudeDialog dialog, boolean isDefault) {
+        if (mAmplitudePos == 42) {
+            dialog.getPlusButtonRef().setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+        } else {
+            if (isDefault) {
+                dialog.getPlusButtonRef().setBackgroundResource(R.drawable.button_circular_primary);
+            } else {
+                dialog.getPlusButtonRef().setBackgroundResource(R.drawable.button_circular_deep_blue);
+            }
+        }
+        if (mAmplitudePos == 0) {
+            dialog.getMinusButtonRef().setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+        } else {
+            if (isDefault) {
+                dialog.getMinusButtonRef().setBackgroundResource(R.drawable.button_circular_primary);
+            } else {
+                dialog.getMinusButtonRef().setBackgroundResource(R.drawable.button_circular_deep_blue);
+            }
+        }
+    }
+
     @SuppressLint({"ClickableViewAccessibility", "DefaultLocale"})
     private void setUpAmplitudeButtonClick() {
         binding.btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
@@ -124,10 +141,9 @@ public class ProgramTherapyFragment extends Fragment {
             float amplitudeVal = WandData.getAmpFromPos(mAmplitudePos);
             final AmplitudeDialog dialog = new AmplitudeDialog(requireContext());
             dialog.setAmplitude(amplitudeVal);
-            dialog.setItnsMinusListener(minusButton -> {
+            dialog.setItnsPlusListener(minusButton -> {
                 if (mAmplitudePos < 42) {
                     mAmplitudePos += 1;
-                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                 }
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
@@ -139,17 +155,13 @@ public class ProgramTherapyFragment extends Fragment {
                 TextView amp = dialog.findViewById(R.id.tv_itns_amplitude);
                 amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
-                Drawable drawable = dialog.getMinusButtonRef().getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = dialog.getPlusButtonRef().getBackground().mutate();
-                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                setPlusMinusButtonColors(dialog, false);
                 dialog.getConfirmButtonRef().setEnabled(false);
                 dialog.getCancelButtonRef().setEnabled(true);
             });
-            dialog.setItnsPlusListener(plusButton -> {
+            dialog.setItnsMinusListener(plusButton -> {
                 if (mAmplitudePos > 0) {
                     mAmplitudePos -= 1;
-                    //MakeTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
                 }
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
                 TextView amp = dialog.findViewById(R.id.tv_itns_amplitude);
@@ -161,10 +173,7 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                 }
 
-                Drawable drawable = dialog.getMinusButtonRef().getBackground().mutate();
-                drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-                Drawable drawablePlus = dialog.getPlusButtonRef().getBackground().mutate();
-                drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+                setPlusMinusButtonColors(dialog, false);
                 dialog.getConfirmButtonRef().setEnabled(false);
                 dialog.getCancelButtonRef().setEnabled(true);
             });
@@ -174,7 +183,6 @@ public class ProgramTherapyFragment extends Fragment {
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulationButton.setPressed(true);
                             mMainActivity.wandComm.setStimulation(true);
-                            //MakeTone(ToneGenerator.TONE_PROP_BEEP);
                             ((Button) stimulationButton).setText(R.string.stimulation_active);
                             WandData.invalidateStimLeadI();
 
@@ -187,28 +195,16 @@ public class ProgramTherapyFragment extends Fragment {
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
-                        // Only execute code on up/cancel when mStimEnabled is true,
-                        // otherwise this means that the user pressed the down key too
-                        // quickly and when he let's go, the motion event causes SetTestStimulation
-                        // to be executed again even though it wasn't started. This causes an
-                        // unnecessary beep as well.
                         if (mStimEnabled) {
                             stimulationButton.setPressed(false);
                             ((Button) stimulationButton).setText(R.string.hold_to_deliver_neurostimulation);
-                            //stimulate.setEnabled(false);
-                            //stimulate.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                            // Set delay to 1500 to be the same delay as ExternalFragment
                             if (mNow + 1500 < System.currentTimeMillis()) {
                                 mMainActivity.wandComm.setStimulation(false);
-//                                MakeTone(ToneGenerator.TONE_PROP_NACK);
                                 mStimEnabled = false;
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
-                            Drawable drawablePlus = dialog.getPlusButtonRef().getBackground().mutate();
-                            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                            Drawable drawableMinus = dialog.getMinusButtonRef().getBackground().mutate();
-                            drawableMinus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
+                            setPlusMinusButtonColors(dialog, true);
 
                             dialog.getConfirmButtonRef().setClickable(true);
                             dialog.getConfirmButtonRef().setEnabled(true);
@@ -242,6 +238,7 @@ public class ProgramTherapyFragment extends Fragment {
             });
             dialog.show();
             dialogs.add(dialog);
+            setPlusMinusButtonColors(dialog, true);
         });
     }
 
@@ -293,10 +290,10 @@ public class ProgramTherapyFragment extends Fragment {
                         Frequency selected as other than Off
                         When the user changes frequency from off to other than Off, reset all the values to Coloplast blue
                     */
-                    if (prevFreq == 0) {
-                        valuesChanged[0] = false;
-                        binding.btnAmplitudeVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-                    }
+//                    if (prevFreq == 0) {
+//                        valuesChanged[0] = false;
+//                        binding.btnAmplitudeVal.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+//                    }
 
                     valuesChanged[2] = false;
                     valuesChanged[3] = false;

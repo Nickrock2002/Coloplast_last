@@ -41,10 +41,10 @@
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
     <ImageButton
-        android:id="@+id/ib_itns_minus"
+        android:id="@+id/ib_itns_plus"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/button_circular"
+        android:background="@drawable/button_circular_primary"
         android:contentDescription="@string/ic_plus"
         android:gravity="center_vertical|center_horizontal"
         android:src="@drawable/ic_plus_white"
@@ -62,18 +62,18 @@
         android:textColor="@color/colorBaseDeepBlue"
         android:textSize="48sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/ib_itns_plus"
-        app:layout_constraintEnd_toStartOf="@+id/ib_itns_minus"
+        app:layout_constraintBottom_toBottomOf="@+id/ib_itns_minus"
+        app:layout_constraintEnd_toStartOf="@+id/ib_itns_plus"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/ib_itns_plus"
-        app:layout_constraintTop_toTopOf="@+id/ib_itns_plus" />
+        app:layout_constraintStart_toEndOf="@+id/ib_itns_minus"
+        app:layout_constraintTop_toTopOf="@+id/ib_itns_minus" />
 
     <ImageButton
-        android:id="@+id/ib_itns_plus"
+        android:id="@+id/ib_itns_minus"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/button_circular"
+        android:background="@drawable/button_circular_primary"
         android:contentDescription="@string/ic_plus"
         android:gravity="center_vertical|center_horizontal"
         android:src="@drawable/ic_minus_white"

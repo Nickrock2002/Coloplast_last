@@ -3,7 +3,6 @@ package com.ninecmed.tablet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentItnsBinding;
@@ -24,6 +22,8 @@ import com.ninecmed.tablet.events.UIUpdateEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Locale;
 
 public class ItnsFragment extends Fragment {
     private static final String TAG = "ItnsFragment";
@@ -109,14 +109,7 @@ public class ItnsFragment extends Fragment {
                         } else {
                             mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                         }
-
-                        Drawable drawable = binding.ibItnsPlus.getBackground().mutate();
-                        drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
-                        Drawable drawablePlus = binding.ibItnsMinus.getBackground().mutate();
-                        drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorPrimary));
                     }
-                    binding.ibItnsPlus.setClickable(true);
-                    binding.ibItnsMinus.setClickable(true);
                     break;
             }
             return true;
@@ -154,7 +147,8 @@ public class ItnsFragment extends Fragment {
             }
 
             WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-            binding.tvItnsAmplitude.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
+            binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V",
+                    WandData.getAmpFromPos(mAmplitudePos)));
 
             if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
@@ -162,10 +156,7 @@ public class ItnsFragment extends Fragment {
                 mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
             }
 
-            Drawable drawable = binding.ibItnsPlus.getBackground().mutate();
-            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-            Drawable drawablePlus = binding.ibItnsMinus.getBackground().mutate();
-            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+            setPlusMinusButtonColors(false);
         });
 
         binding.ibItnsMinus.setOnClickListener(view -> {
@@ -174,23 +165,44 @@ public class ItnsFragment extends Fragment {
             }
 
             WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-            binding.tvItnsAmplitude.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
+            binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V",
+                    WandData.getAmpFromPos(mAmplitudePos)));
 
             if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
             } else {
                 mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
             }
-
-            Drawable drawable = binding.ibItnsPlus.getBackground().mutate();
-            drawable.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
-            Drawable drawablePlus = binding.ibItnsMinus.getBackground().mutate();
-            drawablePlus.setTint(ActivityCompat.getColor(requireContext(), R.color.colorBaseDeepBlue));
+            setPlusMinusButtonColors(false);
         });
+    }
+
+    void setPlusMinusButtonColors(boolean isDefault) {
+        if (mAmplitudePos == 42) {
+            binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+        } else {
+            if (isDefault) {
+                binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_primary);
+            } else {
+                binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_deep_blue);
+            }
+        }
+        if (mAmplitudePos == 0) {
+            binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+        } else {
+            if (isDefault) {
+                binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_primary);
+            } else {
+                binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_deep_blue);
+            }
+        }
     }
 
     public void updateItnsUI(boolean success) {
         View view = getView();
+
+        binding.ibItnsPlus.setClickable(true);
+        binding.ibItnsMinus.setClickable(true);
 
         if (success) {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -202,10 +214,8 @@ public class ItnsFragment extends Fragment {
 
                 binding.ibItnsPlus.setEnabled(true);
                 binding.ibItnsPlus.setImageResource(R.drawable.ic_plus_white);
-                binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular);
 
                 binding.ibItnsMinus.setEnabled(true);
-                binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular);
                 binding.ibItnsMinus.setImageResource(R.drawable.ic_minus_white);
 
                 binding.btItnsStartStim.setEnabled(true);
@@ -216,20 +226,14 @@ public class ItnsFragment extends Fragment {
                 showLeadRWarningIfFound();
                 checkForReset();
                 setInitialAmplitude();
-
-                binding.ibItnsPlus.setClickable(true);
-                binding.ibItnsMinus.setClickable(true);
                 initializeStimulationButton();
             }
         }
         // Here's what happens on fail
         else {
-            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                mMainActivity.showWandITNSCommunicationIssueDialog();
-            } else {
-                mMainActivity.showWandITNSCommunicationIssueDialog();
-            }
+            mMainActivity.showWandITNSCommunicationIssueDialog();
         }
+        setPlusMinusButtonColors(true);
     }
 
     private void setInitialAmplitude() {
@@ -240,7 +244,6 @@ public class ItnsFragment extends Fragment {
 
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.getLeadR();
-        float leadIValue = WandData.getLeadI();
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
         if (isWarningFound) {

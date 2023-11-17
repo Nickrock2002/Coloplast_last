@@ -87,6 +87,7 @@ class WandComm {
     }
 
     static WandComm wandComm;
+
     public static WandComm getInstance(Bluetooth bt, MainActivity mainActivity) {
         wandComm = new WandComm(bt, mainActivity);
         return wandComm;
@@ -192,19 +193,19 @@ class WandComm {
         mState = 0;
         mRetries = 3;
         task_list[tasks.GETID] = true;
-        if (change_list[changes.THERAPY]) {
-            task_list[tasks.SETTHERAPY] = true;
-            task_list[tasks.SETSCHEDULE] = true;
-        }
-        if (change_list[changes.DATE]) {
-            task_list[tasks.SETSCHEDULE] = true;
-        }
-        if (change_list[changes.TIME]) {
-            task_list[tasks.SETSCHEDULE] = true;
-        }
-        if (change_list[changes.AMPLITUDE]) {
-            task_list[tasks.SETAMPLITUDE] = true;
-        }
+//        if (change_list[changes.THERAPY]) {
+        task_list[tasks.SETTHERAPY] = true;
+        task_list[tasks.SETSCHEDULE] = true;
+//        }
+//        if (change_list[changes.DATE]) {
+//            task_list[tasks.SETSCHEDULE] = true;
+//        }
+//        if (change_list[changes.TIME]) {
+//            task_list[tasks.SETSCHEDULE] = true;
+//        }
+//        if (change_list[changes.AMPLITUDE]) {
+        task_list[tasks.SETAMPLITUDE] = true;
+//        }
         processStateMachine();
     }
 
@@ -684,7 +685,8 @@ class WandComm {
 
         byte[] txBuffer;
         txBuffer = CobsUtils.Encode(msg);
-        mBluetooth.send(txBuffer);
+        if (mBluetooth != null)
+            mBluetooth.send(txBuffer);
 
         // Call timer to verify that every message to the wand is acknowledged
         // 1200 seems to work well when the wand battery is low. Shorter durations
