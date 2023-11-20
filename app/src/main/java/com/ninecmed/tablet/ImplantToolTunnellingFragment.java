@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,6 +92,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeStimulationButton() {
         binding.btExternalStartStim.setOnTouchListener((view1, motionEvent) -> {
+            Log.v("MY Event ", ""+motionEvent.getActionMasked());
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     if (mNow + 500 < System.currentTimeMillis()) {
@@ -105,6 +107,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_POINTER_DOWN:
+                case MotionEvent.ACTION_POINTER_UP:
                     if (mStimEnabled) {
                         binding.btExternalStartStim.setPressed(false);
                         binding.btExternalStartStim.setText(R.string.hold_to_deliver_neurostimulation);
@@ -183,7 +187,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     public void updateImplantTunnellingUI(boolean success) {
         if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             binding.btExternalStartStim.setEnabled(true);
-
+            binding.btExternalStartStim.setText(R.string.hold_to_deliver_neurostimulation);
             setPlusMinusButtonColors(true);
         }
 

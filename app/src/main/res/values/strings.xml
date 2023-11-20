@@ -50,7 +50,7 @@
     <string name="main_wand_error_msg">Please turn Wand OFF, then back ON, and try again</string>
     <string name="surgery">Surgery</string>
     <string name="clinic_visit">Clinic Visit</string>
-    <string name="wand_not_comm">Tablet and Wand communication issue:\nIs wand on?</string>
+    <string name="wand_not_comm">Tablet and Wand communication issue:\nIs the Wand on?</string>
     <string name="wand_is_comm">Tablet communicating with Wand.</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
@@ -103,7 +103,7 @@
     <string name="wand_and_itns_communication_issue">Wand and ITNS Communication Issue</string>
     <string name="the_communication_between_the_wand_and_the_tablet_has_been_lost">The communication between the Wand and the Tablet has been lost.</string>
     <string name="wand_must_be_within_5_cm_2_inches_of_the_itns_pulse_generator">The Wand must be within 5 cm (2 inches) of the ITNS pulse generator.</string>
-    <string name="the_communication_ready_when_light_on_the_wand">The communication is ready when the Pulse Generator icon light on the Wand is steady green.</string>
+    <string name="the_communication_ready_when_light_on_the_wand">The communication is ready when the ITNS pulse generator icon light on the Wand is steady green.</string>
     <string name="tablet_and_wand_communication_issue">Tablet and Wand Communication issue</string>
     <string name="the_communication_between_the_wand_and_itns_has_been_lost">The communication between the Wand and the ITNS has been lost.</string>
     <string name="resetting_date_and_time_sub_1">Resetting date and time will only change the set date and time in the Intibia App.</string>

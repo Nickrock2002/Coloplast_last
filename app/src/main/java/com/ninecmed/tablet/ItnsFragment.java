@@ -96,6 +96,8 @@ public class ItnsFragment extends Fragment {
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_POINTER_DOWN:
+                case MotionEvent.ACTION_POINTER_UP:
                     if (mStimEnabled) {
                         binding.btItnsStartStim.setPressed(false);
                         binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
@@ -210,6 +212,7 @@ public class ItnsFragment extends Fragment {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 showLeadRWarningIfFound();
                 binding.btItnsInterrogate.setClickable(true);
+                binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
             } else {
                 binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
                 binding.tvItnsSN.setText(WandData.getSerialNumber());
