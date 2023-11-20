@@ -157,7 +157,9 @@ public class ImplantToolTunnellingFragment extends Fragment {
     void setPlusMinusButtonColors(boolean isDefault) {
         if (mAmplitudePos == 42) {
             binding.ibExternalPlus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+            binding.ibExternalPlus.setClickable(false);
         } else {
+            binding.ibExternalPlus.setClickable(true);
             if (isDefault) {
                 binding.ibExternalPlus.setBackgroundResource(R.drawable.button_circular_primary);
             } else {
@@ -166,7 +168,9 @@ public class ImplantToolTunnellingFragment extends Fragment {
         }
         if (mAmplitudePos == 0) {
             binding.ibExternalMinus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+            binding.ibExternalMinus.setClickable(false);
         } else {
+            binding.ibExternalMinus.setClickable(true);
             if (isDefault) {
                 binding.ibExternalMinus.setBackgroundResource(R.drawable.button_circular_primary);
             } else {

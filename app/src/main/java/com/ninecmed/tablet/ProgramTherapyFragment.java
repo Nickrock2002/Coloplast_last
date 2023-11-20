@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -115,7 +114,9 @@ public class ProgramTherapyFragment extends Fragment {
     void setPlusMinusButtonColors(AmplitudeDialog dialog, boolean isDefault) {
         if (mAmplitudePos == 42) {
             dialog.getPlusButtonRef().setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+            dialog.getPlusButtonRef().setClickable(false);
         } else {
+            dialog.getPlusButtonRef().setClickable(true);
             if (isDefault) {
                 dialog.getPlusButtonRef().setBackgroundResource(R.drawable.button_circular_primary);
             } else {
@@ -124,7 +125,9 @@ public class ProgramTherapyFragment extends Fragment {
         }
         if (mAmplitudePos == 0) {
             dialog.getMinusButtonRef().setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+            dialog.getMinusButtonRef().setClickable(false);
         } else {
+            dialog.getMinusButtonRef().setClickable(true);
             if (isDefault) {
                 dialog.getMinusButtonRef().setBackgroundResource(R.drawable.button_circular_primary);
             } else {

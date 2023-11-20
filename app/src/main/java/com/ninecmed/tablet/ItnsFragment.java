@@ -178,7 +178,9 @@ public class ItnsFragment extends Fragment {
     void setPlusMinusButtonColors(boolean isDefault) {
         if (mAmplitudePos == 42) {
             binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+            binding.ibItnsPlus.setClickable(false);
         } else {
+            binding.ibItnsPlus.setClickable(true);
             if (isDefault) {
                 binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_primary);
             } else {
@@ -187,7 +189,9 @@ public class ItnsFragment extends Fragment {
         }
         if (mAmplitudePos == 0) {
             binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
+            binding.ibItnsMinus.setClickable(false);
         } else {
+            binding.ibItnsMinus.setClickable(true);
             if (isDefault) {
                 binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_primary);
             } else {
