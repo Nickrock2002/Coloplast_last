@@ -31,7 +31,6 @@ import com.ninecmed.tablet.dialogs.CloseAppDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandTabConnDialog;
-import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 import com.ninecmed.tablet.events.UpdateCurrentTimeEvent;
@@ -104,13 +103,10 @@ public class MainActivity extends AppCompatActivity {
     private void manageFragmentToolbar() {
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                FragmentManager.BackStackEntry topEntry = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
+                FragmentManager.BackStackEntry topEntry = getSupportFragmentManager()
+                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
                 String fragmentName = topEntry.getName();
-                boolean isInside = fragmentName.equals("inside");
-                updateToolbar(isInside);
-                InsideOutsideEntryEvent insideOutsideEntryEvent = new InsideOutsideEntryEvent();
-                insideOutsideEntryEvent.setInside(isInside);
-                EventBus.getDefault().post(insideOutsideEntryEvent);
+                updateToolbar(fragmentName);
             }
         });
     }
@@ -148,20 +144,29 @@ public class MainActivity extends AppCompatActivity {
             binding.ivHamburger.setClickable(false);
         });
 
-        binding.ivBack.setOnClickListener(view -> showBackToStartDialog());
+        binding.ivBack.setOnClickListener(view -> {
+            FragmentManager fm = getSupportFragmentManager();
+
+            if (fm.getBackStackEntryCount() > 1 && fm.getBackStackEntryAt(
+                    fm.getBackStackEntryCount() - 1).getName().equals(HamburgerFragment.CLASS_NAME)) {
+                goBack();
+            } else {
+                showBackToStartDialog();
+            }
+        });
     }
 
-    public void updateToolbar(boolean isInside) {
-        if (isInside) {
-            binding.llToolbar.setBackgroundColor(ActivityCompat.getColor(this,
-                    R.color.colorGreyThreeHundred));
-            binding.ivIntbiaLogo.setVisibility(View.VISIBLE);
-            binding.ivBack.setVisibility(View.VISIBLE);
-        } else {
+    public void updateToolbar(String isInside) {
+        if (isInside.equals(FeatureSelectionFragment.CLASS_NAME)) {
             binding.llToolbar.setBackgroundColor(ActivityCompat.getColor(this,
                     R.color.colorBaseGrayFifty));
             binding.ivIntbiaLogo.setVisibility(View.INVISIBLE);
             binding.ivBack.setVisibility(View.INVISIBLE);
+        } else {
+            binding.llToolbar.setBackgroundColor(ActivityCompat.getColor(this,
+                    R.color.colorGreyThreeHundred));
+            binding.ivIntbiaLogo.setVisibility(View.VISIBLE);
+            binding.ivBack.setVisibility(View.VISIBLE);
         }
     }
 
@@ -205,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         if (clearHistory)
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
-        fragmentTransaction.addToBackStack("outside");
+        fragmentTransaction.addToBackStack(FeatureSelectionFragment.CLASS_NAME);
 
         fragmentTransaction.commit();
     }
@@ -216,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         BaseTabFragment baseTabFragment = new BaseTabFragment();
         fragmentTransaction.add(R.id.fl_fragment, baseTabFragment);
-        fragmentTransaction.addToBackStack("inside");
+        fragmentTransaction.addToBackStack(BaseTabFragment.CLASS_NAME);
 
         fragmentTransaction.commit();
     }
@@ -227,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ProgramTherapyFragment programTherapyFragment = new ProgramTherapyFragment();
         fragmentTransaction.add(R.id.fl_fragment, programTherapyFragment);
-        fragmentTransaction.addToBackStack("inside");
+        fragmentTransaction.addToBackStack(ProgramTherapyFragment.CLASS_NAME);
         fragmentTransaction.commit();
     }
 
@@ -237,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         HamburgerFragment hamburgerFragment = new HamburgerFragment();
         fragmentTransaction.add(R.id.fl_fragment, hamburgerFragment);
-        fragmentTransaction.addToBackStack("inside");
+        fragmentTransaction.addToBackStack(HamburgerFragment.CLASS_NAME);
         fragmentTransaction.commit();
     }
 
@@ -545,12 +550,16 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelButtonListener(v -> dialog.dismiss());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
-            getSupportFragmentManager().popBackStack();
-            setUpToolbarClickEvents();
-            binding.ivHamburger.setAlpha(1.0f);
-            binding.ivBack.setVisibility(View.GONE);
+            goBack();
         });
         dialog.show();
+    }
+
+    private void goBack() {
+        getSupportFragmentManager().popBackStack();
+        setUpToolbarClickEvents();
+        binding.ivHamburger.setAlpha(1.0f);
+        binding.ivBack.setVisibility(View.GONE);
     }
 
     public void showCloseAppDialog() {

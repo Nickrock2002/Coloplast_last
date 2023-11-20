@@ -13,6 +13,7 @@ import com.ninecmed.tablet.databinding.FragmentSurgeryBinding;
 import org.greenrobot.eventbus.EventBus;
 
 public class BaseTabFragment extends Fragment {
+    public static final String CLASS_NAME = "BTF";
     private SectionsPageAdapter mSectionsPageAdapter;
     FragmentSurgeryBinding binding;
 

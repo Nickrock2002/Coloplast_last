@@ -28,13 +28,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Locale;
 
 public class HamburgerFragment extends Fragment {
-    private static final String TAG = "HamburgerFragment";
+    public static final String CLASS_NAME = "HBF";
     private MainActivity mMainActivity = null;
     FragmentHamburgerBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "OnCreate: starting.");
         binding = FragmentHamburgerBinding.inflate(inflater, container, false);
 
         binding.btCloseApp.setOnClickListener(v -> showCloseAppDialog());

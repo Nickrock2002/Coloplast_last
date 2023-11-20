@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ProgramTherapyFragment extends Fragment {
-    private static final String TAG = "ProgramTherapyFragment";
+    public static final String CLASS_NAME = "CVF";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 0;
     private int checkedRadioButtonId = -1;
@@ -65,7 +65,6 @@ public class ProgramTherapyFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "OnCreate: starting.");
         binding = FragmentProgramTherapyBinding.inflate(inflater, container, false);
 
         dialogs = new ArrayList<>();

@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBaseGrayFifty">
+    android:background="@color/colorBaseGrayFifty"
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorGreyThreeHundred"
-        android:clickable="true"
         app:layout_constraintBottom_toTopOf="@id/btn_interrogate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +65,7 @@
         style="@style/InterrogateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="28dp"
+        android:layout_marginTop="48dp"
         android:text="@string/interrogate"
         app:layout_constraintBottom_toTopOf="@id/cl_1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,6 +76,7 @@
         android:id="@+id/cl_1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="18dp"
         android:background="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@id/cl_3"
         app:layout_constraintEnd_toEndOf="parent"

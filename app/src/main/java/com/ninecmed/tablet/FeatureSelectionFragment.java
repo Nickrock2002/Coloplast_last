@@ -11,13 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentFeatureSelectionBinding;
-import com.ninecmed.tablet.events.InsideOutsideEntryEvent;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class FeatureSelectionFragment extends Fragment {
+
+    public static final String CLASS_NAME = "FSF";
     MainActivity mainActivity;
     private FragmentFeatureSelectionBinding binding;
 
@@ -30,7 +29,6 @@ public class FeatureSelectionFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        EventBus.getDefault().register(this);
         mainActivity = (MainActivity) getActivity();
     }
 
@@ -38,12 +36,6 @@ public class FeatureSelectionFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(InsideOutsideEntryEvent event) {
-        binding.btSurgery.setClickable(!event.isInside());
-        binding.btClinicVisit.setClickable(!event.isInside());
     }
 
     @Override

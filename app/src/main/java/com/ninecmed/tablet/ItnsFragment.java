@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Locale;
 
 public class ItnsFragment extends Fragment {
-    private static final String TAG = "ItnsFragment";
+    public static final String CLASS_NAME = "ITNSF";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 0;
     private long mNow;
@@ -48,8 +48,6 @@ public class ItnsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "OnCreate: starting.");
-
         binding = FragmentItnsBinding.inflate(inflater, container, false);
         initializeStimulationButton();
         initializeInterrogateButton();

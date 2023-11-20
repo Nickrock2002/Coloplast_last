@@ -2,7 +2,7 @@
     <string name="app_name">INTIBIA™</string>
     <string name="external_title">Implant Tool Tunneling</string>
     <string name="itns_title">Intibia ITNS Interrogation</string>
-    <string name="no_link_msg">Tablet not communicating with Wand: Is Wand on?</string>
+    <string name="no_link_msg">Tablet and Wand communication issue:Is the Wand on?</string>
     <string name="link_msg">Tablet communicating with Wand</string>
     <string name="all_btn_start">HOLD FOR TEST</string>
     <string name="itns_btn_interrogate">Interrogate</string>
@@ -50,7 +50,7 @@
     <string name="main_wand_error_msg">Please turn Wand OFF, then back ON, and try again</string>
     <string name="surgery">Surgery</string>
     <string name="clinic_visit">Clinic Visit</string>
-    <string name="wand_not_comm">Tablet is not communicating with Wand.\nIs wand on?</string>
+    <string name="wand_not_comm">Tablet and Wand communication issue:\nIs wand on?</string>
     <string name="wand_is_comm">Tablet communicating with Wand.</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
@@ -109,7 +109,7 @@
     <string name="resetting_date_and_time_sub_1">Resetting date and time will only change the set date and time in the Intibia App.</string>
     <string name="resetting_date_and_time_sub_2">For Changing the date and time in the Intibia implant, use programming function found in the clinic visit option.</string>
     <string name="test_and_set_amp">Test and Set amplitude of ITNS</string>
-    <string name="set_date_and_time">Set Tablet Date and Time</string>
+    <string name="set_date_and_time">Set Date and Time on the Tablet</string>
     <string name="date_no_colon">Date</string>
     <string name="time_no_colon">Time</string>
     <string name="set_day_date">Set Day/Date</string>

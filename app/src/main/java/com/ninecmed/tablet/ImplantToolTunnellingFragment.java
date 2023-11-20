@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Locale;
 
 public class ImplantToolTunnellingFragment extends Fragment {
+    public static final String CLASS_NAME = "SF";
     private MainActivity mMainActivity = null;
     private int mAmplitudePos = 8;                                                                   // Set default position ot 1.5V
     private long mNow;
