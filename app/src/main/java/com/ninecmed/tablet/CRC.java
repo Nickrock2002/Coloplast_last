@@ -1,7 +1,7 @@
 package com.ninecmed.tablet;
 
 class CRC {
-    static int Crc16(byte[] msg, int n) {
+    static int crc16(byte[] msg, int n) {
         int crc = 0xffff;
 
         for (int i = 0; i < n; i++) {

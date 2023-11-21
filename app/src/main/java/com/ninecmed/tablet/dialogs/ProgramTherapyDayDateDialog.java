@@ -36,17 +36,6 @@ public class ProgramTherapyDayDateDialog extends BaseDialog {
         binding.btCancel.setOnClickListener(cancelButtonListener);
         binding.btConfirm.setOnClickListener(confirmButtonListener);
 
-        Date date = Utility.parseDateFromFormatForProgramTherapy(dateStr);
-        if (date != null) {
-            Calendar selectedDate = Calendar.getInstance();
-            selectedDate.setTimeInMillis(date.getTime());
-            if (selectedDate.getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
-                binding.datePicker.updateDate(selectedDate.get(Calendar.YEAR),
-                        selectedDate.get(Calendar.MONTH),
-                        selectedDate.get(Calendar.DAY_OF_MONTH));
-            }
-        }
-
         // Set max date to 31 days in the future, accounting for time difference
         Calendar maxDate = Calendar.getInstance();
         maxDate.setTimeInMillis(maxDate.getTimeInMillis() + timeDiff);
@@ -64,6 +53,27 @@ public class ProgramTherapyDayDateDialog extends BaseDialog {
             minDate.add(Calendar.DAY_OF_MONTH, 15);
         }
         binding.datePicker.setMinDate(minDate.getTimeInMillis());
+
+        // Set selection on calender
+        Date date = Utility.parseDateFromFormatForProgramTherapy(dateStr);
+        if (date != null) {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.setTimeInMillis(date.getTime());
+
+            if (selectedDate.getTimeInMillis() <= maxDate.getTimeInMillis() && selectedDate.getTimeInMillis() >= minDate.getTimeInMillis()) {
+                binding.datePicker.updateDate(selectedDate.get(Calendar.YEAR),
+                        selectedDate.get(Calendar.MONTH),
+                        selectedDate.get(Calendar.DAY_OF_MONTH));
+            } else {
+                binding.datePicker.updateDate(minDate.get(Calendar.YEAR),
+                        minDate.get(Calendar.MONTH),
+                        minDate.get(Calendar.DAY_OF_MONTH));
+            }
+        } else {
+            binding.datePicker.updateDate(minDate.get(Calendar.YEAR),
+                    minDate.get(Calendar.MONTH),
+                    minDate.get(Calendar.DAY_OF_MONTH));
+        }
     }
 
     public void setCancelButtonListener(View.OnClickListener onClickListener) {

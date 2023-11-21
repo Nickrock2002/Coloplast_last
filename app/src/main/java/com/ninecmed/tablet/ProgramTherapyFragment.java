@@ -640,7 +640,7 @@ public class ProgramTherapyFragment extends Fragment {
                 if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
                     enableDisableFrequencyButton(true);
                     if (implToolFrequency.equals(getString(R.string.off))) {
-                        binding.tvImplantBatteryVal.setText("_");
+                        binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
                     } else {
                         showBatteryWarningIfLow(view);
                     }
@@ -665,7 +665,7 @@ public class ProgramTherapyFragment extends Fragment {
                     if (implToolFrequency.equals(getString(R.string.off))) {
                         enableDisableDayDateButton(false);
                         enableDisableTimeOfDayButton(false);
-                        binding.tvImplantBatteryVal.setText("_");
+                        binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
                     } else {
                         showBatteryWarningIfLow(view);
                         enableDisableDayDateButton(true);

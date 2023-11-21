@@ -679,12 +679,12 @@ class WandComm {
     }
 
     private void sendMessage(byte[] msg) {
-        int crc = CRC.Crc16(msg, msg.length - 2);
+        int crc = CRC.crc16(msg, msg.length - 2);
         msg[msg.length - 2] = (byte) (crc >> 8);
         msg[msg.length - 1] = (byte) (crc & 0xff);
 
         byte[] txBuffer;
-        txBuffer = CobsUtils.Encode(msg);
+        txBuffer = CobsUtils.encode(msg);
         if (mBluetooth != null)
             mBluetooth.send(txBuffer);
 
@@ -700,13 +700,13 @@ class WandComm {
 
         byte[] rxBuffer;
 
-        rxBuffer = CobsUtils.Decode(message);
+        rxBuffer = CobsUtils.decode(message);
 
         switch (mCurrentTask) {
             case tasks.SETUSERNAME:
             case tasks.SETPASSWORD:
             case tasks.WRTSTIMEXTAMP:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct.");
                     mRetries = 3;
                 } else if (mRetries > 0) {
@@ -721,7 +721,7 @@ class WandComm {
                 break;
 
             case tasks.GETCABLE:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETSTATE.");
                     WandData.setCable(rxBuffer);
                     mRetries = 3;
@@ -737,7 +737,7 @@ class WandComm {
                 break;
 
             case tasks.RDSTIMILOW:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "RDSTIMLOW correct.");
                     WandData.setStimI(rxBuffer, WandData.LOW);
                     mRetries = 3;
@@ -753,7 +753,7 @@ class WandComm {
                 break;
 
             case tasks.RDSTIMIHIGH:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "RDSTIMHIGH correct.");
                     WandData.setStimI(rxBuffer, WandData.HIGH);
                     mRetries = 3;
@@ -769,7 +769,7 @@ class WandComm {
                 break;
 
             case tasks.GETSTATE:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETSTATE.");
                     int state = rxBuffer[2];
                     if (state != 6) {
@@ -789,7 +789,7 @@ class WandComm {
                 break;
 
             case tasks.GETID:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETID.");
                     WandData.setIDInformation(rxBuffer);
                     mRetries = 3;
@@ -809,7 +809,7 @@ class WandComm {
                 break;
 
             case tasks.GETWANDFIRMWARE:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETID.");
                     WandData.setWandFirmwareInfo(rxBuffer);
                     mRetries = 3;
@@ -829,7 +829,7 @@ class WandComm {
                 break;
 
             case tasks.GETAMPLITUDE:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETAMPLITUDE.");
                     WandData.setAmplitude(rxBuffer);
                     mRetries = 3;
@@ -843,7 +843,7 @@ class WandComm {
                 break;
 
             case tasks.GETCONFIG:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETCONFIG.");
                     WandData.setConfig(rxBuffer);
                     mRetries = 3;
@@ -857,7 +857,7 @@ class WandComm {
                 break;
 
             case tasks.GETLEADI:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETLEADI.");
                     WandData.setLeadI(rxBuffer);
                     mRetries = 3;
@@ -871,7 +871,7 @@ class WandComm {
                 break;
 
             case tasks.GETCELLV:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETCELLV.");
                     WandData.setCellV(rxBuffer);
                     mRetries = 3;
@@ -885,7 +885,7 @@ class WandComm {
                 break;
 
             case tasks.GETCLOCK:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETCLOCK.");
                     WandData.setClock(rxBuffer);
                     mRetries = 3;
@@ -899,7 +899,7 @@ class WandComm {
                 break;
 
             case tasks.GETSCHEDULE:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for GETSCHEDULE.");
                     WandData.setSchedule(rxBuffer);
                     mRetries = 3;
@@ -913,7 +913,7 @@ class WandComm {
                 break;
 
             case tasks.SETTHERAPY:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for SETTHERAPY.");
 
                     // Update CURRENT and TEMPORARY values in case the "program" command fails
@@ -932,7 +932,7 @@ class WandComm {
                 break;
 
             case tasks.SETSCHEDULE:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for SETSCHEDULE.");
 
                     // Update CURRENT and TEMPORARY values in case the "program" command fails
@@ -953,7 +953,7 @@ class WandComm {
                 break;
 
             case tasks.SETAMPLITUDE:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for SETAMPLITUDE.");
                     // Update CURRENT and TEMPORARY values in case the "program" command fails
                     // the CURRENT value will still reflect that the SetAmplitude was successful
@@ -972,7 +972,7 @@ class WandComm {
                 break;
 
             case tasks.CLRRESETS:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for CLRRESETS.");
                     mRetries = 3;
                 } else if (mRetries > 0) {
@@ -985,7 +985,7 @@ class WandComm {
                 break;
 
             case tasks.SENDTESTBURST:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for TESTBURST.");
                     mRetries = 1;
                     // A delay of 2450 from the receipt of the burst to the start of the
@@ -1004,7 +1004,7 @@ class WandComm {
                 }
 
             case tasks.SENDTESTBURSTEXT:
-                if (CRC.Crc16(rxBuffer, message.length - 2) == 0) {
+                if (CRC.crc16(rxBuffer, message.length - 2) == 0) {
                     Log.d(TAG, "CRC correct for TESTBURSTEXT.");
                     mRetries = 3;
                     // A delay of 2920 from the receipt of the burst to the start of the

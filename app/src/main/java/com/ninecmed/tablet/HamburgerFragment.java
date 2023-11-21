@@ -3,7 +3,6 @@ package com.ninecmed.tablet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
 import com.ninecmed.tablet.dialogs.ChangeLanguageDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
+import com.ninecmed.tablet.dialogs.LeadRImplantTunnelingDialog;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,6 +31,7 @@ public class HamburgerFragment extends Fragment {
     public static final String CLASS_NAME = "HBF";
     private MainActivity mMainActivity = null;
     FragmentHamburgerBinding binding;
+    boolean showStimLeadRDialog = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,13 +66,14 @@ public class HamburgerFragment extends Fragment {
                 binding.tvBatteryReplaceVal.setText(R.string.ok);
             }
         } else {
-            binding.tvBatteryReplaceVal.setText("_");
+            binding.tvBatteryReplaceVal.setText(getString(R.string._1_dash));
         }
     }
 
     private void showLeadRWarningIfFound() {
+        showStimLeadRDialog = false;
         float leadRValue = WandData.getLeadR();
-        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", WandData.getLeadR());
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
         if (isWarningFound) {
@@ -80,7 +82,8 @@ public class HamburgerFragment extends Fragment {
             binding.tvLeadRVal.setVisibility(View.INVISIBLE);
         } else {
             if (leadRValue == 0f) {
-                binding.tvLeadRVal.setText("_");
+                binding.tvLeadRVal.setText(getString(R.string._1_dash));
+//                showStimLeadRWarningIfFound();
             } else {
                 binding.tvLeadRVal.setText(formattedLeadR);
             }
@@ -89,14 +92,39 @@ public class HamburgerFragment extends Fragment {
         }
     }
 
+    private void showStimLeadRWarningIfFound() {
+        float leadRValue = WandData.getStimLeadR();
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
+        boolean isWarningFound = leadRValue > 2000;
+        if (isWarningFound) {
+            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+            binding.tvLeadRVal.setVisibility(View.GONE);
+            showStimLeadRDialog = true;
+        } else {
+            binding.tvLeadRVal.setVisibility(View.VISIBLE);
+            if (leadRValue == 0f) {
+                binding.tvLeadRVal.setText(getString(R.string._1_dash));
+            } else {
+                binding.tvLeadRVal.setText(formattedLeadR);
+            }
+            binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void displayLeadRDialogue() {
-        float leadRValue = WandData.getLeadR();
-        float leadIValue = WandData.getLeadI();
-        final LeadRClinicalDialog dialogue = new LeadRClinicalDialog(getActivity());
-        dialogue.setLeadRValue(leadRValue);
-        dialogue.setLeadIValue(leadIValue);
-        dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
-        dialogue.show();
+        if (showStimLeadRDialog) {
+            LeadRImplantTunnelingDialog dialog = new LeadRImplantTunnelingDialog(requireContext());
+            dialog.setConfirmButtonListener(v -> dialog.dismiss());
+            dialog.show();
+        } else {
+            float leadRValue = WandData.getLeadR();
+            float leadIValue = WandData.getLeadI();
+            final LeadRClinicalDialog dialogue = new LeadRClinicalDialog(getActivity());
+            dialogue.setLeadRValue(leadRValue);
+            dialogue.setLeadIValue(leadIValue);
+            dialogue.setConfirmButtonListener(view1 -> dialogue.dismiss());
+            dialogue.show();
+        }
     }
 
     private void displayAboutDialogue() {
@@ -188,7 +216,7 @@ public class HamburgerFragment extends Fragment {
         if (modelNum != null) {
             binding.tvItnsModelVal.setText(modelNum);
         } else {
-            binding.tvItnsModelVal.setText("_");
+            binding.tvItnsModelVal.setText(getString(R.string._1_dash));
         }
 
         // Serial Num
@@ -196,7 +224,7 @@ public class HamburgerFragment extends Fragment {
         if (serialNum != null) {
             binding.tvItnsSerialVal.setText(serialNum);
         } else {
-            binding.tvItnsSerialVal.setText("_");
+            binding.tvItnsSerialVal.setText(getString(R.string._1_dash));
         }
 
         // Cell V
@@ -204,7 +232,7 @@ public class HamburgerFragment extends Fragment {
         if (cellVoltage != null) {
             binding.tvImplantBatteryVal.setText(cellVoltage);
         } else {
-            binding.tvImplantBatteryVal.setText("_");
+            binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
         }
 
         //RRT
@@ -212,7 +240,7 @@ public class HamburgerFragment extends Fragment {
 
         // LEAD I
         if (WandData.getLeadI() == 0.0f) {
-            binding.tvLeadIVal.setText("_");
+            binding.tvLeadIVal.setText(getString(R.string._1_dash));
         } else {
             String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", WandData.getLeadI());
             binding.tvLeadIVal.setText(formattedLeadI);

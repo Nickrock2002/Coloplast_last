@@ -9,7 +9,7 @@ package com.ninecmed.tablet;
 class CobsUtils {
 
     // Expected to be the entire packet to encode
-    static byte[] Encode(byte[] packet) {
+    static byte[] encode(byte[] packet) {
         if (packet == null
                 || packet.length == 0) {
             return new byte[]{};
@@ -43,7 +43,7 @@ class CobsUtils {
     }
 
     // Expected to be the entire packet to decode with trailing 0
-    static byte[] Decode(byte[] packet) {
+    static byte[] decode(byte[] packet) {
         if (packet == null
                 || packet.length < 3
                 || packet[packet.length - 1] != 0) {
