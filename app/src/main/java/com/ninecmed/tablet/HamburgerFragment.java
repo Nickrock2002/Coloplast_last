@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
@@ -98,7 +99,7 @@ public class HamburgerFragment extends Fragment {
         boolean isWarningFound = leadRValue > 2000;
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            binding.tvLeadRVal.setVisibility(View.GONE);
+            binding.tvLeadRVal.setVisibility(View.INVISIBLE);
             showStimLeadRDialog = true;
         } else {
             binding.tvLeadRVal.setVisibility(View.VISIBLE);
@@ -237,17 +238,37 @@ public class HamburgerFragment extends Fragment {
 
         //RRT
         showBatteryWarningIfLow();
+        FragmentManager fm = mMainActivity.getSupportFragmentManager();
+
+        boolean isExternalStim = false;
+        if (fm.getBackStackEntryCount() > 2 && fm.getBackStackEntryAt(
+                fm.getBackStackEntryCount() - 2).getName().equals(BaseTabFragment.CLASS_NAME)) {
+            if (mMainActivity.selectedTab.equals(getResources().getString(R.string.external_title)))
+                isExternalStim = true;
+        }
 
         // LEAD I
-        if (WandData.getLeadI() == 0.0f) {
-            binding.tvLeadIVal.setText(getString(R.string._1_dash));
+        if (isExternalStim) {
+            if (WandData.getStimLeadI().equals("0.000 mA")) {
+                binding.tvLeadIVal.setText(getString(R.string._1_dash));
+            } else {
+                binding.tvLeadIVal.setText(WandData.getStimLeadI());
+            }
         } else {
-            String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", WandData.getLeadI());
-            binding.tvLeadIVal.setText(formattedLeadI);
+            if (WandData.getLeadI() == 0.0f) {
+                binding.tvLeadIVal.setText(getString(R.string._1_dash));
+            } else {
+                String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", WandData.getLeadI());
+                binding.tvLeadIVal.setText(formattedLeadI);
+            }
         }
 
         // LEAD R
-        showLeadRWarningIfFound();
+        if (isExternalStim) {
+            showStimLeadRWarningIfFound();
+        } else {
+            showLeadRWarningIfFound();
+        }
     }
 
     public void updateHamburgerUI(boolean success) {

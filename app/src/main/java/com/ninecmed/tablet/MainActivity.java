@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private int selectedDay = 0;
     private ActivityMainBinding binding;
     ArrayList<Dialog> dialogs;
+    public String selectedTab;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
