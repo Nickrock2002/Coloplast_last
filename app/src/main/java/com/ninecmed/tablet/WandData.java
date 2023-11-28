@@ -5,11 +5,7 @@ import static java.lang.Math.max;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import com.bumptech.glide.util.Util;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class WandData {
     static private final String TAG = "WandData";
@@ -155,14 +151,18 @@ public class WandData {
     }
 
     static void setIDInformation(byte[] msg) {
-        mSerialNumber[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
-        mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
-        mResets[TEMPORARY] = (msg[6] & 0xff);
-        mImplantFirmwareVersion[TEMPORARY] = msg[4] & 0x0f;
-        mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
+        try {
+            mSerialNumber[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
+            mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
+            mResets[TEMPORARY] = (msg[6] & 0xff);
+            mImplantFirmwareVersion[TEMPORARY] = msg[4] & 0x0f;
+            mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
 
-        if (isITNSNew()) {
-            mInterrogateSuccessful = false;
+            if (isITNSNew()) {
+                mInterrogateSuccessful = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

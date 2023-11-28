@@ -2,7 +2,7 @@
     <string name="app_name">INTIBIA™</string>
     <string name="external_title">Implant Tool Tunneling</string>
     <string name="itns_title">Intibia ITNS Interrogation</string>
-    <string name="no_link_msg">Tablet and Wand communication issue:Is the Wand on?</string>
+    <string name="no_link_msg">Tablet and Wand communication Issue:Is the Wand on?</string>
     <string name="link_msg">Tablet communicating with Wand</string>
     <string name="all_btn_start">HOLD FOR TEST</string>
     <string name="itns_btn_interrogate">Interrogate</string>
@@ -15,7 +15,7 @@
     <string name="itns_telem_checkwand_msg">Reposition Wand over ITNS and try again</string>
     <string name="itns_resets_detected_msg">%d reset(s) were detected in the ITNS</string>
     <string name="itns_resets_continue_msg">Press Cancel or Clear to continue</string>
-    <string name="itns_time_before_now_msg">Date and/or time must be set at least 1 hour in the future</string>
+    <string name="itns_time_before_now_msg">Therapy must be programmed to start at least one hour after the current time</string>
     <string name="itns_time_after_7days_msg">Date and/or time must not be more than 7 days from now</string>
     <string name="itns_time_after_31days_msg">Date and/or time must not be more than 31 days from now"</string>
     <string name="itns_time_correct_msg">Please correct the date and/or time and try again</string>
@@ -50,7 +50,7 @@
     <string name="main_wand_error_msg">Please turn Wand OFF, then back ON, and try again</string>
     <string name="surgery">Surgery</string>
     <string name="clinic_visit">Clinic Visit</string>
-    <string name="wand_not_comm">Tablet and Wand communication issue:\nIs the Wand on?</string>
+    <string name="wand_not_comm">Tablet and Wand communication Issue:\nIs the Wand on?</string>
     <string name="wand_is_comm">Tablet communicating with Wand.</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
@@ -104,7 +104,7 @@
     <string name="the_communication_between_the_wand_and_the_tablet_has_been_lost">The communication between the Wand and the Tablet has been lost.</string>
     <string name="wand_must_be_within_5_cm_2_inches_of_the_itns_pulse_generator">The Wand must be within 5 cm (2 inches) of the ITNS pulse generator.</string>
     <string name="the_communication_ready_when_light_on_the_wand">The communication is ready when the ITNS pulse generator icon light on the Wand is steady green.</string>
-    <string name="tablet_and_wand_communication_issue">Tablet and Wand Communication issue</string>
+    <string name="tablet_and_wand_communication_issue">Tablet and Wand Communication Issue</string>
     <string name="the_communication_between_the_wand_and_itns_has_been_lost">The communication between the Wand and the ITNS has been lost.</string>
     <string name="resetting_date_and_time_sub_1">Resetting date and time will only change the set date and time in the Intibia App.</string>
     <string name="resetting_date_and_time_sub_2">For Changing the date and time in the Intibia implant, use programming function found in the clinic visit option.</string>
@@ -165,7 +165,7 @@
     <string name="implant_reset_counter_3">Implant Reset Counter: 3</string>
     <string name="ic_plus">ic_plus</string>
     <string name="_0_0v">0.0V</string>
-    <string name="incorrect_time">Incorrect time</string>
+    <string name="incorrect_time">Incorrect Time of Day</string>
     <string name="implant_tool_tunneling_msg">When <b>Implant Tool Tunnelling</b> is complete,\n go to the <b>ITNS Interrogation</b> Tab</string>
     <string name="amplitude_colon">Amplitude:</string>
     <string name="intibia_itns_information_and_settings">Intibia ITNS Information and Settings</string>

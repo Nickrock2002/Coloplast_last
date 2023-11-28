@@ -84,7 +84,6 @@ public class HamburgerFragment extends Fragment {
         } else {
             if (leadRValue == 0f) {
                 binding.tvLeadRVal.setText(getString(R.string._1_dash));
-//                showStimLeadRWarningIfFound();
             } else {
                 binding.tvLeadRVal.setText(formattedLeadR);
             }

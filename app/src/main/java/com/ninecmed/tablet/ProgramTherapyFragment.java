@@ -646,7 +646,6 @@ public class ProgramTherapyFragment extends Fragment {
                     }
                 }
             } else { /* This is interrogate callback */
-
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
                 binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
