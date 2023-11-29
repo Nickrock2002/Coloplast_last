@@ -64,7 +64,8 @@ public class ProgramTherapyFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentProgramTherapyBinding.inflate(inflater, container, false);
+        if (binding == null)
+            binding = FragmentProgramTherapyBinding.inflate(inflater, container, false);
 
         dialogs = new ArrayList<>();
         initializeInterrogateButton();

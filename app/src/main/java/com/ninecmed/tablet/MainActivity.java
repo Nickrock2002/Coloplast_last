@@ -210,9 +210,8 @@ public class MainActivity extends AppCompatActivity {
         FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
         if (clearHistory)
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
         fragmentTransaction.addToBackStack(FeatureSelectionFragment.CLASS_NAME);
-
+        fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
         fragmentTransaction.commit();
     }
 
@@ -221,9 +220,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         BaseTabFragment baseTabFragment = new BaseTabFragment();
-        fragmentTransaction.add(R.id.fl_fragment, baseTabFragment);
         fragmentTransaction.addToBackStack(BaseTabFragment.CLASS_NAME);
-
+        fragmentTransaction.replace(R.id.fl_fragment, baseTabFragment);
         fragmentTransaction.commit();
     }
 
@@ -232,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ProgramTherapyFragment programTherapyFragment = new ProgramTherapyFragment();
-        fragmentTransaction.add(R.id.fl_fragment, programTherapyFragment);
         fragmentTransaction.addToBackStack(ProgramTherapyFragment.CLASS_NAME);
+        fragmentTransaction.replace(R.id.fl_fragment, programTherapyFragment);
         fragmentTransaction.commit();
     }
 
@@ -242,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         HamburgerFragment hamburgerFragment = new HamburgerFragment();
-        fragmentTransaction.add(R.id.fl_fragment, hamburgerFragment);
         fragmentTransaction.addToBackStack(HamburgerFragment.CLASS_NAME);
+        fragmentTransaction.replace(R.id.fl_fragment, hamburgerFragment);
         fragmentTransaction.commit();
     }
 
@@ -396,12 +394,16 @@ public class MainActivity extends AppCompatActivity {
         public void onDeviceConnected(BluetoothDevice device) {
             runOnUiThread(() -> {
                 isDeviceConnected = true;
-                new Handler().postDelayed(() -> {
-                    if (wandComm != null) {
-                        wandComm.initWand();
-                        showWandConnectionInActiveMode();
-                    }
-                }, 3000);
+                try {
+                    new Handler().postDelayed(() -> {
+                        if (wandComm != null) {
+                            wandComm.initWand();
+                            showWandConnectionInActiveMode();
+                        }
+                    }, 3000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
         }
 

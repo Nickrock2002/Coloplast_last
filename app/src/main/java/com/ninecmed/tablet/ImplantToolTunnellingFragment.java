@@ -57,7 +57,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentImplantTunnelingBinding.inflate(inflater, container, false);
+        if (binding == null)
+            binding = FragmentImplantTunnelingBinding.inflate(inflater, container, false);
 
         initializeStimulationButton();
         initializeAmplitudeButton();
@@ -92,7 +93,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeStimulationButton() {
         binding.btExternalStartStim.setOnTouchListener((view1, motionEvent) -> {
-            Log.v("MY Event ", ""+motionEvent.getActionMasked());
+            Log.v("MY Event ", "" + motionEvent.getActionMasked());
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     if (mNow + 500 < System.currentTimeMillis()) {

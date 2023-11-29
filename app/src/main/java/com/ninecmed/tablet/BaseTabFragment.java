@@ -26,7 +26,8 @@ public class BaseTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentSurgeryBinding.inflate(inflater, container, false);
+        if (binding == null)
+            binding = FragmentSurgeryBinding.inflate(inflater, container, false);
         mSectionsPageAdapter = new SectionsPageAdapter(getChildFragmentManager());
 
         // Setup ViewPager with the sections adapter
