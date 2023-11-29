@@ -212,6 +212,7 @@ public class ItnsFragment extends Fragment {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 showLeadRWarningIfFound();
                 binding.btItnsInterrogate.setClickable(true);
+                binding.btItnsStartStim.setPressed(false);
                 binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
             } else {
                 binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));

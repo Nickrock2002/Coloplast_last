@@ -84,4 +84,8 @@ public class AmplitudeDialog extends BaseDialog {
     public ImageButton getMinusButtonRef() {
         return binding.ibItnsMinus;
     }
+
+    public Button getStimulationButtonRef() {
+        return binding.btItnsStartStim;
+    }
 }

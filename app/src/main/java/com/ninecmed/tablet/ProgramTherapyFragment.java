@@ -60,6 +60,7 @@ public class ProgramTherapyFragment extends Fragment {
     //For amplitude, frequency, date & time respectively
     private final boolean[] valuesChanged = new boolean[4];
     ArrayList<Dialog> dialogs;
+    AmplitudeDialog amplitudeDialog;
     ProgramITNSProgressDialog dialogProgrammingInProgress;
 
     @Override
@@ -142,9 +143,9 @@ public class ProgramTherapyFragment extends Fragment {
         binding.btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
             mAmplitudePos = WandData.getAmplitudePos();
             float amplitudeVal = WandData.getAmpFromPos(mAmplitudePos);
-            final AmplitudeDialog dialog = new AmplitudeDialog(requireContext());
-            dialog.setAmplitude(amplitudeVal);
-            dialog.setItnsPlusListener(minusButton -> {
+            amplitudeDialog = new AmplitudeDialog(requireContext());
+            amplitudeDialog.setAmplitude(amplitudeVal);
+            amplitudeDialog.setItnsPlusListener(minusButton -> {
                 if (mAmplitudePos < 42) {
                     mAmplitudePos += 1;
                 }
@@ -155,19 +156,19 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                 }
 
-                TextView amp = dialog.findViewById(R.id.tv_itns_amplitude);
+                TextView amp = amplitudeDialog.findViewById(R.id.tv_itns_amplitude);
                 amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
-                setPlusMinusButtonColors(dialog, false);
-                dialog.getConfirmButtonRef().setEnabled(false);
-                dialog.getCancelButtonRef().setEnabled(true);
+                setPlusMinusButtonColors(amplitudeDialog, false);
+                amplitudeDialog.getConfirmButtonRef().setEnabled(false);
+                amplitudeDialog.getCancelButtonRef().setEnabled(true);
             });
-            dialog.setItnsMinusListener(plusButton -> {
+            amplitudeDialog.setItnsMinusListener(plusButton -> {
                 if (mAmplitudePos > 0) {
                     mAmplitudePos -= 1;
                 }
                 WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-                TextView amp = dialog.findViewById(R.id.tv_itns_amplitude);
+                TextView amp = amplitudeDialog.findViewById(R.id.tv_itns_amplitude);
                 amp.setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
                 if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
@@ -176,11 +177,11 @@ public class ProgramTherapyFragment extends Fragment {
                     mMainActivity.wandComm.addProgramChanges(WandComm.changes.AMPLITUDE);
                 }
 
-                setPlusMinusButtonColors(dialog, false);
-                dialog.getConfirmButtonRef().setEnabled(false);
-                dialog.getCancelButtonRef().setEnabled(true);
+                setPlusMinusButtonColors(amplitudeDialog, false);
+                amplitudeDialog.getConfirmButtonRef().setEnabled(false);
+                amplitudeDialog.getCancelButtonRef().setEnabled(true);
             });
-            dialog.setStimulationButtonListener((stimulationButton, motionEvent) -> {
+            amplitudeDialog.setStimulationButtonListener((stimulationButton, motionEvent) -> {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
@@ -192,9 +193,9 @@ public class ProgramTherapyFragment extends Fragment {
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
                         }
-                        dialog.getPlusButtonRef().setClickable(false);
-                        dialog.getMinusButtonRef().setClickable(false);
-                        dialog.getCancelButtonRef().setEnabled(false);
+                        amplitudeDialog.getPlusButtonRef().setClickable(false);
+                        amplitudeDialog.getMinusButtonRef().setClickable(false);
+                        amplitudeDialog.getCancelButtonRef().setEnabled(false);
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
@@ -209,27 +210,27 @@ public class ProgramTherapyFragment extends Fragment {
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
-                            setPlusMinusButtonColors(dialog, true);
+                            setPlusMinusButtonColors(amplitudeDialog, true);
 
-                            dialog.getConfirmButtonRef().setClickable(true);
-                            dialog.getConfirmButtonRef().setEnabled(true);
+                            amplitudeDialog.getConfirmButtonRef().setClickable(true);
+                            amplitudeDialog.getConfirmButtonRef().setEnabled(true);
                         }
-                        dialog.getPlusButtonRef().setClickable(true);
-                        dialog.getMinusButtonRef().setClickable(true);
+                        amplitudeDialog.getPlusButtonRef().setClickable(true);
+                        amplitudeDialog.getMinusButtonRef().setClickable(true);
                         break;
                 }
                 return true;
             });
-            dialog.setCancelButtonListener(cancelView -> {
-                dialog.dismiss();
+            amplitudeDialog.setCancelButtonListener(cancelView -> {
+                amplitudeDialog.dismiss();
                 dialogs.clear();
             });
-            dialog.setConfirmButtonListener(confirmView -> {
+            amplitudeDialog.setConfirmButtonListener(confirmView -> {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
                 amplitudeButton.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[0] = true;
-                dialog.dismiss();
+                amplitudeDialog.dismiss();
                 dialogs.clear();
                 if (valuesChanged[1]) {
                     if (binding.btnFrequencyVal.getText().equals(getString(R.string.off))) {
@@ -241,9 +242,9 @@ public class ProgramTherapyFragment extends Fragment {
                     enableDisableProgramButton(false);
                 }
             });
-            dialog.show();
-            dialogs.add(dialog);
-            setPlusMinusButtonColors(dialog, true);
+            amplitudeDialog.show();
+            dialogs.add(amplitudeDialog);
+            setPlusMinusButtonColors(amplitudeDialog, true);
         });
     }
 
@@ -635,6 +636,11 @@ public class ProgramTherapyFragment extends Fragment {
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 showLeadRWarningIfFound();
                 enableDisableFrequencyButton(true);
+                if (amplitudeDialog != null) {
+                    amplitudeDialog.getStimulationButtonRef().setPressed(false);
+                    amplitudeDialog.getStimulationButtonRef().setText(R.string.hold_to_deliver_neurostimulation);
+                }
+
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
                 resetChangedParameters();
                 String implToolFrequency = WandData.getTherapy(requireContext());
