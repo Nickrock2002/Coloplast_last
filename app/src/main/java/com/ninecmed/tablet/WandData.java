@@ -64,6 +64,7 @@ public class WandData {
 
     static int LOW = 0;
     static int HIGH = 1;
+    static long timeDifferenceMillis = 0;
 
     static void setCable(byte[] msg) {
         mCable = (msg[2] & 0xff) > 0;
@@ -516,6 +517,7 @@ public class WandData {
             minutes_to_alarm += (mSchedule.mAlarms[TEMPORARY] & 0xff) * 1440;
 
         Calendar now = Calendar.getInstance();
+        now.setTimeInMillis(now.getTimeInMillis() + timeDifferenceMillis);
         now.add(Calendar.MINUTE, minutes_to_alarm);
         dateandtime[TEMPORARY] = now.getTimeInMillis();
     }

@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         requestBluetoothPermission();
         setUpToolbarClickEvents();
         timeDifferenceMillis = Utility.getTimeDifferenceInSharedPref(MainActivity.this);
+        WandData.timeDifferenceMillis = timeDifferenceMillis;
         manageFragmentToolbar();
     }
 
@@ -600,6 +601,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Calculate the time difference in milliseconds
         timeDifferenceMillis = userSelectedCalendar.getTimeInMillis() - currentCalendar.getTimeInMillis();
+        WandData.timeDifferenceMillis = timeDifferenceMillis;
 
         Utility.setTimeDifferenceInSharedPref(MainActivity.this, timeDifferenceMillis);
     }
