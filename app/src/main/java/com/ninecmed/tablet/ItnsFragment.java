@@ -32,6 +32,7 @@ public class ItnsFragment extends Fragment {
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
     FragmentItnsBinding binding;
+    private boolean isFromBackstack = false;
 
     @Override
     public void onAttach(Context context) {
@@ -49,6 +50,9 @@ public class ItnsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (binding == null)
             binding = FragmentItnsBinding.inflate(inflater, container, false);
+        else
+            isFromBackstack = true;
+
         initializeStimulationButton();
         initializeInterrogateButton();
         initializeAmpControls();
@@ -136,8 +140,10 @@ public class ItnsFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initializeAmpControls() {
-        binding.ibItnsPlus.setEnabled(false);
-        binding.ibItnsMinus.setEnabled(false);
+        if (!isFromBackstack) {
+            binding.ibItnsPlus.setEnabled(false);
+            binding.ibItnsMinus.setEnabled(false);
+        }
 
         // Use OnTouchListener rather than onClickListener so that we register the change
         // on the action down, rather that on the action up!
