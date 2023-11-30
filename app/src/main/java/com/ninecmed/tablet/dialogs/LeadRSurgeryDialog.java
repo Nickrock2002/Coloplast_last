@@ -29,7 +29,7 @@ public class LeadRSurgeryDialog extends BaseDialog {
             binding.tvLeadRSubtitle.setText(R.string.lead_r_above);
         } else {
             binding.tvWarnTitle.setText(R.string.lead_r_is_250_ohms);
-            binding.tvElectrodeTip.setText(R.string.use_a_different_intibia_itns);
+            binding.tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
             binding.tvLeadRSubtitle.setText(R.string.lead_r_below);
         }
 

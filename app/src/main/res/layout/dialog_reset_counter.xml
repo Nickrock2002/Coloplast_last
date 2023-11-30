@@ -45,12 +45,12 @@
         android:id="@+id/tv_reset_counter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="@string/implant_reset_counter_3"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_lead_r"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
     <TextView
@@ -58,12 +58,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginBottom="128dp"
         android:text="@string/the_intibia_itns_reset_recently"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btn_reset_counter_confirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />

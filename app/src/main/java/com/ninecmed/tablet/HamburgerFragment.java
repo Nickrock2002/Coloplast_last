@@ -88,17 +88,13 @@ public class HamburgerFragment extends Fragment {
         float leadRValue = WandData.getLeadR();
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
+        isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
             binding.btnLeadRWarn.setText(formattedLeadR);
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             binding.tvLeadRVal.setVisibility(View.INVISIBLE);
         } else {
-            if (leadRValue == 0f) {
-                binding.tvLeadRVal.setText(getString(R.string._1_dash));
-            } else {
-                binding.tvLeadRVal.setText(formattedLeadR);
-            }
+            binding.tvLeadRVal.setText(formattedLeadR);
             binding.tvLeadRVal.setVisibility(View.VISIBLE);
             binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
         }

@@ -708,7 +708,7 @@ public class ProgramTherapyFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                mMainActivity.showWandITNSCommunicationIssueDialog();
+                showWandITNSCommunicationIssueDialog();
                 try {
                     if (dialogs != null && !dialogs.isEmpty()) {
                         AmplitudeDialog dialog = (AmplitudeDialog) dialogs.get(dialogs.size() - 1);
@@ -723,7 +723,7 @@ public class ProgramTherapyFragment extends Fragment {
                     dialogProgrammingInProgress.dismiss();
                 showWandITNSCommunicationIssueDialog();
             } else {
-                mMainActivity.showWandITNSCommunicationIssueDialog();
+                showWandITNSCommunicationIssueDialog();
                 if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.INTERROGATE) {
                     binding.btnInterrogate.setClickable(true);
                     binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
@@ -783,7 +783,7 @@ public class ProgramTherapyFragment extends Fragment {
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || (leadRValue < 250 && leadRValue > 0);
+        isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             binding.tvLeadRVal.setVisibility(View.INVISIBLE);

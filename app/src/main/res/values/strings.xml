@@ -93,7 +93,7 @@
     <string name="auto">Auto</string>
     <string name="rrt_dialogue_disc">The Intibia ITNS must be replaced soon. \n Contact Coloplast</string>
     <string name="battery_voltage_1230_v">Battery Voltage: 1230 V</string>
-    <string name="rrt_dialogue_title">The Intibia ITNS reached its Battery Replacement Time (RRT)</string>
+    <string name="rrt_dialogue_title">The Intibia ITNS reached its Battery Recommended Replacement Time (RRT)</string>
     <string name="intibia_itns_rrt">Intibia ITNS RRT</string>
     <string name="stimulation_active">Stimulation Active</string>
     <string name="implant_reset_counter">"Implant Reset Counter: "</string>
@@ -107,7 +107,7 @@
     <string name="tablet_and_wand_communication_issue">Tablet and Wand Communication Issue</string>
     <string name="the_communication_between_the_wand_and_itns_has_been_lost">The communication between the Wand and the ITNS has been lost.</string>
     <string name="resetting_date_and_time_sub_1">Resetting date and time will only change the set date and time in the Intibia App.</string>
-    <string name="resetting_date_and_time_sub_2">For Changing the date and time in the Intibia implant, use programming function found in the clinic visit option.</string>
+    <string name="resetting_date_and_time_sub_2">For Changing the therapy date and time in the Intibia implant, use programming function found in the clinic visit option.</string>
     <string name="test_and_set_amp">Test and Set amplitude of ITNS</string>
     <string name="set_date_and_time">Set Date and Time on the Tablet</string>
     <string name="date_no_colon">Date</string>

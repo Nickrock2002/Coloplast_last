@@ -55,7 +55,7 @@ public class WandData {
         static private final int[] mMins = new int[3];
     }
 
-    static private boolean mInterrogateSuccessful = false;
+    static private boolean mIsITNSNew = false;
     static private boolean mCable;
 
     static int TEMPORARY = 0;
@@ -98,7 +98,7 @@ public class WandData {
     static void interrogateSuccessful() {
         copyTemporaryValuesToCurrentValues();
         mModelSerial[CURRENT] = (mModelNumber[CURRENT] << 16) + mSerialNumber[CURRENT];
-        mInterrogateSuccessful = true;
+        mIsITNSNew = true;
     }
 
     static void programSuccessful() {
@@ -124,7 +124,7 @@ public class WandData {
 
         // Don't update these parameter following the first successful interrogation for model 1
         if (mModelNumber[TEMPORARY] == 1) {
-            if (!mInterrogateSuccessful) {
+            if (mIsITNSNew) {
                 mLeadI[CURRENT] = mLeadI[TEMPORARY];
                 mCellV[CURRENT] = mCellV[TEMPORARY];
                 mRRT[CURRENT] = mRRT[TEMPORARY];
@@ -132,7 +132,7 @@ public class WandData {
         }
         // Do this for model 2
         else {
-            if (!mInterrogateSuccessful) {
+            if (mIsITNSNew) {
                 mLeadI[CURRENT] = mLeadI[TEMPORARY];
             }
             mCellV[CURRENT] = mCellV[TEMPORARY];
@@ -159,9 +159,7 @@ public class WandData {
             mImplantFirmwareVersion[TEMPORARY] = msg[4] & 0x0f;
             mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
 
-            if (isITNSNew()) {
-                mInterrogateSuccessful = false;
-            }
+            mIsITNSNew = !isITNSNew();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -370,7 +368,7 @@ public class WandData {
     }
 
     static void setLeadI(byte[] msg) {
-        if ((mConfig[TEMPORARY] & 0x01) > 0 || mInterrogateSuccessful)                              // Show lead I on first interrogate if therapy is set, or if after a successful interrogation
+        if ((mConfig[TEMPORARY] & 0x01) > 0 || mIsITNSNew)                              // Show lead I on first interrogate if therapy is set, or if after a successful interrogation
             mLeadI[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
         else
             mLeadI[TEMPORARY] = -1;                                                                 // Otherwise hide value
@@ -455,7 +453,6 @@ public class WandData {
 
     @SuppressLint("DefaultLocale")
     static float getLeadR() {
-
         if (mLeadI[CURRENT] == -1)
             return 0f;
         else {
@@ -553,6 +550,6 @@ public class WandData {
     }
 
     static boolean isITNSNew() {
-        return mModelSerial[CURRENT] != mModelSerial[TEMPORARY];
+        return (mModelSerial[CURRENT] != 0) && (mModelSerial[CURRENT] != mModelSerial[TEMPORARY]);
     }
 }
