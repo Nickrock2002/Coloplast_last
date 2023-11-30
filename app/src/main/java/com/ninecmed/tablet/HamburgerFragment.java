@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
+import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.ChangeLanguageDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.dialogs.LeadRImplantTunnelingDialog;
@@ -45,6 +46,7 @@ public class HamburgerFragment extends Fragment {
         binding.btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());
         binding.btnAbout.setOnClickListener(v -> displayAboutDialogue());
         setDateTime();
+        setUpRRTButtonClick();
         return binding.getRoot();
     }
 
@@ -69,6 +71,16 @@ public class HamburgerFragment extends Fragment {
         } else {
             binding.tvBatteryReplaceVal.setText(getString(R.string._1_dash));
         }
+    }
+
+    private void setUpRRTButtonClick() {
+        binding.btnImplantBatteryStatus.setOnClickListener(view -> {
+            final BatteryReplaceRRTDialog dialog = new BatteryReplaceRRTDialog(requireContext());
+            dialog.setConfirmButtonListener(view1 -> {
+                dialog.dismiss();
+            });
+            dialog.show();
+        });
     }
 
     private void showLeadRWarningIfFound() {
@@ -248,10 +260,14 @@ public class HamburgerFragment extends Fragment {
 
         // LEAD I
         if (isExternalStim) {
-            if (WandData.getStimLeadI().equals("0.000 mA")) {
-                binding.tvLeadIVal.setText(getString(R.string._1_dash));
+            if (WandData.getStimLeadI() != null) {
+                if (WandData.getStimLeadI().equals("0.000 mA")) {
+                    binding.tvLeadIVal.setText(getString(R.string._1_dash));
+                } else {
+                    binding.tvLeadIVal.setText(WandData.getStimLeadI());
+                }
             } else {
-                binding.tvLeadIVal.setText(WandData.getStimLeadI());
+                binding.tvLeadIVal.setText(getString(R.string._1_dash));
             }
         } else {
             if (WandData.getLeadI() == 0.0f) {
