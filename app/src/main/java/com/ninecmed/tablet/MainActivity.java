@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private String formattedDate = "";
     private WandTabConnDialog wandConnDialog;
     private long timeDifferenceMillis = 0;
+    private long lastBatteryDialogShownTime = 0;
     private int selectedHour = 0;
     private int selectedMinutes = 0;
     private int selectedYear = 0;
@@ -361,7 +362,8 @@ public class MainActivity extends AppCompatActivity {
         int batteryPct = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
         if (batteryPct <= 15 && !batteryCharging) {
-            showBatteryWarnDialog();
+            if (Calendar.getInstance().getTimeInMillis() > lastBatteryDialogShownTime + 600000)
+                showBatteryWarnDialog();
         }
 
         binding.tvBatteryPer.setText(String.valueOf(batteryPct).concat("%"));
@@ -577,6 +579,7 @@ public class MainActivity extends AppCompatActivity {
         BatteryWarnDialog dialog = new BatteryWarnDialog(this);
         dialog.setConfirmButtonListener(v -> dialog.dismiss());
         dialog.show();
+        lastBatteryDialogShownTime = Calendar.getInstance().getTimeInMillis();
     }
 
     public void showWandTabCommunicationIssueDialog() {
