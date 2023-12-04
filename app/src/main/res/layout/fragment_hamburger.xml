@@ -326,8 +326,9 @@
             android:text="@string/company_info"
             android:textColor="@color/colorGreySixHundred"
             android:textSize="20sp"
+            android:minLines="5"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guideline_start"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/tv_lead_i_title" />
 
         <TextView
@@ -337,6 +338,7 @@
             android:text="@string/company_address"
             android:textColor="@color/cardview_dark_background"
             android:textSize="18sp"
+            android:minLines="5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid"

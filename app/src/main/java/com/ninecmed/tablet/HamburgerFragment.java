@@ -89,14 +89,18 @@ public class HamburgerFragment extends Fragment {
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
-        if (isWarningFound) {
-            binding.btnLeadRWarn.setText(formattedLeadR);
-            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            binding.tvLeadRVal.setVisibility(View.INVISIBLE);
+        if (leadRValue != 0) {
+            if (isWarningFound) {
+                binding.btnLeadRWarn.setText(formattedLeadR);
+                binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+                binding.tvLeadRVal.setVisibility(View.INVISIBLE);
+            } else {
+                binding.tvLeadRVal.setText(formattedLeadR);
+                binding.tvLeadRVal.setVisibility(View.VISIBLE);
+                binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
+            }
         } else {
-            binding.tvLeadRVal.setText(formattedLeadR);
-            binding.tvLeadRVal.setVisibility(View.VISIBLE);
-            binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
+            binding.tvLeadRVal.setText(getString(R.string._1_dash));
         }
     }
 
@@ -104,18 +108,18 @@ public class HamburgerFragment extends Fragment {
         float leadRValue = WandData.getStimLeadR();
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
         boolean isWarningFound = leadRValue > 2000;
-        if (isWarningFound) {
-            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            binding.tvLeadRVal.setVisibility(View.INVISIBLE);
-            showStimLeadRDialog = true;
-        } else {
-            binding.tvLeadRVal.setVisibility(View.VISIBLE);
-            if (leadRValue == 0f) {
-                binding.tvLeadRVal.setText(getString(R.string._1_dash));
+        if (leadRValue != 0f) {
+            if (isWarningFound) {
+                binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+                binding.tvLeadRVal.setVisibility(View.INVISIBLE);
+                showStimLeadRDialog = true;
             } else {
+                binding.tvLeadRVal.setVisibility(View.VISIBLE);
                 binding.tvLeadRVal.setText(formattedLeadR);
+                binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
             }
-            binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
+        } else {
+            binding.tvLeadRVal.setText(getString(R.string._1_dash));
         }
     }
 
