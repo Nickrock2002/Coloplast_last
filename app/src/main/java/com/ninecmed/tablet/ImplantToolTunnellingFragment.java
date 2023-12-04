@@ -187,6 +187,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     @SuppressLint("DefaultLocale")
     public void updateImplantTunnellingUI(boolean success) {
         if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIMEXT) {
+            mMainActivity.isInterrogationDone = true;
             binding.btExternalStartStim.setEnabled(true);
             binding.btExternalStartStim.setPressed(false);
             binding.btExternalStartStim.setText(R.string.hold_to_deliver_neurostimulation);
