@@ -78,6 +78,9 @@ public class ProgramTherapyFragment extends Fragment {
         setUpDateButtonClick();
         setUpTimeButtonClick();
         setDateTime();
+        if (mMainActivity.isInterrogationDone) {
+            setupWandData();
+        }
         return binding.getRoot();
     }
 
@@ -649,56 +652,18 @@ public class ProgramTherapyFragment extends Fragment {
                     if (implToolFrequency.equals(getString(R.string.off))) {
                         binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
                     } else {
-                        showBatteryWarningIfLow(view);
+                        showBatteryWarningIfLow();
                     }
                 }
             } else { /* This is interrogate callback */
-                binding.btnInterrogate.setClickable(true);
-                binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-                binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
-
-                binding.tvItnsSerialVal.setText(WandData.getSerialNumber());
-
-                enableDisableAmplitudeButton(true);
-
-                setInitialAmplitudeAndEnableAmplitudeButton();
-
-                String implToolFrequency = WandData.getTherapy(requireContext());
-                binding.btnFrequencyVal.setText(implToolFrequency);
-
-                if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
-                    enableDisableFrequencyButton(true);
-                    if (implToolFrequency.equals(getString(R.string.off))) {
-                        enableDisableDayDateButton(false);
-                        enableDisableTimeOfDayButton(false);
-                        binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
-                    } else {
-                        showBatteryWarningIfLow(view);
-                        enableDisableDayDateButton(true);
-                        enableDisableTimeOfDayButton(true);
-                    }
-                } else {
-                    enableDisableFrequencyButton(false);
-                }
-                showLeadRWarningIfFound();
+                mMainActivity.isInterrogationDone = true;
+                setupWandData();
                 checkForReset();
-
-                String date = WandData.getDate();
-                String time = WandData.getTime();
-
-                lastSetMinute = WandData.getProgramMinute();
-                lastSetHour = WandData.getProgramHour();
-
-                if (!date.isEmpty())
-                    binding.btnStartDay.setText(date);
-                if (!time.isEmpty())
-                    binding.btnTimeOfDay.setText(time);
-
                 resetChangedParameters();
             }
         } // Here's what happens on fail
         else {
-            if (WandData.isITNSNew() && mMainActivity.wandComm.getCurrentJob() != WandComm.jobs.INTERROGATE) {
+            if (WandData.isITNSNew()) {
                 showSerialNumberMismatchWarnDialog();
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
@@ -732,6 +697,48 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
+    void setupWandData() {
+        binding.btnInterrogate.setClickable(true);
+        binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+        binding.tvItnsModelNumber.setText((WandData.getModelNumber(getContext())));
+
+        binding.tvItnsSerialVal.setText(WandData.getSerialNumber());
+
+        enableDisableAmplitudeButton(true);
+
+        setInitialAmplitudeAndEnableAmplitudeButton();
+
+        String implToolFrequency = WandData.getTherapy(requireContext());
+        binding.btnFrequencyVal.setText(implToolFrequency);
+
+        if (implToolFrequency != null && !implToolFrequency.isEmpty()) {
+            enableDisableFrequencyButton(true);
+            if (implToolFrequency.equals(getString(R.string.off))) {
+                enableDisableDayDateButton(false);
+                enableDisableTimeOfDayButton(false);
+                binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
+            } else {
+                showBatteryWarningIfLow();
+                enableDisableDayDateButton(true);
+                enableDisableTimeOfDayButton(true);
+            }
+        } else {
+            enableDisableFrequencyButton(false);
+        }
+        showLeadRWarningIfFound();
+
+        String date = WandData.getDate();
+        String time = WandData.getTime();
+
+        lastSetMinute = WandData.getProgramMinute();
+        lastSetHour = WandData.getProgramHour();
+
+        if (!date.isEmpty())
+            binding.btnStartDay.setText(date);
+        if (!time.isEmpty())
+            binding.btnTimeOfDay.setText(time);
+    }
+
     public void showSerialNumberMismatchWarnDialog() {
         SerialNumberMismatchDialog dialog = new SerialNumberMismatchDialog(requireContext());
         dialog.setConfirmButtonListener(v -> dialog.dismiss());
@@ -763,8 +770,8 @@ public class ProgramTherapyFragment extends Fragment {
         dialogs.add(dialog);
     }
 
-    private void showBatteryWarningIfLow(View view) {
-        String rrt_result = WandData.getRRT(view.getContext());
+    private void showBatteryWarningIfLow() {
+        String rrt_result = WandData.getRRT(getContext());
 
         if (rrt_result != null) {
             if (rrt_result.equals(getString(R.string.all_yes))) {

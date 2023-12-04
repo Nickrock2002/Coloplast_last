@@ -54,7 +54,8 @@ public class HamburgerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeInterrogateButton();
-        setupInitialData();
+        if (mMainActivity.isInterrogationDone)
+            setupInitialData();
     }
 
     private void showBatteryWarningIfLow() {
@@ -89,18 +90,14 @@ public class HamburgerFragment extends Fragment {
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
-        if (leadRValue != 0) {
-            if (isWarningFound) {
-                binding.btnLeadRWarn.setText(formattedLeadR);
-                binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-                binding.tvLeadRVal.setVisibility(View.INVISIBLE);
-            } else {
-                binding.tvLeadRVal.setText(formattedLeadR);
-                binding.tvLeadRVal.setVisibility(View.VISIBLE);
-                binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
-            }
+        if (isWarningFound) {
+            binding.btnLeadRWarn.setText(formattedLeadR);
+            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+            binding.tvLeadRVal.setVisibility(View.INVISIBLE);
         } else {
-            binding.tvLeadRVal.setText(getString(R.string._1_dash));
+            binding.tvLeadRVal.setText(formattedLeadR);
+            binding.tvLeadRVal.setVisibility(View.VISIBLE);
+            binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -108,18 +105,15 @@ public class HamburgerFragment extends Fragment {
         float leadRValue = WandData.getStimLeadR();
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
         boolean isWarningFound = leadRValue > 2000;
-        if (leadRValue != 0f) {
-            if (isWarningFound) {
-                binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-                binding.tvLeadRVal.setVisibility(View.INVISIBLE);
-                showStimLeadRDialog = true;
-            } else {
-                binding.tvLeadRVal.setVisibility(View.VISIBLE);
-                binding.tvLeadRVal.setText(formattedLeadR);
-                binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
-            }
+
+        if (isWarningFound) {
+            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+            binding.tvLeadRVal.setVisibility(View.INVISIBLE);
+            showStimLeadRDialog = true;
         } else {
-            binding.tvLeadRVal.setText(getString(R.string._1_dash));
+            binding.tvLeadRVal.setVisibility(View.VISIBLE);
+            binding.tvLeadRVal.setText(formattedLeadR);
+            binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -194,6 +188,7 @@ public class HamburgerFragment extends Fragment {
         binding.btnInterrogate.setOnClickListener(view -> {
             binding.btnInterrogate.setPressed(true);
             mMainActivity.wandComm.interrogate(WandComm.frags.HAMBURGER);
+            mMainActivity.isInterrogationDone = true;
             binding.btnInterrogate.setPressed(false);
         });
 
@@ -289,6 +284,7 @@ public class HamburgerFragment extends Fragment {
     public void updateHamburgerUI(boolean success) {
         if (success) {
             setupWandData();
+            mMainActivity.isInterrogationDone = true;
         } else {
             mMainActivity.showWandITNSCommunicationIssueDialog();
         }

@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentItnsBinding;
@@ -59,6 +60,9 @@ public class ItnsFragment extends Fragment {
         initializeLeadRWarnButton();
 
         mMainActivity = (MainActivity) getActivity();
+
+        if (mMainActivity != null && mMainActivity.isInterrogationDone)
+            setupWandData();
         return binding.getRoot();
     }
 
@@ -209,8 +213,6 @@ public class ItnsFragment extends Fragment {
     }
 
     public void updateItnsUI(boolean success) {
-        View view = getView();
-
         binding.ibItnsPlus.setClickable(true);
         binding.ibItnsMinus.setClickable(true);
 
@@ -221,24 +223,9 @@ public class ItnsFragment extends Fragment {
                 binding.btItnsStartStim.setPressed(false);
                 binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
             } else {
-                binding.tvItnsModelNumber.setText((WandData.getModelNumber(view.getContext())));
-                binding.tvItnsSN.setText(WandData.getSerialNumber());
-
-                binding.ibItnsPlus.setEnabled(true);
-                binding.ibItnsPlus.setImageResource(R.drawable.ic_plus_white);
-
-                binding.ibItnsMinus.setEnabled(true);
-                binding.ibItnsMinus.setImageResource(R.drawable.ic_minus_white);
-
-                binding.btItnsStartStim.setEnabled(true);
-                binding.btItnsStartStim.setTextColor(getResources().getColor(R.color.colorWhite));
-
-                binding.tvItnsAmplitude.setTextColor(getResources().getColor(R.color.cardview_dark_background));
-
-                showLeadRWarningIfFound();
+                mMainActivity.isInterrogationDone = true;
+                setupWandData();
                 checkForReset();
-                setInitialAmplitude();
-                initializeStimulationButton();
             }
         }
         // Here's what happens on fail
@@ -246,6 +233,30 @@ public class ItnsFragment extends Fragment {
             mMainActivity.showWandITNSCommunicationIssueDialog();
         }
         setPlusMinusButtonColors(true);
+    }
+
+    void setupWandData() {
+        binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_primary);
+        binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_primary);
+        binding.ibItnsPlus.setClickable(true);
+        binding.ibItnsMinus.setClickable(true);
+        binding.tvItnsModelNumber.setText((WandData.getModelNumber(getContext())));
+        binding.tvItnsSN.setText(WandData.getSerialNumber());
+
+        binding.ibItnsPlus.setEnabled(true);
+        binding.ibItnsPlus.setImageResource(R.drawable.ic_plus_white);
+
+        binding.ibItnsMinus.setEnabled(true);
+        binding.ibItnsMinus.setImageResource(R.drawable.ic_minus_white);
+
+        binding.btItnsStartStim.setEnabled(true);
+        binding.btItnsStartStim.setTextColor(ActivityCompat.getColor(getContext(), R.color.colorWhite));
+
+        binding.tvItnsAmplitude.setTextColor(ActivityCompat.getColor(getContext(), R.color.cardview_dark_background));
+
+        showLeadRWarningIfFound();
+        setInitialAmplitude();
+        initializeStimulationButton();
     }
 
     private void setInitialAmplitude() {
