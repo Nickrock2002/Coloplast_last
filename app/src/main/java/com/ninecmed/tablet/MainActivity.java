@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     ArrayList<Dialog> dialogs;
     public String selectedTab;
-    public boolean isInterrogationDone= false;
+    public boolean isInterrogationDone = false;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -290,27 +290,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void initBluetooth() {
         // Permission has been granted, you can proceed with your Bluetooth functionality
-        mBluetooth = new Bluetooth(this);
-        mBluetooth.setReader(ByteReader.class);
-        mBluetooth.setDeviceCallback(deviceCallback);
-        wandComm = WandComm.getInstance(mBluetooth, this);
+        if (mBluetooth == null) {
+            mBluetooth = new Bluetooth(this);
+            mBluetooth.setReader(ByteReader.class);
+            mBluetooth.setDeviceCallback(deviceCallback);
+            wandComm = WandComm.getInstance(mBluetooth, this);
 
-        mBluetooth.onStart();
+            mBluetooth.onStart();
 
-        if (mBluetooth.isEnabled()) {
-            Log.d(TAG, "BT was enabled");
+            if (mBluetooth.isEnabled()) {
+                Log.d(TAG, "BT was enabled");
+            } else {
+                mBluetooth.enable();
+            }
+
+            List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
+            for (BluetoothDevice bt : btDevices) {
+                mBTDevice = bt;
+            }
+
+            if (mBTDevice != null) mBluetooth.connectToDevice(mBTDevice);
+
+            mRunBT = true;
         } else {
-            mBluetooth.enable();
+            if (!isDeviceConnected) {
+                List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
+                for (BluetoothDevice bt : btDevices) {
+                    mBTDevice = bt;
+                }
+
+                if (mBTDevice != null) mBluetooth.connectToDevice(mBTDevice);
+            }
         }
-
-        List<BluetoothDevice> btDevices = mBluetooth.getPairedDevices();
-        for (BluetoothDevice bt : btDevices) {
-            mBTDevice = bt;
-        }
-
-        if (mBTDevice != null) mBluetooth.connectToDevice(mBTDevice);
-
-        mRunBT = true;
     }
 
     @Override
@@ -415,9 +426,20 @@ public class MainActivity extends AppCompatActivity {
         public void onDeviceDisconnected(BluetoothDevice device, String message) {
             isDeviceConnected = false;
             wandComm.resetWandComm();
-            launchFeatureSelectionFragment(true);
-            dismissAllDialogs();
-            MainActivity.this.runOnUiThread(() -> showWandTabCommunicationIssueDialog());
+
+            boolean onFeatureSelectionScreen = false;
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                onFeatureSelectionScreen = FeatureSelectionFragment.CLASS_NAME.equals(fm.getBackStackEntryAt(
+                        fm.getBackStackEntryCount() - 1).getName());
+            }
+            if (onFeatureSelectionScreen && dialogs != null && dialogs.size() > 0) {
+                if (!(dialogs.get(dialogs.size() - 1) instanceof WandAndTabletCommIssueDialog)) {
+                    backToHomeScreen(false);
+                }
+            } else {
+                backToHomeScreen(true);
+            }
         }
 
         @Override
@@ -435,6 +457,14 @@ public class MainActivity extends AppCompatActivity {
                 mHandler.postDelayed(Reconnect, 1000); // And if fail, try every second
         }
     };
+
+    private void backToHomeScreen(boolean relaunch) {
+        MainActivity.this.runOnUiThread(() -> {
+            if (relaunch) launchFeatureSelectionFragment(true);
+            dismissAllDialogs();
+            showWandTabCommunicationIssueDialog();
+        });
+    }
 
     private void dismissAllDialogs() {
         if (wandConnDialog != null && wandConnDialog.isShowing()) {
@@ -587,6 +617,7 @@ public class MainActivity extends AppCompatActivity {
         WandAndTabletCommIssueDialog dialog = new WandAndTabletCommIssueDialog(this);
         dialog.setConfirmButtonListener(v -> dialog.dismiss());
         dialog.show();
+        dialogs.add(dialog);
     }
 
     public void showWandITNSCommunicationIssueDialog() {
