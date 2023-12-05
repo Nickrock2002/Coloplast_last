@@ -214,9 +214,6 @@ public class ProgramTherapyFragment extends Fragment {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
                             setPlusMinusButtonColors(amplitudeDialog, true);
-
-                            amplitudeDialog.getConfirmButtonRef().setClickable(true);
-                            amplitudeDialog.getConfirmButtonRef().setEnabled(true);
                         }
                         amplitudeDialog.getPlusButtonRef().setClickable(true);
                         amplitudeDialog.getMinusButtonRef().setClickable(true);
@@ -642,6 +639,8 @@ public class ProgramTherapyFragment extends Fragment {
                 if (amplitudeDialog != null) {
                     amplitudeDialog.getStimulationButtonRef().setPressed(false);
                     amplitudeDialog.getStimulationButtonRef().setText(R.string.hold_to_deliver_neurostimulation);
+                    amplitudeDialog.getConfirmButtonRef().setClickable(true);
+                    amplitudeDialog.getConfirmButtonRef().setEnabled(true);
                 }
 
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
@@ -673,7 +672,6 @@ public class ProgramTherapyFragment extends Fragment {
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                showWandITNSCommunicationIssueDialog();
                 try {
                     if (dialogs != null && !dialogs.isEmpty()) {
                         AmplitudeDialog dialog = (AmplitudeDialog) dialogs.get(dialogs.size() - 1);
@@ -683,10 +681,13 @@ public class ProgramTherapyFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                showWandITNSCommunicationIssueDialog();
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
                 if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
                     dialogProgrammingInProgress.dismiss();
                 showWandITNSCommunicationIssueDialog();
+                binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+                enableDisableProgramButton(true);
             } else {
                 showWandITNSCommunicationIssueDialog();
                 if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.INTERROGATE) {
@@ -761,8 +762,6 @@ public class ProgramTherapyFragment extends Fragment {
     public void showWandITNSCommunicationIssueDialog() {
         WandAndITNSCommIssueDialog dialog = new WandAndITNSCommIssueDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
-            binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-            enableDisableProgramButton(true);
             dialog.dismiss();
             dialogs.clear();
         });
