@@ -636,11 +636,11 @@ public class ProgramTherapyFragment extends Fragment {
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 showLeadRWarningIfFound();
                 enableDisableFrequencyButton(true);
+                amplitudeDialog.getConfirmButtonRef().setClickable(true);
+                amplitudeDialog.getConfirmButtonRef().setEnabled(true);
                 if (amplitudeDialog != null) {
                     amplitudeDialog.getStimulationButtonRef().setPressed(false);
                     amplitudeDialog.getStimulationButtonRef().setText(R.string.hold_to_deliver_neurostimulation);
-                    amplitudeDialog.getConfirmButtonRef().setClickable(true);
-                    amplitudeDialog.getConfirmButtonRef().setEnabled(true);
                 }
 
             } else if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.PROGRAM) {
