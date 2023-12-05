@@ -54,7 +54,7 @@ public class HamburgerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeInterrogateButton();
-        if (mMainActivity.isInterrogationDone)
+        if (mMainActivity.isInterrogationDone || mMainActivity.isImplantInterrogationDone)
             setupInitialData();
     }
 

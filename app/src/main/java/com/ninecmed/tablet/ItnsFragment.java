@@ -49,10 +49,8 @@ public class ItnsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (binding == null)
-            binding = FragmentItnsBinding.inflate(inflater, container, false);
-        else
-            isFromBackstack = true;
+        if (binding == null) binding = FragmentItnsBinding.inflate(inflater, container, false);
+        else isFromBackstack = true;
 
         initializeStimulationButton();
         initializeInterrogateButton();
@@ -61,14 +59,13 @@ public class ItnsFragment extends Fragment {
 
         mMainActivity = (MainActivity) getActivity();
 
-        if (mMainActivity != null && mMainActivity.isInterrogationDone)
-            setupWandData();
+        if (mMainActivity != null && mMainActivity.isInterrogationDone) setupWandData(false);
         return binding.getRoot();
     }
 
     private void initializeLeadRWarnButton() {
         binding.btnLeadRWarn.setOnClickListener(v -> {
-            showLeadRWarningIfFound();
+            showLeadRWarningIfFound(true);
         });
     }
 
@@ -157,8 +154,7 @@ public class ItnsFragment extends Fragment {
             }
 
             WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-            binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V",
-                    WandData.getAmpFromPos(mAmplitudePos)));
+            binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
             if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
@@ -175,8 +171,7 @@ public class ItnsFragment extends Fragment {
             }
 
             WandData.amplitude[WandData.FUTURE] = (byte) mAmplitudePos;
-            binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V",
-                    WandData.getAmpFromPos(mAmplitudePos)));
+            binding.tvItnsAmplitude.setText(String.format(Locale.ENGLISH, "%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
 
             if (WandData.amplitude[WandData.CURRENT] == WandData.amplitude[WandData.FUTURE]) {
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
@@ -218,24 +213,26 @@ public class ItnsFragment extends Fragment {
 
         if (success) {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
-                showLeadRWarningIfFound();
+                showLeadRWarningIfFound(true);
                 binding.btItnsInterrogate.setClickable(true);
                 binding.btItnsStartStim.setPressed(false);
                 binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
             } else {
                 mMainActivity.isInterrogationDone = true;
-                setupWandData();
+                setupWandData(true);
                 checkForReset();
             }
         }
         // Here's what happens on fail
         else {
             mMainActivity.showWandITNSCommunicationIssueDialog();
+            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM)
+                binding.btItnsInterrogate.setClickable(true);
         }
         setPlusMinusButtonColors(true);
     }
 
-    void setupWandData() {
+    void setupWandData(boolean showWarningOnStart) {
         binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_primary);
         binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_primary);
         binding.ibItnsPlus.setClickable(true);
@@ -254,7 +251,7 @@ public class ItnsFragment extends Fragment {
 
         binding.tvItnsAmplitude.setTextColor(ActivityCompat.getColor(getContext(), R.color.cardview_dark_background));
 
-        showLeadRWarningIfFound();
+        showLeadRWarningIfFound(showWarningOnStart);
         setInitialAmplitude();
         initializeStimulationButton();
     }
@@ -265,16 +262,17 @@ public class ItnsFragment extends Fragment {
         WandData.amplitude[WandData.FUTURE] = WandData.amplitude[WandData.CURRENT];
     }
 
-    private void showLeadRWarningIfFound() {
+    private void showLeadRWarningIfFound(boolean showWarningOnStart) {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            LeadRSurgeryDialog dialog = new LeadRSurgeryDialog(requireContext());
-
-            dialog.setConfirmButtonListener(v -> dialog.dismiss());
-            dialog.show();
+            if (showWarningOnStart) {
+                LeadRSurgeryDialog dialog = new LeadRSurgeryDialog(requireContext());
+                dialog.setConfirmButtonListener(v -> dialog.dismiss());
+                dialog.show();
+            }
         } else {
             binding.tvLeadRVal.setText(R.string.ok);
             binding.btnLeadRWarn.setVisibility(View.GONE);

@@ -636,9 +636,9 @@ public class ProgramTherapyFragment extends Fragment {
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
                 showLeadRWarningIfFound();
                 enableDisableFrequencyButton(true);
-                amplitudeDialog.getConfirmButtonRef().setClickable(true);
-                amplitudeDialog.getConfirmButtonRef().setEnabled(true);
-                if (amplitudeDialog != null) {
+                if (amplitudeDialog != null && amplitudeDialog.isShowing()) {
+                    amplitudeDialog.getConfirmButtonRef().setClickable(true);
+                    amplitudeDialog.getConfirmButtonRef().setEnabled(true);
                     amplitudeDialog.getStimulationButtonRef().setPressed(false);
                     amplitudeDialog.getStimulationButtonRef().setText(R.string.hold_to_deliver_neurostimulation);
                 }
@@ -663,6 +663,8 @@ public class ProgramTherapyFragment extends Fragment {
         } // Here's what happens on fail
         else {
             if (WandData.isITNSNew()) {
+                if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
+                    dialogProgrammingInProgress.dismiss();
                 showSerialNumberMismatchWarnDialog();
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);

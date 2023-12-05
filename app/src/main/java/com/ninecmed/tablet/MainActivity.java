@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Dialog> dialogs;
     public String selectedTab;
     public boolean isInterrogationDone = false;
+    public boolean isImplantInterrogationDone = false;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
