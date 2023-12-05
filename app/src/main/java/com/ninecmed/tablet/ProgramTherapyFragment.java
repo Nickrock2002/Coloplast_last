@@ -665,6 +665,15 @@ public class ProgramTherapyFragment extends Fragment {
             if (WandData.isITNSNew()) {
                 if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
                     dialogProgrammingInProgress.dismiss();
+                try {
+                    if (dialogs != null && !dialogs.isEmpty()) {
+                        AmplitudeDialog dialog = (AmplitudeDialog) dialogs.get(dialogs.size() - 1);
+                        dialog.getCancelButtonRef().setEnabled(true);
+                        dialog.getConfirmButtonRef().setEnabled(false);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 showSerialNumberMismatchWarnDialog();
                 binding.btnInterrogate.setClickable(true);
                 binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
