@@ -190,7 +190,7 @@ public class WandData {
         return String.valueOf(mImplantFirmwareVersion[TEMPORARY]);
     }
 
-    static String getModelNumber(Context context) {
+    public static String getModelNumber(Context context) {
         if (mModelNumber[CURRENT] == 1)
             return context.getString(R.string.all_model_number_one);
         else if (mModelNumber[CURRENT] == 2)

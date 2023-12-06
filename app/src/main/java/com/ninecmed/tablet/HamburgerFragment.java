@@ -112,7 +112,11 @@ public class HamburgerFragment extends Fragment {
             showStimLeadRDialog = true;
         } else {
             binding.tvLeadRVal.setVisibility(View.VISIBLE);
-            binding.tvLeadRVal.setText(formattedLeadR);
+            if (leadRValue == 0) {
+                binding.tvLeadRVal.setText(getString(R.string._1_dash));
+            } else {
+                binding.tvLeadRVal.setText(formattedLeadR);
+            }
             binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
         }
     }

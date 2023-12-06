@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="@string/lead_r_is_above_normal"
+        android:text="@string/lead_r_above"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
         android:textStyle="bold"

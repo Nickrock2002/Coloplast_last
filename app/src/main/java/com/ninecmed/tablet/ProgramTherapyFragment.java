@@ -34,6 +34,7 @@ import com.ninecmed.tablet.dialogs.ProgrammingUnsuccessfulDialog;
 import com.ninecmed.tablet.dialogs.ResetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
+import com.ninecmed.tablet.dialogs.WrongModelDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.ProgramSuccessEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
@@ -61,6 +62,9 @@ public class ProgramTherapyFragment extends Fragment {
     private final boolean[] valuesChanged = new boolean[4];
     ArrayList<Dialog> dialogs;
     AmplitudeDialog amplitudeDialog;
+    FrequencyDialog freqDialog;
+    ProgramTherapyDayDateDialog dayDateDialog;
+    ProgramTherapyTimeOfDayDialog timeOfDayDialog;
     ProgramITNSProgressDialog dialogProgrammingInProgress;
 
     @Override
@@ -144,6 +148,7 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint({"ClickableViewAccessibility", "DefaultLocale"})
     private void setUpAmplitudeButtonClick() {
         binding.btnAmplitudeVal.setOnClickListener(amplitudeButton -> {
+            amplitudeButton.setClickable(false);
             mAmplitudePos = WandData.getAmplitudePos();
             float amplitudeVal = WandData.getAmpFromPos(mAmplitudePos);
             amplitudeDialog = new AmplitudeDialog(requireContext());
@@ -223,6 +228,7 @@ public class ProgramTherapyFragment extends Fragment {
             });
             amplitudeDialog.setCancelButtonListener(cancelView -> {
                 amplitudeDialog.dismiss();
+                amplitudeButton.setClickable(true);
                 dialogs.clear();
             });
             amplitudeDialog.setConfirmButtonListener(confirmView -> {
@@ -231,6 +237,7 @@ public class ProgramTherapyFragment extends Fragment {
                 amplitudeButton.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[0] = true;
                 amplitudeDialog.dismiss();
+                amplitudeButton.setClickable(true);
                 dialogs.clear();
                 if (valuesChanged[1]) {
                     if (binding.btnFrequencyVal.getText().equals(getString(R.string.off))) {
@@ -255,15 +262,16 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void setUpFrequencyButtonClick() {
         binding.btnFrequencyVal.setOnClickListener(frequencyButton -> {
-            final FrequencyDialog dialog = new FrequencyDialog(requireContext());
-            dialog.setCancelButtonListener(cancelView -> {
-                dialog.dismiss();
+            frequencyButton.setClickable(false);
+            freqDialog = new FrequencyDialog(requireContext());
+            freqDialog.setCancelButtonListener(cancelView -> {
+                freqDialog.dismiss();
+                frequencyButton.setClickable(true);
                 dialogs.clear();
             });
-            dialog.setConfirmButtonListener(confirmView -> {
-                int prevFreq = WandData.therapy[WandData.FUTURE];
-                checkedRadioButtonId = dialog.getCheckedButtonId();
-                RadioButton checkedRadioButton = dialog.findViewById(checkedRadioButtonId);
+            freqDialog.setConfirmButtonListener(confirmView -> {
+                checkedRadioButtonId = freqDialog.getCheckedButtonId();
+                RadioButton checkedRadioButton = freqDialog.findViewById(checkedRadioButtonId);
                 binding.btnFrequencyVal.setText(checkedRadioButton.getText().toString());
                 byte position = Byte.parseByte(checkedRadioButton.getTag().toString());
                 boolean freqChanged = position != WandData.therapy[WandData.FUTURE];
@@ -318,22 +326,23 @@ public class ProgramTherapyFragment extends Fragment {
                 binding.btnFrequencyVal.setBackgroundResource(R.drawable.rounded_button_dark_always);
                 valuesChanged[1] = true;
 
-                dialog.dismiss();
+                freqDialog.dismiss();
+                frequencyButton.setClickable(true);
                 dialogs.clear();
             });
-            dialog.show();
-            dialogs.add(dialog);
+            freqDialog.show();
+            dialogs.add(freqDialog);
 
             RadioButton rb;
             if (checkedRadioButtonId != -1) {
-                rb = dialog.findViewById(checkedRadioButtonId);
+                rb = freqDialog.findViewById(checkedRadioButtonId);
             } else {
-                rb = dialog.findViewById(R.id.radio_off);
+                rb = freqDialog.findViewById(R.id.radio_off);
             }
             if (rb != null) {
                 rb.setChecked(true);
             } else {
-                rb = dialog.findViewById(R.id.radio_off);
+                rb = freqDialog.findViewById(R.id.radio_off);
                 rb.setChecked(true);
             }
         });
@@ -341,13 +350,17 @@ public class ProgramTherapyFragment extends Fragment {
 
     private void setUpDateButtonClick() {
         binding.btnStartDay.setOnClickListener(dayDateButton -> {
-            final ProgramTherapyDayDateDialog dialog = new ProgramTherapyDayDateDialog(
+            dayDateButton.setClickable(false);
+            dayDateDialog = new ProgramTherapyDayDateDialog(
                     requireContext(), mMainActivity.getTimeDifferenceMillis(),
                     binding.btnStartDay.getText().toString(),
                     WandData.therapy[WandData.FUTURE] == 5);
-            dialog.setCancelButtonListener(cancelView -> dialog.dismiss());
-            dialog.setConfirmButtonListener(confirmView -> {
-                DatePicker datePicker = dialog.findViewById(R.id.datePicker);
+            dayDateDialog.setCancelButtonListener(cancelView -> {
+                dayDateDialog.dismiss();
+                dayDateButton.setClickable(true);
+            });
+            dayDateDialog.setConfirmButtonListener(confirmView -> {
+                DatePicker datePicker = dayDateDialog.findViewById(R.id.datePicker);
                 int year = datePicker.getYear();
                 int month = datePicker.getMonth();
                 int day = datePicker.getDayOfMonth();
@@ -373,21 +386,26 @@ public class ProgramTherapyFragment extends Fragment {
 
                 enableDisableProgramButton(valuesChanged[0] && valuesChanged[1] && valuesChanged[3]);
 
-                dialog.dismiss();
+                dayDateDialog.dismiss();
+                dayDateButton.setClickable(true);
                 dialogs.clear();
             });
-            dialog.show();
-            dialogs.add(dialog);
+            dayDateDialog.show();
+            dialogs.add(dayDateDialog);
         });
     }
 
     private void setUpTimeButtonClick() {
         binding.btnTimeOfDay.setOnClickListener(timeOfDayButton -> {
-            final ProgramTherapyTimeOfDayDialog dialog = new ProgramTherapyTimeOfDayDialog(
+            timeOfDayButton.setClickable(false);
+            timeOfDayDialog = new ProgramTherapyTimeOfDayDialog(
                     requireContext(), mMainActivity.getTimeDifferenceMillis(), lastSetHour, lastSetMinute);
-            dialog.setCancelButtonListener(cancelView -> dialog.dismiss());
-            dialog.setConfirmButtonListener(confirmView -> {
-                TimePicker timePicker = dialog.findViewById(R.id.timePicker);
+            timeOfDayDialog.setCancelButtonListener(cancelView -> {
+                timeOfDayDialog.dismiss();
+                timeOfDayButton.setClickable(true);
+            });
+            timeOfDayDialog.setConfirmButtonListener(confirmView -> {
+                TimePicker timePicker = timeOfDayDialog.findViewById(R.id.timePicker);
 
                 lastSetHour = timePicker.getHour();
                 lastSetMinute = timePicker.getMinute();
@@ -410,11 +428,12 @@ public class ProgramTherapyFragment extends Fragment {
 
                 enableDisableProgramButton(valuesChanged[0] && valuesChanged[1] && valuesChanged[2]);
 
-                dialog.dismiss();
+                timeOfDayDialog.dismiss();
+                timeOfDayButton.setClickable(true);
                 dialogs.clear();
             });
-            dialog.show();
-            dialogs.add(dialog);
+            timeOfDayDialog.show();
+            dialogs.add(timeOfDayDialog);
         });
     }
 
@@ -446,6 +465,7 @@ public class ProgramTherapyFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton() {
         binding.btnInterrogate.setOnClickListener(interrogateButton -> {
+            interrogateButton.setClickable(false);
             mMainActivity.wandComm.interrogate(WandComm.frags.PROGRAM);
             binding.btnInterrogate.setClickable(false);
             binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_button_dark_always);
@@ -628,8 +648,8 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void updateUI(boolean success) {
-        View view = getView();
-        if (success & view != null) {
+        binding.btnInterrogate.setClickable(true);
+        if (success) {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 // Re-enable changed parameters (and the test stim button) only when
                 // UIUpdate is called - meaning that the state machine has finished its tasks
@@ -712,7 +732,16 @@ public class ProgramTherapyFragment extends Fragment {
     void setupWandData() {
         binding.btnInterrogate.setClickable(true);
         binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-        binding.tvItnsModelNumber.setText((WandData.getModelNumber(getContext())));
+        String modelNumber = WandData.getModelNumber(getContext());
+        if (getString(R.string.all_model_number_two).equals(modelNumber)) {
+            binding.tvItnsModelNumber.setText(modelNumber);
+        } else {
+            showWrongModelNumberDialog();
+            disableAllTheButtons();
+            resetAllButtonsWithDefaultBackground();
+            resetAllTheTexts();
+            return;
+        }
 
         binding.tvItnsSerialVal.setText(WandData.getSerialNumber());
 
@@ -753,6 +782,12 @@ public class ProgramTherapyFragment extends Fragment {
 
     public void showSerialNumberMismatchWarnDialog() {
         SerialNumberMismatchDialog dialog = new SerialNumberMismatchDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    public void showWrongModelNumberDialog() {
+        WrongModelDialog dialog = new WrongModelDialog(requireContext());
         dialog.setConfirmButtonListener(v -> dialog.dismiss());
         dialog.show();
     }

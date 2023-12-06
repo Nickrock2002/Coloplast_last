@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.ninecmed.tablet.databinding.FragmentItnsBinding;
 import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRSurgeryDialog;
+import com.ninecmed.tablet.dialogs.WrongModelDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -59,7 +60,9 @@ public class ItnsFragment extends Fragment {
 
         mMainActivity = (MainActivity) getActivity();
 
-        if (mMainActivity != null && mMainActivity.isInterrogationDone) setupWandData(false);
+        if (mMainActivity != null && mMainActivity.isInterrogationDone
+                && getString(R.string.all_model_number_two).equals(getString(R.string.all_model_number_two)))
+            setupWandData(false);
         return binding.getRoot();
     }
 
@@ -72,6 +75,7 @@ public class ItnsFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeInterrogateButton() {
         binding.btItnsInterrogate.setOnClickListener(view -> {
+            view.setClickable(false);
             mMainActivity.wandComm.interrogate(WandComm.frags.ITNS);
             binding.ibItnsPlus.setClickable(false);
             binding.ibItnsMinus.setClickable(false);
@@ -208,9 +212,6 @@ public class ItnsFragment extends Fragment {
     }
 
     public void updateItnsUI(boolean success) {
-        binding.ibItnsPlus.setClickable(true);
-        binding.ibItnsMinus.setClickable(true);
-
         if (success) {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 showLeadRWarningIfFound(true);
@@ -219,6 +220,13 @@ public class ItnsFragment extends Fragment {
                 binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
             } else {
                 mMainActivity.isInterrogationDone = true;
+                String modelNumber = WandData.getModelNumber(getContext());
+                if (!getString(R.string.all_model_number_two).equals(modelNumber)) {
+                    showWrongModelNumberDialog();
+                    disableAllTheButtons();
+                    resetAllTheTexts();
+                    return;
+                }
                 setupWandData(true);
                 checkForReset();
             }
@@ -229,6 +237,9 @@ public class ItnsFragment extends Fragment {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM)
                 binding.btItnsInterrogate.setClickable(true);
         }
+        binding.ibItnsPlus.setClickable(true);
+        binding.ibItnsMinus.setClickable(true);
+        binding.btItnsInterrogate.setClickable(true);
         setPlusMinusButtonColors(true);
     }
 
@@ -237,7 +248,8 @@ public class ItnsFragment extends Fragment {
         binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_primary);
         binding.ibItnsPlus.setClickable(true);
         binding.ibItnsMinus.setClickable(true);
-        binding.tvItnsModelNumber.setText((WandData.getModelNumber(getContext())));
+
+        binding.tvItnsModelNumber.setText(WandData.getModelNumber(getContext()));
         binding.tvItnsSN.setText(WandData.getSerialNumber());
 
         binding.ibItnsPlus.setEnabled(true);
@@ -254,6 +266,32 @@ public class ItnsFragment extends Fragment {
         showLeadRWarningIfFound(showWarningOnStart);
         setInitialAmplitude();
         initializeStimulationButton();
+    }
+
+    public void showWrongModelNumberDialog() {
+        WrongModelDialog dialog = new WrongModelDialog(requireContext());
+        dialog.setConfirmButtonListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void disableAllTheButtons() {
+        binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_white);
+        binding.ibItnsPlus.setImageResource(R.drawable.ic_plus_grey);
+        binding.ibItnsPlus.setClickable(false);
+
+        binding.ibItnsMinus.setBackgroundResource(R.drawable.button_circular_white);
+        binding.ibItnsMinus.setImageResource(R.drawable.ic_minus_grey);
+        binding.ibItnsMinus.setClickable(false);
+
+        binding.btItnsStartStim.setEnabled(false);
+        binding.btItnsStartStim.setTextColor(ActivityCompat.getColor(getContext(), R.color.colorBaseGreyFourHundred));
+    }
+
+    private void resetAllTheTexts() {
+        binding.tvItnsModelNumber.setText(getString(R.string._1_dash));
+        binding.tvItnsSN.setText(getString(R.string._1_dash));
+        binding.tvLeadRVal.setText(getString(R.string._1_dash));
+        binding.tvItnsAmplitude.setText("0.0 V");
     }
 
     private void setInitialAmplitude() {

@@ -80,6 +80,7 @@
     <string name="language">Language:</string>
     <string name="date">Date:</string>
     <string name="the_intibia_itns_reset_recently">The Intibia ITNS reset recently</string>
+    <string name="contact_coloplast">Please contact coloplast</string>
     <string name="program">Program</string>
     <string name="lead_r_is_2000_ohms"><![CDATA[Lead R is > 2000 ohms]]></string>
     <string name="electrode_tip_must_make_contact_with_the_tissue">Electrode tip must make contact with the tissue.</string>
@@ -139,6 +140,7 @@
     <string name="time_with_colon">Time:</string>
     <string name="programming_unsuccessful">Programming unsuccessful</string>
     <string name="intibia_itns_reset">Intibia ITNS Reset</string>
+    <string name="intibia_wrong_model">Intibia Wrong Model</string>
     <string name="reset_counter">Reset Counter</string>
     <string name="implant_serial_number_mismatch">Implant Serial Number Mismatch</string>
     <string name="attempting_to_program_an_implant_with_an_incorrect_serial_number">Attempting to program an implant with an incorrect serial number</string>
@@ -163,6 +165,7 @@
     <string name="verify_sheath_position">Verify sheath position.</string>
     <string name="intibia_itns_successfully_programmed">Intibia ITNS successfully programmed</string>
     <string name="implant_reset_counter_3">Implant Reset Counter: 3</string>
+    <string name="implant_wrong_model_msg">Tablet not able to communicate with ITNS model</string>
     <string name="ic_plus">ic_plus</string>
     <string name="_0_0v">0.0V</string>
     <string name="incorrect_time">Incorrect Time of Day</string>

@@ -187,7 +187,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 wandConnDialog.dismiss();
             });
-            wandConnDialog.setCancelButtonListener(view -> wandConnDialog.dismiss());
+            wandConnDialog.setCancelButtonListener(view -> {
+                wandConnDialog.dismiss();
+            });
 
             wandConnDialog.show();
             if (isBluetoothPermissionGranted) {
