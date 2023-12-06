@@ -25,8 +25,10 @@ public class LeadRClinicalDialog extends BaseDialog {
 
         if (leadRValue > 2000) {
             binding.tvWarnTitle.setText(R.string.lead_r_is_2000_ohms);
+            binding.tvResetCounter.setText(R.string.lead_r_above);
         } else {
             binding.tvWarnTitle.setText(R.string.lead_r_is_250_ohms);
+            binding.tvResetCounter.setText(R.string.lead_r_below);
         }
 
         binding.tvLeadRVal.setText(String.valueOf(leadRValue).concat(" ohms"));
