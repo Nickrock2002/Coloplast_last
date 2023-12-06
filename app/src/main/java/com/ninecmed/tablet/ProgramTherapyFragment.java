@@ -688,8 +688,7 @@ public class ProgramTherapyFragment extends Fragment {
                 try {
                     if (dialogs != null && !dialogs.isEmpty()) {
                         AmplitudeDialog dialog = (AmplitudeDialog) dialogs.get(dialogs.size() - 1);
-                        dialog.getCancelButtonRef().setEnabled(true);
-                        dialog.getConfirmButtonRef().setEnabled(false);
+                        dialog.dismiss();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
