@@ -91,9 +91,15 @@ public class HamburgerFragment extends Fragment {
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
-            binding.btnLeadRWarn.setText(formattedLeadR);
-            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            binding.tvLeadRVal.setVisibility(View.INVISIBLE);
+            if(leadRValue == 0) {
+                binding.tvLeadRVal.setText(getString(R.string._1_dash));
+                binding.tvLeadRVal.setVisibility(View.VISIBLE);
+                binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
+            } else {
+                binding.btnLeadRWarn.setText(formattedLeadR);
+                binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+                binding.tvLeadRVal.setVisibility(View.INVISIBLE);
+            }
         } else {
             binding.tvLeadRVal.setText(formattedLeadR);
             binding.tvLeadRVal.setVisibility(View.VISIBLE);

@@ -234,8 +234,10 @@ public class ItnsFragment extends Fragment {
         // Here's what happens on fail
         else {
             mMainActivity.showWandITNSCommunicationIssueDialog();
-            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM)
+            if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 binding.btItnsInterrogate.setClickable(true);
+                showLeadRWarningIfFound(false);
+            }
         }
         binding.ibItnsPlus.setClickable(true);
         binding.ibItnsMinus.setClickable(true);
@@ -305,11 +307,16 @@ public class ItnsFragment extends Fragment {
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
-            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            if (showWarningOnStart) {
-                LeadRSurgeryDialog dialog = new LeadRSurgeryDialog(requireContext());
-                dialog.setConfirmButtonListener(v -> dialog.dismiss());
-                dialog.show();
+            if (leadRValue == 0) {
+                binding.tvLeadRVal.setText(R.string._1_dash);
+                binding.btnLeadRWarn.setVisibility(View.GONE);
+            } else {
+                binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+                if (showWarningOnStart) {
+                    LeadRSurgeryDialog dialog = new LeadRSurgeryDialog(requireContext());
+                    dialog.setConfirmButtonListener(v -> dialog.dismiss());
+                    dialog.show();
+                }
             }
         } else {
             binding.tvLeadRVal.setText(R.string.ok);

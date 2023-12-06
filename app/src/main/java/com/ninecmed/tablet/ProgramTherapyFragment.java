@@ -837,9 +837,15 @@ public class ProgramTherapyFragment extends Fragment {
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
-            binding.btnLeadRWarn.setVisibility(View.VISIBLE);
-            binding.tvLeadRVal.setVisibility(View.INVISIBLE);
-            displayLeadRDialogue();
+            if (leadRValue == 0) {
+                binding.tvLeadRVal.setVisibility(View.VISIBLE);
+                binding.tvLeadRVal.setText(R.string._1_dash);
+                binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
+            } else {
+                binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+                binding.tvLeadRVal.setVisibility(View.INVISIBLE);
+                displayLeadRDialogue();
+            }
         } else {
             binding.tvLeadRVal.setVisibility(View.VISIBLE);
             binding.tvLeadRVal.setText(R.string.ok);
