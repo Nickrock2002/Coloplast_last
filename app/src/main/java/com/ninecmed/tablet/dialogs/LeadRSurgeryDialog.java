@@ -7,6 +7,8 @@ import android.view.View;
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.databinding.DialogLeadrSurgeryBinding;
 
+import java.util.Locale;
+
 public class LeadRSurgeryDialog extends BaseDialog {
     private float leadRValue;
     private float leadIValue;
@@ -33,7 +35,8 @@ public class LeadRSurgeryDialog extends BaseDialog {
             binding.tvLeadRSubtitle.setText(R.string.lead_r_below);
         }
 
-        binding.tvLeadRVal.setText(String.valueOf(leadRValue).concat(" ohms"));
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
+        binding.tvLeadRVal.setText(formattedLeadR);
         binding.tvLeadIVal.setText(String.valueOf(leadIValue).concat(" mA"));
 
         binding.btnConfirmLeadR.setOnClickListener(confirmButtonListener);
