@@ -645,6 +645,10 @@ public class ProgramTherapyFragment extends Fragment {
         binding.btnFrequencyVal.setText(getString(R.string.off));
         binding.btnStartDay.setText(getString(R.string._3_dash));
         binding.btnTimeOfDay.setText(getString(R.string._3_dash));
+        binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
+        binding.tvLeadRVal.setVisibility(View.VISIBLE);
+        binding.btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
+        binding.tvImplantBatteryVal.setVisibility(View.VISIBLE);
     }
 
     public void updateUI(boolean success) {
