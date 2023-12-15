@@ -684,15 +684,13 @@ public class ProgramTherapyFragment extends Fragment {
                 checkForReset();
                 resetChangedParameters();
             }
-        } // Here's what happens on fail
-        else {
+        } else {  // Here's what happens on fail
             if (WandData.isITNSNew()) {
                 if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
                     dialogProgrammingInProgress.dismiss();
                 try {
-                    if (dialogs != null && !dialogs.isEmpty()) {
-                        AmplitudeDialog dialog = (AmplitudeDialog) dialogs.get(dialogs.size() - 1);
-                        dialog.dismiss();
+                    if (amplitudeDialog != null && !amplitudeDialog.isShowing()) {
+                        amplitudeDialog.dismiss();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -707,10 +705,9 @@ public class ProgramTherapyFragment extends Fragment {
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 try {
-                    if (dialogs != null && !dialogs.isEmpty()) {
-                        AmplitudeDialog dialog = (AmplitudeDialog) dialogs.get(dialogs.size() - 1);
-                        dialog.getCancelButtonRef().setEnabled(true);
-                        dialog.getConfirmButtonRef().setEnabled(false);
+                    if (amplitudeDialog != null && !amplitudeDialog.isShowing()) {
+                        amplitudeDialog.getCancelButtonRef().setEnabled(true);
+                        amplitudeDialog.getConfirmButtonRef().setEnabled(false);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -791,7 +788,10 @@ public class ProgramTherapyFragment extends Fragment {
 
     public void showWrongModelNumberDialog() {
         WrongModelDialog dialog = new WrongModelDialog(requireContext());
-        dialog.setConfirmButtonListener(v -> dialog.dismiss());
+        dialog.setConfirmButtonListener(v -> {
+            dialog.dismiss();
+            mMainActivity.goBack();
+        });
         dialog.show();
     }
 

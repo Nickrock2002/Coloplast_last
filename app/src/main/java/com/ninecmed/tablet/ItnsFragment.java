@@ -60,8 +60,7 @@ public class ItnsFragment extends Fragment {
 
         mMainActivity = (MainActivity) getActivity();
 
-        if (mMainActivity != null && mMainActivity.isInterrogationDone
-                && getString(R.string.all_model_number_two).equals(getString(R.string.all_model_number_two)))
+        if (mMainActivity != null && mMainActivity.isInterrogationDone && getString(R.string.all_model_number_two).equals(getString(R.string.all_model_number_two)))
             setupWandData(false);
         return binding.getRoot();
     }
@@ -272,7 +271,10 @@ public class ItnsFragment extends Fragment {
 
     public void showWrongModelNumberDialog() {
         WrongModelDialog dialog = new WrongModelDialog(requireContext());
-        dialog.setConfirmButtonListener(v -> dialog.dismiss());
+        dialog.setConfirmButtonListener(v -> {
+            dialog.dismiss();
+            mMainActivity.goBack();
+        });
         dialog.show();
     }
 

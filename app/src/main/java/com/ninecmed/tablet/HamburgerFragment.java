@@ -40,7 +40,6 @@ public class HamburgerFragment extends Fragment {
         binding = FragmentHamburgerBinding.inflate(inflater, container, false);
 
         binding.btCloseApp.setOnClickListener(v -> showCloseAppDialog());
-        binding.tvSoftwareVersionVal.setText(BuildConfig.VERSION_NAME);
 
         binding.btnSetLanguage.setOnClickListener(v -> showChangeLanguageDialogue());
         binding.btnLeadRWarn.setOnClickListener(v -> displayLeadRDialogue());

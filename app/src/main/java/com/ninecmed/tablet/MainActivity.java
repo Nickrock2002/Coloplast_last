@@ -508,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (isFromClinicVisit) {
-                updateAppTime(isFromClinicVisit);
+                updateAppTime(true);
             } else {
                 launchProgramTherapyFragment();
             }
@@ -595,7 +595,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void goBack() {
+    public void goBack() {
         getSupportFragmentManager().popBackStack();
         setUpToolbarClickEvents();
         binding.ivHamburger.setAlpha(1.0f);

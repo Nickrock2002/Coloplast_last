@@ -71,7 +71,7 @@
     <string name="software_version">Software Version</string>
     <string name="software_versions">Software Versions:</string>
     <string name="battery_replacement_time_rrt">Battery Replacement Time (RRT)</string>
-    <string name="company_info"><b>Coloplast Corporation</b>\n<br />+1-800-258-3476 \n<br />IFU link: <href url="https://docshub.coloplast.com/ifus">https://docshub\n.coloplast.com/ifus \nRef:  520500</href></string>
+    <string name="company_info">Coloplast Corporation\n<br />+1-800-258-3476 \n<br /><b>IFU link: </b><href url="https://docshub.coloplast.com/ifus">https://docshub\n.coloplast.com/ifus \nRef:  520500</href></string>
     <string name="company_address">1601 West River Road \nMinneapolis, MN 55411 \nUnited States of America</string>
     <string name="close_application">Close Application</string>
     <string name="reset_date_and_time">Reset Date and Time</string>
