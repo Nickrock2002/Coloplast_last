@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.ninecmed.tablet.databinding.FragmentItnsBinding;
 import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRSurgeryDialog;
+import com.ninecmed.tablet.dialogs.StimulationProgressDialog;
 import com.ninecmed.tablet.dialogs.WrongModelDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
@@ -35,6 +36,7 @@ public class ItnsFragment extends Fragment {
     private boolean mStimEnabled = false;
     FragmentItnsBinding binding;
     private boolean isFromBackstack = false;
+    private StimulationProgressDialog stimulationProgressDialog;
 
     @Override
     public void onAttach(Context context) {
@@ -109,7 +111,7 @@ public class ItnsFragment extends Fragment {
                     if (mStimEnabled) {
                         binding.btItnsStartStim.setPressed(false);
                         binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
-
+                        showNeurostimulationProgressDialog();
                         // Set delay to 1500 to be the same delay as ExternalFragment
                         if (mNow + 1500 < System.currentTimeMillis()) {
                             mMainActivity.wandComm.setStimulation(false);
@@ -186,7 +188,7 @@ public class ItnsFragment extends Fragment {
     }
 
     void setPlusMinusButtonColors(boolean isDefault) {
-        if (mAmplitudePos == 42) {
+        if (mAmplitudePos == 22) {
             binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
             binding.ibItnsPlus.setClickable(false);
         } else {
@@ -210,7 +212,15 @@ public class ItnsFragment extends Fragment {
         }
     }
 
+    public void showNeurostimulationProgressDialog() {
+        stimulationProgressDialog = new StimulationProgressDialog(requireContext());
+        stimulationProgressDialog.show();
+    }
+
     public void updateItnsUI(boolean success) {
+        if (stimulationProgressDialog != null && stimulationProgressDialog.isShowing()) {
+            stimulationProgressDialog.dismiss();
+        }
         if (success) {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 showLeadRWarningIfFound(true);

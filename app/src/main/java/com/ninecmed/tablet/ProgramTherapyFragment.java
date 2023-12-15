@@ -33,6 +33,7 @@ import com.ninecmed.tablet.dialogs.ProgramTherapyTimeOfDayDialog;
 import com.ninecmed.tablet.dialogs.ProgrammingUnsuccessfulDialog;
 import com.ninecmed.tablet.dialogs.ResetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
+import com.ninecmed.tablet.dialogs.StimulationProgressDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WrongModelDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
@@ -66,6 +67,7 @@ public class ProgramTherapyFragment extends Fragment {
     ProgramTherapyDayDateDialog dayDateDialog;
     ProgramTherapyTimeOfDayDialog timeOfDayDialog;
     ProgramITNSProgressDialog dialogProgrammingInProgress;
+    StimulationProgressDialog stimulationProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,8 +84,10 @@ public class ProgramTherapyFragment extends Fragment {
         setUpDateButtonClick();
         setUpTimeButtonClick();
         setDateTime();
-        if (mMainActivity.isInterrogationDone) {
-            setupWandData();
+        String modelNumber = WandData.getModelNumber(getContext());
+        if (mMainActivity.isInterrogationDone
+                && !getString(R.string.all_model_number_one).equals(modelNumber)) {
+            setupWandData(modelNumber);
         }
         return binding.getRoot();
     }
@@ -197,7 +201,6 @@ public class ProgramTherapyFragment extends Fragment {
                             mMainActivity.wandComm.setStimulation(true);
                             ((Button) stimulationButton).setText(R.string.stimulation_active);
                             WandData.invalidateStimLeadI();
-
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
                         }
@@ -220,6 +223,7 @@ public class ProgramTherapyFragment extends Fragment {
                             }
                             setPlusMinusButtonColors(amplitudeDialog, true);
                         }
+                        showNeurostimulationProgressDialog();
                         amplitudeDialog.getPlusButtonRef().setClickable(true);
                         amplitudeDialog.getMinusButtonRef().setClickable(true);
                         break;
@@ -652,6 +656,9 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void updateUI(boolean success) {
+        if (stimulationProgressDialog != null && stimulationProgressDialog.isShowing()) {
+            stimulationProgressDialog.dismiss();
+        }
         binding.btnInterrogate.setClickable(true);
         if (success) {
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -680,7 +687,7 @@ public class ProgramTherapyFragment extends Fragment {
                 }
             } else { /* This is interrogate callback */
                 mMainActivity.isInterrogationDone = true;
-                setupWandData();
+                setupWandData(WandData.getModelNumber(getContext()));
                 checkForReset();
                 resetChangedParameters();
             }
@@ -729,18 +736,18 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
-    void setupWandData() {
+    void setupWandData(String modelNumber) {
         binding.btnInterrogate.setClickable(true);
         binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-        String modelNumber = WandData.getModelNumber(getContext());
-        if (getString(R.string.all_model_number_two).equals(modelNumber)) {
-            binding.tvItnsModelNumber.setText(modelNumber);
-        } else {
+
+        if (getString(R.string.all_model_number_one).equals(modelNumber)) {
             showWrongModelNumberDialog();
             disableAllTheButtons();
             resetAllButtonsWithDefaultBackground();
             resetAllTheTexts();
             return;
+        } else {
+            binding.tvItnsModelNumber.setText(modelNumber);
         }
 
         binding.tvItnsSerialVal.setText(WandData.getSerialNumber());
@@ -793,6 +800,12 @@ public class ProgramTherapyFragment extends Fragment {
             mMainActivity.goBack();
         });
         dialog.show();
+    }
+
+    public void showNeurostimulationProgressDialog() {
+        stimulationProgressDialog = new StimulationProgressDialog(requireContext());
+        stimulationProgressDialog.show();
+        dialogs.add(stimulationProgressDialog);
     }
 
     // Client Suggested to hide this & show another dialog

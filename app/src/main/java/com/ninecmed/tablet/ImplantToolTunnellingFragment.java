@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentImplantTunnelingBinding;
 import com.ninecmed.tablet.dialogs.LeadRImplantTunnelingDialog;
+import com.ninecmed.tablet.dialogs.StimulationProgressDialog;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,6 +35,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     private final Handler mHandler = new Handler();
     private boolean mStimEnabled = false;
     private FragmentImplantTunnelingBinding binding;
+    private StimulationProgressDialog stimulationProgressDialog;
 
     @Override
     public void onAttach(Context context) {
@@ -120,6 +122,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                             mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
                         }
                     }
+                    showNeurostimulationProgressDialog();
                     binding.ibExternalPlus.setClickable(true);
                     binding.ibExternalMinus.setClickable(true);
                     break;
@@ -160,7 +163,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     }
 
     void setPlusMinusButtonColors(boolean isDefault) {
-        if (mAmplitudePos == 42) {
+        if (mAmplitudePos == 22) {
             binding.ibExternalPlus.setBackgroundResource(R.drawable.button_circular_grey_three_hundred);
             binding.ibExternalPlus.setClickable(false);
         } else {
@@ -184,8 +187,16 @@ public class ImplantToolTunnellingFragment extends Fragment {
         }
     }
 
+    public void showNeurostimulationProgressDialog() {
+        stimulationProgressDialog = new StimulationProgressDialog(requireContext());
+        stimulationProgressDialog.show();
+    }
+
     @SuppressLint("DefaultLocale")
     public void updateImplantTunnellingUI(boolean success) {
+        if (stimulationProgressDialog != null && stimulationProgressDialog.isShowing()) {
+            stimulationProgressDialog.dismiss();
+        }
         if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIMEXT) {
             mMainActivity.isImplantInterrogationDone = true;
             binding.btExternalStartStim.setEnabled(true);
