@@ -188,8 +188,10 @@ public class ImplantToolTunnellingFragment extends Fragment {
     }
 
     public void showNeurostimulationProgressDialog() {
-        stimulationProgressDialog = new StimulationProgressDialog(requireContext());
-        stimulationProgressDialog.show();
+        if (stimulationProgressDialog == null)
+            stimulationProgressDialog = new StimulationProgressDialog(requireContext());
+        if (!stimulationProgressDialog.isShowing())
+            stimulationProgressDialog.show();
     }
 
     @SuppressLint("DefaultLocale")
