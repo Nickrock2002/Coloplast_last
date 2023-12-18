@@ -9,10 +9,10 @@ import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.WandData;
 import com.ninecmed.tablet.databinding.DialogWrongModelBinding;
 
-public class WrongModelDialog extends BaseDialog {
+public class InvalidModelDialog extends BaseDialog {
     private View.OnClickListener confirmButtonListener = null;
 
-    public WrongModelDialog(Context context) {
+    public InvalidModelDialog(Context context) {
         super(context);
     }
 

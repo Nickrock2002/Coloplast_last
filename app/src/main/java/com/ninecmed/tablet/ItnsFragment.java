@@ -14,10 +14,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentItnsBinding;
+import com.ninecmed.tablet.dialogs.InvalidModelDialog;
 import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRSurgeryDialog;
 import com.ninecmed.tablet.dialogs.StimulationProgressDialog;
-import com.ninecmed.tablet.dialogs.WrongModelDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
 
@@ -232,7 +232,9 @@ public class ItnsFragment extends Fragment {
             } else {
                 mMainActivity.isInterrogationDone = true;
                 String modelNumber = WandData.getModelNumber(getContext());
-                if (!getString(R.string.all_model_number_two).equals(modelNumber)) {
+                if (!getString(R.string.all_model_number_two).equals(modelNumber) &&
+                        !getString(R.string.all_model_number_three).equals(modelNumber) &&
+                        !getString(R.string.all_model_number_four).equals(modelNumber)) {
                     showWrongModelNumberDialog();
                     disableAllTheButtons();
                     resetAllTheTexts();
@@ -282,7 +284,7 @@ public class ItnsFragment extends Fragment {
     }
 
     public void showWrongModelNumberDialog() {
-        WrongModelDialog dialog = new WrongModelDialog(requireContext());
+        InvalidModelDialog dialog = new InvalidModelDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             mMainActivity.goBack();

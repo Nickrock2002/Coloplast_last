@@ -35,6 +35,8 @@
     <string name="all_amplitude">Amplitude:</string>
     <string name="all_model_number_one">9C-680</string>
     <string name="all_model_number_two">CP-IN100</string>
+    <string name="all_model_number_three">9C-680E</string>
+    <string name="all_model_number_four">CP-IN101</string>
     <string name="all_cancel">Cancel</string>
     <string name="all_retry">Retry</string>
     <string name="all_ok">OK</string>
@@ -172,7 +174,7 @@
     <string name="implant_tool_tunneling_msg">When <b>Implant Tool Tunnelling</b> is complete,\n go to the <b>ITNS Interrogation</b> Tab</string>
     <string name="amplitude_colon">Amplitude:</string>
     <string name="intibia_itns_information_and_settings">Intibia ITNS Information and Settings</string>
-    <string name="program_therapy">Program therapy</string>
+    <string name="program_therapy">Program Therapy</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
         <item>Daily</item>

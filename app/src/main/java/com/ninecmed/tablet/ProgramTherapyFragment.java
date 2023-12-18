@@ -24,6 +24,7 @@ import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.FrequencyDialog;
 import com.ninecmed.tablet.dialogs.GetProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
+import com.ninecmed.tablet.dialogs.InvalidModelDialog;
 import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.dialogs.ProgramITNSProgressDialog;
@@ -35,7 +36,6 @@ import com.ninecmed.tablet.dialogs.ResetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.StimulationProgressDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
-import com.ninecmed.tablet.dialogs.WrongModelDialog;
 import com.ninecmed.tablet.events.ItnsUpdateAmpEvent;
 import com.ninecmed.tablet.events.ProgramSuccessEvent;
 import com.ninecmed.tablet.events.UIUpdateEvent;
@@ -740,14 +740,16 @@ public class ProgramTherapyFragment extends Fragment {
         binding.btnInterrogate.setClickable(true);
         binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
 
-        if (getString(R.string.all_model_number_one).equals(modelNumber)) {
+        if (getString(R.string.all_model_number_two).equals(modelNumber) ||
+                getString(R.string.all_model_number_three).equals(modelNumber) ||
+                getString(R.string.all_model_number_four).equals(modelNumber)) {
+            binding.tvItnsModelNumber.setText(modelNumber);
+        } else {
             showWrongModelNumberDialog();
             disableAllTheButtons();
             resetAllButtonsWithDefaultBackground();
             resetAllTheTexts();
             return;
-        } else {
-            binding.tvItnsModelNumber.setText(modelNumber);
         }
 
         binding.tvItnsSerialVal.setText(WandData.getSerialNumber());
@@ -794,7 +796,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void showWrongModelNumberDialog() {
-        WrongModelDialog dialog = new WrongModelDialog(requireContext());
+        InvalidModelDialog dialog = new InvalidModelDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             mMainActivity.goBack();
