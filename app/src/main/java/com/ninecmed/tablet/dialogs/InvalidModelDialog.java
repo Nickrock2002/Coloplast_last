@@ -25,12 +25,10 @@ public class InvalidModelDialog extends BaseDialog {
         setContentView(binding.getRoot());
 
         String modelNumber = WandData.getModelNumber(getContext());
-        if (modelNumber == null) {
-            modelNumber = "";
-        }
-        binding.tvImplantModel.setText(getContext().getString(R.string.implant_wrong_model_msg)
-                .concat(" ").concat(modelNumber));
+        modelNumber = getContext().getString(R.string.implant_wrong_model_msg)
+                .concat(" ").concat(modelNumber);
 
+        binding.tvImplantModel.setText(modelNumber);
         binding.btnResetCounterConfirm.setOnClickListener(confirmButtonListener);
     }
 
