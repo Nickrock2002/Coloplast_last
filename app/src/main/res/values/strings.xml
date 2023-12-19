@@ -34,8 +34,8 @@
     <string name="itns_time">Time:</string>
     <string name="all_amplitude">Amplitude:</string>
     <string name="all_model_number_one">9C-680</string>
-    <string name="all_model_number_two">CP-IN100</string>
-    <string name="all_model_number_three">9C-680E</string>
+    <string name="all_model_number_two">9C-680E</string>
+    <string name="all_model_number_three">CP-IN100</string>
     <string name="all_model_number_four">CP-IN101</string>
     <string name="all_cancel">Cancel</string>
     <string name="all_retry">Retry</string>
@@ -82,7 +82,7 @@
     <string name="language">Language:</string>
     <string name="date">Date:</string>
     <string name="the_intibia_itns_reset_recently">The Intibia ITNS reset recently</string>
-    <string name="contact_coloplast">Please contact coloplast</string>
+    <string name="contact_coloplast">Please contact Coloplast</string>
     <string name="program">Program</string>
     <string name="lead_r_is_2000_ohms"><![CDATA[Lead R is > 2000 ohms]]></string>
     <string name="electrode_tip_must_make_contact_with_the_tissue">Electrode tip must make contact with the tissue.</string>

@@ -62,7 +62,10 @@ public class ItnsFragment extends Fragment {
 
         mMainActivity = (MainActivity) getActivity();
 
-        if (mMainActivity != null && mMainActivity.isInterrogationDone && getString(R.string.all_model_number_two).equals(getString(R.string.all_model_number_two)))
+        if (mMainActivity != null && mMainActivity.isInterrogationDone
+                && (getString(R.string.all_model_number_two).equals(WandData.getModelNumber(getContext()))
+                || getString(R.string.all_model_number_three).equals(WandData.getModelNumber(getContext()))
+                || getString(R.string.all_model_number_four).equals(WandData.getModelNumber(getContext()))))
             setupWandData(false);
         return binding.getRoot();
     }

@@ -195,6 +195,10 @@ public class WandData {
             return context.getString(R.string.all_model_number_one);
         else if (mModelNumber[CURRENT] == 2)
             return context.getString(R.string.all_model_number_two);
+        else if (mModelNumber[CURRENT] == 3)
+            return context.getString(R.string.all_model_number_three);
+        else if (mModelNumber[CURRENT] == 4)
+            return context.getString(R.string.all_model_number_four);
         else
             return null;
     }

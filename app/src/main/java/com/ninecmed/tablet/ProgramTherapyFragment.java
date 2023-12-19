@@ -688,7 +688,6 @@ public class ProgramTherapyFragment extends Fragment {
             } else { /* This is interrogate callback */
                 mMainActivity.isInterrogationDone = true;
                 setupWandData(WandData.getModelNumber(getContext()));
-                checkForReset();
                 resetChangedParameters();
             }
         } else {  // Here's what happens on fail
@@ -745,6 +744,7 @@ public class ProgramTherapyFragment extends Fragment {
                 getString(R.string.all_model_number_four).equals(modelNumber)) {
             binding.tvItnsModelNumber.setText(modelNumber);
         } else {
+            dismissAllDialogs();
             showWrongModelNumberDialog();
             disableAllTheButtons();
             resetAllButtonsWithDefaultBackground();
