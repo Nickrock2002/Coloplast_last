@@ -73,7 +73,8 @@
     <string name="software_version">Software Version</string>
     <string name="software_versions">Software Versions:</string>
     <string name="battery_replacement_time_rrt">Battery Replacement Time (RRT)</string>
-    <string name="company_info">Coloplast Corporation\n<br />+1-800-258-3476 \n<br /><b>IFU link: </b><href url="https://docshub.coloplast.com/ifus">https://docshub\n.coloplast.com/ifus \nRef:  520500</href></string>
+    <string name="company_info">Coloplast Corporation\n<br />+1-800-258-3476 \n<br /></string>
+    <string name="ifu_link"><b>IFU link: </b><href url="docshub.coloplast.com/ifus">docshub.coloplast.com/ifus Ref:  520500</href></string>
     <string name="company_address">1601 West River Road \nMinneapolis, MN 55411 \nUnited States of America</string>
     <string name="close_application">Close Application</string>
     <string name="reset_date_and_time">Reset Date and Time</string>
@@ -82,6 +83,8 @@
     <string name="language">Language:</string>
     <string name="date">Date:</string>
     <string name="the_intibia_itns_reset_recently">The Intibia ITNS reset recently</string>
+    <string name="the_intibia_itns_reset_recently_cv">The Intibia ITNS automatically reset since the last visit</string>
+    <string name="the_intibia_itns_off">The Intibia ITNS is in \'OFF\'.</string>
     <string name="contact_coloplast">Please contact Coloplast</string>
     <string name="program">Program</string>
     <string name="lead_r_is_2000_ohms"><![CDATA[Lead R is > 2000 ohms]]></string>

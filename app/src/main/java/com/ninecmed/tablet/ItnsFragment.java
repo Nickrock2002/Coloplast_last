@@ -238,7 +238,7 @@ public class ItnsFragment extends Fragment {
                 if (!getString(R.string.all_model_number_two).equals(modelNumber) &&
                         !getString(R.string.all_model_number_three).equals(modelNumber) &&
                         !getString(R.string.all_model_number_four).equals(modelNumber)) {
-                    showWrongModelNumberDialog();
+                    mMainActivity.showInvalidModelNumberDialog();
                     disableAllTheButtons();
                     resetAllTheTexts();
                     return;
@@ -286,15 +286,6 @@ public class ItnsFragment extends Fragment {
         initializeStimulationButton();
     }
 
-    public void showWrongModelNumberDialog() {
-        InvalidModelDialog dialog = new InvalidModelDialog(requireContext());
-        dialog.setConfirmButtonListener(v -> {
-            dialog.dismiss();
-            mMainActivity.goBack();
-        });
-        dialog.show();
-    }
-
     private void disableAllTheButtons() {
         binding.ibItnsPlus.setBackgroundResource(R.drawable.button_circular_white);
         binding.ibItnsPlus.setImageResource(R.drawable.ic_plus_grey);
@@ -324,6 +315,7 @@ public class ItnsFragment extends Fragment {
     private void showLeadRWarningIfFound(boolean showWarningOnStart) {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
+        leadRValue = 240;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
             if (leadRValue == 0) {

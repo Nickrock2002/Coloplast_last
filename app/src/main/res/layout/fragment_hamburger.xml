@@ -296,11 +296,11 @@
             android:id="@+id/tv_company_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minLines="5"
+            android:minLines="3"
             android:text="@string/company_info"
             android:textColor="@color/colorGreySixHundred"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_ifu_link"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/tv_lead_i_title" />
 
@@ -308,13 +308,26 @@
             android:id="@+id/tv_company_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minLines="5"
+            android:minLines="3"
             android:text="@string/company_address"
             android:textColor="@color/cardview_dark_background"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toStartOf="@+id/guideline_mid"
             app:layout_constraintTop_toTopOf="@+id/tv_company_title" />
+
+        <TextView
+            android:id="@+id/tv_ifu_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/ifu_link"
+            android:textColor="@color/colorGreySixHundred"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_company_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

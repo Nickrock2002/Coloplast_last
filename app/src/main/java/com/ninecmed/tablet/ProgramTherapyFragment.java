@@ -24,8 +24,7 @@ import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.FrequencyDialog;
 import com.ninecmed.tablet.dialogs.GetProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
-import com.ninecmed.tablet.dialogs.InvalidModelDialog;
-import com.ninecmed.tablet.dialogs.ItnsResetDialog;
+import com.ninecmed.tablet.dialogs.ItnsResetCVDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.dialogs.ProgramITNSProgressDialog;
 import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
@@ -745,7 +744,7 @@ public class ProgramTherapyFragment extends Fragment {
             binding.tvItnsModelNumber.setText(modelNumber);
         } else {
             dismissAllDialogs();
-            showWrongModelNumberDialog();
+            mMainActivity.showInvalidModelNumberDialog();
             disableAllTheButtons();
             resetAllButtonsWithDefaultBackground();
             resetAllTheTexts();
@@ -792,15 +791,6 @@ public class ProgramTherapyFragment extends Fragment {
     public void showSerialNumberMismatchWarnDialog() {
         SerialNumberMismatchDialog dialog = new SerialNumberMismatchDialog(requireContext());
         dialog.setConfirmButtonListener(v -> dialog.dismiss());
-        dialog.show();
-    }
-
-    public void showWrongModelNumberDialog() {
-        InvalidModelDialog dialog = new InvalidModelDialog(requireContext());
-        dialog.setConfirmButtonListener(v -> {
-            dialog.dismiss();
-            mMainActivity.goBack();
-        });
         dialog.show();
     }
 
@@ -887,13 +877,11 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void showItnsResetDialog() {
-        ItnsResetDialog dialog = new ItnsResetDialog(requireContext());
+        ItnsResetCVDialog dialog = new ItnsResetCVDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             dialogs.clear();
             mMainActivity.wandComm.clearResetCounter();
-//            resetAllButtonsWithDefaultBackground();
-//            disableAllTheButtons();
             resetAllTheTexts();
         });
         dialog.show();

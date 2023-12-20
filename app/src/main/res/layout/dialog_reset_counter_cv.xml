@@ -28,12 +28,12 @@
             android:id="@+id/tv_warn_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:text="@string/intibia_itns_reset"
+            android:textAlignment="center"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"
-            android:layout_marginStart="24dp"
-            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -45,27 +45,41 @@
         android:id="@+id/tv_top_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/the_intibia_itns_reset_recently"
+        android:text="@string/the_intibia_itns_reset_recently_cv"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
+        app:layout_constraintBottom_toTopOf="@id/tv_mid_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tv_reset_counter"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
+
+    <TextView
+        android:id="@+id/tv_mid_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:text="@string/the_intibia_itns_off"
+        android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="@dimen/dialog_large_text"
+        app:layout_constraintBottom_toTopOf="@+id/tv_reset_counter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_top_text" />
 
     <TextView
         android:id="@+id/tv_reset_counter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
+        android:text="@string/implant_reset_counter_3"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
-        android:text="@string/implant_reset_counter_3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_top_text" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_mid_text" />
 
     <Button
         android:id="@+id/btn_reset_counter_confirm"

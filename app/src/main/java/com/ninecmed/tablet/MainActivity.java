@@ -28,6 +28,7 @@ import com.ninecmed.tablet.dialogs.ClinicVisitDatePickerDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
 import com.ninecmed.tablet.dialogs.CloseAppDialog;
+import com.ninecmed.tablet.dialogs.InvalidModelDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandTabConnDialog;
@@ -438,10 +439,10 @@ public class MainActivity extends AppCompatActivity {
             }
             if (onFeatureSelectionScreen && dialogs != null && dialogs.size() > 0) {
                 if (!(dialogs.get(dialogs.size() - 1) instanceof WandAndTabletCommIssueDialog)) {
-                    backToHomeScreen(false);
+                    backToHomeScreen(false, true);
                 }
             } else {
-                backToHomeScreen(true);
+                backToHomeScreen(true, true);
             }
         }
 
@@ -461,11 +462,15 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void backToHomeScreen(boolean relaunch) {
+    private void backToHomeScreen(boolean relaunch, boolean showWandCommIssueDialog) {
         MainActivity.this.runOnUiThread(() -> {
-            if (relaunch) launchFeatureSelectionFragment(true);
+            if (relaunch) {
+                launchFeatureSelectionFragment(true);
+            }
             dismissAllDialogs();
-            showWandTabCommunicationIssueDialog();
+            if (showWandCommIssueDialog) {
+                showWandTabCommunicationIssueDialog();
+            }
         });
     }
 
@@ -583,6 +588,15 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
         dialogs.add(dialog);
+    }
+
+    public void showInvalidModelNumberDialog() {
+        InvalidModelDialog dialog = new InvalidModelDialog(MainActivity.this);
+        dialog.setConfirmButtonListener(v -> {
+            dialog.dismiss();
+            backToHomeScreen(true, false);
+        });
+        dialog.show();
     }
 
     public void showBackToStartDialog() {

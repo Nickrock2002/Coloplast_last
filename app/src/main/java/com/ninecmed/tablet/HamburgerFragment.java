@@ -90,7 +90,7 @@ public class HamburgerFragment extends Fragment {
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
-            if(leadRValue == 0) {
+            if (leadRValue == 0) {
                 binding.tvLeadRVal.setText(getString(R.string._1_dash));
                 binding.tvLeadRVal.setVisibility(View.VISIBLE);
                 binding.btnLeadRWarn.setVisibility(View.INVISIBLE);
@@ -228,11 +228,13 @@ public class HamburgerFragment extends Fragment {
 
     private void setupWandData() {
         // Model Num
-        String modelNum = WandData.getModelNumber(getContext());
-        if (modelNum != null) {
-            binding.tvItnsModelVal.setText(modelNum);
+        String modelNumber = WandData.getModelNumber(getContext());
+        if (getString(R.string.all_model_number_two).equals(modelNumber) ||
+                getString(R.string.all_model_number_three).equals(modelNumber) ||
+                getString(R.string.all_model_number_four).equals(modelNumber)) {
+            binding.tvItnsModelVal.setText(modelNumber);
         } else {
-            binding.tvItnsModelVal.setText(getString(R.string._1_dash));
+            mMainActivity.showInvalidModelNumberDialog();
         }
 
         // Serial Num

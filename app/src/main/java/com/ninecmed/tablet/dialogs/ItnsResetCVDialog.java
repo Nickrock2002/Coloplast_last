@@ -7,12 +7,12 @@ import android.view.View;
 
 import com.ninecmed.tablet.R;
 import com.ninecmed.tablet.WandData;
-import com.ninecmed.tablet.databinding.DialogInvalidModelBinding;
+import com.ninecmed.tablet.databinding.DialogResetCounterCvBinding;
 
-public class InvalidModelDialog extends BaseDialog {
+public class ItnsResetCVDialog extends BaseDialog {
     private View.OnClickListener confirmButtonListener = null;
 
-    public InvalidModelDialog(Context context) {
+    public ItnsResetCVDialog(Context context) {
         super(context);
     }
 
@@ -21,14 +21,12 @@ public class InvalidModelDialog extends BaseDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DialogInvalidModelBinding binding = DialogInvalidModelBinding.inflate(getLayoutInflater());
+        DialogResetCounterCvBinding binding = DialogResetCounterCvBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String modelNumber = WandData.getModelNumber(getContext());
-        modelNumber = getContext().getString(R.string.implant_wrong_model_msg)
-                .concat(" ").concat(modelNumber);
+        binding.tvResetCounter.setText(getContext().getString(R.string.implant_reset_counter)
+                .concat(String.valueOf(WandData.getResets())));
 
-        binding.tvImplantModel.setText(modelNumber);
         binding.btnResetCounterConfirm.setOnClickListener(confirmButtonListener);
     }
 
