@@ -687,6 +687,7 @@ public class ProgramTherapyFragment extends Fragment {
             } else { /* This is interrogate callback */
                 mMainActivity.isInterrogationDone = true;
                 setupWandData(WandData.getModelNumber(getContext()));
+                checkForReset();
                 resetChangedParameters();
             }
         } else {  // Here's what happens on fail
