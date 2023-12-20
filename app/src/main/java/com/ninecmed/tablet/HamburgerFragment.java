@@ -35,6 +35,8 @@ public class HamburgerFragment extends Fragment {
     FragmentHamburgerBinding binding;
     boolean showStimLeadRDialog = false;
 
+    boolean interrogateClickedOnHamburger = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHamburgerBinding.inflate(inflater, container, false);
@@ -234,7 +236,11 @@ public class HamburgerFragment extends Fragment {
                 getString(R.string.all_model_number_four).equals(modelNumber)) {
             binding.tvItnsModelVal.setText(modelNumber);
         } else {
-            mMainActivity.showInvalidModelNumberDialog();
+            if (interrogateClickedOnHamburger) {
+                mMainActivity.showInvalidModelNumberDialog();
+            } else {
+                binding.tvItnsModelVal.setText(modelNumber);
+            }
         }
 
         // Serial Num
@@ -294,6 +300,7 @@ public class HamburgerFragment extends Fragment {
 
     public void updateHamburgerUI(boolean success) {
         if (success) {
+            interrogateClickedOnHamburger = true;
             setupWandData();
             mMainActivity.isInterrogationDone = true;
         } else {
