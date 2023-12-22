@@ -72,7 +72,7 @@
         android:id="@+id/tv_lead_r"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:text="@string/lead_r_colon"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"
@@ -94,11 +94,10 @@
         android:id="@+id/tv_lead_r_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
-        app:layout_constraintTop_toBottomOf="@+id/tv_lead_r_subtitle"
+        app:layout_constraintTop_toTopOf="@+id/tv_lead_r"
         tools:text="@string/_0_ohms" />
 
     <TextView
@@ -116,7 +115,7 @@
         android:id="@+id/tv_electrode_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:text="@string/electrode_tip_must_make_contact_with_the_tissue"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"

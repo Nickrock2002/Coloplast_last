@@ -74,15 +74,24 @@
             android:textSize="@dimen/dialog_large_text" />
 
         <TextView
-            android:id="@+id/tv_lead_r"
+            android:id="@+id/tv_model_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/model_num_text"
+            android:textAlignment="center"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="@dimen/dialog_large_text" />
+
+        <TextView
+            android:id="@+id/tv_last_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/contact_coloplast"
             android:textAlignment="center"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="@dimen/dialog_large_text"
-            android:textStyle="bold" />
+            android:textSize="@dimen/dialog_large_text" />
     </LinearLayout>
 
     <Button

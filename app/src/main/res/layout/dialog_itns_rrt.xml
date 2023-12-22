@@ -59,8 +59,7 @@
             android:text="@string/rrt_dialogue_title"
             android:textAlignment="center"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="@dimen/dialog_large_text"
-            android:textStyle="bold" />
+            android:textSize="@dimen/dialog_large_text" />
 
         <TextView
             android:id="@+id/tv_implant_battery_volts"
@@ -80,6 +79,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/rrt_dialogue_disc"
+            android:textAlignment="center"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="@dimen/dialog_medium_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_implant_battery_volts" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/contact_text"
             android:textAlignment="center"
             android:textColor="@color/cardview_dark_background"
             android:textSize="@dimen/dialog_medium_text"
