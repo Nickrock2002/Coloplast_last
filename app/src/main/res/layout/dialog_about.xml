@@ -35,14 +35,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7" />
+        app:layout_constraintGuide_percent="0.8" />
 
     <TextView
         android:id="@+id/tv_implant_firmware"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/implant_firmware"
-        android:textSize="@dimen/dialog_medium_text"
+        android:textSize="@dimen/dialog_large_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
 
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/wand_firmware"
-        android:textSize="@dimen/dialog_medium_text"
+        android:textSize="@dimen/dialog_large_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_implant_firmware" />
 
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/tablet_application"
-        android:textSize="@dimen/dialog_medium_text"
+        android:textSize="@dimen/dialog_large_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_wand_firmware" />
 
@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/_1_dash"
-        android:textSize="@dimen/dialog_medium_text"
+        android:textSize="@dimen/dialog_large_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/_1_dash"
-        android:textSize="@dimen/dialog_medium_text"
+        android:textSize="@dimen/dialog_large_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_implant_firmware_val" />
@@ -102,14 +102,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/_1_dash"
-        android:textSize="@dimen/dialog_medium_text"
+        android:textSize="@dimen/dialog_large_text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toBottomOf="@+id/tv_wand_firmware_val" />
 
     <Button
         android:id="@+id/btn_ok"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/confirm_ok_single_button_width"
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corners_button"

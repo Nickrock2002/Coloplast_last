@@ -29,6 +29,7 @@ import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
 import com.ninecmed.tablet.dialogs.CloseAppDialog;
 import com.ninecmed.tablet.dialogs.InvalidModelDialog;
+import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandTabConnDialog;

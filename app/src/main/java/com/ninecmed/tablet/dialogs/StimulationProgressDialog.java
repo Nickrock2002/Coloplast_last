@@ -3,6 +3,7 @@ package com.ninecmed.tablet.dialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.ninecmed.tablet.R;
@@ -22,7 +23,7 @@ public class StimulationProgressDialog extends BaseDialog {
         DialogProgramItnsProgressBinding binding = DialogProgramItnsProgressBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.tvWarnTitle.setText(getContext().getString(R.string.all_neuro_in_progress));
+        binding.cvTopContainer.setVisibility(View.GONE);
 
         Glide.with(getContext())
                 .load(R.raw.coloplast_spinner)

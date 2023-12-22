@@ -24,7 +24,6 @@ public class LeadRClinicalDialog extends BaseDialog {
 
         DialogLeadrClinicalBinding binding = DialogLeadrClinicalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         if (leadRValue > 2000) {
             binding.tvWarnTitle.setText(R.string.lead_r_is_2000_ohms);
             binding.tvResetCounter.setText(R.string.lead_r_above);
@@ -32,7 +31,7 @@ public class LeadRClinicalDialog extends BaseDialog {
             binding.tvWarnTitle.setText(R.string.lead_r_is_250_ohms);
             binding.tvResetCounter.setText(R.string.lead_r_below);
         }
-        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
         binding.tvLeadRVal.setText(formattedLeadR);
         String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", leadIValue);
         binding.tvLeadIVal.setText(formattedLeadI);

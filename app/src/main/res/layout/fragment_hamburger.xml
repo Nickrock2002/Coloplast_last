@@ -423,7 +423,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:paddingVertical="10dp"
-            android:text="@string/about_title"
+            android:text="@string/about_text"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/btn_set_language"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_3"

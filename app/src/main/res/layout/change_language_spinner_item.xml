@@ -5,5 +5,5 @@
     android:text="@string/set_language"
     android:textAlignment="center"
     android:textColor="@color/cardview_dark_background"
-    android:textSize="@dimen/dialog_small_text"
+    android:textSize="@dimen/dialog_medium_text"
     android:textStyle="bold" />

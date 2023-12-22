@@ -7,12 +7,12 @@ import android.view.View;
 
 import com.ninecmed.tablet.databinding.DialogProgramItnsBinding;
 
-public class GetProgramConfirmationDialog extends BaseDialog {
+public class ProgramConfirmationDialog extends BaseDialog {
     private View.OnClickListener confirmButtonListener = null;
     private View.OnClickListener cancelButtonListener = null;
     String ampVal, freqVal, dayDateVal, timeOfDayVal;
 
-    public GetProgramConfirmationDialog(Context context) {
+    public ProgramConfirmationDialog(Context context) {
         super(context);
     }
 

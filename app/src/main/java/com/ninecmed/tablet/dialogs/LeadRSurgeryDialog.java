@@ -35,7 +35,7 @@ public class LeadRSurgeryDialog extends BaseDialog {
             binding.tvLeadRSubtitle.setText(R.string.lead_r_below);
         }
 
-        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
         binding.tvLeadRVal.setText(formattedLeadR);
         String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", leadIValue);
         binding.tvLeadIVal.setText(formattedLeadI);

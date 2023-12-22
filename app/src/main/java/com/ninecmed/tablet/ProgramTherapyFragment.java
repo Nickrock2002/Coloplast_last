@@ -22,7 +22,7 @@ import com.ninecmed.tablet.databinding.FragmentProgramTherapyBinding;
 import com.ninecmed.tablet.dialogs.AmplitudeDialog;
 import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.FrequencyDialog;
-import com.ninecmed.tablet.dialogs.GetProgramConfirmationDialog;
+import com.ninecmed.tablet.dialogs.ProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
 import com.ninecmed.tablet.dialogs.ItnsResetCVDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
@@ -497,7 +497,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void showProgramConfirmationDialog() {
-        GetProgramConfirmationDialog dialog = new GetProgramConfirmationDialog(requireContext());
+        ProgramConfirmationDialog dialog = new ProgramConfirmationDialog(requireContext());
         dialog.setAmpVal(binding.btnAmplitudeVal.getText().toString());
         dialog.setFreqVal(binding.btnFrequencyVal.getText().toString());
         dialog.setDayDateVal(binding.btnStartDay.getText().toString());

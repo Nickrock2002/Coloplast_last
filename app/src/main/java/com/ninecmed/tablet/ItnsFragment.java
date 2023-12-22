@@ -315,7 +315,6 @@ public class ItnsFragment extends Fragment {
     private void showLeadRWarningIfFound(boolean showWarningOnStart) {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
-        leadRValue = 240;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
             if (leadRValue == 0) {
