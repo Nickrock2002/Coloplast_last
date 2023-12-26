@@ -83,8 +83,8 @@ public class ImplantToolTunnellingFragment extends Fragment {
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex1, endIndex1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Apply bold style to "ITNS Interrogation Tab"
-        int startIndex2 = text.indexOf("ITNS Interrogation Tab");
-        int endIndex2 = startIndex2 + "ITNS Interrogation Tab".length();
+        int startIndex2 = text.indexOf("ITNS Interrogation");
+        int endIndex2 = startIndex2 + "ITNS Interrogation".length();
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex2, endIndex2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Set the modified text in the TextView

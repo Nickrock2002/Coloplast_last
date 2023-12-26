@@ -173,11 +173,11 @@
     <string name="verify_sheath_position">Verify sheath position</string>
     <string name="intibia_itns_successfully_programmed">The ITNS was successfully programmed</string>
     <string name="implant_reset_counter_3">ITNS Reset Counter: 3</string>
-    <string name="implant_wrong_model_msg">Attending to program an ITNS with an incorrect or invalid model number</string>
+    <string name="implant_wrong_model_msg">Attending to program an ITNS with an incorrect or unknown model number</string>
     <string name="ic_plus">ic_plus</string>
     <string name="_0_0v">0.0V</string>
     <string name="incorrect_time">Incorrect Time of Day</string>
-    <string name="implant_tool_tunneling_msg">When <b>Implant Tool Tunnelling</b> is complete,\n go to the <b>ITNS Interrogation</b> Tab</string>
+    <string name="implant_tool_tunneling_msg">When Implant Tool Tunnelling is complete,\n go to the ITNS Interrogation Tab</string>
     <string name="amplitude_colon">Amplitude:</string>
     <string name="intibia_itns_information_and_settings">Intibia ITNS Information and Settings</string>
     <string name="program_therapy">Program Therapy</string>

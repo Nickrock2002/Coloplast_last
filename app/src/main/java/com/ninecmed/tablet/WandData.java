@@ -182,7 +182,7 @@ public class WandData {
         } else if (mModelNumber[CURRENT] == 4) {
             return context.getString(R.string.all_model_number_four);
         } else {
-            return "Unknown model number";
+            return "Unknown";
         }
     }
 
