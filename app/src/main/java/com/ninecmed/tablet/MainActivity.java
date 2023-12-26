@@ -29,9 +29,6 @@ import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
 import com.ninecmed.tablet.dialogs.CloseAppDialog;
 import com.ninecmed.tablet.dialogs.InvalidModelDialog;
-import com.ninecmed.tablet.dialogs.ItnsResetCVDialog;
-import com.ninecmed.tablet.dialogs.ItnsResetDialog;
-import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandTabConnDialog;
@@ -218,8 +215,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         FeatureSelectionFragment featureSelectionFragment = new FeatureSelectionFragment();
-        if (clearHistory)
+        if (clearHistory) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
         fragmentTransaction.addToBackStack(FeatureSelectionFragment.CLASS_NAME);
         fragmentTransaction.replace(R.id.fl_fragment, featureSelectionFragment);
         fragmentTransaction.commit();
@@ -326,7 +324,9 @@ public class MainActivity extends AppCompatActivity {
                     mBTDevice = bt;
                 }
 
-                if (mBTDevice != null) mBluetooth.connectToDevice(mBTDevice);
+                if (mBTDevice != null) {
+                    mBluetooth.connectToDevice(mBTDevice);
+                }
             }
         }
     }
@@ -381,20 +381,22 @@ public class MainActivity extends AppCompatActivity {
         int batteryPct = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
         if (batteryPct <= 15 && !batteryCharging) {
-            if (Calendar.getInstance().getTimeInMillis() > lastBatteryDialogShownTime + 600000)
+            if (Calendar.getInstance().getTimeInMillis() > lastBatteryDialogShownTime + 600000) {
                 showBatteryWarnDialog();
+            }
         }
 
         binding.tvBatteryPer.setText(String.valueOf(batteryPct).concat("%"));
 
-        if (batteryPct > 70)
+        if (batteryPct > 70) {
             binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_full);
-        else if (batteryPct > 40)
+        } else if (batteryPct > 40) {
             binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_level_1);
-        else if (batteryPct > 10)
+        } else if (batteryPct > 10) {
             binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_level_2);
-        else
+        } else {
             binding.ivBatteryPer.setBackgroundResource(R.drawable.cp_battery_empty);
+        }
     }
 
     public void updateUIFragments(final int frag, final boolean success) {
@@ -460,8 +462,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onConnectError(final BluetoothDevice device, String message) {
-            if (mRunBT)
+            if (mRunBT) {
                 mHandler.postDelayed(Reconnect, 1000); // And if fail, try every second
+            }
         }
     };
 

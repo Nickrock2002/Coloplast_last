@@ -22,10 +22,10 @@ import com.ninecmed.tablet.databinding.FragmentProgramTherapyBinding;
 import com.ninecmed.tablet.dialogs.AmplitudeDialog;
 import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.FrequencyDialog;
-import com.ninecmed.tablet.dialogs.ProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
 import com.ninecmed.tablet.dialogs.ItnsResetCVDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
+import com.ninecmed.tablet.dialogs.ProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.ProgramITNSProgressDialog;
 import com.ninecmed.tablet.dialogs.ProgramItnsSuccessDialog;
 import com.ninecmed.tablet.dialogs.ProgramTherapyDayDateDialog;
@@ -70,9 +70,9 @@ public class ProgramTherapyFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (binding == null)
+        if (binding == null) {
             binding = FragmentProgramTherapyBinding.inflate(inflater, container, false);
-
+        }
         dialogs = new ArrayList<>();
         initializeInterrogateButton();
         initializeProgramButton();
@@ -577,8 +577,9 @@ public class ProgramTherapyFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ProgramSuccessEvent event) {
-        if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
+        if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing()) {
             dialogProgrammingInProgress.dismiss();
+        }
         showProgramSuccessDialog();
     }
 
@@ -783,10 +784,12 @@ public class ProgramTherapyFragment extends Fragment {
         lastSetMinute = WandData.getProgramMinute();
         lastSetHour = WandData.getProgramHour();
 
-        if (!date.isEmpty())
+        if (!date.isEmpty()) {
             binding.btnStartDay.setText(date);
-        if (!time.isEmpty())
+        }
+        if (!time.isEmpty()) {
             binding.btnTimeOfDay.setText(time);
+        }
     }
 
     public void showSerialNumberMismatchWarnDialog() {
@@ -796,10 +799,12 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void showNeurostimulationProgressDialog() {
-        if (stimulationProgressDialog == null)
+        if (stimulationProgressDialog == null) {
             stimulationProgressDialog = new StimulationProgressDialog(requireContext());
-        if (!stimulationProgressDialog.isShowing())
+        }
+        if (!stimulationProgressDialog.isShowing()) {
             stimulationProgressDialog.show();
+        }
         dialogs.add(stimulationProgressDialog);
     }
 

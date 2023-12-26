@@ -12,10 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentFeatureSelectionBinding;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 public class FeatureSelectionFragment extends Fragment {
 
     public static final String CLASS_NAME = "FSF";

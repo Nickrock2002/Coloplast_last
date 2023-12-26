@@ -38,19 +38,19 @@ public class ByteReader extends SocketReader {
         List<Byte> byteList = new ArrayList<>();
         byte[] tmp = new byte[1];
 
-        while(true) {
+        while (true) {
             int n = reader.read();
             reader.unread(n);
 
             int count = reader.read(tmp);
-            if(count > 0) {
-                if(tmp[0] == delimiter){
+            if (count > 0) {
+                if (tmp[0] == delimiter) {
 
                     // Add the delimiter to the returned byte array
                     byteList.add(delimiter);
 
                     byte[] returnBytes = new byte[byteList.size()];
-                    for(int i = 0 ; i < byteList.size() ; i++){
+                    for (int i = 0; i < byteList.size(); i++) {
                         returnBytes[i] = byteList.get(i);
                     }
                     return returnBytes;

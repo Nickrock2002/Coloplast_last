@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -59,9 +58,9 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (binding == null)
+        if (binding == null) {
             binding = FragmentImplantTunnelingBinding.inflate(inflater, container, false);
-
+        }
         initializeStimulationButton();
         initializeAmplitudeButton();
         initializeTitle();
@@ -95,7 +94,6 @@ public class ImplantToolTunnellingFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeStimulationButton() {
         binding.btExternalStartStim.setOnTouchListener((view1, motionEvent) -> {
-            Log.v("MY Event ", "" + motionEvent.getActionMasked());
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     if (mNow + 500 < System.currentTimeMillis()) {
@@ -139,7 +137,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initializeAmplitudeButton() {
         binding.ibExternalPlus.setOnClickListener(view -> {
-            if (mAmplitudePos < 42) {
+            if (mAmplitudePos < 22) {
                 mAmplitudePos += 1;
             }
             WandData.setStimAmplitude(mAmplitudePos);
@@ -188,10 +186,12 @@ public class ImplantToolTunnellingFragment extends Fragment {
     }
 
     public void showNeurostimulationProgressDialog() {
-        if (stimulationProgressDialog == null)
+        if (stimulationProgressDialog == null) {
             stimulationProgressDialog = new StimulationProgressDialog(requireContext());
-        if (!stimulationProgressDialog.isShowing())
+        }
+        if (!stimulationProgressDialog.isShowing()) {
             stimulationProgressDialog.show();
+        }
     }
 
     @SuppressLint("DefaultLocale")

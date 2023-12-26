@@ -14,7 +14,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ninecmed.tablet.databinding.FragmentItnsBinding;
-import com.ninecmed.tablet.dialogs.InvalidModelDialog;
 import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRSurgeryDialog;
 import com.ninecmed.tablet.dialogs.StimulationProgressDialog;
@@ -52,8 +51,11 @@ public class ItnsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (binding == null) binding = FragmentItnsBinding.inflate(inflater, container, false);
-        else isFromBackstack = true;
+        if (binding == null) {
+            binding = FragmentItnsBinding.inflate(inflater, container, false);
+        } else {
+            isFromBackstack = true;
+        }
 
         initializeStimulationButton();
         initializeInterrogateButton();
@@ -65,8 +67,9 @@ public class ItnsFragment extends Fragment {
         if (mMainActivity != null && mMainActivity.isInterrogationDone
                 && (getString(R.string.all_model_number_two).equals(WandData.getModelNumber(getContext()))
                 || getString(R.string.all_model_number_three).equals(WandData.getModelNumber(getContext()))
-                || getString(R.string.all_model_number_four).equals(WandData.getModelNumber(getContext()))))
+                || getString(R.string.all_model_number_four).equals(WandData.getModelNumber(getContext())))) {
             setupWandData(false);
+        }
         return binding.getRoot();
     }
 
@@ -216,10 +219,12 @@ public class ItnsFragment extends Fragment {
     }
 
     public void showNeurostimulationProgressDialog() {
-        if (stimulationProgressDialog == null)
+        if (stimulationProgressDialog == null) {
             stimulationProgressDialog = new StimulationProgressDialog(requireContext());
-        if (!stimulationProgressDialog.isShowing())
+        }
+        if (!stimulationProgressDialog.isShowing()) {
             stimulationProgressDialog.show();
+        }
     }
 
     public void updateItnsUI(boolean success) {

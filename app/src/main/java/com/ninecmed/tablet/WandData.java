@@ -20,16 +20,6 @@ public class WandData {
     // interrogation is completed successfully.  Likewise, when we program parameters, we are able
     // to update the CURRENT values when we're confident that the commands were successful, even
     // if it means that the entire "program" set might be unsuccessful.
-
-    // Programmable implant parameters
-    static byte[] therapy = new byte[3];                                                            // 0 for Off, 1 for Daily, 2 for Weekly, 3 for Fortnightly, 4 for Monthly, 5 for Auto
-    static long[] dateandtime = new long[3];                                                        // Date and time of next therapy in milliseconds
-    static byte[] amplitude = new byte[3];                                                          // 0 for 0.1 V, 42 for 10.0.
-
-    // Programmable external stimulation parameters
-    static private byte mStimAmplitude = 30;                                                        // Set default amplitude to 1.5 V (50 mV resolution)
-    static private int mStimLeadI;                                                                  // Start with StimLeadI hidden
-
     // Interrogatable implant parameters
     static private final int[] mSerialNumber = new int[3];
     static private final int[] mWandFirmwareVersion = new int[3];
@@ -40,31 +30,23 @@ public class WandData {
     static private final int[] mLeadI = new int[3];
     static private final int[] mCellV = new int[3];
     static private final int[] mRRT = new int[3];
-
     // Combined model/serial number to detect unique ITNSs
     static private final long[] mModelSerial = new long[3];
-
-    static private class mClock {
-        static private final int[] mHours = new int[3];
-        static private final int[] mMins = new int[3];
-    }
-
-    static private class mSchedule {
-        static private final int[] mAlarms = new int[3];
-        static private final int[] mHours = new int[3];
-        static private final int[] mMins = new int[3];
-    }
-
-    static private boolean mIsITNSNew = false;
-    static private boolean mCable;
-
+    // Programmable implant parameters
+    static byte[] therapy = new byte[3];                                                            // 0 for Off, 1 for Daily, 2 for Weekly, 3 for Fortnightly, 4 for Monthly, 5 for Auto
+    static long[] dateandtime = new long[3];                                                        // Date and time of next therapy in milliseconds
+    static byte[] amplitude = new byte[3];                                                          // 0 for 0.1 V, 42 for 10.0.
     static int TEMPORARY = 0;
     static int CURRENT = 1;
     static int FUTURE = 2;
-
     static int LOW = 0;
     static int HIGH = 1;
     static long timeDifferenceMillis = 0;
+    // Programmable external stimulation parameters
+    static private byte mStimAmplitude = 30;                                                        // Set default amplitude to 1.5 V (50 mV resolution)
+    static private int mStimLeadI;                                                                  // Start with StimLeadI hidden
+    static private boolean mIsITNSNew = false;
+    static private boolean mCable;
 
     static void setCable(byte[] msg) {
         mCable = (msg[2] & 0xff) > 0;
@@ -76,6 +58,11 @@ public class WandData {
 
     static int getStimAmplitude() {
         return mStimAmplitude;
+    }
+
+    static void setStimAmplitude(int position) {
+        float f = getAmpFromPos(position);
+        mStimAmplitude = (byte) (f / .05f);
     }
 
     // Call InvalidateStimLeadI whenever the amplitude is changed.  After the initial
@@ -90,14 +77,9 @@ public class WandData {
         mStimLeadI = -1;
     }
 
-    static void setStimAmplitude(int position) {
-        float f = getAmpFromPos(position);
-        mStimAmplitude = (byte) (f / .05f);
-    }
-
     static void interrogateSuccessful() {
         copyTemporaryValuesToCurrentValues();
-        mModelSerial[CURRENT] = (mModelNumber[CURRENT] << 16) + mSerialNumber[CURRENT];
+        mModelSerial[CURRENT] = ((long) mModelNumber[CURRENT] << 16) + mSerialNumber[CURRENT];
         mIsITNSNew = true;
     }
 
@@ -157,7 +139,7 @@ public class WandData {
             mModelNumber[TEMPORARY] = (msg[4] & 0xf0) >> 4;
             mResets[TEMPORARY] = (msg[6] & 0xff);
             mImplantFirmwareVersion[TEMPORARY] = msg[4] & 0x0f;
-            mModelSerial[TEMPORARY] = (mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
+            mModelSerial[TEMPORARY] = ((long) mModelNumber[TEMPORARY] << 16) + mSerialNumber[TEMPORARY];
 
             mIsITNSNew = !isITNSNew();
         } catch (Exception e) {
@@ -191,16 +173,17 @@ public class WandData {
     }
 
     public static String getModelNumber(Context context) {
-        if (mModelNumber[CURRENT] == 1)
+        if (mModelNumber[CURRENT] == 1) {
             return context.getString(R.string.all_model_number_one);
-        else if (mModelNumber[CURRENT] == 2)
+        } else if (mModelNumber[CURRENT] == 2) {
             return context.getString(R.string.all_model_number_two);
-        else if (mModelNumber[CURRENT] == 3)
+        } else if (mModelNumber[CURRENT] == 3) {
             return context.getString(R.string.all_model_number_three);
-        else if (mModelNumber[CURRENT] == 4)
+        } else if (mModelNumber[CURRENT] == 4) {
             return context.getString(R.string.all_model_number_four);
-        else
+        } else {
             return "Unknown model number";
+        }
     }
 
     static int getModelNumber() {
@@ -208,17 +191,18 @@ public class WandData {
     }
 
     static void setStimI(byte[] msg, int low_or_high) {
-        if (low_or_high == LOW)
+        if (low_or_high == LOW) {
             mStimLeadI = (msg[2] & 0xff);
-        else
+        } else {
             mStimLeadI += (msg[2] & 0xff) << 8;
+        }
     }
 
     @SuppressLint("DefaultLocale")
     static String getStimLeadI() {
-        if (mStimLeadI == -1)
+        if (mStimLeadI == -1) {
             return null;
-        else {
+        } else {
             float amp_setting = (mStimAmplitude & 0xff) * 0.05f;
             float amp = max(amp_setting, 2.25f);
 
@@ -229,27 +213,46 @@ public class WandData {
 
             // Determine the load resistance
             leadr = (7150.0f * 7150.0f * imeas) / (imeas * (7218.9f) - vtank) - 40.0f - 7150.0f;
-            if (leadr <= 0.0f)
+            if (leadr <= 0.0f) {
                 leadr = 10000.0f;
-
+            }
             // Then calculate lead current
             leadi = 1000.0f * (7150.0f * imeas) / (7190.0f + leadr);
 
             // If lead current is greater than 2000 ohms, then display 0 mA
-            if (leadr > 2000.0f)
+            if (leadr > 2000.0f) {
                 leadi = 0.0f;
-
+            }
             // Adjust lead current based on voltage setting for voltages < 2.25 V
-            if (amp_setting < 2.25f)
+            if (amp_setting < 2.25f) {
                 leadi = leadi * amp_setting / 2.25f;
-
-            if (leadi < 0.1f)
+            }
+            if (leadi < 0.1f) {
                 return String.format("%.3f mA", leadi);
-            else if (leadi < 1.0f)
+            } else if (leadi < 1.0f) {
                 return String.format("%.2f mA", leadi);
-            else
+            } else {
                 return String.format("%.1f mA", leadi);
+            }
         }
+    }
+
+    static int getAmplitudePos() {
+        return amplitude[CURRENT];
+    }
+
+    static float getAmpFromPos(int pos) {
+        if (pos <= 4) {
+            return (pos + 1) * 0.1f;
+        } else {
+            return (pos + 1) * 0.25f - 0.75f;
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    static String getAmplitude() {
+        float amp = getAmpFromPos(amplitude[CURRENT]);
+        return String.format("%.2f V", amp);
     }
 
     static void setAmplitude(byte[] msg) {
@@ -259,21 +262,8 @@ public class WandData {
             amplitude[TEMPORARY] = (byte) ((msg[2] & 0xff) / 5 + 2);
     }
 
-    static int getAmplitudePos() {
-        return amplitude[CURRENT];
-    }
-
-    static float getAmpFromPos(int pos) {
-        if (pos <= 4)
-            return (pos + 1) * 0.1f;
-        else
-            return (pos + 1) * 0.25f - 0.75f;
-    }
-
-    @SuppressLint("DefaultLocale")
-    static String getAmplitude() {
-        float amp = getAmpFromPos(amplitude[CURRENT]);
-        return String.format("%.2f V", amp);
+    static int getConfig() {
+        return mConfig[CURRENT];
     }
 
     static void setConfig(byte[] msg) {
@@ -283,18 +273,21 @@ public class WandData {
         // update mRRT
         if (mModelNumber[TEMPORARY] == 1) {
             if ((mConfig[TEMPORARY] & 0x01) > 0) {
-                if ((mConfig[TEMPORARY] & 0x02) > 0)
-                    therapy[TEMPORARY] = 1;                                                         // Daily
-                else
-                    therapy[TEMPORARY] = 2;                                                         // Weekly
+                if ((mConfig[TEMPORARY] & 0x02) > 0) {
+                    therapy[TEMPORARY] = 1;
+                }                                                       // Daily
+                else {
+                    therapy[TEMPORARY] = 2;
+                }                                                       // Weekly
             } else
                 therapy[TEMPORARY] = 0;                                                             // Off
 
             if ((mConfig[TEMPORARY] & 0x01) > 0) {
-                if ((mConfig[TEMPORARY] & 0x04) > 0)                                                // Report RRT flag
+                if ((mConfig[TEMPORARY] & 0x04) > 0) {                                              // Report RRT flag
                     mRRT[TEMPORARY] = 1;
-                else
+                } else {
                     mRRT[TEMPORARY] = 0;
+                }
             } else
                 mRRT[TEMPORARY] = -1;                                                               // Otherwise hide value
         } else {
@@ -304,15 +297,12 @@ public class WandData {
             } else
                 therapy[TEMPORARY] = 0;                                                             // Off
 
-            if ((mConfig[TEMPORARY] & 0x10) > 0)                                                    // Report RRT flag
+            if ((mConfig[TEMPORARY] & 0x10) > 0) {                                                 // Report RRT flag
                 mRRT[TEMPORARY] = 1;
-            else
+            } else {
                 mRRT[TEMPORARY] = 0;
+            }
         }
-    }
-
-    static int getConfig() {
-        return mConfig[CURRENT];
     }
 
     public static int getTherapyPos() {
@@ -323,26 +313,28 @@ public class WandData {
         // Do this for Model 1
         if (mModelNumber[CURRENT] == 1) {
             String[] therapy_array = context.getResources().getStringArray(R.array.itns_therapy_schedule_array_model_one);
-            if (therapy[CURRENT] >= 0 && therapy[CURRENT] <= 2)
+            if (therapy[CURRENT] >= 0 && therapy[CURRENT] <= 2) {
                 return therapy_array[therapy[CURRENT]];
-            else
+            } else {
                 return "error";
+            }
         }
         // Do this for Model 2
         else {
             String[] therapy_array = context.getResources().getStringArray(R.array.itns_therapy_schedule_array_model_two);
-            if (therapy[CURRENT] >= 0 && therapy[CURRENT] <= 5)
+            if (therapy[CURRENT] >= 0 && therapy[CURRENT] <= 5) {
                 return therapy_array[therapy[CURRENT]];
-            else
+            } else {
                 return "error";
+            }
         }
     }
 
     @SuppressLint("DefaultLocale")
     static float getLeadI() {
-        if (mLeadI[CURRENT] == -1)
+        if (mLeadI[CURRENT] == -1) {
             return 0.0f;
-        else {
+        } else {
             float amp = getAmpFromPos(amplitude[CURRENT]);
 
             float leadi;
@@ -357,9 +349,9 @@ public class WandData {
             float leadr = amp_setting / (mLeadI[CURRENT] * 0.00003922f);
 
             // And set lead current to 0 mA if load resistance > 2000 ohms.
-            if (leadr > 2000.0f)
+            if (leadr > 2000.0f) {
                 leadi = 0.0f;
-
+            }
             return leadi;
 
             /*if(leadi < 0.1f)
@@ -372,10 +364,11 @@ public class WandData {
     }
 
     static void setLeadI(byte[] msg) {
-        if ((mConfig[TEMPORARY] & 0x01) > 0 || mIsITNSNew)                              // Show lead I on first interrogate if therapy is set, or if after a successful interrogation
+        if ((mConfig[TEMPORARY] & 0x01) > 0 || mIsITNSNew) {                           // Show lead I on first interrogate if therapy is set, or if after a successful interrogation
             mLeadI[TEMPORARY] = (msg[2] & 0xff) * 256 + (msg[3] & 0xff);
-        else
-            mLeadI[TEMPORARY] = -1;                                                                 // Otherwise hide value
+        } else {
+            mLeadI[TEMPORARY] = -1;
+        }                                                             // Otherwise hide value
     }
 
     @SuppressLint("DefaultLocale")
@@ -383,9 +376,9 @@ public class WandData {
 
         // For model 1, hide Cell V if -1
         if (mModelNumber[CURRENT] == 1) {
-            if (mCellV[CURRENT] == -1)
+            if (mCellV[CURRENT] == -1) {
                 return null;
-            else {
+            } else {
                 float cellv = mCellV[CURRENT] * .025f;
                 return String.format("%.2f V", cellv);
             }
@@ -401,10 +394,11 @@ public class WandData {
     }
 
     static void setCellV(byte[] msg) {
-        if (((mConfig[TEMPORARY] & 0x01) > 0) || (mModelNumber[TEMPORARY] == 2))                    // Show cell V on first interrogate if therapy is set or if Model 2
+        if (((mConfig[TEMPORARY] & 0x01) > 0) || (mModelNumber[TEMPORARY] == 2)) {                  // Show cell V on first interrogate if therapy is set or if Model 2
             mCellV[TEMPORARY] = msg[2] & 0xff;
-        else
-            mCellV[TEMPORARY] = -1;                                                                 // Otherwise hide value
+        } else {
+            mCellV[TEMPORARY] = -1;
+        }                                                              // Otherwise hide value
     }
 
     static String getRRT(Context context) {
@@ -555,5 +549,16 @@ public class WandData {
 
     static boolean isITNSNew() {
         return (mModelSerial[CURRENT] != 0) && (mModelSerial[CURRENT] != mModelSerial[TEMPORARY]);
+    }
+
+    static private class mClock {
+        static private final int[] mHours = new int[3];
+        static private final int[] mMins = new int[3];
+    }
+
+    static private class mSchedule {
+        static private final int[] mAlarms = new int[3];
+        static private final int[] mHours = new int[3];
+        static private final int[] mMins = new int[3];
     }
 }

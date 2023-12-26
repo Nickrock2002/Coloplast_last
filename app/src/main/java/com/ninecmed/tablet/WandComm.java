@@ -228,8 +228,9 @@ class WandComm {
     boolean AnyProgramChanges() {
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < change_list.length; i++) {
-            if (change_list[i])
+            if (change_list[i]) {
                 return true;
+            }
         }
         return false;
     }
@@ -243,14 +244,11 @@ class WandComm {
     }
 
     boolean anyProgramChangesOtherThanAmplitude() {
-        if (change_list[changes.TIME])
+        if (change_list[changes.TIME]) {
             return true;
-        else if (change_list[changes.THERAPY])
+        } else if (change_list[changes.THERAPY]) {
             return true;
-        else if (change_list[changes.DATE])
-            return true;
-        else
-            return false;
+        } else return change_list[changes.DATE];
     }
 
     void clearResetCounter() {
@@ -659,11 +657,12 @@ class WandComm {
         byte config = (byte) WandData.getConfig();
 
         // Do this for Model 1
-        if (WandData.getModelNumber() == 1)
+        if (WandData.getModelNumber() == 1) {
             config |= 0x88;                     // Set upper bit to change config and bit 3 to clear bReset
             // Do this for Model 2
-        else
-            config |= 0xa0;                     // Set upper bit to change config and bit 5 to clear bReset
+        } else {
+            config |= 0xa0;
+        }                  // Set upper bit to change config and bit 5 to clear bReset
 
         byte[] msg = {'I', '2', config, 0, 0};
         sendMessage(msg);
@@ -685,9 +684,9 @@ class WandComm {
 
         byte[] txBuffer;
         txBuffer = CobsUtils.encode(msg);
-        if (mBluetooth != null)
+        if (mBluetooth != null) {
             mBluetooth.send(txBuffer);
-
+        }
         // Call timer to verify that every message to the wand is acknowledged
         // 1200 seems to work well when the wand battery is low. Shorter durations
         // seem to fail on the setschedule command
