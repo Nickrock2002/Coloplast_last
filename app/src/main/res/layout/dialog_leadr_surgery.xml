@@ -63,7 +63,6 @@
         android:text="@string/lead_r_is_above_normal"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
@@ -119,7 +118,6 @@
         android:text="@string/electrode_tip_must_make_contact_with_the_tissue"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_lead_i" />
@@ -131,7 +129,6 @@
         android:text="@string/verify_sheath_position"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_electrode_tip" />

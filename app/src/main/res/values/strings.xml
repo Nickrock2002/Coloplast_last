@@ -53,8 +53,8 @@
     <string name="main_wand_error_msg">Please turn Wand OFF, then back ON, and try again</string>
     <string name="surgery">Surgery</string>
     <string name="clinic_visit">Clinic Visit</string>
-    <string name="wand_not_comm">Tablet and Wand communication Issue:\nIs the Wand on?</string>
-    <string name="wand_is_comm">Tablet communicating with Wand</string>
+    <string name="wand_not_comm">Tablet and wand communication issue:\nIs the wand on?</string>
+    <string name="wand_is_comm">Tablet communicating with wand</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="amplitude">Amplitude</string>
@@ -75,7 +75,7 @@
     <string name="software_versions">Software Versions:</string>
     <string name="battery_replacement_time_rrt">Battery Replacement Time (RRT)</string>
     <string name="company_info">Coloplast Corporation\n<br />+1-800-258-3476 \n<br /></string>
-    <string name="ifu_link"><b>IFU link: </b><href url="docshub.coloplast.com/ifus">docshub.coloplast.com/ifus Ref:  520500</href></string>
+    <string name="ifu_link"><b>IFU link: </b><href url="docshub.coloplast.com/ifus">docshub.coloplast.com/ifus</href></string>
     <string name="company_address">1601 West River Road \nMinneapolis, MN 55411 \nUnited States of America</string>
     <string name="close_application">Close Application</string>
     <string name="reset_date_and_time">Reset Date and Time</string>
@@ -102,7 +102,7 @@
     <string name="rrt_dialogue_disc">The ITNS must be replaced soon</string>
     <string name="contact_text">Contact Coloplast</string>
     <string name="battery_voltage_1230_v">Battery Voltage: 1230 V</string>
-    <string name="rrt_dialogue_title">The ITNS reached its Battery Recommended Replacement Time (RRT)</string>
+    <string name="rrt_dialogue_title">The ITNS reached its Battery \nRecommended Replacement Time (RRT)</string>
     <string name="intibia_itns_rrt">ITNS Battery RRT Reached</string>
     <string name="stimulation_active">Stimulation Active</string>
     <string name="implant_reset_counter">"ITNS Reset Counter: "</string>
@@ -116,7 +116,7 @@
     <string name="tablet_and_wand_communication_issue">Tablet - Wand Comm Issue</string>
     <string name="the_communication_between_the_wand_and_itns_has_been_lost">The communication between the wand and the ITNS has been lost</string>
     <string name="resetting_date_and_time_sub_1">Resetting date and time will only change the set date and time in the Intibia App</string>
-    <string name="resetting_date_and_time_sub_2">For changing the therapy date and time in the ITNS, use programming function found in the clinic visit option</string>
+    <string name="resetting_date_and_time_sub_2">For changing the therapy date and time in the ITNS, use the programming function found in the Clinic Visit option</string>
     <string name="test_and_set_amp">Test and Set amplitude of ITNS</string>
     <string name="set_date_and_time">Set Date and Time on the Tablet</string>
     <string name="date_no_colon">Date</string>
@@ -128,7 +128,7 @@
     <string name="tablet_battery_capacity_is_less_than_15">Tablet battery capacity is less than 15%</string>
     <string name="set_time">Set Time</string>
     <string name="back_to_start_screen">Back to the Start Screen?</string>
-    <string name="do_you_want_to_close_app">Do you want to close the Intibia ITNS application?</string>
+    <string name="do_you_want_to_close_app">Do you want to close the Intibia ITNS App?</string>
     <string name="set_date">Set Date</string>
     <string name="lead_r_2000_ohms"><![CDATA[Lead R > 2000 Ω]]></string>
     <string name="lead_r_colon">Lead R:</string>
@@ -152,7 +152,7 @@
     <string name="reset_counter">Reset Counter</string>
     <string name="implant_serial_number_mismatch">Serial Number Mismatch</string>
     <string name="attempting_to_program_an_implant_with_an_incorrect_serial_number">Attempting to program an ITNS with an incorrect serial number</string>
-    <string name="re_interrogate_the_intibia_itns">Re-Interrogate the ITNS</string>
+    <string name="re_interrogate_the_intibia_itns">Re-interrogate the ITNS</string>
     <string name="ensure_wand_communicae_with_itns">Ensure the wand is communicating with the ITNS and try programming again</string>
     <string name="coloplast_corporation_addr_part_1">Coloplast Corporation \n+1-800-258-3476 \nIFU link: intibia.com/IFU</string>
     <string name="intibia_com_ifu_part_2">intibia.com/IFU</string>

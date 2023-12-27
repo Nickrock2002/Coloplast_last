@@ -62,7 +62,6 @@
         android:text="@string/lead_r_above"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_large_text"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
@@ -119,7 +118,6 @@
         android:text="@string/verify_motor_resp"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_lead_i" />
@@ -133,7 +131,6 @@
         android:text="@string/verify_lead_r_consistent"
         android:textColor="@color/cardview_dark_background"
         android:textSize="@dimen/dialog_medium_text"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_tip_one" />

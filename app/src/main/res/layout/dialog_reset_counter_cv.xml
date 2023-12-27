@@ -68,7 +68,7 @@
             android:text="@string/the_intibia_itns_off"
             android:textAlignment="center"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="@dimen/dialog_large_text" />
+            android:textSize="@dimen/dialog_medium_text" />
 
         <TextView
             android:id="@+id/tv_reset_counter"
@@ -79,7 +79,7 @@
             android:text="@string/implant_reset_counter_3"
             android:textAlignment="center"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="@dimen/dialog_large_text" />
+            android:textSize="@dimen/dialog_medium_text" />
     </LinearLayout>
 
     <Button

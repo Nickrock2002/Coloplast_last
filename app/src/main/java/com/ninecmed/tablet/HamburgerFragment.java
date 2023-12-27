@@ -89,7 +89,7 @@ public class HamburgerFragment extends Fragment {
     private void showLeadRWarningIfFound() {
         showStimLeadRDialog = false;
         float leadRValue = WandData.getLeadR();
-        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
         boolean isWarningFound;
         isWarningFound = leadRValue > 2000 || leadRValue < 250;
         if (isWarningFound) {
@@ -111,7 +111,7 @@ public class HamburgerFragment extends Fragment {
 
     private void showStimLeadRWarningIfFound() {
         float leadRValue = WandData.getStimLeadR();
-        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f ohms", leadRValue);
+        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
         boolean isWarningFound = leadRValue > 2000;
 
         if (isWarningFound) {

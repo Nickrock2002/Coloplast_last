@@ -23,12 +23,16 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ninecmed.tablet.databinding.ActivityMainBinding;
 import com.ninecmed.tablet.dialogs.BackToStartDialog;
+import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.BatteryWarnDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitDatePickerDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitSetDateTimeDialog;
 import com.ninecmed.tablet.dialogs.ClinicVisitTimePickerDialog;
 import com.ninecmed.tablet.dialogs.CloseAppDialog;
 import com.ninecmed.tablet.dialogs.InvalidModelDialog;
+import com.ninecmed.tablet.dialogs.ItnsResetCVDialog;
+import com.ninecmed.tablet.dialogs.ItnsResetDialog;
+import com.ninecmed.tablet.dialogs.SerialNumberMismatchDialog;
 import com.ninecmed.tablet.dialogs.WandAndITNSCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandAndTabletCommIssueDialog;
 import com.ninecmed.tablet.dialogs.WandTabConnDialog;
