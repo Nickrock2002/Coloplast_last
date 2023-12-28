@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.util.Util;
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
 import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
@@ -91,7 +92,7 @@ public class HamburgerFragment extends Fragment {
         float leadRValue = WandData.getLeadR();
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || leadRValue < 250;
+        isWarningFound = leadRValue > Utility.maxLeadR || leadRValue < Utility.minLeadR;
         if (isWarningFound) {
             if (leadRValue == 0) {
                 binding.tvLeadRVal.setText(getString(R.string._1_dash));
@@ -112,7 +113,7 @@ public class HamburgerFragment extends Fragment {
     private void showStimLeadRWarningIfFound() {
         float leadRValue = WandData.getStimLeadR();
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
-        boolean isWarningFound = leadRValue > 2000;
+        boolean isWarningFound = leadRValue > Utility.maxLeadR;
 
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
@@ -221,11 +222,9 @@ public class HamburgerFragment extends Fragment {
     }
 
     private void setupInitialData() {
-        //Date - time
         if (mMainActivity.isDeviceConnected()) {
             binding.tvLanguageVal.setText(getString(R.string.english));
         }
-
         setupWandData();
     }
 

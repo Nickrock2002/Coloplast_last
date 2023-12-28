@@ -84,8 +84,10 @@ public class ProgramTherapyFragment extends Fragment {
         setUpTimeButtonClick();
         setDateTime();
         String modelNumber = WandData.getModelNumber(getContext());
-        if (mMainActivity.isInterrogationDone
-                && !getString(R.string.all_model_number_one).equals(modelNumber)) {
+        if (mMainActivity != null && mMainActivity.isInterrogationDone
+                && (getString(R.string.all_model_number_two).equals(WandData.getModelNumber(getContext()))
+                || getString(R.string.all_model_number_three).equals(WandData.getModelNumber(getContext()))
+                || getString(R.string.all_model_number_four).equals(WandData.getModelNumber(getContext())))) {
             setupWandData(modelNumber);
         }
         return binding.getRoot();
@@ -851,7 +853,7 @@ public class ProgramTherapyFragment extends Fragment {
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || leadRValue < 250;
+        isWarningFound = leadRValue > Utility.maxLeadR || leadRValue < Utility.minLeadR;
         if (isWarningFound) {
             if (leadRValue == 0) {
                 binding.tvLeadRVal.setVisibility(View.VISIBLE);

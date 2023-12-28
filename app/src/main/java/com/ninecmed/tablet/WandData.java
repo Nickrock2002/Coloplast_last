@@ -220,7 +220,7 @@ public class WandData {
             leadi = 1000.0f * (7150.0f * imeas) / (7190.0f + leadr);
 
             // If lead current is greater than 2000 ohms, then display 0 mA
-            if (leadr > 2000.0f) {
+            if (leadr > Utility.maxLeadR) {
                 leadi = 0.0f;
             }
             // Adjust lead current based on voltage setting for voltages < 2.25 V
@@ -349,7 +349,7 @@ public class WandData {
             float leadr = amp_setting / (mLeadI[CURRENT] * 0.00003922f);
 
             // And set lead current to 0 mA if load resistance > 2000 ohms.
-            if (leadr > 2000.0f) {
+            if (leadr > Utility.maxLeadR) {
                 leadi = 0.0f;
             }
             return leadi;

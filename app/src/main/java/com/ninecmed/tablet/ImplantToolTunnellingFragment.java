@@ -222,7 +222,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     private void showLeadRWarningIfFound() {
         float leadRValue = WandData.getStimLeadR();
-        boolean isWarningFound = leadRValue > 2000;
+        boolean isWarningFound = leadRValue > Utility.maxLeadR;
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
             LeadRImplantTunnelingDialog dialog = new LeadRImplantTunnelingDialog(requireContext());

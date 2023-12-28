@@ -19,6 +19,8 @@ public class Utility {
     static SimpleDateFormat dateFormatForClinicVisit = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
     static SimpleDateFormat dateFormatForProgramTherapy = new SimpleDateFormat("EEE dd-MMM-yyyy", Locale.US);
     static SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+    public static final float maxLeadR = 2000;
+    public static final float minLeadR = 250;
 
     public static Pair<Integer, Integer> getDimensionsForDialogue(Context context) {
         Pair<Integer, Integer> dimensions;

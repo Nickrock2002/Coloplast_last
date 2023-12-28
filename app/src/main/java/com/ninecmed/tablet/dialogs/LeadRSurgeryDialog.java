@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.ninecmed.tablet.R;
+import com.ninecmed.tablet.Utility;
 import com.ninecmed.tablet.databinding.DialogLeadrSurgeryBinding;
 
 import java.util.Locale;
@@ -24,7 +25,7 @@ public class LeadRSurgeryDialog extends BaseDialog {
 
         DialogLeadrSurgeryBinding binding = DialogLeadrSurgeryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        if (leadRValue > 2000) {
+        if (leadRValue > Utility.maxLeadR) {
             binding.tvWarnTitle.setText(R.string.lead_r_is_2000_ohms);
             binding.tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
             binding.tvLeadRSubtitle.setText(R.string.lead_r_above);

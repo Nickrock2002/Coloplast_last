@@ -320,7 +320,7 @@ public class ItnsFragment extends Fragment {
     private void showLeadRWarningIfFound(boolean showWarningOnStart) {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
-        isWarningFound = leadRValue > 2000 || leadRValue < 250;
+        isWarningFound = leadRValue > Utility.maxLeadR || leadRValue < Utility.minLeadR;
         if (isWarningFound) {
             if (leadRValue == 0) {
                 binding.tvLeadRVal.setText(R.string._1_dash);
