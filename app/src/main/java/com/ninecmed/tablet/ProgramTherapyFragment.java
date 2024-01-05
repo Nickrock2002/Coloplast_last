@@ -695,10 +695,11 @@ public class ProgramTherapyFragment extends Fragment {
             }
         } else {  // Here's what happens on fail
             if (WandData.isITNSNew()) {
-                if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing())
-                    dialogProgrammingInProgress.dismiss();
                 try {
-                    if (amplitudeDialog != null && !amplitudeDialog.isShowing()) {
+                    if (dialogProgrammingInProgress != null && dialogProgrammingInProgress.isShowing()) {
+                        dialogProgrammingInProgress.dismiss();
+                    }
+                    if (amplitudeDialog != null && amplitudeDialog.isShowing()) {
                         amplitudeDialog.dismiss();
                     }
                 } catch (Exception e) {
@@ -714,7 +715,7 @@ public class ProgramTherapyFragment extends Fragment {
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
                 try {
-                    if (amplitudeDialog != null && !amplitudeDialog.isShowing()) {
+                    if (amplitudeDialog != null && amplitudeDialog.isShowing()) {
                         amplitudeDialog.getCancelButtonRef().setEnabled(true);
                         amplitudeDialog.getConfirmButtonRef().setEnabled(false);
                     }
