@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -199,11 +200,13 @@ public class ProgramTherapyFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulationButton.setPressed(true);
-                            mMainActivity.wandComm.setStimulation(true);
+                            mMainActivity.wandComm.setStimulation(true, WandComm.frags.PROGRAM);
+                            Log.v("PTherapy", "Stimulation method called {true}");
                             ((Button) stimulationButton).setText(R.string.stimulation_active);
                             WandData.invalidateStimLeadI();
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
+                            showNeurostimulationProgressDialog();
                         }
                         amplitudeDialog.getPlusButtonRef().setClickable(false);
                         amplitudeDialog.getMinusButtonRef().setClickable(false);
@@ -217,14 +220,14 @@ public class ProgramTherapyFragment extends Fragment {
                             stimulationButton.setPressed(false);
                             ((Button) stimulationButton).setText(R.string.hold_to_deliver_neurostimulation);
                             if (mNow + 1500 < System.currentTimeMillis()) {
-                                mMainActivity.wandComm.setStimulation(false);
+                                mMainActivity.wandComm.setStimulation(false, WandComm.frags.PROGRAM);
+                                Log.v("PTherapy", "Stimulation method called (false)");
                                 mStimEnabled = false;
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                             }
                             setPlusMinusButtonColors(amplitudeDialog, true);
                         }
-                        showNeurostimulationProgressDialog();
                         amplitudeDialog.getPlusButtonRef().setClickable(true);
                         amplitudeDialog.getMinusButtonRef().setClickable(true);
                         break;
@@ -261,7 +264,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private final Runnable HoldStimulation = () -> {
-        mMainActivity.wandComm.setStimulation(false);
+        mMainActivity.wandComm.setStimulation(false, WandComm.frags.PROGRAM);
         mStimEnabled = false;
     };
 

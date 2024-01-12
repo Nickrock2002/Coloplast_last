@@ -98,13 +98,14 @@ public class ItnsFragment extends Fragment {
                 case MotionEvent.ACTION_DOWN:
                     if (mNow + 500 < System.currentTimeMillis()) {
                         binding.btItnsStartStim.setPressed(true);
-                        mMainActivity.wandComm.setStimulation(true);
+                        mMainActivity.wandComm.setStimulation(true, WandComm.frags.ITNS);
 
                         binding.btItnsStartStim.setText(R.string.stimulation_active);
                         WandData.invalidateStimLeadI();
 
                         mNow = System.currentTimeMillis();
                         mStimEnabled = true;
+                        showNeurostimulationProgressDialog();
                     }
                     binding.ibItnsPlus.setClickable(false);
                     binding.ibItnsMinus.setClickable(false);
@@ -117,10 +118,9 @@ public class ItnsFragment extends Fragment {
                     if (mStimEnabled) {
                         binding.btItnsStartStim.setPressed(false);
                         binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
-                        showNeurostimulationProgressDialog();
                         // Set delay to 1500 to be the same delay as ExternalFragment
                         if (mNow + 1500 < System.currentTimeMillis()) {
-                            mMainActivity.wandComm.setStimulation(false);
+                            mMainActivity.wandComm.setStimulation(false, WandComm.frags.ITNS);
                             mStimEnabled = false;
                         } else {
                             mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
@@ -133,7 +133,7 @@ public class ItnsFragment extends Fragment {
     }
 
     private final Runnable HoldStimulation = () -> {
-        mMainActivity.wandComm.setStimulation(false);
+        mMainActivity.wandComm.setStimulation(false, WandComm.frags.ITNS);
         //MakeTone(ToneGenerator.TONE_PROP_NACK);
         mStimEnabled = false;
     };

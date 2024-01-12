@@ -106,7 +106,8 @@ class WandComm {
         processStateMachine();
     }
 
-    void setStimulation(boolean enable) {
+    void setStimulation(boolean enable, int frag) {
+        mCallingFragment = frag;
         mCurrentJob = jobs.SETSTIM;
         mEnableStim = enable;
         mHandler.removeCallbacks(restartTestBurst);
