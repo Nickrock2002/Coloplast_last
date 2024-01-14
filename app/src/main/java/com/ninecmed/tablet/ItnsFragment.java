@@ -105,7 +105,6 @@ public class ItnsFragment extends Fragment {
 
                         mNow = System.currentTimeMillis();
                         mStimEnabled = true;
-                        showNeurostimulationProgressDialog();
                     }
                     binding.ibItnsPlus.setClickable(false);
                     binding.ibItnsMinus.setClickable(false);
@@ -125,6 +124,7 @@ public class ItnsFragment extends Fragment {
                         } else {
                             mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                         }
+                        showNeurostimulationProgressDialog();
                     }
                     break;
             }

@@ -102,7 +102,6 @@ public class ImplantToolTunnellingFragment extends Fragment {
                         binding.btExternalStartStim.setText(getString(R.string.stimulation_active));
                         mNow = System.currentTimeMillis();
                         mStimEnabled = true;
-                        showNeurostimulationProgressDialog();
                     }
                     binding.ibExternalPlus.setClickable(false);
                     binding.ibExternalMinus.setClickable(false);
@@ -120,6 +119,7 @@ public class ImplantToolTunnellingFragment extends Fragment {
                         } else {
                             mHandler.postDelayed(holdStimulationRunnable, mNow + 1500 - System.currentTimeMillis());
                         }
+                        showNeurostimulationProgressDialog();
                     }
                     binding.ibExternalPlus.setClickable(true);
                     binding.ibExternalMinus.setClickable(true);

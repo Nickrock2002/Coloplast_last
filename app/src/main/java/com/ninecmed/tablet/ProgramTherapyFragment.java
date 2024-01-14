@@ -201,12 +201,12 @@ public class ProgramTherapyFragment extends Fragment {
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulationButton.setPressed(true);
                             mMainActivity.wandComm.setStimulation(true, WandComm.frags.PROGRAM);
-                            Log.v("PTherapy", "Stimulation method called {true}");
+                            Log.v("Stimulation", "ACTION DOWN");
                             ((Button) stimulationButton).setText(R.string.stimulation_active);
                             WandData.invalidateStimLeadI();
                             mNow = System.currentTimeMillis();
                             mStimEnabled = true;
-                            showNeurostimulationProgressDialog();
+                            //showNeurostimulationProgressDialog();
                         }
                         amplitudeDialog.getPlusButtonRef().setClickable(false);
                         amplitudeDialog.getMinusButtonRef().setClickable(false);
@@ -217,11 +217,12 @@ public class ProgramTherapyFragment extends Fragment {
                     case MotionEvent.ACTION_POINTER_DOWN:
                     case MotionEvent.ACTION_POINTER_UP:
                         if (mStimEnabled) {
+                            showNeurostimulationProgressDialog();
                             stimulationButton.setPressed(false);
                             ((Button) stimulationButton).setText(R.string.hold_to_deliver_neurostimulation);
                             if (mNow + 1500 < System.currentTimeMillis()) {
                                 mMainActivity.wandComm.setStimulation(false, WandComm.frags.PROGRAM);
-                                Log.v("PTherapy", "Stimulation method called (false)");
+                                Log.v("Stimulation", "ACTION UP");
                                 mStimEnabled = false;
                             } else {
                                 mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
@@ -709,11 +710,7 @@ public class ProgramTherapyFragment extends Fragment {
                     e.printStackTrace();
                 }
                 showSerialNumberMismatchWarnDialog();
-                binding.btnInterrogate.setClickable(true);
-                binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
-                disableAllTheButtons();
-                resetAllButtonsWithDefaultBackground();
-                resetAllTheTexts();
+
                 return;
             }
             if (mMainActivity.wandComm.getCurrentJob() == WandComm.jobs.SETSTIM) {
@@ -800,7 +797,17 @@ public class ProgramTherapyFragment extends Fragment {
 
     public void showSerialNumberMismatchWarnDialog() {
         SerialNumberMismatchDialog dialog = new SerialNumberMismatchDialog(requireContext());
-        dialog.setConfirmButtonListener(v -> dialog.dismiss());
+        dialog.setConfirmButtonListener(view -> {
+            dialog.dismiss();
+            binding.btnInterrogate.setClickable(true);
+            binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
+            disableAllTheButtons();
+            resetAllButtonsWithDefaultBackground();
+            resetAllTheTexts();
+            if (stimulationProgressDialog != null && stimulationProgressDialog.isShowing()) {
+                stimulationProgressDialog.dismiss();
+            }
+        });
         dialog.show();
     }
 
