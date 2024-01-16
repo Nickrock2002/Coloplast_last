@@ -614,11 +614,13 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     private void dismissAllDialogs() {
-        for (Dialog dialog : dialogs) {
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-                dialogs.remove(dialog);
+        if (dialogs != null) {
+            for (Dialog dialog : dialogs) {
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
             }
+            dialogs.clear();
         }
     }
 

@@ -36,6 +36,7 @@ public class ItnsFragment extends Fragment {
     FragmentItnsBinding binding;
     private boolean isFromBackstack = false;
     private StimulationProgressDialog stimulationProgressDialog;
+    private boolean interogationDoneOnThisScreen = false;
 
     @Override
     public void onAttach(Context context) {
@@ -239,6 +240,7 @@ public class ItnsFragment extends Fragment {
                 binding.btItnsStartStim.setText(R.string.hold_to_deliver_neurostimulation);
             } else {
                 mMainActivity.isInterrogationDone = true;
+                interogationDoneOnThisScreen = true;
                 String modelNumber = WandData.getModelNumber(getContext());
                 if (!getString(R.string.all_model_number_two).equals(modelNumber) &&
                         !getString(R.string.all_model_number_three).equals(modelNumber) &&
@@ -263,7 +265,8 @@ public class ItnsFragment extends Fragment {
         binding.ibItnsPlus.setClickable(true);
         binding.ibItnsMinus.setClickable(true);
         binding.btItnsInterrogate.setClickable(true);
-        setPlusMinusButtonColors(true);
+
+        if (interogationDoneOnThisScreen) setPlusMinusButtonColors(true);
     }
 
     void setupWandData(boolean showWarningOnStart) {
