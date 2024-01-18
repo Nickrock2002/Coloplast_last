@@ -99,7 +99,7 @@ public class ProgramTherapyFragment extends Fragment {
             final BatteryReplaceRRTDialog dialog = new BatteryReplaceRRTDialog(requireContext());
             dialog.setConfirmButtonListener(view1 -> {
                 dialog.dismiss();
-                dialogs.clear();
+                removeLastDialogRef();
             });
             dialog.show();
             dialogs.add(dialog);
@@ -120,7 +120,7 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setLeadIValue(leadIValue);
         dialog.setConfirmButtonListener(view1 -> {
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
         });
         dialog.show();
         dialogs.add(dialog);
@@ -238,7 +238,7 @@ public class ProgramTherapyFragment extends Fragment {
             amplitudeDialog.setCancelButtonListener(cancelView -> {
                 amplitudeDialog.dismiss();
                 amplitudeButton.setClickable(true);
-                dialogs.clear();
+                removeLastDialogRef();
             });
             amplitudeDialog.setConfirmButtonListener(confirmView -> {
                 ((Button) amplitudeButton).setText(String.format("%.2f V", WandData.getAmpFromPos(mAmplitudePos)));
@@ -247,7 +247,7 @@ public class ProgramTherapyFragment extends Fragment {
                 valuesChanged[0] = true;
                 amplitudeDialog.dismiss();
                 amplitudeButton.setClickable(true);
-                dialogs.clear();
+                removeLastDialogRef();
                 if (valuesChanged[1]) {
                     if (binding.btnFrequencyVal.getText().equals(getString(R.string.off))) {
                         enableDisableProgramButton(true);
@@ -276,7 +276,7 @@ public class ProgramTherapyFragment extends Fragment {
             freqDialog.setCancelButtonListener(cancelView -> {
                 freqDialog.dismiss();
                 frequencyButton.setClickable(true);
-                dialogs.clear();
+                removeLastDialogRef();;
             });
             freqDialog.setConfirmButtonListener(confirmView -> {
                 checkedRadioButtonId = freqDialog.getCheckedButtonId();
@@ -337,7 +337,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 freqDialog.dismiss();
                 frequencyButton.setClickable(true);
-                dialogs.clear();
+                removeLastDialogRef();
             });
             freqDialog.show();
             dialogs.add(freqDialog);
@@ -397,7 +397,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 dayDateDialog.dismiss();
                 dayDateButton.setClickable(true);
-                dialogs.clear();
+                removeLastDialogRef();
             });
             dayDateDialog.show();
             dialogs.add(dayDateDialog);
@@ -439,7 +439,7 @@ public class ProgramTherapyFragment extends Fragment {
 
                 timeOfDayDialog.dismiss();
                 timeOfDayButton.setClickable(true);
-                dialogs.clear();
+                removeLastDialogRef();
             });
             timeOfDayDialog.show();
             dialogs.add(timeOfDayDialog);
@@ -512,7 +512,7 @@ public class ProgramTherapyFragment extends Fragment {
         dialog.setCancelButtonListener(v -> {
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
         });
 
         dialog.setConfirmButtonListener(v -> {
@@ -521,7 +521,7 @@ public class ProgramTherapyFragment extends Fragment {
             }
             mMainActivity.wandComm.program();
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
             showProgramITNSInProgressDialog();
         });
 
@@ -538,7 +538,7 @@ public class ProgramTherapyFragment extends Fragment {
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             enableDisableProgramButton(false);
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
         });
         dialog.show();
         dialogs.add(dialog);
@@ -552,7 +552,7 @@ public class ProgramTherapyFragment extends Fragment {
             enableDisableProgramButton(false);
 
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
         });
 
         dialog.setAmpVal(WandData.getAmplitude());
@@ -828,7 +828,7 @@ public class ProgramTherapyFragment extends Fragment {
         ProgrammingUnsuccessfulDialog dialog = new ProgrammingUnsuccessfulDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
             binding.btnProgram.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
             enableDisableProgramButton(true);
         });
@@ -840,10 +840,16 @@ public class ProgramTherapyFragment extends Fragment {
         WandAndITNSCommIssueDialog dialog = new WandAndITNSCommIssueDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
         });
         dialog.show();
         dialogs.add(dialog);
+    }
+
+    void removeLastDialogRef() {
+        if (dialogs.size() > 0) {
+            dialogs.remove(dialogs.size() - 1);
+        }
     }
 
     private void showBatteryWarningIfLow() {
@@ -901,7 +907,7 @@ public class ProgramTherapyFragment extends Fragment {
         ItnsResetCVDialog dialog = new ItnsResetCVDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
-            dialogs.clear();
+            removeLastDialogRef();
             mMainActivity.wandComm.clearResetCounter();
             resetAllTheTexts();
         });
