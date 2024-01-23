@@ -89,21 +89,25 @@ public class ProgramTherapyFragment extends Fragment {
                 && (getString(R.string.all_model_number_two).equals(WandData.getModelNumber(getContext()))
                 || getString(R.string.all_model_number_three).equals(WandData.getModelNumber(getContext()))
                 || getString(R.string.all_model_number_four).equals(WandData.getModelNumber(getContext())))) {
-            setupWandData(modelNumber);
+            setupWandData(modelNumber, false);
         }
         return binding.getRoot();
     }
 
     private void setUpRRTButtonClick() {
         binding.btnImplantBatteryStatus.setOnClickListener(view -> {
-            final BatteryReplaceRRTDialog dialog = new BatteryReplaceRRTDialog(requireContext());
-            dialog.setConfirmButtonListener(view1 -> {
-                dialog.dismiss();
-                removeLastDialogRef();
-            });
-            dialog.show();
-            dialogs.add(dialog);
+            showRRTDialog();
         });
+    }
+
+    private void showRRTDialog() {
+        final BatteryReplaceRRTDialog dialog = new BatteryReplaceRRTDialog(requireContext());
+        dialog.setConfirmButtonListener(view1 -> {
+            dialog.dismiss();
+            removeLastDialogRef();
+        });
+        dialog.show();
+        dialogs.add(dialog);
     }
 
     private void setUpLeadRButtonClick() {
@@ -276,7 +280,8 @@ public class ProgramTherapyFragment extends Fragment {
             freqDialog.setCancelButtonListener(cancelView -> {
                 freqDialog.dismiss();
                 frequencyButton.setClickable(true);
-                removeLastDialogRef();;
+                removeLastDialogRef();
+                ;
             });
             freqDialog.setConfirmButtonListener(confirmView -> {
                 checkedRadioButtonId = freqDialog.getCheckedButtonId();
@@ -673,7 +678,7 @@ public class ProgramTherapyFragment extends Fragment {
                 // Re-enable changed parameters (and the test stim button) only when
                 // UIUpdate is called - meaning that the state machine has finished its tasks
                 mMainActivity.wandComm.removeProgramChanges(WandComm.changes.AMPLITUDE);
-                showLeadRWarningIfFound();
+                showLeadRWarningIfFound(true);
                 enableDisableFrequencyButton(true);
                 if (amplitudeDialog != null && amplitudeDialog.isShowing()) {
                     amplitudeDialog.getConfirmButtonRef().setClickable(true);
@@ -690,12 +695,12 @@ public class ProgramTherapyFragment extends Fragment {
                     if (implToolFrequency.equals(getString(R.string.off))) {
                         binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
                     } else {
-                        showBatteryWarningIfLow();
+                        showBatteryWarningIfLow(true);
                     }
                 }
             } else { /* This is interrogate callback */
                 mMainActivity.isInterrogationDone = true;
-                setupWandData(WandData.getModelNumber(getContext()));
+                setupWandData(WandData.getModelNumber(getContext()), true);
                 checkForReset();
                 resetChangedParameters();
             }
@@ -741,7 +746,7 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
-    void setupWandData(String modelNumber) {
+    void setupWandData(String modelNumber, boolean showWarningOnStart) {
         binding.btnInterrogate.setClickable(true);
         binding.btnInterrogate.setBackgroundResource(R.drawable.rounded_corner_button_dynamic);
 
@@ -774,14 +779,14 @@ public class ProgramTherapyFragment extends Fragment {
                 enableDisableTimeOfDayButton(false);
                 binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
             } else {
-                showBatteryWarningIfLow();
+                showBatteryWarningIfLow(showWarningOnStart);
                 enableDisableDayDateButton(true);
                 enableDisableTimeOfDayButton(true);
             }
         } else {
             enableDisableFrequencyButton(false);
         }
-        showLeadRWarningIfFound();
+        showLeadRWarningIfFound(showWarningOnStart);
 
         String date = WandData.getDate();
         String time = WandData.getTime();
@@ -852,13 +857,16 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
-    private void showBatteryWarningIfLow() {
+    private void showBatteryWarningIfLow(boolean showWarningOnStart) {
         String rrt_result = WandData.getRRT(getContext());
 
         if (rrt_result != null) {
             if (rrt_result.equals(getString(R.string.all_yes))) {
                 binding.btnImplantBatteryStatus.setVisibility(View.VISIBLE);
                 binding.tvImplantBatteryVal.setVisibility(View.INVISIBLE);
+                if (showWarningOnStart) {
+                    showRRTDialog();
+                }
             } else {
                 binding.btnImplantBatteryStatus.setVisibility(View.INVISIBLE);
                 binding.tvImplantBatteryVal.setVisibility(View.VISIBLE);
@@ -869,7 +877,7 @@ public class ProgramTherapyFragment extends Fragment {
         }
     }
 
-    private void showLeadRWarningIfFound() {
+    private void showLeadRWarningIfFound(boolean showWarningOnStart) {
         float leadRValue = WandData.getLeadR();
         boolean isWarningFound;
         isWarningFound = leadRValue > Utility.maxLeadR || leadRValue < Utility.minLeadR;
@@ -881,7 +889,9 @@ public class ProgramTherapyFragment extends Fragment {
             } else {
                 binding.btnLeadRWarn.setVisibility(View.VISIBLE);
                 binding.tvLeadRVal.setVisibility(View.INVISIBLE);
-                displayLeadRDialogue();
+                if (showWarningOnStart) {
+                    displayLeadRDialogue();
+                }
             }
         } else {
             binding.tvLeadRVal.setVisibility(View.VISIBLE);

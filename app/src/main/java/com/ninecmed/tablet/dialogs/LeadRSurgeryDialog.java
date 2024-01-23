@@ -36,9 +36,17 @@ public class LeadRSurgeryDialog extends BaseDialog {
         }
 
         String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
-        binding.tvLeadRVal.setText(formattedLeadR);
+        if (leadRValue == 0) {
+            binding.tvLeadRVal.setText(getContext().getString(R.string._1_dash));
+        } else {
+            binding.tvLeadRVal.setText(formattedLeadR);
+        }
         String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", leadIValue);
-        binding.tvLeadIVal.setText(formattedLeadI);
+        if (leadIValue == 0) {
+            binding.tvLeadIVal.setText(getContext().getString(R.string._1_dash));
+        } else {
+            binding.tvLeadIVal.setText(formattedLeadI);
+        }
 
         binding.btnConfirmLeadR.setOnClickListener(confirmButtonListener);
     }
