@@ -917,7 +917,7 @@ public class ProgramTherapyFragment extends Fragment {
         ItnsResetCVDialog dialog = new ItnsResetCVDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
-            removeLastDialogRef();
+            dismissAllDialogs();
             mMainActivity.wandComm.clearResetCounter();
             resetAllTheTexts();
         });
