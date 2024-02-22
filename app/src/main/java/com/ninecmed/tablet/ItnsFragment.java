@@ -37,6 +37,7 @@ public class ItnsFragment extends Fragment {
     private boolean isFromBackstack = false;
     private StimulationProgressDialog stimulationProgressDialog;
     private boolean interogationDoneOnThisScreen = false;
+    private boolean stimulationInProgress = false;
 
     @Override
     public void onAttach(Context context) {
@@ -97,6 +98,7 @@ public class ItnsFragment extends Fragment {
         binding.btItnsStartStim.setOnTouchListener((view, motionEvent) -> {
             switch (motionEvent.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
+                    stimulationInProgress = true;
                     if (mNow + 500 < System.currentTimeMillis()) {
                         binding.btItnsStartStim.setPressed(true);
                         mMainActivity.wandComm.setStimulation(true, WandComm.frags.ITNS);
@@ -125,7 +127,9 @@ public class ItnsFragment extends Fragment {
                         } else {
                             mHandler.postDelayed(HoldStimulation, mNow + 1500 - System.currentTimeMillis());
                         }
-                        showNeurostimulationProgressDialog();
+                        if (stimulationInProgress) {
+                            showNeurostimulationProgressDialog();
+                        }
                     }
                     break;
             }
@@ -142,6 +146,7 @@ public class ItnsFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getFrag() == WandComm.frags.ITNS) {
+            stimulationInProgress = false;
             updateItnsUI(event.isUiUpdateSuccess());
         }
     }

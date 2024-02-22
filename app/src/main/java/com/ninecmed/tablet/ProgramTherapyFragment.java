@@ -68,6 +68,7 @@ public class ProgramTherapyFragment extends Fragment {
     ProgramTherapyTimeOfDayDialog timeOfDayDialog;
     ProgramITNSProgressDialog dialogProgrammingInProgress;
     StimulationProgressDialog stimulationProgressDialog;
+    private boolean stimulationInProgress = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -202,6 +203,7 @@ public class ProgramTherapyFragment extends Fragment {
             amplitudeDialog.setStimulationButtonListener((stimulationButton, motionEvent) -> {
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
+                        stimulationInProgress = true;
                         if (mNow + 500 < System.currentTimeMillis()) {
                             stimulationButton.setPressed(true);
                             mMainActivity.wandComm.setStimulation(true, WandComm.frags.PROGRAM);
@@ -221,7 +223,9 @@ public class ProgramTherapyFragment extends Fragment {
                     case MotionEvent.ACTION_POINTER_DOWN:
                     case MotionEvent.ACTION_POINTER_UP:
                         if (mStimEnabled) {
-                            showNeurostimulationProgressDialog();
+                            if (stimulationInProgress) {
+                                showNeurostimulationProgressDialog();
+                            }
                             stimulationButton.setPressed(false);
                             ((Button) stimulationButton).setText(R.string.hold_to_deliver_neurostimulation);
                             if (mNow + 1500 < System.currentTimeMillis()) {
@@ -577,6 +581,7 @@ public class ProgramTherapyFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UIUpdateEvent event) {
         if (event.getFrag() == WandComm.frags.PROGRAM) {
+            stimulationInProgress = false;
             updateUI(event.isUiUpdateSuccess());
         }
     }
