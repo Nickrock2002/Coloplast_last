@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -55,6 +56,9 @@ public class WandTabConnDialog extends BaseDialog {
 
     public LinearLayoutCompat getHeaderActiveRef() {
         return binding.llHeaderActive;
+    }
+    public ImageView getGreenTickRef() {
+        return binding.ivGreenTick;
     }
 
     public TextView getConnectionStatusTvRef() {

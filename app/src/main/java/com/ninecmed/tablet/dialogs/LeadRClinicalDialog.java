@@ -26,24 +26,24 @@ public class LeadRClinicalDialog extends BaseDialog {
         DialogLeadrClinicalBinding binding = DialogLeadrClinicalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if (leadRValue > Utility.maxLeadR) {
-            binding.tvWarnTitle.setText(R.string.lead_r_is_2000_ohms);
+            binding.tvWarnTitle.setText(R.string.lead_r);
             binding.tvResetCounter.setText(R.string.lead_r_above);
         } else {
-            binding.tvWarnTitle.setText(R.string.lead_r_is_250_ohms);
+            binding.tvWarnTitle.setText(R.string.lead_r);
             binding.tvResetCounter.setText(R.string.lead_r_below);
         }
-        String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
-        if (leadRValue == 0) {
-            binding.tvLeadRVal.setText(getContext().getString(R.string._1_dash));
-        } else {
-            binding.tvLeadRVal.setText(formattedLeadR);
-        }
-        String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", leadIValue);
-        if (leadIValue == 0) {
-            binding.tvLeadIVal.setText(getContext().getString(R.string._1_dash));
-        } else {
-            binding.tvLeadIVal.setText(formattedLeadI);
-        }
+       // String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);
+//        if (leadRValue == 0) {
+//            binding.tvLeadRVal.setText(getContext().getString(R.string._1_dash));
+//        } else {
+//            binding.tvLeadRVal.setText(formattedLeadR);
+//        }
+//        String formattedLeadI = String.format(Locale.ENGLISH, "%.1f mA", leadIValue);
+//        if (leadIValue == 0) {
+//            binding.tvLeadIVal.setText(getContext().getString(R.string._1_dash));
+//        } else {
+//            binding.tvLeadIVal.setText(formattedLeadI);
+//        }
         binding.btnConfirmLeadR.setOnClickListener(confirmButtonListener);
     }
 

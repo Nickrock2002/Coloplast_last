@@ -14,11 +14,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <TextView
             android:id="@+id/tv_warn_title"
-            android:layout_width="@dimen/error_icon_size"
-            android:layout_height="@dimen/error_icon_size"
-            android:src="@drawable/baseline_check_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/programming_success"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/dialog_title"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="@string/amplitude_with_colon"
+        android:text="@string/voltage_with_colon"
         android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />

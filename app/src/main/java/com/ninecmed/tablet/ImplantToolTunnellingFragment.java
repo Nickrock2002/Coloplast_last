@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,18 +74,11 @@ public class ImplantToolTunnellingFragment extends Fragment {
 
     private void initializeTitle() {
         String text = binding.tvImplantTitle.getText().toString();
-
         // Create a SpannableString to apply styles
         SpannableString spannableString = new SpannableString(text);
-
-        // Apply bold style to "Implant Tool Tunnelling"
-        int startIndex1 = text.indexOf("Implant Tool Tunnelling");
-        int endIndex1 = startIndex1 + "Implant Tool Tunnelling".length();
-        spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex1, endIndex1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         // Apply bold style to "ITNS Interrogation Tab"
-        int startIndex2 = text.indexOf("ITNS Interrogation");
-        int endIndex2 = startIndex2 + "ITNS Interrogation".length();
+        int startIndex2 = text.indexOf("Interrogate Implant");
+        int endIndex2 = startIndex2 + "Interrogate Implant".length();
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex2, endIndex2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Set the modified text in the TextView

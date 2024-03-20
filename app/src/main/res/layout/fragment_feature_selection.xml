@@ -10,8 +10,8 @@
     <ImageView
         android:layout_width="240dp"
         android:layout_height="80dp"
-        android:src="@drawable/cp_intibia_startpage_logo"
         android:layout_marginBottom="70dp"
+        android:src="@drawable/cp_intibia_startpage_logo"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -33,7 +33,7 @@
             android:layout_width="400dp"
             android:layout_height="70dp"
             android:background="@drawable/bt_rounded_corners"
-            android:text="@string/surgery"
+            android:text="@string/implant_procedure"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="28sp" />
@@ -50,11 +50,45 @@
             android:textSize="28sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <TextView
+        android:id="@+id/t"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/scan_for_instructions"
+        android:textColor="@color/colorBlack"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/iv_qr_code"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_qr_code"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/qr_code"
+        app:layout_constraintBottom_toTopOf="@id/tv_url"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/https_docshub_coloplast_com_ifus"
+        android:textColor="@color/colorBlack"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="180dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="40dp"
         android:src="@drawable/cp_masterbrand_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

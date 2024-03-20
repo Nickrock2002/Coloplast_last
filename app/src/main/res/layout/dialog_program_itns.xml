@@ -95,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="@string/amplitude_with_colon"
+        android:text="@string/voltage_with_colon"
         android:textSize="@dimen/dialog_medium_text"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />

@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:text="@string/amplitude"
+            android:text="@string/voltage"
             android:textColor="@color/design_default_color_surface"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"

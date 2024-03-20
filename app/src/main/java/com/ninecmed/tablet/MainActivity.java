@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             wandConnDialog.getHeaderRef().setVisibility(View.INVISIBLE);
             wandConnDialog.getHeaderActiveRef().setVisibility(View.VISIBLE);
             wandConnDialog.getConnectionStatusTvRef().setText(R.string.wand_is_comm);
-
+            wandConnDialog.getGreenTickRef().setVisibility(View.VISIBLE);
             wandConnDialog.getConfirmButtonRef().setClickable(true);
             wandConnDialog.getConfirmButtonRef().setBackgroundResource(R.drawable.bt_dialogue_wand_comm_active);
             wandConnDialog.getConfirmButtonRef().setTextColor(ActivityCompat.getColor(this, R.color.txt_dialogue_wand_comm_active));

@@ -68,6 +68,14 @@
             android:textColor="@color/colorBaseDeepBlue"
             android:textSize="@dimen/dialog_large_text" />
 
+        <ImageView
+            android:id="@+id/iv_green_tick"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/icons_green_tick"
+            android:layout_marginTop="30dp"
+            android:visibility="invisible"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

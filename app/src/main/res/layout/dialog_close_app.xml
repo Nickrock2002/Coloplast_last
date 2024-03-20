@@ -14,11 +14,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/tv_warn_title"
-            android:layout_width="@dimen/error_icon_size"
-            android:layout_height="@dimen/error_icon_size"
-            android:src="@drawable/baseline_clear_24"
+        <TextView
+            android:id="@+id/tv_close_apllication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/close_application"
+            android:textSize="@dimen/dialog_title"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +33,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="32dp"
         android:text="@string/do_you_want_to_close_app"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
@@ -38,7 +40,21 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_top_container" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"/>
+    <TextView
+        android:id="@+id/tv_current_session"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/this_will_end_the_current_session."
+        android:textAlignment="center"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="@dimen/dialog_large_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_reset_counter" />
 
     <Button
         android:id="@+id/btn_cancel"
@@ -64,7 +80,7 @@
         android:layout_marginBottom="18dp"
         android:background="@drawable/rounded_corners_button"
         android:paddingHorizontal="56dp"
-        android:text="@string/all_yes"
+        android:text="@string/confirm"
         android:textAllCaps="false"
         android:textColor="@color/cardview_light_background"
         android:textSize="@dimen/dialog_action_buttons"
