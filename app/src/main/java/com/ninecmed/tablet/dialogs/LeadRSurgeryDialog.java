@@ -26,11 +26,11 @@ public class LeadRSurgeryDialog extends BaseDialog {
         DialogLeadrSurgeryBinding binding = DialogLeadrSurgeryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if (leadRValue > Utility.maxLeadR) {
-            binding.tvWarnTitle.setText(R.string.lead_r_2000);
+            binding.tvWarnTitle.setText(R.string.lead_r_e5);
             binding.tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
             binding.tvLeadRSubtitle.setText(R.string.lead_r_above);
         } else {
-            binding.tvWarnTitle.setText(R.string.lead_r_2000);
+            binding.tvWarnTitle.setText(R.string.lead_r_e4);
             binding.tvElectrodeTip.setText(R.string.electrode_tip_must_make_contact_with_the_tissue);
             binding.tvLeadRSubtitle.setText(R.string.lead_r_below);
         }

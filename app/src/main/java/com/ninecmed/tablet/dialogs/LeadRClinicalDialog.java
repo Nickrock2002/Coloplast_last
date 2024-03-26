@@ -26,10 +26,10 @@ public class LeadRClinicalDialog extends BaseDialog {
         DialogLeadrClinicalBinding binding = DialogLeadrClinicalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if (leadRValue > Utility.maxLeadR) {
-            binding.tvWarnTitle.setText(R.string.lead_r);
+            binding.tvWarnTitle.setText(R.string.lead_r_e7);
             binding.tvResetCounter.setText(R.string.lead_r_above);
         } else {
-            binding.tvWarnTitle.setText(R.string.lead_r);
+            binding.tvWarnTitle.setText(R.string.lead_r_e6);
             binding.tvResetCounter.setText(R.string.lead_r_below);
         }
        // String formattedLeadR = String.format(Locale.ENGLISH, "%.0f Ω", leadRValue);

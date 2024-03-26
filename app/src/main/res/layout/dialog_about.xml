@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingHorizontal="16dp"
-            android:text="@string/about_title"
+            android:text="@string/about_text"
             android:textColor="@color/cardview_dark_background"
             android:textSize="@dimen/dialog_title"
             android:textStyle="bold"

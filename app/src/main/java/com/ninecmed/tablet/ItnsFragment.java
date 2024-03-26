@@ -337,6 +337,7 @@ public class ItnsFragment extends Fragment {
                 binding.btnLeadRWarn.setVisibility(View.VISIBLE);
                 if (showWarningOnStart) {
                     LeadRSurgeryDialog dialog = new LeadRSurgeryDialog(requireContext());
+                    dialog.setLeadRValue(leadRValue);
                     dialog.setConfirmButtonListener(v -> dialog.dismiss());
                     dialog.show();
                 }
