@@ -69,7 +69,7 @@
     <string name="rrt_dialogue_title"> Implant reached Battery Recommended  \n Replacement Time (RRT)</string>
     <string name="intibia_itns_rrt">E8 - Implant Battery Low</string>
     <string name="stimulation_active">Stimulation Active</string>
-    <string name="implant_reset_counter">"ITNS Reset Counter: "</string>
+    <string name="implant_reset_counter">"Implant Reset Counter: "</string>
     <string name="_3_dash">---</string>
     <string name="_1_dash">-</string>
     <string name="voltage_with_colon">Voltage:</string>
@@ -133,7 +133,7 @@
     <string name="_0_ma">0 mA</string>
     <string name="verify_sheath_position">Verify sheath is adjacent to pulse generator.</string>
     <string name="intibia_itns_successfully_programmed">Implant successfully programmed</string>
-    <string name="implant_reset_counter_3">ITNS Reset Counter: 3</string>
+    <string name="implant_reset_counter_3">Implant Reset Counter: 3</string>
     <string name="implant_wrong_model_msg">Tablet unable to identify implant</string>
     <string name="ic_plus">ic_plus</string>
     <string name="_0_0v">0.0V</string>
