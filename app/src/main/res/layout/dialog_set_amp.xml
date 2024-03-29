@@ -17,7 +17,6 @@
             android:id="@+id/tv_warn_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:text="@string/voltage"
             android:textColor="@color/design_default_color_surface"
             android:textSize="@dimen/dialog_title"

@@ -6,7 +6,7 @@
     <string name="all_yes">Yes</string>
     <string name="all_no">No</string>
     <string name="itns_resets_continue_msg">Press Cancel or Clear to continue</string>
-    <string name="itns_time_before_now_msg">Therapy Start Time must be at least one hour later than current time</string>
+    <string name="itns_time_before_now_msg">Therapy Start Time must be at least one hour later than current time.</string>
     <string name="all_model_number_one">9C-680</string>
     <string name="all_model_number_two">9C-680E</string>
     <string name="all_model_number_three">CP-IN100</string>
@@ -22,7 +22,7 @@
     <string name="confirm">Confirm</string>
     <string name="voltage">Voltage</string>
     <string name="start_day_date">Start Day/Date</string>
-    <string name="frequency">Therapy schedule</string>
+    <string name="frequency">Therapy Schedule</string>
     <string name="time_of_day">Start Time</string>
     <string name="error">Error</string>
     <string name="warning">Warning</string>
@@ -40,7 +40,7 @@
     <string name="off">Off</string>
     <string name="implant_battery">Implant Battery</string>
     <string name="software_versions">Software Versions:</string>
-    <string name="battery_replacement_time_rrt">Recommended Replacement\nTime(RRT)</string>
+    <string name="battery_replacement_time_rrt">Recommended Replacement\nTime (RRT)</string>
     <string name="company_info">Coloplast Customer Service\n<br />+1-800-258-3476 \n<br /></string>
     <string name="ifu_link"><b>IFU link: </b><href url="docshub.coloplast.com/ifus">docshub.coloplast.com/ifus</href></string>
     <string name="company_address">1601 West River Road \nMinneapolis, MN 55411 \nUnited States of America</string>
@@ -52,7 +52,7 @@
     <string name="the_intibia_itns_reset_recently_cv">The ITNS automatically reset since the last visit</string>
     <string name="the_intibia_itns_off">The ITNS is in \'OFF\'</string>
     <string name="model_num_text">Model Number:</string>
-    <string name="contact_coloplast">Contact Coloplast</string>
+    <string name="contact_coloplast">Contact Coloplast.</string>
     <string name="program">Program</string>
     <!--    <string name="lead_r_is_2000_ohms"><![CDATA[Lead Resistance > 2000 Ω]]></string>-->
     <string name="electrode_tip_must_make_contact_with_the_tissue">Lead tip must make contact with tissue.</string>
@@ -65,8 +65,8 @@
     <string name="auto">Auto</string>
     <string name="rrt_dialogue_disc">Replace Implant soon.</string>
     <string name="contact_text">Contact Coloplast</string>
-    <string name="battery_voltage_1230_v">implant Battery Voltage: 1.23 V</string>
-    <string name="rrt_dialogue_title"> Implant reached Battery Recommended  \n Replacement Time (RRT)</string>
+    <string name="battery_voltage_1230_v">implant Battery Voltage: 1.23 V.</string>
+    <string name="rrt_dialogue_title"> Implant reached Battery Recommended  \n Replacement Time (RRT).</string>
     <string name="intibia_itns_rrt">E8 - Implant Battery Low</string>
     <string name="stimulation_active">Stimulation Active</string>
     <string name="implant_reset_counter">"Implant Reset Counter: "</string>
@@ -79,8 +79,8 @@
     <string name="the_communication_ready_when_light_on_the_wand">The communication is ready when the ITNS pulse generator icon light on the wand is steady green</string>
     <string name="tablet_and_wand_communication_issue">E14 - Tablet and Wand\nCommunication Lost</string>
     <string name="the_communication_between_the_wand_and_itns_has_been_lost">Reestablish Wand and Implant connection to proceed.</string>
-    <string name="resetting_date_and_time_sub_1">Changing Current Date and Time does not change Therapy Start Time</string>
-    <string name="resetting_date_and_time_sub_2">Use Program Therapy screen to change Therapy Start Time/Date</string>
+    <string name="resetting_date_and_time_sub_1">Changing Current Date and Time does not change Therapy Start Time.</string>
+    <string name="resetting_date_and_time_sub_2">Use Program Therapy screen to change Therapy Start Time/Date.</string>
     <string name="test_and_set_amp">Select, test, and set voltage</string>
     <string name="set_date_and_time">Set Current Date and Time</string>
     <string name="date_no_colon">Date</string>
@@ -88,8 +88,8 @@
     <string name="set_day_date">Start Day/Date</string>
     <string name="set_time_for_start_of_therapy">Set time for start of therapy</string>
     <string name="tablet_battery_low">E13 - Tablet Battery Low</string>
-    <string name="connect_the_tablet_to_an_external_charger">Connect tablet to charger</string>
-    <string name="tablet_battery_capacity_is_less_than_15">Tablet battery capacity is less than 15%</string>
+    <string name="connect_the_tablet_to_an_external_charger">Connect tablet to charger.</string>
+    <string name="tablet_battery_capacity_is_less_than_15">Tablet battery capacity is less than 15%.</string>
     <string name="set_time">Set Current Time</string>
     <string name="back_to_start_screen">Back to Start Screen?</string>
     <string name="do_you_want_to_close_app">Close the Intibia application?</string>
@@ -99,7 +99,7 @@
     <!--    <string name="lead_i_colon">Lead I:</string>-->
     <string name="verify_motor_resp"> Verify that paresthesia or motor response occur.</string>
     <string name="verify_lead_r_consistent"> Verify that Lead Resistance value is consistent during repeated interrogation attempts.</string>
-    <string name="lead_r_is_above_normal">Lead Resistance is above normal range</string>
+    <string name="lead_r_is_above_normal">Lead Resistance is above normal range.</string>
     <string name="lead_r_2000"><![CDATA[Lead Resistance]]></string>
     <string name="lead_r_n_cable_connectivity_issue">E1 - Connectivity Issue</string>
     <string name="neurostimulation_was_unsuccessful">Stimulation was unsuccessful</string>
@@ -107,7 +107,7 @@
     <string name="program_itns">Program Implant</string>
     <string name="programming_itns">Programming Implant</string>
     <string name="the_intibia_itns_is_about_to_be_programmed">Confirm the following are correct:</string>
-    <string name="frequency_with_colon">Therapy schedule:</string>
+    <string name="frequency_with_colon">Therapy Schedule:</string>
     <string name="start_day_date_with_colon">Start Day/Date:</string>
     <string name="time_with_colon">Start Time:</string>
     <string name="programming_success">Programming Success</string>
@@ -116,11 +116,11 @@
     <string name="intibia_wrong_model">E3 - Cannot Identify Implant</string>
     <string name="reset_counter">Clear Reset Counter</string>
     <string name="implant_serial_number_mismatch">E11 - Different Implant Identified</string>
-    <string name="attempting_to_program_an_implant_with_an_incorrect_serial_number">Implant seems to have changed</string>
-    <string name="re_interrogate_the_intibia_itns">Re-interrogate</string>
+    <string name="attempting_to_program_an_implant_with_an_incorrect_serial_number">Implant seems to have changed.</string>
+    <string name="re_interrogate_the_intibia_itns">Re-interrogate.</string>
     <string name="ensure_wand_communicae_with_itns">Try again</string>
-    <string name="lead_r_above">Lead Resistance is above normal range</string>
-    <string name="lead_r_below">Lead Resistance is below normal range</string>
+    <string name="lead_r_above">Lead Resistance is above normal range.</string>
+    <string name="lead_r_below">Lead Resistance is below normal range.</string>
     <string name="dash">-</string>
     <string name="english">English</string>
     <string name="battery_voltage">"Battery Voltage: "</string>
@@ -134,7 +134,7 @@
     <string name="verify_sheath_position">Verify sheath is adjacent to pulse generator.</string>
     <string name="intibia_itns_successfully_programmed">Implant successfully programmed</string>
     <string name="implant_reset_counter_3">Implant Reset Counter: 3</string>
-    <string name="implant_wrong_model_msg">Tablet unable to identify implant</string>
+    <string name="implant_wrong_model_msg">Tablet unable to identify implant.</string>
     <string name="ic_plus">ic_plus</string>
     <string name="_0_0v">0.0V</string>
     <string name="incorrect_time">E10 - Invalid Start Time</string>
