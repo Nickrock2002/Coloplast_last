@@ -102,8 +102,8 @@
     <string name="lead_r_is_above_normal">Lead Resistance is above normal range.</string>
     <string name="lead_r_2000"><![CDATA[Lead Resistance]]></string>
     <string name="lead_r_n_cable_connectivity_issue">E1 - Connectivity Issue</string>
-    <string name="neurostimulation_was_unsuccessful">Stimulation was unsuccessful</string>
-    <string name="check_cable">Check cable connections and electrode \n patches</string>
+    <string name="neurostimulation_was_unsuccessful">Stimulation was unsuccessful.</string>
+    <string name="check_cable">Check cable connections and electrode \n patches.</string>
     <string name="program_itns">Program Implant</string>
     <string name="programming_itns">Programming Implant</string>
     <string name="the_intibia_itns_is_about_to_be_programmed">Confirm the following are correct:</string>
