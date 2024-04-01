@@ -25,6 +25,7 @@ import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
 import com.ninecmed.tablet.dialogs.FrequencyDialog;
 import com.ninecmed.tablet.dialogs.IncorrectTimeDialog;
 import com.ninecmed.tablet.dialogs.ItnsResetCVDialog;
+import com.ninecmed.tablet.dialogs.ItnsResetDialog;
 import com.ninecmed.tablet.dialogs.LeadRClinicalDialog;
 import com.ninecmed.tablet.dialogs.ProgramConfirmationDialog;
 import com.ninecmed.tablet.dialogs.ProgramITNSProgressDialog;
@@ -919,7 +920,7 @@ public class ProgramTherapyFragment extends Fragment {
     }
 
     public void showItnsResetDialog() {
-        ItnsResetCVDialog dialog = new ItnsResetCVDialog(requireContext());
+        ItnsResetDialog dialog = new ItnsResetDialog(requireContext());
         dialog.setConfirmButtonListener(v -> {
             dialog.dismiss();
             dismissAllDialogs();
