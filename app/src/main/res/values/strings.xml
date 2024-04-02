@@ -12,7 +12,7 @@
     <string name="all_model_number_three">CP-IN100</string>
     <string name="all_model_number_four">CP-IN101</string>
     <string name="all_ok">OK</string>
-<!--    <string name="about_title">Software versions</string>-->
+    <!--    <string name="about_title">Software versions</string>-->
     <string name="about_text">About</string>
     <string name="implant_procedure">Implant Procedure</string>
     <string name="clinic_visit">Clinic Visit</string>
@@ -45,7 +45,7 @@
     <string name="ifu_link"><b>IFU link: </b><href url="docshub.coloplast.com/ifus">docshub.coloplast.com/ifus</href></string>
     <string name="company_address">1601 West River Road \nMinneapolis, MN 55411 \nUnited States of America</string>
     <string name="close_application">Close Application</string>
-    <string name="reset_date_and_time">E12 - Change Current Date and Time</string>
+    <string name="reset_date_and_time">E11 - Change Current Date and Time</string>
     <string name="set_language">Set Language</string>
     <string name="language">Language:</string>
     <string name="the_intibia_itns_reset_recently">The Intibia Implant reset.</string>
@@ -73,11 +73,11 @@
     <string name="_3_dash">---</string>
     <string name="_1_dash">-</string>
     <string name="voltage_with_colon">Voltage:</string>
-    <string name="wand_and_itns_communication_issue">E15 - Wand and Implant\nCommunication Lost</string>
+    <string name="wand_and_itns_communication_issue">E14 - Wand and Implant\nCommunication Lost</string>
     <string name="the_communication_between_the_wand_and_the_tablet_has_been_lost"> Reestablish Wand and Tablet connection to proceed.</string>
     <string name="wand_must_be_within_5_cm_2_inches_of_the_itns_pulse_generator">The wand must be within 5 cm (2 inches) of the ITNS pulse generator</string>
     <string name="the_communication_ready_when_light_on_the_wand">The communication is ready when the ITNS pulse generator icon light on the wand is steady green</string>
-    <string name="tablet_and_wand_communication_issue">E14 - Tablet and Wand\nCommunication Lost</string>
+    <string name="tablet_and_wand_communication_issue">E13 - Tablet and Wand\nCommunication Lost</string>
     <string name="the_communication_between_the_wand_and_itns_has_been_lost">Reestablish Wand and Implant connection to proceed.</string>
     <string name="resetting_date_and_time_sub_1">Changing Current Date and Time does not change Therapy Start Time.</string>
     <string name="resetting_date_and_time_sub_2">Use Program Therapy screen to change Therapy Start Time/Date.</string>
@@ -87,7 +87,7 @@
     <string name="time_no_colon">Time</string>
     <string name="set_day_date">Start Day/Date</string>
     <string name="set_time_for_start_of_therapy">Set time for start of therapy</string>
-    <string name="tablet_battery_low">E13 - Tablet Battery Low</string>
+    <string name="tablet_battery_low">E12 - Tablet Battery Low</string>
     <string name="connect_the_tablet_to_an_external_charger">Connect tablet to charger.</string>
     <string name="tablet_battery_capacity_is_less_than_15">Tablet battery capacity is less than 15%.</string>
     <string name="set_time">Set Current Time</string>
@@ -115,7 +115,7 @@
     <string name="intibia_itns_reset">E2 - Implant Reset</string>
     <string name="intibia_wrong_model">E3 - Cannot Identify Implant</string>
     <string name="reset_counter">Clear Reset Counter</string>
-    <string name="implant_serial_number_mismatch">E11 - Different Implant Identified</string>
+    <string name="implant_serial_number_mismatch">E10 - Different Implant Identified</string>
     <string name="attempting_to_program_an_implant_with_an_incorrect_serial_number">Implant seems to have changed.</string>
     <string name="re_interrogate_the_intibia_itns">Re-interrogate.</string>
     <string name="ensure_wand_communicae_with_itns">Try again</string>
@@ -137,7 +137,7 @@
     <string name="implant_wrong_model_msg">Tablet unable to identify implant.</string>
     <string name="ic_plus">ic_plus</string>
     <string name="_0_0v">0.0V</string>
-    <string name="incorrect_time">E10 - Invalid Start Time</string>
+    <string name="incorrect_time">E9 - Invalid Start Time</string>
     <string name="implant_tool_tunneling_msg">When Introducer advancement is complete,\n go to the Interrogate Implant tab</string>
     <string name="voltage_colon">Voltage:</string>
     <string name="intibia_itns_information_and_settings">Intibia System Information</string>
