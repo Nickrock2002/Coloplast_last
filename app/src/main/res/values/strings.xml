@@ -98,7 +98,7 @@
     <!--    <string name="lead_r_colon">Lead Resistance:</string>-->
     <!--    <string name="lead_i_colon">Lead I:</string>-->
     <string name="verify_motor_resp"> Verify that paresthesia or motor response occur.</string>
-    <string name="verify_lead_r_consistent"> Verify that Lead Resistance value is consistent during repeated interrogation attempts.</string>
+    <string name="verify_lead_r_consistent">Verify that Lead Resistance states “OK” during repeated interrogation attempts.</string>
     <string name="lead_r_is_above_normal">Lead Resistance is above normal range.</string>
     <string name="lead_r_2000"><![CDATA[Lead Resistance]]></string>
     <string name="lead_r_n_cable_connectivity_issue">E1 - Connectivity Issue</string>
