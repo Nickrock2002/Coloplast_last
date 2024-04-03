@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.bumptech.glide.util.Util;
 import com.ninecmed.tablet.databinding.FragmentHamburgerBinding;
 import com.ninecmed.tablet.dialogs.AboutDialog;
 import com.ninecmed.tablet.dialogs.BatteryReplaceRRTDialog;
@@ -254,7 +253,11 @@ public class HamburgerFragment extends Fragment {
         // Cell V
         String cellVoltage = WandData.getCellV();
         if (cellVoltage != null) {
-            binding.tvImplantBatteryVal.setText(cellVoltage);
+            if (WandData.getCellV().contains("-")) {
+                binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
+            } else {
+                binding.tvImplantBatteryVal.setText(cellVoltage);
+            }
         } else {
             binding.tvImplantBatteryVal.setText(getString(R.string._1_dash));
         }

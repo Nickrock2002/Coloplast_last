@@ -394,7 +394,7 @@ public class WandData {
     }
 
     static void setCellV(byte[] msg) {
-        if (((mConfig[TEMPORARY] & 0x01) > 0) || (mModelNumber[TEMPORARY] == 2)) {                  // Show cell V on first interrogate if therapy is set or if Model 2
+        if (((mConfig[TEMPORARY] & 0x01) > 0) || (mModelNumber[TEMPORARY] == 1)) {                  // Show cell V on first interrogate if therapy is set or if Model 2
             mCellV[TEMPORARY] = msg[2] & 0xff;
         } else {
             mCellV[TEMPORARY] = -1;

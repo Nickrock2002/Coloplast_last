@@ -24,8 +24,12 @@ public class BatteryReplaceRRTDialog extends BaseDialog {
         DialogItnsRrtBinding binding = DialogItnsRrtBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.tvImplantBatteryVolts.setText(String.format("%s%s",
-                getContext().getString(R.string.battery_voltage), WandData.getCellV()));
+        if (WandData.getCellV() != null && WandData.getCellV().contains("-")) {
+            binding.tvImplantBatteryVolts.setText("-");
+        } else {
+            binding.tvImplantBatteryVolts.setText(String.format("%s%s",
+                    getContext().getString(R.string.battery_voltage), WandData.getCellV()));
+        }
         binding.btConfirm.setOnClickListener(confirmButtonListener);
     }
 
