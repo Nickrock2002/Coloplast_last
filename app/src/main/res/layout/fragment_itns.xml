@@ -166,20 +166,15 @@
             app:layout_constraintStart_toStartOf="@+id/guideline_mid_1"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_lead_r_warn"
-            android:layout_width="260dp"
-            android:layout_height="64dp"
-            android:layout_gravity="start"
-            android:background="@drawable/rounded_corners_btn_error"
-            android:drawableStart="@drawable/ic_error"
-            android:drawablePadding="5dp"
-            android:paddingStart="60dp"
-            android:text="@string/error"
-            android:textAlignment="textStart"
-            android:textAllCaps="false"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="24sp"
+            style="@style/OtherErrorButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:gravity="center"
+            android:paddingVertical="12dp"
+            android:src="@drawable/ic_error"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_1"
@@ -217,6 +212,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_mid_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_end_2"
@@ -259,13 +261,14 @@
             style="@style/amplitude_plus_minus_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
             android:background="@drawable/button_circular_white"
             android:contentDescription="ic_minus"
-            android:gravity="center_vertical|center_horizontal"
             android:src="@drawable/ic_minus_grey"
             app:layout_constraintBottom_toBottomOf="@+id/textView6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView6"
+            app:layout_constraintEnd_toStartOf="@id/tvItnsAmplitude"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/guideline_mid_2"
             app:layout_constraintTop_toTopOf="@+id/textView6" />
 
         <TextView
@@ -286,12 +289,12 @@
             style="@style/amplitude_plus_minus_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
             android:background="@drawable/button_circular_white"
             android:contentDescription="ic_plus"
-            android:gravity="center_vertical|center_horizontal"
             android:src="@drawable/ic_plus_grey"
             app:layout_constraintBottom_toBottomOf="@+id/tvItnsAmplitude"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end_2"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end_2"
             app:layout_constraintStart_toEndOf="@id/tvItnsAmplitude"
             app:layout_constraintTop_toTopOf="@+id/tvItnsAmplitude" />
     </androidx.constraintlayout.widget.ConstraintLayout>
