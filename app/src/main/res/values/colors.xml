@@ -16,5 +16,6 @@
     <color name="colorGreyThreeHundred">#cad0d3</color>
     <color name="colorBaseGreyFourHundred">#b4bdc0</color>
     <color name="colorGreySixHundred">#4d646b</color>
-    <color name="colorOrange">#d05d29</color>
+    <color name="colorOrange">#F9A800</color>
+    <color name="colorOrangeOld">#d05d29</color>
 </resources>
