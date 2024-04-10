@@ -268,7 +268,7 @@
             android:paddingHorizontal="18dp"
             android:paddingVertical="12dp"
             android:paddingStart="20dp"
-            android:text="@string/error"
+            android:text="@string/_1_dash"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/cardview_dark_background"
