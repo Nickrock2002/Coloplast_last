@@ -116,6 +116,7 @@ public class HamburgerFragment extends Fragment {
 
         if (isWarningFound) {
             binding.btnLeadRWarn.setVisibility(View.VISIBLE);
+            binding.btnLeadRWarn.setText(formattedLeadR);
             binding.tvLeadRVal.setVisibility(View.INVISIBLE);
             showStimLeadRDialog = true;
         } else {
