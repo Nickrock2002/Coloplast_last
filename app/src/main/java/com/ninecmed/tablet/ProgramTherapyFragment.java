@@ -501,7 +501,7 @@ public class ProgramTherapyFragment extends Fragment {
             Calendar c = Calendar.getInstance();
             long future = WandData.dateandtime[WandData.FUTURE];
             long now = c.getTimeInMillis() + mMainActivity.getTimeDifferenceMillis();
-            if (!binding.btnFrequencyVal.getText().toString().equals("Off") && future < (now + 1000L * 3600L)) {
+            if (!binding.btnFrequencyVal.getText().toString().equals("Off") && future < (now + 1000L * 900L)) {
                 // Don't allow therapy to be set within 1 hour of now because only a
                 // magnet could stop therapy, telemetry can't interrupt therapy for
                 // the model 2.

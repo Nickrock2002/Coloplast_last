@@ -6,7 +6,7 @@
     <string name="all_yes">Yes</string>
     <string name="all_no">No</string>
     <string name="itns_resets_continue_msg">Press Cancel or Clear to continue</string>
-    <string name="itns_time_before_now_msg">Therapy Start Time must be at least one hour later than current time.</string>
+    <string name="itns_time_before_now_msg">Therapy Start Time must be at least fifteen minutes later than current time.</string>
     <string name="all_model_number_one">9C-680</string>
     <string name="all_model_number_two">9C-680E</string>
     <string name="all_model_number_three">CP-IN100</string>
