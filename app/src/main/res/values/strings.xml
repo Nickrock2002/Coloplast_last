@@ -150,6 +150,7 @@
     <string name="this_will_end_the_current_session.">This will end the current session.</string>
     <string name="https_docshub_coloplast_com_ifus">https://docshub.coloplast.com/ifus</string>
     <string name="scan_for_instructions">Scan for Instructions for Use</string>
+    <string name="scan_for_instructions_and_url">Scan for Instructions for Use\n<br />https://docshub.coloplast.com/ifus \n<br /></string>
     <string name="hold_to_deliver_stimulation">Hold to deliver stimulation</string>
     <string-array name="itns_therapy_schedule_array_model_one">
         <item>Off</item>
